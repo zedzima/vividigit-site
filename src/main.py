@@ -1,15 +1,26 @@
 import os
 import json
 import glob as glob_module
+import tomllib
 from parser import load_file
 from generator import Generator
 
 CONTENT_DIR = "content"
 TEMPLATE_DIR = "templates"
 OUTPUT_DIR = "public"
+GLOBAL_DIR = os.path.join(CONTENT_DIR, "global")
 
 # Collections are subdirectories in content/ (except 'pages' and 'global')
 RESERVED_DIRS = {"pages", "global"}
+
+
+def load_site_config() -> dict:
+    """Load global site configuration."""
+    site_config_path = os.path.join(GLOBAL_DIR, "site.toml")
+    if os.path.exists(site_config_path):
+        with open(site_config_path, "rb") as f:
+            return tomllib.load(f)
+    return {}
 
 
 def find_content_files(directory: str) -> list:
@@ -75,8 +86,12 @@ def main():
     print("Starting CMS Build...")
     print("-" * 40)
 
-    # Initialize Generator
-    gen = Generator(TEMPLATE_DIR, OUTPUT_DIR)
+    # Load site-wide configuration
+    site_config = load_site_config()
+    print(f"Site base URL: {site_config.get('site', {}).get('base_url', '/')}")
+
+    # Initialize Generator with site config
+    gen = Generator(TEMPLATE_DIR, OUTPUT_DIR, site_config)
 
     # Find all page files
     pages_dir = os.path.join(CONTENT_DIR, "pages")

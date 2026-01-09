@@ -1,14 +1,16 @@
 import os
+import tomllib
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from typing import Dict, Any
 
 class Generator:
-    def __init__(self, template_dir: str, output_dir: str):
+    def __init__(self, template_dir: str, output_dir: str, site_config: Dict[str, Any] = None):
         self.env = Environment(
             loader=FileSystemLoader(template_dir),
             autoescape=select_autoescape(['html', 'xml'])
         )
         self.output_dir = output_dir
+        self.site_config = site_config or {}
 
     def render_page(self, page_data: Dict[str, Any], filename: str, sitemap: list):
         """Render a page and save it to the output directory."""
@@ -17,6 +19,7 @@ class Generator:
         
         # Prepare context
         context = {
+            "site": self.site_config.get("site", {}),
             "config": page_data.get("config", {}),
             "meta": page_data.get("meta", {}),
             "translations": page_data.get("translations", {}),

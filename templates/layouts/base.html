@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="{{ site.base_url | default('/') }}">
     <title>{{ meta.title | default('V\\V\\D\\G\\T') }}</title>
     <meta name="description" content="{{ meta.description | default('') }}">
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <!-- Header -->
@@ -25,9 +26,9 @@
             </button>
         </div>
 
-        <a href="/" class="logo">
-            <img src="/images/logo-white.svg" alt="VVDGT" class="logo-text logo-dark">
-            <img src="/images/logo-dark.svg" alt="VVDGT" class="logo-text logo-light">
+        <a href="./" class="logo">
+            <img src="images/logo-white.svg" alt="VVDGT" class="logo-text logo-dark">
+            <img src="images/logo-dark.svg" alt="VVDGT" class="logo-text logo-light">
         </a>
 
         <div class="header-right">
@@ -52,7 +53,7 @@
                 <div class="nav-title">Menu</div>
 
                 <!-- Home -->
-                <a href="/" class="nav-link {% if config.url == '/' %}active{% endif %}">Home</a>
+                <a href="./" class="nav-link {% if config.url == '/' %}active{% endif %}">Home</a>
 
                 <!-- Services - Collapsible -->
                 <div class="nav-item {% if config.url == '/services' or config.collection == 'services' %}active expanded{% endif %}">
@@ -63,7 +64,7 @@
                         </svg>
                     </div>
                     <div class="nav-subitems">
-                        <a href="/services/ai-optimisation/" class="nav-sublink {% if config.url == '/services/ai-optimisation' %}active{% endif %}">AI Visibility</a>
+                        <a href="services/ai-optimisation/" class="nav-sublink {% if config.url == '/services/ai-optimisation' %}active{% endif %}">AI Visibility</a>
                     </div>
                 </div>
 
@@ -76,7 +77,7 @@
                         </svg>
                     </div>
                     <div class="nav-subitems">
-                        <a href="/blog/how-ai-chooses-sources/" class="nav-sublink {% if config.url == '/blog/how-ai-chooses-sources' %}active{% endif %}">How AI Chooses Sources</a>
+                        <a href="blog/how-ai-chooses-sources/" class="nav-sublink {% if config.url == '/blog/how-ai-chooses-sources' %}active{% endif %}">How AI Chooses Sources</a>
                     </div>
                 </div>
             </div>
@@ -110,10 +111,10 @@
         <main>
             {% if config.url != '/' %}
             <nav class="breadcrumbs">
-                <a href="/">Home</a>
+                <a href="./">Home</a>
                 <span>/</span>
                 {% if config.collection %}
-                <a href="/{{ config.collection }}">{{ config.collection | capitalize }}</a>
+                <a href="{{ config.collection }}/">{{ config.collection | capitalize }}</a>
                 <span>/</span>
                 {% endif %}
                 <span>{{ meta.title | default(config.menu) }}</span>
@@ -220,23 +221,23 @@
             <!-- Blog Sidebar -->
             <div class="widget">
                 <div class="widget-title">Related Services</div>
-                <a href="/services/ai-optimisation" class="sidebar-link">AI Visibility Audit</a>
-                <a href="/services/seo-audit" class="sidebar-link">SEO Audit & Strategy</a>
-                <a href="/services/content-strategy" class="sidebar-link">Content Strategy</a>
+                <a href="services/ai-optimisation/" class="sidebar-link">AI Visibility Audit</a>
+                <a href="services/seo-audit/" class="sidebar-link">SEO Audit & Strategy</a>
+                <a href="services/content-strategy/" class="sidebar-link">Content Strategy</a>
             </div>
 
             <div class="widget">
                 <div class="widget-title">Categories</div>
-                <a href="/blog?category=seo" class="sidebar-link">SEO</a>
-                <a href="/blog?category=ai" class="sidebar-link">AI & LLMs</a>
-                <a href="/blog?category=content" class="sidebar-link">Content</a>
-                <a href="/blog?category=analytics" class="sidebar-link">Analytics</a>
+                <a href="blog/?category=seo" class="sidebar-link">SEO</a>
+                <a href="blog/?category=ai" class="sidebar-link">AI & LLMs</a>
+                <a href="blog/?category=content" class="sidebar-link">Content</a>
+                <a href="blog/?category=analytics" class="sidebar-link">Analytics</a>
             </div>
 
             <div class="widget">
                 <div class="widget-title">Explore Services</div>
                 <p class="widget-text">Ready to improve your visibility?</p>
-                <a href="/services" class="btn btn-primary btn-full">Browse Services</a>
+                <a href="services/" class="btn btn-primary btn-full">Browse Services</a>
             </div>
 
             {% else %}
@@ -244,7 +245,7 @@
             <div class="widget">
                 <div class="widget-title">Get Started</div>
                 <p class="widget-text">Ready to grow? Browse our services or request a custom quote.</p>
-                <a href="/services" class="btn btn-primary btn-full btn-mb">Browse Services</a>
+                <a href="services/" class="btn btn-primary btn-full btn-mb">Browse Services</a>
                 <button class="btn btn-secondary btn-full">Request Quote</button>
             </div>
 
