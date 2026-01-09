@@ -1,0 +1,53 @@
+<!-- Benefits Block -->
+<section class="benefits-block">
+    {% if data.title %}
+    <h2>{{ data.title }}</h2>
+    {% endif %}
+
+    {% if data.intro %}
+    <p class="benefits-intro">{{ data.intro | safe }}</p>
+    {% endif %}
+
+    {% if data.benefits %}
+    <ul class="benefits-list">
+        {% for benefit in data.benefits %}
+        <li>{{ benefit }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
+
+<style>
+.benefits-block {
+    padding: var(--space-2xl) 0;
+}
+
+.benefits-intro {
+    font-size: var(--font-size-subtitle);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+}
+
+.benefits-list {
+    display: grid;
+    gap: var(--space-md);
+    list-style: none;
+    padding: 0;
+}
+
+.benefits-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+}
+
+.benefits-list li::before {
+    content: "✓";
+    color: var(--accent);
+    font-weight: bold;
+}
+</style>

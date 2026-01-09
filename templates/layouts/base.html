@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="{{ config.lang | default('en') }}" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ meta.title | default('V\\V\\D\\G\\T') }}</title>
+    <meta name="description" content="{{ meta.description | default('') }}">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="header-btn btn-menu" id="btnMenu" aria-label="Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <a href="/" class="logo">
+            <img src="/images/logo-white.svg" alt="VVDGT" class="logo-text logo-dark">
+            <img src="/images/logo-dark.svg" alt="VVDGT" class="logo-text logo-light">
+        </a>
+
+        <div class="header-right">
+            <button class="header-btn btn-action" id="btnAction" aria-label="Actions">
+                <!-- Arrow up-right icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Layout -->
+    <div class="layout">
+        <!-- Left Sidebar: Navigation -->
+        <aside class="sidebar-nav" id="sidebarNav">
+            <div class="nav-section">
+                <div class="nav-title">Menu</div>
+
+                <!-- Home -->
+                <a href="/" class="nav-link {% if config.url == '/' %}active{% endif %}">Home</a>
+
+                <!-- Services - Collapsible -->
+                <div class="nav-item {% if config.url == '/services' or config.collection == 'services' %}active expanded{% endif %}">
+                    <div class="nav-item-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span>Services</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-subitems">
+                        <a href="/services/ai-optimisation/" class="nav-sublink {% if config.url == '/services/ai-optimisation' %}active{% endif %}">AI Visibility</a>
+                    </div>
+                </div>
+
+                <!-- Blog - Collapsible -->
+                <div class="nav-item {% if config.url == '/blog' or config.collection == 'blog' %}active expanded{% endif %}">
+                    <div class="nav-item-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span>Blog</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-subitems">
+                        <a href="/blog/how-ai-chooses-sources/" class="nav-sublink {% if config.url == '/blog/how-ai-chooses-sources' %}active{% endif %}">How AI Chooses Sources</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-bottom">
+                <!-- Language Dropdown -->
+                <div class="widget">
+                    <div class="widget-title">Language</div>
+                    <select class="form-input" id="langSelect">
+                        <option value="en" selected>English</option>
+                        <option value="de" disabled>Deutsch (coming soon)</option>
+                        <option value="fr" disabled>Français (coming soon)</option>
+                        <option value="es" disabled>Español (coming soon)</option>
+                        <option value="ru" disabled>Русский (coming soon)</option>
+                        <option value="zh" disabled>中文 (coming soon)</option>
+                    </select>
+                </div>
+
+                <!-- Theme Toggle -->
+                <div class="widget">
+                    <div class="widget-title">Theme</div>
+                    <button class="theme-toggle" id="btnTheme">
+                        <span class="theme-icon-light">Light</span>
+                        <span class="theme-icon-dark">Dark</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            {% if config.url != '/' %}
+            <nav class="breadcrumbs">
+                <a href="/">Home</a>
+                <span>/</span>
+                {% if config.collection %}
+                <a href="/{{ config.collection }}">{{ config.collection | capitalize }}</a>
+                <span>/</span>
+                {% endif %}
+                <span>{{ meta.title | default(config.menu) }}</span>
+            </nav>
+            {% endif %}
+
+            {% for block in blocks %}
+            <div class="block">
+                {{ block | safe }}
+            </div>
+            {% endfor %}
+        </main>
+
+        <!-- Right Sidebar: Contextual Actions -->
+        <aside class="sidebar-action" id="sidebarAction">
+            {% if config.collection == 'services' %}
+            <!-- Service Configurator -->
+            <div class="widget">
+                <div class="widget-title">Configure Service</div>
+                <div class="price-display">
+                    <div class="price-value" id="totalPrice">$2,500</div>
+                    <div class="price-label">Estimated total</div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Tariff</div>
+                <div class="form-group">
+                    <select class="form-input" id="tariff">
+                        <option value="1000">Starter - $1,000</option>
+                        <option value="2500" selected>Growth - $2,500</option>
+                        <option value="5000">Scale - $5,000</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Modules</div>
+                <label class="widget-checkbox">
+                    <input type="checkbox" class="module-check" data-price="500"> Preliminary Audit (+$500)
+                </label>
+                <label class="widget-checkbox">
+                    <input type="checkbox" class="module-check" data-price="1200"> Strategy Development (+$1,200)
+                </label>
+                <label class="widget-checkbox">
+                    <input type="checkbox" class="module-check" data-price="2000" checked> Execution (+$2,000)
+                </label>
+                <label class="widget-checkbox">
+                    <input type="checkbox" class="module-check" data-price="800"> Analysis & Reporting (+$800)
+                </label>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Speed</div>
+                <select class="form-input" id="speed">
+                    <option value="1">Standard (x1.0)</option>
+                    <option value="1.25">Fast (x1.25)</option>
+                    <option value="1.5">Rush (x1.5)</option>
+                </select>
+            </div>
+
+            <div class="widget">
+                <button class="btn btn-primary btn-full">Request Quote</button>
+                <p class="widget-note">Estimated. Final quote after brief.</p>
+            </div>
+
+            {% elif config.url == '/services' %}
+            <!-- Catalog Filters -->
+            <div class="widget">
+                <div class="widget-title">Category</div>
+                <select class="form-input" name="category">
+                    <option value="">All categories</option>
+                    <option value="SEO">SEO</option>
+                    <option value="Content">Content</option>
+                    <option value="PPC">PPC</option>
+                    <option value="Localization">Localization</option>
+                    <option value="Analytics">Analytics</option>
+                </select>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Delivery Mode</div>
+                <label class="widget-checkbox">
+                    <input type="checkbox" name="delivery" value="onetime" checked> One-time
+                </label>
+                <label class="widget-checkbox">
+                    <input type="checkbox" name="delivery" value="ongoing" checked> Ongoing
+                </label>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Price Range</div>
+                <div class="price-range-row">
+                    <input type="number" class="form-input" name="minPrice" placeholder="Min">
+                    <input type="number" class="form-input" name="maxPrice" placeholder="Max">
+                </div>
+            </div>
+
+            <div class="widget">
+                <button class="btn btn-secondary btn-full btn-reset-filters">Reset Filters</button>
+            </div>
+
+            {% elif config.collection == 'blog' %}
+            <!-- Blog Sidebar -->
+            <div class="widget">
+                <div class="widget-title">Related Services</div>
+                <a href="/services/ai-optimisation" class="sidebar-link">AI Visibility Audit</a>
+                <a href="/services/seo-audit" class="sidebar-link">SEO Audit & Strategy</a>
+                <a href="/services/content-strategy" class="sidebar-link">Content Strategy</a>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Categories</div>
+                <a href="/blog?category=seo" class="sidebar-link">SEO</a>
+                <a href="/blog?category=ai" class="sidebar-link">AI & LLMs</a>
+                <a href="/blog?category=content" class="sidebar-link">Content</a>
+                <a href="/blog?category=analytics" class="sidebar-link">Analytics</a>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Explore Services</div>
+                <p class="widget-text">Ready to improve your visibility?</p>
+                <a href="/services" class="btn btn-primary btn-full">Browse Services</a>
+            </div>
+
+            {% else %}
+            <!-- Home / Default: Lead CTA -->
+            <div class="widget">
+                <div class="widget-title">Get Started</div>
+                <p class="widget-text">Ready to grow? Browse our services or request a custom quote.</p>
+                <a href="/services" class="btn btn-primary btn-full btn-mb">Browse Services</a>
+                <button class="btn btn-secondary btn-full">Request Quote</button>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Quick Contact</div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" rows="3" placeholder="Your message"></textarea>
+                </div>
+                <button class="btn btn-primary btn-full">Send</button>
+            </div>
+            {% endif %}
+        </aside>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const btnTheme = document.getElementById('btnTheme');
+        const html = document.documentElement;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+
+        btnTheme?.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        });
+
+        // Sidebar Toggles
+        const btnMenu = document.getElementById('btnMenu');
+        const btnAction = document.getElementById('btnAction');
+        const sidebarNav = document.getElementById('sidebarNav');
+        const sidebarAction = document.getElementById('sidebarAction');
+        const overlay = document.getElementById('overlay');
+
+        function closeSidebars() {
+            sidebarNav?.classList.remove('open');
+            sidebarAction?.classList.remove('open');
+            overlay?.classList.remove('active');
+        }
+
+        btnMenu?.addEventListener('click', () => {
+            sidebarNav?.classList.toggle('open');
+            overlay?.classList.toggle('active');
+            sidebarAction?.classList.remove('open');
+        });
+
+        btnAction?.addEventListener('click', () => {
+            sidebarAction?.classList.toggle('open');
+            overlay?.classList.toggle('active');
+            sidebarNav?.classList.remove('open');
+        });
+
+        overlay?.addEventListener('click', closeSidebars);
+
+        // Price Calculator (for service pages)
+        function calculatePrice() {
+            const tariff = parseInt(document.getElementById('tariff')?.value || 0);
+            const speed = parseFloat(document.getElementById('speed')?.value || 1);
+            let modules = 0;
+            document.querySelectorAll('.module-check:checked').forEach(cb => {
+                modules += parseInt(cb.dataset.price || 0);
+            });
+            const total = Math.round((tariff + modules) * speed);
+            const display = document.getElementById('totalPrice');
+            if (display) display.textContent = '$' + total.toLocaleString();
+        }
+
+        document.getElementById('tariff')?.addEventListener('change', calculatePrice);
+        document.getElementById('speed')?.addEventListener('change', calculatePrice);
+        document.querySelectorAll('.module-check').forEach(cb => {
+            cb.addEventListener('change', calculatePrice);
+        });
+
+        // Initial calculation
+        calculatePrice();
+    </script>
+</body>
+</html>

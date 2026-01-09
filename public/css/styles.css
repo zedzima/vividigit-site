@@ -1,0 +1,963 @@
+/* ==========================================================================
+   VVDGT Global Styles
+   All sizes use --scale variable for responsive scaling on wide screens
+   ========================================================================== */
+
+:root {
+    /* Font */
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+
+    /* Base scale factor - increases on wide screens */
+    --scale: 1;
+
+    /* Layout - all scaled */
+    --header-height: calc(56px * var(--scale));
+    --sidebar-width: calc(340px * var(--scale));
+    --action-width: calc(340px * var(--scale));
+    --content-max-width: calc(1200px * var(--scale));
+
+    /* Spacing - all scaled */
+    --space-xs: calc(4px * var(--scale));
+    --space-sm: calc(8px * var(--scale));
+    --space-md: calc(16px * var(--scale));
+    --space-lg: calc(24px * var(--scale));
+    --space-xl: calc(32px * var(--scale));
+    --space-2xl: calc(48px * var(--scale));
+    --space-3xl: calc(64px * var(--scale));
+
+    /*
+     * Typography System - 8 sizes
+     * Display (hero numbers), H1, H2, H3, H4, Subtitle, Body, UI, Caption
+     */
+    --font-size-display: calc(48px * var(--scale)); /* hero numbers, stats, highlighted values */
+    --font-size-h1: calc(32px * var(--scale));
+    --font-size-h2: calc(24px * var(--scale));
+    --font-size-h3: calc(18px * var(--scale));
+    --font-size-h4: calc(16px * var(--scale));
+    --font-size-subtitle: calc(16px * var(--scale));
+    --font-size-body: calc(14px * var(--scale));
+    --font-size-ui: calc(13px * var(--scale));      /* buttons, inputs, selects, breadcrumbs, tags, tables, nav */
+    --font-size-caption: calc(11px * var(--scale)); /* small labels, notes */
+
+    /* Border Radius - scaled */
+    --radius-sm: calc(4px * var(--scale));
+    --radius-md: calc(8px * var(--scale));
+    --radius-lg: calc(12px * var(--scale));
+    --radius-xl: calc(16px * var(--scale));
+    --radius-full: 9999px;
+    --radius: calc(12px * var(--scale));
+
+    /* Icon sizes */
+    --icon-sm: calc(16px * var(--scale));
+    --icon-md: calc(20px * var(--scale));
+    --icon-lg: calc(24px * var(--scale));
+
+    /* Button sizes */
+    --btn-height: calc(40px * var(--scale));
+    --btn-padding-x: calc(20px * var(--scale));
+    --btn-padding-y: calc(10px * var(--scale));
+
+    /* Input sizes */
+    --input-height: calc(40px * var(--scale));
+    --input-padding-x: calc(12px * var(--scale));
+    --input-padding-y: calc(10px * var(--scale));
+
+    --transition: 0.2s ease;
+}
+
+/* Scale up for wide screens (>2000px) */
+@media (min-width: 2000px) {
+    :root { --scale: 1.1; }
+}
+@media (min-width: 2200px) {
+    :root { --scale: 1.2; }
+}
+@media (min-width: 2400px) {
+    :root { --scale: 1.3; }
+}
+@media (min-width: 2600px) {
+    :root { --scale: 1.4; }
+}
+@media (min-width: 2800px) {
+    :root { --scale: 1.5; }
+}
+
+/* Brand Colors (from logo) */
+:root {
+    --brand-purple: #5A24F2;
+    --brand-magenta: #A530E8;
+    --brand-gradient: linear-gradient(135deg, #5A24F2 0%, #A530E8 100%);
+    --brand-gradient-soft: linear-gradient(135deg, rgba(90, 36, 242, 0.15) 0%, rgba(165, 48, 232, 0.15) 100%);
+}
+
+/* Light Theme - iOS 26 Style */
+[data-theme="light"] {
+    --bg-body: #f5f5f7;
+    --bg-main: #ffffff;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #f0f1f3;
+    /* Glass panels - slightly darkened */
+    --bg-glass: rgba(255, 255, 255, 0.72);
+    --bg-glass-solid: rgba(255, 255, 255, 0.88);
+    --bg-card: rgba(0, 0, 0, 0.03);
+    --bg-card-hover: rgba(0, 0, 0, 0.05);
+    --bg-input: rgba(0, 0, 0, 0.04);
+    /* iOS 26 style borders */
+    --border: rgba(0, 0, 0, 0.06);
+    --border-color: rgba(0, 0, 0, 0.06);
+    --border-light: rgba(0, 0, 0, 0.04);
+    --border-strong: rgba(0, 0, 0, 0.1);
+    --border-glass: rgba(255, 255, 255, 0.5);
+    /* Text */
+    --text-primary: #1d1d1f;
+    --text-secondary: #515154;
+    --text-muted: #86868b;
+    /* Accent - brand gradient */
+    --accent: #5A24F2;
+    --accent-primary: #5A24F2;
+    --accent-secondary: #A530E8;
+    --accent-hover: #4a1ed9;
+    --accent-gradient: linear-gradient(135deg, #5A24F2 0%, #A530E8 100%);
+    /* Shadows */
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --shadow-glass: 0 0 0 0.5px rgba(0, 0, 0, 0.05), 0 2px 16px rgba(0, 0, 0, 0.06);
+    --glow-opacity: 0.06;
+}
+
+/* Dark Theme - iOS 26 Style */
+[data-theme="dark"] {
+    --bg-body: #000000;
+    --bg-main: #0d0d0f;
+    --bg-primary: #0d0d0f;
+    --bg-secondary: #161618;
+    --bg-tertiary: #1c1c1e;
+    /* Glass panels - slightly lightened */
+    --bg-glass: rgba(28, 28, 30, 0.72);
+    --bg-glass-solid: rgba(28, 28, 30, 0.88);
+    --bg-card: rgba(255, 255, 255, 0.04);
+    --bg-card-hover: rgba(255, 255, 255, 0.07);
+    --bg-input: rgba(255, 255, 255, 0.06);
+    /* iOS 26 style borders */
+    --border: rgba(255, 255, 255, 0.08);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-light: rgba(255, 255, 255, 0.05);
+    --border-strong: rgba(255, 255, 255, 0.12);
+    --border-glass: rgba(255, 255, 255, 0.1);
+    /* Text */
+    --text-primary: #f5f5f7;
+    --text-secondary: #a1a1a6;
+    --text-muted: #6e6e73;
+    /* Accent - brand gradient (brighter for dark) */
+    --accent: #7c4dff;
+    --accent-primary: #7c4dff;
+    --accent-secondary: #b366f9;
+    --accent-hover: #9d7aff;
+    --accent-gradient: linear-gradient(135deg, #7c4dff 0%, #b366f9 100%);
+    /* Shadows */
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-glass: 0 0 0 0.5px rgba(255, 255, 255, 0.1), 0 2px 16px rgba(0, 0, 0, 0.3);
+    --glow-opacity: 0.12;
+}
+
+/* ==========================================================================
+   Reset & Base
+   ========================================================================== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-body);
+    background: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+
+/* Text gradient for brand highlights */
+.text-gradient, .brand-gradient {
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ==========================================================================
+   Header - iOS 26 Glass
+   ========================================================================== */
+
+.header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-height);
+    background: var(--bg-glass);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-glass);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-md);
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-text {
+    height: calc(24px * var(--scale));
+    width: auto;
+}
+
+/* Logo theme switching */
+.logo-light { display: none; }
+.logo-dark { display: block; }
+[data-theme="light"] .logo-light { display: block; }
+[data-theme="light"] .logo-dark { display: none; }
+
+.header-btn {
+    width: var(--btn-height);
+    height: var(--btn-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.header-btn:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+}
+
+.header-btn svg {
+    width: var(--icon-md);
+    height: var(--icon-md);
+}
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+    padding-top: var(--header-height);
+    justify-content: center;
+}
+
+/* ==========================================================================
+   Left Sidebar - iOS 26 Glass
+   ========================================================================== */
+
+.sidebar-nav {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--bg-glass);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border-right: 1px solid var(--border);
+    box-shadow: var(--shadow-glass);
+    padding: var(--space-lg) var(--space-md);
+    display: flex;
+    flex-direction: column;
+    z-index: 90;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.sidebar-nav.open { transform: translateX(0); }
+
+@media (min-width: 1200px) {
+    .sidebar-nav { transform: translateX(0); }
+    .btn-menu { display: none; }
+}
+
+.nav-section { margin-bottom: var(--space-lg); }
+
+.nav-title {
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+    padding: 0 var(--space-sm);
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-sm);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: var(--font-size-body);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-link:hover, .nav-link.active {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.nav-link.active { color: var(--accent); }
+
+/* Collapsible Nav Item */
+.nav-item {
+    margin-bottom: calc(2px * var(--scale));
+}
+
+.nav-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-sm);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: var(--font-size-body);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.nav-item-header:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.nav-item.active > .nav-item-header {
+    color: var(--accent);
+}
+
+.nav-arrow {
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+    transition: transform 0.2s ease;
+}
+
+.nav-item.expanded .nav-arrow {
+    transform: rotate(90deg);
+}
+
+.nav-subitems {
+    display: none;
+    padding-left: var(--space-md);
+    margin-top: var(--space-xs);
+}
+
+.nav-item.expanded .nav-subitems {
+    display: block;
+}
+
+.nav-sublink {
+    display: block;
+    padding: var(--space-sm) var(--space-sm);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: var(--font-size-ui);
+    transition: var(--transition);
+}
+
+.nav-sublink:hover {
+    color: var(--text-secondary);
+    background: var(--bg-card);
+}
+
+.nav-sublink.active {
+    color: var(--accent);
+}
+
+/* ==========================================================================
+   Sidebar Bottom (Language + Theme)
+   ========================================================================== */
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+}
+
+.sidebar-bottom .widget {
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-bottom .widget:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.sidebar-bottom .widget-title {
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+/* ==========================================================================
+   Theme Toggle
+   ========================================================================== */
+
+.theme-toggle {
+    display: flex;
+    width: 100%;
+    padding: var(--space-sm);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-ui);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.theme-toggle:hover { border-color: var(--border-strong); }
+
+.theme-icon-light, .theme-icon-dark {
+    flex: 1;
+    padding: calc(6px * var(--scale));
+    border-radius: var(--radius-sm);
+    text-align: center;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+[data-theme="light"] .theme-icon-light {
+    background: var(--accent);
+    color: white;
+}
+
+[data-theme="dark"] .theme-icon-dark {
+    background: var(--accent);
+    color: white;
+}
+
+/* ==========================================================================
+   Right Sidebar - iOS 26 Glass
+   ========================================================================== */
+
+.sidebar-action {
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    bottom: 0;
+    width: var(--action-width);
+    background: var(--bg-glass);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border-left: 1px solid var(--border);
+    box-shadow: var(--shadow-glass);
+    padding: var(--space-lg) var(--space-md);
+    overflow-y: auto;
+    z-index: 90;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.sidebar-action.open { transform: translateX(0); }
+
+@media (min-width: 1600px) {
+    .sidebar-action { transform: translateX(0); }
+    .btn-action { display: none; }
+}
+
+/* ==========================================================================
+   Main Content
+   ========================================================================== */
+
+main {
+    flex: 1;
+    padding: var(--space-xl) var(--space-lg);
+    max-width: var(--content-max-width);
+    width: 100%;
+    text-align: left;
+}
+
+/* Left sidebar visible - limit content width */
+@media (min-width: 1200px) {
+    main {
+        margin-left: var(--sidebar-width);
+        padding: var(--space-2xl) var(--space-2xl);
+        /* Don't let content go under hidden right sidebar */
+        max-width: calc(100vw - var(--sidebar-width) - var(--space-2xl) * 2);
+    }
+}
+
+/* Both sidebars visible */
+@media (min-width: 1600px) {
+    main {
+        margin-right: var(--action-width);
+        padding: var(--space-2xl) var(--space-3xl);
+        /* Content fits between both sidebars */
+        max-width: calc(100vw - var(--sidebar-width) - var(--action-width) - var(--space-3xl) * 2);
+    }
+}
+
+/* ==========================================================================
+   Sidebar Links
+   ========================================================================== */
+
+.sidebar-link {
+    display: block;
+    padding: var(--space-sm) 0;
+    color: var(--text-secondary);
+    font-size: var(--font-size-body);
+    border-bottom: 1px solid var(--border-light);
+    transition: var(--transition);
+}
+
+.sidebar-link:hover {
+    color: var(--accent);
+}
+
+.sidebar-link:last-child {
+    border-bottom: none;
+}
+
+/* ==========================================================================
+   Glass Card - iOS 26 style
+   ========================================================================== */
+
+.glass {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    transition: var(--transition);
+}
+
+.glass:hover {
+    background: var(--bg-card-hover);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--btn-padding-y) var(--btn-padding-x);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-ui);
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-glass-solid);
+    border-color: var(--border-strong);
+}
+
+.btn-full { width: 100%; }
+
+/* ==========================================================================
+   Form Elements
+   ========================================================================== */
+
+.form-group { margin-bottom: var(--space-md); }
+
+.form-label {
+    display: block;
+    font-size: var(--font-size-ui);
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: calc(6px * var(--scale));
+}
+
+.form-input {
+    width: 100%;
+    padding: var(--input-padding-y) var(--input-padding-x);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-ui);
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-input::placeholder { color: var(--text-muted); }
+
+/* Select dropdown */
+select.form-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--input-padding-x) center;
+    padding-right: calc(var(--input-padding-x) * 2.5);
+}
+
+/* ==========================================================================
+   Tags
+   ========================================================================== */
+
+.tag {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-caption);
+    font-weight: 500;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+}
+
+.tag-accent {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: var(--accent);
+}
+
+/* ==========================================================================
+   Sections
+   ========================================================================== */
+
+.section { margin-bottom: var(--space-2xl); }
+.section-title {
+    font-size: var(--font-size-ui);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+}
+
+/* ==========================================================================
+   Breadcrumbs
+   ========================================================================== */
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--font-size-ui);
+    color: var(--text-muted);
+    margin-bottom: var(--space-lg);
+}
+
+.breadcrumbs a { color: var(--text-muted); }
+.breadcrumbs a:hover { color: var(--text-secondary); }
+
+/* ==========================================================================
+   Widget in sidebar
+   ========================================================================== */
+
+.widget {
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border);
+}
+
+.widget:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.widget-title {
+    font-size: var(--font-size-ui);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+/* ==========================================================================
+   Overlay
+   ========================================================================== */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 80;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ==========================================================================
+   Price Display
+   ========================================================================== */
+
+.price-display {
+    text-align: center;
+    padding: var(--space-md);
+    background: var(--bg-input);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-md);
+}
+
+.price-value {
+    font-size: var(--font-size-h1);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.price-label {
+    font-size: var(--font-size-ui);
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Blocks
+   ========================================================================== */
+
+.block {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--border);
+}
+
+.block:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+h1 {
+    font-size: var(--font-size-h1);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--space-lg);
+}
+
+h2 {
+    font-size: var(--font-size-h2);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+}
+
+h3 {
+    font-size: var(--font-size-h3);
+    font-weight: 600;
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+}
+
+h4 {
+    font-size: var(--font-size-h4);
+    font-weight: 600;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-xs);
+}
+
+p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+    line-height: 1.7;
+}
+
+p:last-child { margin-bottom: 0; }
+
+ul, ol {
+    margin: var(--space-md) 0;
+    padding-left: var(--space-lg);
+    color: var(--text-secondary);
+}
+
+li {
+    margin-bottom: var(--space-sm);
+    line-height: 1.6;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-ui);
+    margin: var(--space-md) 0;
+}
+
+th, td {
+    padding: var(--space-sm) var(--space-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-card);
+}
+
+td {
+    color: var(--text-secondary);
+}
+
+tr:hover td {
+    background: var(--bg-card);
+}
+
+/* Main content specific */
+main h2:first-child { margin-top: 0; }
+
+/* ==========================================================================
+   Checkbox styling in sidebar
+   ========================================================================== */
+
+.sidebar-action label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.sidebar-action label:last-child {
+    margin-bottom: 0;
+}
+
+/* Custom checkbox */
+.sidebar-action input[type="checkbox"] {
+    width: calc(18px * var(--scale));
+    height: calc(18px * var(--scale));
+    accent-color: var(--accent);
+}
+
+/* ==========================================================================
+   Small text in sidebar
+   ========================================================================== */
+
+.sidebar-action p {
+    font-size: var(--font-size-ui);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.sidebar-action .btn + p {
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: var(--space-sm);
+}
+
+/* ==========================================================================
+   Widget specific elements
+   ========================================================================== */
+
+/* Checkbox label in widgets */
+.widget-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.widget-checkbox:last-child {
+    margin-bottom: 0;
+}
+
+.widget-checkbox input[type="checkbox"] {
+    width: calc(18px * var(--scale));
+    height: calc(18px * var(--scale));
+    accent-color: var(--accent);
+}
+
+/* Price range row */
+.price-range-row {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.price-range-row .form-input {
+    width: 50%;
+}
+
+/* Widget note/description */
+.widget-note {
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: var(--space-sm);
+}
+
+/* Widget description text */
+.widget-text {
+    font-size: var(--font-size-ui);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+/* Button with bottom margin */
+.btn-mb {
+    margin-bottom: var(--space-sm);
+}

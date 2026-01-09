@@ -1,0 +1,30 @@
+<!-- Nested Lists Block -->
+<section class="nested-block">
+    {% if data.title %}
+    <h2>{{ data.title }}</h2>
+    {% endif %}
+
+    {% if data.content %}
+    <div class="nested-content">{{ data.content | safe }}</div>
+    {% endif %}
+</section>
+
+<style>
+.nested-block {
+    padding: var(--space-2xl) 0;
+}
+
+.nested-content {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.nested-content ol, .nested-content ul {
+    margin: var(--space-md) 0;
+    padding-left: var(--space-xl);
+}
+
+.nested-content li {
+    margin-bottom: var(--space-sm);
+}
+</style>

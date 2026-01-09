@@ -1,0 +1,274 @@
+<!-- Pricing Block: Product/Service pricing info (form is in sidebar) -->
+<section class="pricing-block" id="audit">
+    <div class="pricing-header text-center">
+        {% if data.tag %}
+        <span class="tag tag-accent">{{ data.tag }}</span>
+        {% endif %}
+        <h2>{{ data.title }}</h2>
+        {% if data.subtitle %}
+        <p class="pricing-subtitle">{{ data.subtitle }}</p>
+        {% endif %}
+    </div>
+
+    <div class="pricing-content">
+        <div class="pricing-main">
+            {% if data.description %}
+            <div class="pricing-description">
+                {{ data.description | safe }}
+            </div>
+            {% endif %}
+
+            {% if data.includes %}
+            <div class="pricing-includes">
+                <h4>What's included:</h4>
+                <ul>
+                    {% for item in data.includes %}
+                    <li><span class="check">+</span> {{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="pricing-cta-card card">
+            {% if data.badge %}
+            <span class="pricing-badge">{{ data.badge }}</span>
+            {% endif %}
+
+            <div class="pricing-price">
+                {% if data.price_original %}
+                <span class="price-original">${{ data.price_original }}</span>
+                {% endif %}
+                <span class="price-label">from</span>
+                <span class="price-current">${{ data.price }}</span>
+                {% if data.price_period %}
+                <span class="price-period">{{ data.price_period }}</span>
+                {% endif %}
+            </div>
+
+            {% if data.options %}
+            <div class="pricing-tiers">
+                {% for option in data.options %}
+                <div class="pricing-tier {% if option.selected %}active{% endif %}">
+                    <span class="tier-name">{{ option.name }}</span>
+                    <span class="tier-desc">{{ option.description }}</span>
+                    <span class="tier-price">${{ option.price }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <a href="{{ data.button_url | default('#audit') }}" class="btn btn-primary btn-full pricing-cta-btn">
+                {{ data.button_label | default('Request Audit') }}
+            </a>
+
+            {% if data.button_secondary_label %}
+            <a href="{{ data.button_secondary_url | default('#') }}" class="btn btn-ghost btn-full">
+                {{ data.button_secondary_label }}
+            </a>
+            {% endif %}
+
+            {% if data.guarantees %}
+            <div class="pricing-guarantees">
+                {% for g in data.guarantees %}
+                <span class="guarantee">{{ g }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+    .pricing-block {
+        padding: var(--space-2xl) 0;
+    }
+
+    .pricing-header {
+        margin-bottom: var(--space-2xl);
+    }
+
+    .pricing-header .tag {
+        margin-bottom: var(--space-lg);
+    }
+
+    .pricing-header h2 {
+        margin-bottom: var(--space-md);
+    }
+
+    .pricing-subtitle {
+        font-size: var(--font-size-subtitle);
+        color: var(--text-secondary);
+        max-width: calc(700px * var(--scale));
+        margin: 0 auto;
+    }
+
+    .pricing-content {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: var(--space-3xl);
+        align-items: start;
+    }
+
+    .pricing-main {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xl);
+    }
+
+    .pricing-description {
+        color: var(--text-secondary);
+        line-height: 1.8;
+    }
+
+    .pricing-includes h4 {
+        font-size: var(--font-size-body);
+        margin-bottom: var(--space-md);
+    }
+
+    .pricing-includes ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .pricing-includes li {
+        display: flex;
+        gap: var(--space-sm);
+        margin-bottom: var(--space-sm);
+        color: var(--text-secondary);
+    }
+
+    .pricing-includes .check {
+        color: var(--success);
+        font-weight: 600;
+    }
+
+    /* CTA Card */
+    .pricing-cta-card {
+        position: sticky;
+        top: 100px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-lg);
+    }
+
+    .pricing-badge {
+        position: absolute;
+        top: calc(var(--space-xl) * -0.5);
+        right: var(--space-lg);
+        background: var(--accent-gradient);
+        color: white;
+        padding: var(--space-xs) var(--space-md);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-caption);
+        font-weight: 600;
+    }
+
+    .pricing-price {
+        display: flex;
+        align-items: baseline;
+        gap: var(--space-sm);
+        flex-wrap: wrap;
+    }
+
+    .price-label {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .price-original {
+        font-size: var(--font-size-subtitle);
+        color: var(--text-muted);
+        text-decoration: line-through;
+    }
+
+    .price-current {
+        font-size: var(--font-size-4xl);
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .price-period {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .pricing-tiers {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+        padding: var(--space-md);
+        background: var(--bg-tertiary);
+        border-radius: var(--radius-md);
+    }
+
+    .pricing-tier {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: var(--space-sm);
+        align-items: center;
+        padding: var(--space-sm) 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .pricing-tier:last-child {
+        border-bottom: none;
+    }
+
+    .pricing-tier.active .tier-name {
+        color: var(--accent-primary);
+    }
+
+    .tier-name {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .tier-desc {
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+    }
+
+    .tier-price {
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .pricing-guarantees {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-lg);
+        padding-top: var(--space-md);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .guarantee {
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+    }
+
+    @media (max-width: 968px) {
+        .pricing-content {
+            grid-template-columns: 1fr;
+        }
+
+        .pricing-cta-card {
+            position: static;
+        }
+    }
+</style>
+
+<script>
+(function() {
+    // CTA button opens sidebar on mobile
+    document.querySelectorAll('.pricing-cta-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            if (window.innerWidth < 2200) {
+                e.preventDefault();
+                const actionToggle = document.getElementById('actionToggle');
+                if (actionToggle) actionToggle.click();
+            }
+        });
+    });
+})();
+</script>

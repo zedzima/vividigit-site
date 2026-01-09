@@ -1,0 +1,151 @@
+<!-- Framework Block: Card grid for principles/criteria -->
+<section class="framework-block">
+    <div class="framework-header text-center">
+        {% if data.tag %}
+        <span class="tag tag-accent">{{ data.tag }}</span>
+        {% endif %}
+        <h2>{{ data.title }}</h2>
+        {% if data.subtitle %}
+        <p class="framework-subtitle">{{ data.subtitle }}</p>
+        {% endif %}
+    </div>
+
+    <div class="framework-grid">
+        {% for card in data.cards %}
+        <div class="framework-card">
+            <div class="framework-icon">
+                <span>{{ card.icon }}</span>
+            </div>
+            <h3>{{ card.title }}</h3>
+            <p>{{ card.text }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if data.note %}
+    <div class="framework-note">
+        <span class="framework-note-icon">*</span>
+        <span>{{ data.note.text }}</span>
+    </div>
+    {% endif %}
+</section>
+
+<style>
+    .framework-block {
+        padding: var(--space-2xl) 0;
+    }
+
+    .framework-header {
+        margin-bottom: var(--space-3xl);
+    }
+
+    .framework-header .tag {
+        margin-bottom: var(--space-lg);
+    }
+
+    .framework-header h2 {
+        margin-bottom: var(--space-md);
+    }
+
+    .framework-subtitle {
+        font-size: var(--font-size-subtitle);
+        color: var(--text-secondary);
+        max-width: calc(700px * var(--scale));
+        margin: 0 auto;
+    }
+
+    .framework-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--space-lg);
+    }
+
+    .framework-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: var(--space-xl);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .framework-card:hover {
+        border-color: var(--accent-primary);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(124, 58, 237, 0.15);
+    }
+
+    .framework-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto var(--space-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(192, 38, 211, 0.2) 100%);
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .framework-icon span {
+        font-size: var(--font-size-h2);
+        font-weight: 700;
+        background: linear-gradient(135deg, #7C3AED 0%, #C026D3 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .framework-card h3 {
+        font-size: var(--font-size-subtitle);
+        margin-bottom: var(--space-sm);
+    }
+
+    .framework-card p {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .framework-note {
+        margin-top: var(--space-2xl);
+        padding: var(--space-lg);
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(192, 38, 211, 0.05) 100%);
+        border: 1px solid rgba(124, 58, 237, 0.2);
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-md);
+        justify-content: center;
+        text-align: center;
+    }
+
+    .framework-note-icon {
+        color: var(--accent-primary);
+        font-weight: 600;
+    }
+
+    .framework-note span:last-child {
+        color: var(--text-secondary);
+        font-size: var(--font-size-ui);
+    }
+
+    @media (max-width: 1200px) {
+        .framework-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .framework-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .framework-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

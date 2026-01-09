@@ -1,0 +1,225 @@
+<!-- Testimonials Block: Customer reviews and social proof -->
+<section class="testimonials-block">
+    {% if data.title %}
+    <div class="testimonials-header text-center">
+        {% if data.tag %}<span class="tag tag-accent">{{ data.tag }}</span>{% endif %}
+        <h2>{{ data.title }}</h2>
+        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <div class="testimonials-grid grid grid-{{ data.columns | default(2) }}">
+        {% for testimonial in data.testimonials %}
+        <div class="testimonial-card card {% if testimonial.featured %}card-gradient{% endif %}">
+            {% if testimonial.rating %}
+            <div class="testimonial-rating">
+                {% for i in range(testimonial.rating) %}
+                <span class="star">*</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <blockquote class="testimonial-quote">
+                "{{ testimonial.quote }}"
+            </blockquote>
+
+            <div class="testimonial-author">
+                {% if testimonial.avatar %}
+                <img src="{{ testimonial.avatar }}" alt="{{ testimonial.name }}" class="testimonial-avatar">
+                {% else %}
+                <div class="testimonial-avatar-placeholder">
+                    {{ testimonial.name[0] | upper }}
+                </div>
+                {% endif %}
+                <div class="testimonial-author-info">
+                    <strong>{{ testimonial.name }}</strong>
+                    {% if testimonial.role %}
+                    <span>{{ testimonial.role }}{% if testimonial.company %}, {{ testimonial.company }}{% endif %}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if testimonial.metrics %}
+            <div class="testimonial-metrics">
+                {% for metric in testimonial.metrics %}
+                <div class="testimonial-metric">
+                    <span class="metric-value">{{ metric.value }}</span>
+                    <span class="metric-label">{{ metric.label }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if data.logos %}
+    <div class="testimonials-logos">
+        <p class="text-muted text-center">{{ data.logos_title | default('Trusted by') }}</p>
+        <div class="logos-row">
+            {% for logo in data.logos %}
+            <img src="{{ logo.src }}" alt="{{ logo.alt | default('') }}" class="logo-img">
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<style>
+    .testimonials-block {
+        padding: var(--space-2xl) 0;
+    }
+
+    .testimonials-header {
+        margin-bottom: var(--space-2xl);
+    }
+
+    .testimonials-header p {
+        color: var(--text-secondary);
+        max-width: calc(600px * var(--scale));
+        margin: 0 auto;
+    }
+
+    .testimonials-grid {
+        margin-bottom: var(--space-2xl);
+    }
+
+    .testimonial-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-lg);
+    }
+
+    .testimonial-rating {
+        display: flex;
+        gap: 2px;
+    }
+
+    .testimonial-rating .star {
+        color: var(--warning);
+        font-size: var(--font-size-subtitle);
+    }
+
+    .card-gradient .testimonial-rating .star {
+        color: white;
+    }
+
+    .testimonial-quote {
+        font-size: var(--font-size-subtitle);
+        line-height: 1.6;
+        color: var(--text-primary);
+        margin: 0;
+        flex: 1;
+    }
+
+    .card-gradient .testimonial-quote {
+        color: white;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+    }
+
+    .testimonial-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-full);
+        object-fit: cover;
+    }
+
+    .testimonial-avatar-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-full);
+        background: var(--accent-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: white;
+    }
+
+    .testimonial-author-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .testimonial-author-info strong {
+        color: var(--text-primary);
+    }
+
+    .card-gradient .testimonial-author-info strong {
+        color: white;
+    }
+
+    .testimonial-author-info span {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .card-gradient .testimonial-author-info span {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .testimonial-metrics {
+        display: flex;
+        gap: var(--space-lg);
+        padding-top: var(--space-lg);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .card-gradient .testimonial-metrics {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .testimonial-metric {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .metric-value {
+        font-size: var(--font-size-h3);
+        font-weight: 600;
+        color: var(--accent-primary);
+    }
+
+    .card-gradient .metric-value {
+        color: white;
+    }
+
+    .metric-label {
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+    }
+
+    .card-gradient .metric-label {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .testimonials-logos {
+        margin-top: var(--space-3xl);
+    }
+
+    .logos-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: var(--space-2xl);
+        flex-wrap: wrap;
+        margin-top: var(--space-lg);
+    }
+
+    .logo-img {
+        height: 32px;
+        opacity: 0.5;
+        filter: grayscale(100%);
+        transition: all 0.2s ease;
+    }
+
+    .logo-img:hover {
+        opacity: 1;
+        filter: grayscale(0);
+    }
+</style>

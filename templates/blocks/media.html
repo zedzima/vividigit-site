@@ -1,0 +1,32 @@
+<!-- Media Block -->
+<section class="media-block">
+    {% if data.title %}
+    <h2>{{ data.title }}</h2>
+    {% endif %}
+
+    {% if data.body %}
+    <div class="media-content">{{ data.body | safe }}</div>
+    {% endif %}
+</section>
+
+<style>
+.media-block {
+    padding: var(--space-2xl) 0;
+}
+
+.media-content {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.media-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    margin: var(--space-lg) 0;
+}
+
+.media-content a {
+    color: var(--accent);
+}
+</style>

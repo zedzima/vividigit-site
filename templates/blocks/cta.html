@@ -1,0 +1,145 @@
+<!-- CTA Block: Call-to-action section -->
+<section class="cta-block {% if data.style == 'gradient' %}cta-gradient{% elif data.style == 'minimal' %}cta-minimal{% else %}cta-default{% endif %}">
+    <div class="cta-inner">
+        {% if data.icon %}
+        <span class="cta-icon">{{ data.icon }}</span>
+        {% endif %}
+
+        {% if data.tag %}
+        <span class="tag {% if data.style == 'gradient' %}tag-white{% else %}tag-accent{% endif %}">{{ data.tag }}</span>
+        {% endif %}
+
+        <h2>{{ data.title | default(data.label) }}</h2>
+
+        {% if data.text %}
+        <p>{{ data.text | safe }}</p>
+        {% endif %}
+
+        {% if data.button_label or data.button_secondary_label %}
+        <div class="cta-actions">
+            {% if data.button_label %}
+            <a href="{{ data.button_url | default('#') }}" class="btn {% if data.style == 'gradient' %}btn-white{% else %}btn-primary{% endif %}">
+                {{ data.button_label }}
+            </a>
+            {% endif %}
+            {% if data.button_secondary_label %}
+            <a href="{{ data.button_secondary_url | default('#') }}" class="btn {% if data.style == 'gradient' %}btn-ghost-white{% else %}btn-ghost{% endif %}">
+                {{ data.button_secondary_label }}
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if data.note %}
+        <p class="cta-note">{{ data.note }}</p>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+    .cta-block {
+        padding: var(--space-3xl);
+        border-radius: var(--radius-xl);
+        text-align: center;
+    }
+
+    .cta-default {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+    }
+
+    .cta-gradient {
+        background: var(--accent-gradient);
+        color: white;
+    }
+
+    .cta-minimal {
+        background: transparent;
+        padding: var(--space-2xl) 0;
+    }
+
+    .cta-inner {
+        max-width: calc(700px * var(--scale));
+        margin: 0 auto;
+    }
+
+    .cta-icon {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: var(--space-lg);
+    }
+
+    .cta-block h2 {
+        font-size: var(--font-size-h1);
+        margin-bottom: var(--space-md);
+    }
+
+    .cta-gradient h2 {
+        color: white;
+    }
+
+    .cta-block p {
+        font-size: var(--font-size-subtitle);
+        margin-bottom: var(--space-xl);
+    }
+
+    .cta-gradient p {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .cta-actions {
+        display: flex;
+        gap: var(--space-md);
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-note {
+        margin-top: var(--space-lg);
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .cta-gradient .cta-note {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* White button for gradient background */
+    .btn-white {
+        background: white;
+        color: var(--bg-primary);
+    }
+
+    .btn-white:hover {
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--bg-primary);
+        transform: translateY(-2px);
+    }
+
+    .btn-ghost-white {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-ghost-white:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+    .tag-white {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .cta-block {
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        .cta-block h2 {
+            font-size: var(--font-size-h2);
+        }
+    }
+</style>

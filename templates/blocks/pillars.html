@@ -1,0 +1,101 @@
+<!-- Pillars Block (3 columns) -->
+<section class="pillars-block">
+    {% if data.title %}
+    <h2>{{ data.title }}</h2>
+    {% endif %}
+
+    {% if data.pillars %}
+    <div class="pillars-grid">
+        {% for pillar in data.pillars %}
+        <div class="pillar-card glass">
+            {% if pillar.icon %}
+            <div class="pillar-icon">{{ pillar.icon }}</div>
+            {% endif %}
+            <h3>{{ pillar.title }}</h3>
+            <p>{{ pillar.description }}</p>
+            {% if pillar.features %}
+            <ul class="pillar-items">
+                {% for feature in pillar.features %}
+                <li>{{ feature }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+
+<style>
+.pillars-block {
+    padding: var(--space-2xl) 0;
+}
+
+.pillars-block h2 {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+}
+
+@media (max-width: 900px) {
+    .pillars-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pillar-card {
+    padding: var(--space-xl);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.pillar-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.pillar-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-md);
+}
+
+.pillar-card h3 {
+    color: var(--text-primary);
+    font-size: var(--font-size-subtitle);
+    margin-bottom: var(--space-sm);
+}
+
+.pillar-card p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+}
+
+.pillar-items {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.pillar-items li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+    font-size: var(--font-size-ui);
+    color: var(--text-secondary);
+}
+
+.pillar-items li::before {
+    content: "✓";
+    color: var(--accent);
+    font-weight: bold;
+    flex-shrink: 0;
+}
+</style>

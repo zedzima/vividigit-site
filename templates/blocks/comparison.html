@@ -1,0 +1,228 @@
+<!-- Comparison Block: Compare options side by side -->
+<section class="comparison-block">
+    {% if data.title %}
+    <div class="comparison-header text-center">
+        {% if data.tag %}<span class="tag tag-accent">{{ data.tag }}</span>{% endif %}
+        <h2>{{ data.title }}</h2>
+        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th class="feature-col">{{ data.feature_label | default('Feature') }}</th>
+                    {% for option in data.options %}
+                    <th class="option-col {% if option.highlighted %}option-highlighted{% endif %}">
+                        {% if option.badge %}
+                        <span class="option-badge">{{ option.badge }}</span>
+                        {% endif %}
+                        <span class="option-name">{{ option.name }}</span>
+                        {% if option.description %}
+                        <span class="option-desc">{{ option.description }}</span>
+                        {% endif %}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data.rows %}
+                <tr {% if row.category %}class="category-row"{% endif %}>
+                    <td class="feature-cell">
+                        {{ row.feature }}
+                        {% if row.tooltip %}
+                        <span class="feature-tooltip" title="{{ row.tooltip }}">?</span>
+                        {% endif %}
+                    </td>
+                    {% for value in row.cells | default(row.get('values', [])) %}
+                    <td class="value-cell {% if data.options[loop.index0].highlighted %}cell-highlighted{% endif %}">
+                        {% if value == true %}
+                        <span class="check-yes">+</span>
+                        {% elif value == false %}
+                        <span class="check-no">-</span>
+                        {% elif value == "partial" %}
+                        <span class="check-partial">~</span>
+                        {% else %}
+                        {{ value }}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if data.conclusion %}
+    <div class="comparison-conclusion card mt-xl">
+        <h4>{{ data.conclusion.title | default('Our recommendation') }}</h4>
+        <p>{{ data.conclusion.text }}</p>
+        {% if data.conclusion.button_label %}
+        <a href="{{ data.conclusion.button_url | default('#') }}" class="btn btn-primary">
+            {{ data.conclusion.button_label }}
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+
+<style>
+    .comparison-block {
+        padding: var(--space-2xl) 0;
+    }
+
+    .comparison-header {
+        margin-bottom: var(--space-2xl);
+    }
+
+    .comparison-header p {
+        color: var(--text-secondary);
+        max-width: calc(600px * var(--scale));
+        margin: 0 auto;
+    }
+
+    .comparison-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--font-size-ui);
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+        padding: var(--space-md) var(--space-lg);
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .comparison-table th {
+        background: var(--bg-secondary);
+        font-weight: 500;
+        vertical-align: bottom;
+        padding-bottom: var(--space-lg);
+    }
+
+    .feature-col,
+    .feature-cell {
+        text-align: left;
+        min-width: 200px;
+    }
+
+    .option-col {
+        min-width: 150px;
+        position: relative;
+    }
+
+    .option-highlighted {
+        background: rgba(168, 85, 247, 0.1);
+    }
+
+    .cell-highlighted {
+        background: rgba(168, 85, 247, 0.05);
+    }
+
+    .option-badge {
+        position: absolute;
+        top: var(--space-sm);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent-gradient);
+        color: white;
+        padding: 2px var(--space-sm);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-caption);
+        white-space: nowrap;
+    }
+
+    .option-name {
+        display: block;
+        font-size: var(--font-size-subtitle);
+        color: var(--text-primary);
+        margin-top: var(--space-md);
+    }
+
+    .option-desc {
+        display: block;
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+        font-weight: 400;
+        margin-top: var(--space-xs);
+    }
+
+    .feature-tooltip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        background: var(--bg-tertiary);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+        margin-left: var(--space-xs);
+        cursor: help;
+    }
+
+    .category-row td {
+        background: var(--bg-secondary);
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .check-yes {
+        color: var(--success);
+        font-weight: 600;
+        font-size: var(--font-size-subtitle);
+    }
+
+    .check-no {
+        color: var(--text-muted);
+        font-size: var(--font-size-subtitle);
+    }
+
+    .check-partial {
+        color: var(--warning);
+        font-size: var(--font-size-subtitle);
+    }
+
+    .value-cell {
+        color: var(--text-secondary);
+    }
+
+    .comparison-conclusion {
+        text-align: center;
+        background: var(--bg-tertiary);
+    }
+
+    .comparison-conclusion h4 {
+        margin-bottom: var(--space-sm);
+    }
+
+    .comparison-conclusion p {
+        margin-bottom: var(--space-lg);
+    }
+
+    @media (max-width: 768px) {
+        .comparison-table {
+            font-size: var(--font-size-caption);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: var(--space-sm);
+        }
+
+        .feature-col,
+        .feature-cell {
+            min-width: 120px;
+        }
+
+        .option-col {
+            min-width: 100px;
+        }
+    }
+</style>

@@ -1,0 +1,40 @@
+<!-- Footer Block -->
+<footer class="footer-block">
+    {% if data.text %}
+    <p class="footer-text">{{ data.text }}</p>
+    {% endif %}
+
+    {% if data.note %}
+    <p class="footer-note">{{ data.note }}</p>
+    {% endif %}
+
+    {% if data.link_label and data.link_url %}
+    <a href="{{ data.link_url }}" class="footer-link">{{ data.link_label }}</a>
+    {% endif %}
+</footer>
+
+<style>
+.footer-block {
+    padding: var(--space-xl) 0;
+    margin-top: var(--space-2xl);
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.footer-text {
+    color: var(--text-muted);
+    font-size: var(--font-size-ui);
+    margin-bottom: var(--space-sm);
+}
+
+.footer-note {
+    color: var(--text-muted);
+    font-size: var(--font-size-caption);
+    margin-bottom: var(--space-sm);
+}
+
+.footer-link {
+    color: var(--accent);
+    font-size: var(--font-size-ui);
+}
+</style>

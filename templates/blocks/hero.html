@@ -1,0 +1,132 @@
+<!-- Hero Block: Main landing section with gradient accent -->
+<section class="hero-block">
+    {% if data.tag %}
+    <span class="tag tag-accent" style="margin-bottom: var(--space-lg);">{{ data.tag }}</span>
+    {% endif %}
+
+    <h1>
+        {% if data.highlight %}
+        {{ data.h1 | replace(data.highlight, '<span class="text-gradient">' ~ data.highlight ~ '</span>') | safe }}
+        {% else %}
+        {{ data.h1 }}
+        {% endif %}
+    </h1>
+
+    {% if data.subtitle %}
+    <p class="hero-subtitle">{{ data.subtitle | safe }}</p>
+    {% endif %}
+
+    {% if data.text %}
+    <div class="hero-text">{{ data.text | safe }}</div>
+    {% endif %}
+
+    {% if data.button_label or data.button_secondary_label %}
+    <div class="hero-actions">
+        {% if data.button_label %}
+        <a href="{{ data.button_url | default('#') }}" class="btn btn-primary">
+            {{ data.button_label }}
+        </a>
+        {% endif %}
+        {% if data.button_secondary_label %}
+        <a href="{{ data.button_secondary_url | default('#') }}" class="btn btn-secondary">
+            {{ data.button_secondary_label }}
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if data.stats %}
+    <div class="hero-stats">
+        {% for stat in data.stats %}
+        <div class="hero-stat">
+            <span class="hero-stat-value text-gradient">{{ stat.value }}</span>
+            <span class="hero-stat-label">{{ stat.label }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if data.image %}
+    <div class="hero-image">
+        <img src="{{ data.image }}" alt="{{ data.image_alt | default('') }}" loading="lazy">
+    </div>
+    {% endif %}
+</section>
+
+<style>
+    .hero-block {
+        text-align: center;
+        padding: var(--space-3xl) 0;
+    }
+
+    .hero-block h1 {
+        font-size: var(--font-size-display);
+        max-width: calc(900px * var(--scale));
+        margin: var(--space-lg) auto;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: var(--font-size-subtitle);
+        color: var(--text-secondary);
+        max-width: calc(700px * var(--scale));
+        margin: 0 auto var(--space-lg);
+    }
+
+    .hero-text {
+        font-size: var(--font-size-body);
+        color: var(--text-secondary);
+        max-width: calc(600px * var(--scale));
+        margin: 0 auto var(--space-xl);
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: var(--space-md);
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: var(--space-xl);
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: var(--space-2xl);
+        justify-content: center;
+        margin-top: var(--space-2xl);
+    }
+
+    .hero-stat {
+        text-align: center;
+    }
+
+    .hero-stat-value {
+        display: block;
+        font-size: var(--font-size-display);
+        font-weight: 700;
+    }
+
+    .hero-stat-label {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .hero-image {
+        margin-top: var(--space-3xl);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+
+    .hero-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .hero-stats {
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+    }
+</style>

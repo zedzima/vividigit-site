@@ -1,0 +1,144 @@
+<!-- FAQ Block: Accordion-style questions and answers -->
+<section class="faq-block">
+    {% if data.title %}
+    <div class="faq-header {% if data.centered %}text-center{% endif %}">
+        {% if data.tag %}<span class="tag tag-accent">{{ data.tag }}</span>{% endif %}
+        <h2>{{ data.title }}</h2>
+        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <div class="faq-list {% if data.columns == 2 %}faq-two-columns{% endif %}">
+        {% for item in data.questions | default(data.get('items', [])) %}
+        <details class="faq-item" {% if item.open %}open{% endif %}>
+            <summary class="faq-question">
+                <span>{{ item.question }}</span>
+                <span class="faq-icon">+</span>
+            </summary>
+            <div class="faq-answer">
+                {{ item.answer | safe }}
+            </div>
+        </details>
+        {% endfor %}
+    </div>
+
+    {% if data.contact_text %}
+    <div class="faq-contact card text-center mt-xl">
+        <p>{{ data.contact_text }}</p>
+        {% if data.contact_button %}
+        <a href="{{ data.contact_url | default('#') }}" class="btn btn-primary">
+            {{ data.contact_button }}
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+
+<style>
+    .faq-block {
+        padding: var(--space-2xl) 0;
+        max-width: calc(900px * var(--scale));
+        margin: 0 auto;
+    }
+
+    .faq-header {
+        margin-bottom: var(--space-2xl);
+    }
+
+    .faq-header p {
+        color: var(--text-secondary);
+    }
+
+    .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    .faq-two-columns {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+    }
+
+    .faq-item {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        transition: border-color 0.2s ease;
+    }
+
+    .faq-item:hover {
+        border-color: var(--border-light);
+    }
+
+    .faq-item[open] {
+        border-color: var(--accent-primary);
+    }
+
+    .faq-question {
+        padding: var(--space-lg);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-md);
+        font-weight: 500;
+        color: var(--text-primary);
+        list-style: none;
+    }
+
+    .faq-question::-webkit-details-marker {
+        display: none;
+    }
+
+    .faq-question:hover {
+        color: var(--accent-primary);
+    }
+
+    .faq-icon {
+        font-size: var(--font-size-h3);
+        color: var(--text-muted);
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .faq-item[open] .faq-icon {
+        transform: rotate(45deg);
+        color: var(--accent-primary);
+    }
+
+    .faq-answer {
+        padding: 0 var(--space-lg) var(--space-lg);
+        color: var(--text-secondary);
+        line-height: 1.7;
+    }
+
+    .faq-answer p:last-child {
+        margin-bottom: 0;
+    }
+
+    .faq-answer ul, .faq-answer ol {
+        margin: var(--space-md) 0;
+        padding-left: var(--space-xl);
+    }
+
+    .faq-answer li {
+        margin-bottom: var(--space-xs);
+    }
+
+    .faq-contact {
+        background: var(--bg-tertiary);
+    }
+
+    .faq-contact p {
+        margin-bottom: var(--space-md);
+    }
+
+    @media (max-width: 768px) {
+        .faq-two-columns {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

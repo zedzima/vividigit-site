@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How AI Chooses Which Websites to Cite</title>
+    <meta name="description" content="Understanding why AI systems cite some sources and ignore others. A deep dive into citation behavior of ChatGPT, Perplexity, and other LLMs.">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="header-btn btn-menu" id="btnMenu" aria-label="Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <a href="/" class="logo">
+            <img src="/images/logo-white.svg" alt="VVDGT" class="logo-text logo-dark">
+            <img src="/images/logo-dark.svg" alt="VVDGT" class="logo-text logo-light">
+        </a>
+
+        <div class="header-right">
+            <button class="header-btn btn-action" id="btnAction" aria-label="Actions">
+                <!-- Arrow up-right icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Layout -->
+    <div class="layout">
+        <!-- Left Sidebar: Navigation -->
+        <aside class="sidebar-nav" id="sidebarNav">
+            <div class="nav-section">
+                <div class="nav-title">Menu</div>
+
+                <!-- Home -->
+                <a href="/" class="nav-link ">Home</a>
+
+                <!-- Services - Collapsible -->
+                <div class="nav-item ">
+                    <div class="nav-item-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span>Services</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-subitems">
+                        <a href="/services/ai-optimisation/" class="nav-sublink ">AI Visibility</a>
+                    </div>
+                </div>
+
+                <!-- Blog - Collapsible -->
+                <div class="nav-item active expanded">
+                    <div class="nav-item-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span>Blog</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-subitems">
+                        <a href="/blog/how-ai-chooses-sources/" class="nav-sublink active">How AI Chooses Sources</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-bottom">
+                <!-- Language Dropdown -->
+                <div class="widget">
+                    <div class="widget-title">Language</div>
+                    <select class="form-input" id="langSelect">
+                        <option value="en" selected>English</option>
+                        <option value="de" disabled>Deutsch (coming soon)</option>
+                        <option value="fr" disabled>Français (coming soon)</option>
+                        <option value="es" disabled>Español (coming soon)</option>
+                        <option value="ru" disabled>Русский (coming soon)</option>
+                        <option value="zh" disabled>中文 (coming soon)</option>
+                    </select>
+                </div>
+
+                <!-- Theme Toggle -->
+                <div class="widget">
+                    <div class="widget-title">Theme</div>
+                    <button class="theme-toggle" id="btnTheme">
+                        <span class="theme-icon-light">Light</span>
+                        <span class="theme-icon-dark">Dark</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            
+            <nav class="breadcrumbs">
+                <a href="/">Home</a>
+                <span>/</span>
+                
+                <a href="/blog">Blog</a>
+                <span>/</span>
+                
+                <span>How AI Chooses Which Websites to Cite</span>
+            </nav>
+            
+
+            
+            <div class="block">
+                <!-- Article Block -->
+<article class="article">
+    
+    <a href="/blog?category=AI Visibility" class="tag tag-accent">AI Visibility</a>
+    
+
+    <h1 class="article-title">How AI Chooses Which Websites to Cite</h1>
+
+    <p class="article-meta">
+        V\V\D\G\T Team
+         · 
+        2025-01-06
+         · 3 min read
+    </p>
+
+    
+    <div class="article-tags">
+        
+        <span class="tag">AI</span>
+        
+        <span class="tag">LLM Citations</span>
+        
+        <span class="tag">GEO</span>
+        
+        <span class="tag">Content Strategy</span>
+        
+    </div>
+    
+
+    <div class="article-content">
+        <h1 id="how-ai-chooses-which-websites-to-cite">How AI Chooses Which Websites to Cite</h1>
+<p>When you ask ChatGPT a question and it includes a link, have you ever wondered <em>why that specific source?</em> The answer reveals something important about how AI visibility works — and why traditional SEO isn't enough.</p>
+<h2 id="the-fundamental-difference">The Fundamental Difference</h2>
+<p>Search engines and AI systems solve different problems:</p>
+<table>
+<thead>
+<tr>
+<th>Search Engines</th>
+<th>AI Systems</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Which page is most relevant?"</td>
+<td>"Do I need a source at all?"</td>
+</tr>
+<tr>
+<td>Rankings based on signals</td>
+<td>Citations based on explanation needs</td>
+</tr>
+<tr>
+<td>10 blue links</td>
+<td>One answer, maybe 0-3 citations</td>
+</tr>
+</tbody>
+</table>
+<p><strong>AI doesn't browse and rank.</strong> It generates an explanation first, then decides whether adding a reference would make the answer better.</p>
+<h2 id="when-ai-cites-sources">When AI Cites Sources</h2>
+<p>Not every AI response includes citations. Here's when they're most likely:</p>
+<h3 id="1-factual-claims-that-need-verification">1. Factual Claims That Need Verification</h3>
+<blockquote>
+<p>"According to [source], the conversion rate for..."</p>
+</blockquote>
+<p>When AI makes specific claims — statistics, research findings, quotes — it often cites a source to establish credibility.</p>
+<h3 id="2-how-to-explanations">2. "How To" Explanations</h3>
+<p>Step-by-step guides and tutorials frequently get cited because:
+- They're structured and extractable
+- They provide actionable detail
+- Users want the full context</p>
+<h3 id="3-definitions-and-concepts">3. Definitions and Concepts</h3>
+<p>If you ask "What is AIO?", AI might cite a source that explains the concept clearly — especially if that source introduced or defined the term.</p>
+<h2 id="what-makes-content-citable">What Makes Content Citable?</h2>
+<p>After analyzing thousands of AI responses, a pattern emerges. Citable content has these characteristics:</p>
+<pre class="codehilite"><code>Accessibility    → Can AI access and parse it?
+Credibility      → Is the source trustworthy?
+Clarity          → Are key points explicit?
+Distinctiveness  → Does it add unique value?
+Maintenance      → Is it current?
+</code></pre>
+
+<p>Miss any of these, and your content probably won't be cited.</p>
+<h2 id="the-promotional-content-problem">The Promotional Content Problem</h2>
+<p>This is where most businesses fail. Content written to <em>sell</em> rarely gets cited because:</p>
+<ol>
+<li><strong>Persuasion over explanation</strong> — AI needs to explain, not convince</li>
+<li><strong>Claims without evidence</strong> — "Best in class" means nothing</li>
+<li><strong>Buried information</strong> — Key points hidden in marketing fluff</li>
+</ol>
+<p>Compare these two approaches:</p>
+<p><strong>Won't get cited:</strong></p>
+<blockquote>
+<p>"Our revolutionary AI-powered platform delivers best-in-class results with enterprise-grade security."</p>
+</blockquote>
+<p><strong>Might get cited:</strong></p>
+<blockquote>
+<p>"The platform uses a retrieval-augmented generation (RAG) architecture, combining vector search with LLM inference. Response latency averages 200ms."</p>
+</blockquote>
+<p>The second version <em>explains</em>. That's what AI needs.</p>
+<h2 id="practical-implications">Practical Implications</h2>
+<p>If you want AI to cite your content:</p>
+<ol>
+<li><strong>Lead with explanation</strong> — Save the pitch for later</li>
+<li><strong>State key points explicitly</strong> — Don't make AI interpret</li>
+<li><strong>Structure for extraction</strong> — Headers, lists, clear sections</li>
+<li><strong>Build authority signals</strong> — Author bios, credentials, dates</li>
+<li><strong>Keep it updated</strong> — Outdated content loses citation value</li>
+</ol>
+<hr />
+<h2 id="what-this-means-for-your-strategy">What This Means for Your Strategy</h2>
+<p>AI visibility isn't replacing SEO — it's a parallel channel with different rules. A page can rank #1 in Google and never be cited by ChatGPT. A page on page 3 might get cited repeatedly.</p>
+<p>The question isn't "How do I rank for AI?"</p>
+<p>It's "How do I become useful when AI explains this topic?"</p>
+<p>That's a fundamentally different challenge — and it requires fundamentally different content.</p>
+    </div>
+
+    
+    <div class="article-author">
+        <div class="article-author-avatar">V</div>
+        <div>
+            <div class="article-author-name">V\V\D\G\T Team</div>
+            <div class="article-author-role">Author</div>
+        </div>
+    </div>
+    
+</article>
+
+<style>
+.article-title {
+    margin-top: var(--space-md);
+}
+
+.article-meta {
+    font-size: var(--font-size-ui);
+    color: var(--text-muted);
+    margin-bottom: var(--space-lg);
+}
+
+.article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--border);
+}
+
+.article-content {
+    font-size: var(--font-size-body);
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.article-content > h1:first-child {
+    display: none;
+}
+
+.article-content h2 {
+    font-size: var(--font-size-h2);
+    color: var(--text-primary);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border);
+}
+
+.article-content h2:first-child,
+.article-content > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.article-content h3 {
+    font-size: var(--font-size-h3);
+    color: var(--text-primary);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+}
+
+.article-content h4 {
+    font-size: var(--font-size-h4);
+    color: var(--text-primary);
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+}
+
+.article-content p {
+    margin-bottom: var(--space-md);
+}
+
+.article-content ul,
+.article-content ol {
+    margin: var(--space-md) 0;
+    padding-left: var(--space-lg);
+}
+
+.article-content li {
+    margin-bottom: var(--space-sm);
+}
+
+.article-content li::marker {
+    color: var(--accent);
+}
+
+.article-content blockquote {
+    margin: var(--space-lg) 0;
+    padding: var(--space-md) var(--space-lg);
+    border-left: 3px solid var(--accent);
+    background: var(--bg-card);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-style: italic;
+}
+
+.article-content blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+.article-content pre {
+    margin: var(--space-lg) 0;
+    padding: var(--space-md);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    font-size: var(--font-size-ui);
+    line-height: 1.5;
+}
+
+.article-content code {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-ui);
+    background: var(--bg-input);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+}
+
+.article-content pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+}
+
+.article-content table {
+    width: 100%;
+    margin: var(--space-lg) 0;
+    border-collapse: collapse;
+    font-size: var(--font-size-ui);
+}
+
+.article-content th,
+.article-content td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+}
+
+.article-content th {
+    background: var(--bg-card);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.article-content strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.article-content a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.article-content hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: var(--space-xl) 0;
+}
+
+.article-content .toc {
+    display: none;
+}
+
+.article-author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border);
+}
+
+.article-author-avatar {
+    width: calc(48px * var(--scale));
+    height: calc(48px * var(--scale));
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: var(--font-size-h3);
+    flex-shrink: 0;
+}
+
+.article-author-name {
+    font-weight: 600;
+    font-size: var(--font-size-body);
+    color: var(--text-primary);
+}
+
+.article-author-role {
+    font-size: var(--font-size-ui);
+    color: var(--text-muted);
+}
+</style>
+            </div>
+            
+            <div class="block">
+                <!-- CTA Block: Call-to-action section -->
+<section class="cta-block cta-minimal">
+    <div class="cta-inner">
+        
+
+        
+
+        <h2>Want to check your AI visibility?</h2>
+
+        
+        <p>Get a comprehensive audit of how AI tools currently present your business.</p>
+        
+
+        
+        <div class="cta-actions">
+            
+            <a href="/services/ai-optimisation" class="btn btn-primary">
+                Request Audit
+            </a>
+            
+            
+        </div>
+        
+
+        
+    </div>
+</section>
+
+<style>
+    .cta-block {
+        padding: var(--space-3xl);
+        border-radius: var(--radius-xl);
+        text-align: center;
+    }
+
+    .cta-default {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+    }
+
+    .cta-gradient {
+        background: var(--accent-gradient);
+        color: white;
+    }
+
+    .cta-minimal {
+        background: transparent;
+        padding: var(--space-2xl) 0;
+    }
+
+    .cta-inner {
+        max-width: calc(700px * var(--scale));
+        margin: 0 auto;
+    }
+
+    .cta-icon {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: var(--space-lg);
+    }
+
+    .cta-block h2 {
+        font-size: var(--font-size-h1);
+        margin-bottom: var(--space-md);
+    }
+
+    .cta-gradient h2 {
+        color: white;
+    }
+
+    .cta-block p {
+        font-size: var(--font-size-subtitle);
+        margin-bottom: var(--space-xl);
+    }
+
+    .cta-gradient p {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .cta-actions {
+        display: flex;
+        gap: var(--space-md);
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-note {
+        margin-top: var(--space-lg);
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .cta-gradient .cta-note {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* White button for gradient background */
+    .btn-white {
+        background: white;
+        color: var(--bg-primary);
+    }
+
+    .btn-white:hover {
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--bg-primary);
+        transform: translateY(-2px);
+    }
+
+    .btn-ghost-white {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-ghost-white:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+    .tag-white {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .cta-block {
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        .cta-block h2 {
+            font-size: var(--font-size-h2);
+        }
+    }
+</style>
+            </div>
+            
+        </main>
+
+        <!-- Right Sidebar: Contextual Actions -->
+        <aside class="sidebar-action" id="sidebarAction">
+            
+            <!-- Blog Sidebar -->
+            <div class="widget">
+                <div class="widget-title">Related Services</div>
+                <a href="/services/ai-optimisation" class="sidebar-link">AI Visibility Audit</a>
+                <a href="/services/seo-audit" class="sidebar-link">SEO Audit & Strategy</a>
+                <a href="/services/content-strategy" class="sidebar-link">Content Strategy</a>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Categories</div>
+                <a href="/blog?category=seo" class="sidebar-link">SEO</a>
+                <a href="/blog?category=ai" class="sidebar-link">AI & LLMs</a>
+                <a href="/blog?category=content" class="sidebar-link">Content</a>
+                <a href="/blog?category=analytics" class="sidebar-link">Analytics</a>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Explore Services</div>
+                <p class="widget-text">Ready to improve your visibility?</p>
+                <a href="/services" class="btn btn-primary btn-full">Browse Services</a>
+            </div>
+
+            
+        </aside>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const btnTheme = document.getElementById('btnTheme');
+        const html = document.documentElement;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+
+        btnTheme?.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        });
+
+        // Sidebar Toggles
+        const btnMenu = document.getElementById('btnMenu');
+        const btnAction = document.getElementById('btnAction');
+        const sidebarNav = document.getElementById('sidebarNav');
+        const sidebarAction = document.getElementById('sidebarAction');
+        const overlay = document.getElementById('overlay');
+
+        function closeSidebars() {
+            sidebarNav?.classList.remove('open');
+            sidebarAction?.classList.remove('open');
+            overlay?.classList.remove('active');
+        }
+
+        btnMenu?.addEventListener('click', () => {
+            sidebarNav?.classList.toggle('open');
+            overlay?.classList.toggle('active');
+            sidebarAction?.classList.remove('open');
+        });
+
+        btnAction?.addEventListener('click', () => {
+            sidebarAction?.classList.toggle('open');
+            overlay?.classList.toggle('active');
+            sidebarNav?.classList.remove('open');
+        });
+
+        overlay?.addEventListener('click', closeSidebars);
+
+        // Price Calculator (for service pages)
+        function calculatePrice() {
+            const tariff = parseInt(document.getElementById('tariff')?.value || 0);
+            const speed = parseFloat(document.getElementById('speed')?.value || 1);
+            let modules = 0;
+            document.querySelectorAll('.module-check:checked').forEach(cb => {
+                modules += parseInt(cb.dataset.price || 0);
+            });
+            const total = Math.round((tariff + modules) * speed);
+            const display = document.getElementById('totalPrice');
+            if (display) display.textContent = '$' + total.toLocaleString();
+        }
+
+        document.getElementById('tariff')?.addEventListener('change', calculatePrice);
+        document.getElementById('speed')?.addEventListener('change', calculatePrice);
+        document.querySelectorAll('.module-check').forEach(cb => {
+            cb.addEventListener('change', calculatePrice);
+        });
+
+        // Initial calculation
+        calculatePrice();
+    </script>
+</body>
+</html>
