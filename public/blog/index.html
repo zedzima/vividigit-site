@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ config.lang | default('en') }}" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="{{ site.base_url | default('/') }}">
-    <title>{{ meta.title | default('V\\V\\D\\G\\T') }}</title>
-    <meta name="description" content="{{ meta.description | default('') }}">
+    <base href="/vividigit-site/">
+    <title>Blog — Insights on AI, SEO &amp; Digital Marketing | V\V\D\G\T</title>
+    <meta name="description" content="Expert articles on AI visibility, SEO strategy, content marketing, and digital growth. Actionable insights from the VVDGT team.">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,12 +52,17 @@
             <div class="nav-section">
                 <div class="nav-title">Menu</div>
 
-                {% for item in navigation %}
-                {% if item.children %}
+                
+                
+                <!-- Simple link -->
+                <a href="./" class="nav-link ">Home</a>
+                
+                
+                
                 <!-- Collection with children -->
-                <div class="nav-item {% if config.url == item.url or config.url.startswith(item.url + '/') %}active expanded{% endif %}">
+                <div class="nav-item active expanded">
                     <div class="nav-item-header">
-                        <a href="{{ item.url[1:] }}/" class="nav-item-link">{{ item.menu }}</a>
+                        <a href="blog/" class="nav-item-link">Blog</a>
                         <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
                             <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="9 18 15 12 9 6"></polyline>
@@ -65,16 +70,32 @@
                         </button>
                     </div>
                     <div class="nav-subitems">
-                        {% for child in item.children %}
-                        <a href="{{ child.url[1:] }}/" class="nav-sublink {% if config.url == child.url %}active{% endif %}">{{ child.menu }}</a>
-                        {% endfor %}
+                        
+                        <a href="blog/how-ai-chooses-sources/" class="nav-sublink ">How AI Chooses Sources</a>
+                        
                     </div>
                 </div>
-                {% else %}
-                <!-- Simple link -->
-                <a href="{% if item.url == '/' %}./{% else %}{{ item.url[1:] }}/{% endif %}" class="nav-link {% if config.url == item.url %}active{% endif %}">{{ item.menu }}</a>
-                {% endif %}
-                {% endfor %}
+                
+                
+                
+                <!-- Collection with children -->
+                <div class="nav-item ">
+                    <div class="nav-item-header">
+                        <a href="services/" class="nav-item-link">Services</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="nav-subitems">
+                        
+                        <a href="services/ai-optimisation/" class="nav-sublink ">AI Optimisation</a>
+                        
+                    </div>
+                </div>
+                
+                
             </div>
 
             <div class="sidebar-bottom">
@@ -95,115 +116,251 @@
 
         <!-- Main Content -->
         <main>
-            {% if config.url != '/' %}
+            
             <nav class="breadcrumbs">
                 <a href="./">Home</a>
                 <span>/</span>
-                {% if config.collection %}
-                <a href="{{ config.collection }}/">{{ config.collection | capitalize }}</a>
+                
+                <a href="blog/">Blog</a>
                 <span>/</span>
-                {% endif %}
-                <span>{{ meta.title | default(config.menu) }}</span>
+                
+                <span>Blog — Insights on AI, SEO &amp; Digital Marketing | V\V\D\G\T</span>
             </nav>
-            {% endif %}
+            
 
-            {% for block in blocks %}
+            
             <div class="block">
-                {{ block | safe }}
+                <!-- Hero Block: Main landing section with gradient accent -->
+<section class="hero-block">
+    
+    <span class="tag tag-accent" style="margin-bottom: var(--space-lg);">Blog</span>
+    
+
+    <h1>
+        
+        Insights &amp; Articles
+        
+    </h1>
+
+    
+    <p class="hero-subtitle">Expert perspectives on AI visibility, SEO, and digital marketing strategy.</p>
+    
+
+    
+
+    
+
+    
+
+    
+</section>
+
+<style>
+    .hero-block {
+        text-align: center;
+        padding: var(--space-3xl) 0;
+    }
+
+    .hero-block h1 {
+        font-size: var(--font-size-display);
+        max-width: calc(900px * var(--scale));
+        margin: var(--space-lg) auto;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: var(--font-size-subtitle);
+        color: var(--text-secondary);
+        max-width: calc(700px * var(--scale));
+        margin: 0 auto var(--space-lg);
+    }
+
+    .hero-text {
+        font-size: var(--font-size-body);
+        color: var(--text-secondary);
+        max-width: calc(600px * var(--scale));
+        margin: 0 auto var(--space-xl);
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: var(--space-md);
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: var(--space-xl);
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: var(--space-2xl);
+        justify-content: center;
+        margin-top: var(--space-2xl);
+    }
+
+    .hero-stat {
+        text-align: center;
+    }
+
+    .hero-stat-value {
+        display: block;
+        font-size: var(--font-size-display);
+        font-weight: 700;
+    }
+
+    .hero-stat-label {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .hero-image {
+        margin-top: var(--space-3xl);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+
+    .hero-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .hero-stats {
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+    }
+</style>
             </div>
-            {% endfor %}
+            
+            <div class="block">
+                <section class="block-blog-list">
+    <style>
+        .block-blog-list {
+            padding: var(--space-xl) 0;
+        }
+        .blog-list-header {
+            margin-bottom: var(--space-xl);
+        }
+        .blog-list-title {
+            font-size: var(--font-size-h2);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-lg);
+        }
+        .blog-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            transition: all 0.2s ease;
+        }
+        .blog-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .blog-card-category {
+            font-size: var(--font-size-caption);
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-sm);
+        }
+        .blog-card-title {
+            font-size: var(--font-size-h4);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+        }
+        .blog-card-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .blog-card-title a:hover {
+            color: var(--accent);
+        }
+        .blog-card-excerpt {
+            font-size: var(--font-size-body);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            line-height: 1.6;
+        }
+        .blog-card-meta {
+            font-size: var(--font-size-caption);
+            color: var(--text-muted);
+            display: flex;
+            gap: var(--space-md);
+        }
+        .blog-empty {
+            text-align: center;
+            padding: var(--space-2xl);
+            color: var(--text-secondary);
+        }
+    </style>
+
+    
+    <div class="blog-list-header">
+        <h2 class="blog-list-title">Latest Articles</h2>
+    </div>
+    
+
+    <div class="blog-grid" id="blogGrid">
+        <!-- Articles will be loaded dynamically from /data/blog.json -->
+    </div>
+
+    <div class="blog-empty" id="blogEmpty" style="display: none;">
+        <p>No articles found.</p>
+    </div>
+
+    <script>
+        (function() {
+            const grid = document.getElementById('blogGrid');
+            const empty = document.getElementById('blogEmpty');
+
+            fetch('data/blog.json')
+                .then(res => res.json())
+                .then(articles => {
+                    if (!articles.length) {
+                        empty.style.display = 'block';
+                        return;
+                    }
+
+                    articles.forEach(article => {
+                        const card = document.createElement('article');
+                        card.className = 'blog-card';
+                        card.innerHTML = `
+                            ${article.category ? `<div class="blog-card-category">${article.category}</div>` : ''}
+                            <h3 class="blog-card-title">
+                                <a href="${article.url.slice(1)}/">${article.title}</a>
+                            </h3>
+                            <p class="blog-card-excerpt">${article.description || ''}</p>
+                            <div class="blog-card-meta">
+                                ${article.date ? `<span>${article.date}</span>` : ''}
+                                ${article.author ? `<span>by ${article.author}</span>` : ''}
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                })
+                .catch(err => {
+                    console.error('Failed to load blog articles:', err);
+                    empty.style.display = 'block';
+                });
+        })();
+    </script>
+</section>
+            </div>
+            
         </main>
 
         <!-- Right Sidebar: Contextual Actions -->
         <aside class="sidebar-action" id="sidebarAction">
-            {% if config.url == '/services' %}
-            <!-- Catalog Filters -->
-            <div class="widget">
-                <div class="widget-title">Category</div>
-                <select class="form-input" name="category">
-                    <option value="">All categories</option>
-                    <option value="SEO">SEO</option>
-                    <option value="Content">Content</option>
-                    <option value="PPC">PPC</option>
-                    <option value="Localization">Localization</option>
-                    <option value="Analytics">Analytics</option>
-                </select>
-            </div>
-
-            <div class="widget">
-                <div class="widget-title">Delivery Mode</div>
-                <label class="widget-checkbox">
-                    <input type="checkbox" name="delivery" value="onetime" checked> One-time
-                </label>
-                <label class="widget-checkbox">
-                    <input type="checkbox" name="delivery" value="ongoing" checked> Ongoing
-                </label>
-            </div>
-
-            <div class="widget">
-                <div class="widget-title">Price Range</div>
-                <div class="price-range-row">
-                    <input type="number" class="form-input" name="minPrice" placeholder="Min">
-                    <input type="number" class="form-input" name="maxPrice" placeholder="Max">
-                </div>
-            </div>
-
-            <div class="widget">
-                <button class="btn btn-secondary btn-full btn-reset-filters">Reset Filters</button>
-            </div>
-
-            {% elif config.collection == 'services' %}
-            <!-- Service Configurator (for individual service pages) -->
-            <div class="widget">
-                <div class="widget-title">Configure Service</div>
-                <div class="price-display">
-                    <div class="price-value" id="totalPrice">$2,500</div>
-                    <div class="price-label">Estimated total</div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-title">Tariff</div>
-                <div class="form-group">
-                    <select class="form-input" id="tariff">
-                        <option value="1000">Starter - $1,000</option>
-                        <option value="2500" selected>Growth - $2,500</option>
-                        <option value="5000">Scale - $5,000</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-title">Modules</div>
-                <label class="widget-checkbox">
-                    <input type="checkbox" class="module-check" data-price="500"> Preliminary Audit (+$500)
-                </label>
-                <label class="widget-checkbox">
-                    <input type="checkbox" class="module-check" data-price="1200"> Strategy Development (+$1,200)
-                </label>
-                <label class="widget-checkbox">
-                    <input type="checkbox" class="module-check" data-price="2000" checked> Execution (+$2,000)
-                </label>
-                <label class="widget-checkbox">
-                    <input type="checkbox" class="module-check" data-price="800"> Analysis & Reporting (+$800)
-                </label>
-            </div>
-
-            <div class="widget">
-                <div class="widget-title">Speed</div>
-                <select class="form-input" id="speed">
-                    <option value="1">Standard (x1.0)</option>
-                    <option value="1.25">Fast (x1.25)</option>
-                    <option value="1.5">Rush (x1.5)</option>
-                </select>
-            </div>
-
-            <div class="widget">
-                <button class="btn btn-primary btn-full">Request Quote</button>
-                <p class="widget-note">Estimated. Final quote after brief.</p>
-            </div>
-
-            {% elif config.collection == 'blog' %}
+            
             <!-- Blog Sidebar -->
             <div class="widget">
                 <div class="widget-title">Related Services</div>
@@ -226,26 +383,7 @@
                 <a href="services/" class="btn btn-primary btn-full">Browse Services</a>
             </div>
 
-            {% else %}
-            <!-- Home / Default: Lead CTA -->
-            <div class="widget">
-                <div class="widget-title">Get Started</div>
-                <p class="widget-text">Ready to grow? Browse our services or request a custom quote.</p>
-                <a href="services/" class="btn btn-primary btn-full btn-mb">Browse Services</a>
-                <button class="btn btn-secondary btn-full">Request Quote</button>
-            </div>
-
-            <div class="widget">
-                <div class="widget-title">Quick Contact</div>
-                <div class="form-group">
-                    <input type="email" class="form-input" placeholder="Your email">
-                </div>
-                <div class="form-group">
-                    <textarea class="form-input" rows="3" placeholder="Your message"></textarea>
-                </div>
-                <button class="btn btn-primary btn-full">Send</button>
-            </div>
-            {% endif %}
+            
 
             <!-- Theme Toggle - Bottom of right sidebar -->
             <div class="sidebar-bottom-action">

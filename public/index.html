@@ -47,39 +47,55 @@
 
     <!-- Layout -->
     <div class="layout">
-        <!-- Left Sidebar: Navigation -->
+        <!-- Left Sidebar: Navigation (auto-generated) -->
         <aside class="sidebar-nav" id="sidebarNav">
             <div class="nav-section">
                 <div class="nav-title">Menu</div>
 
-                <!-- Home -->
+                
+                
+                <!-- Simple link -->
                 <a href="./" class="nav-link active">Home</a>
-
-                <!-- Services - Collapsible -->
+                
+                
+                
+                <!-- Collection with children -->
                 <div class="nav-item ">
-                    <div class="nav-item-header" onclick="this.parentElement.classList.toggle('expanded')">
-                        <span>Services</span>
-                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
+                    <div class="nav-item-header">
+                        <a href="blog/" class="nav-item-link">Blog</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
                     </div>
                     <div class="nav-subitems">
-                        <a href="services/ai-optimisation/" class="nav-sublink ">AI Visibility</a>
-                    </div>
-                </div>
-
-                <!-- Blog - Collapsible -->
-                <div class="nav-item ">
-                    <div class="nav-item-header" onclick="this.parentElement.classList.toggle('expanded')">
-                        <span>Blog</span>
-                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </div>
-                    <div class="nav-subitems">
+                        
                         <a href="blog/how-ai-chooses-sources/" class="nav-sublink ">How AI Chooses Sources</a>
+                        
                     </div>
                 </div>
+                
+                
+                
+                <!-- Collection with children -->
+                <div class="nav-item ">
+                    <div class="nav-item-header">
+                        <a href="services/" class="nav-item-link">Services</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="nav-subitems">
+                        
+                        <a href="services/ai-optimisation/" class="nav-sublink ">AI Optimisation</a>
+                        
+                    </div>
+                </div>
+                
+                
             </div>
 
             <div class="sidebar-bottom">
@@ -94,15 +110,6 @@
                         <option value="ru" disabled>Русский (coming soon)</option>
                         <option value="zh" disabled>中文 (coming soon)</option>
                     </select>
-                </div>
-
-                <!-- Theme Toggle -->
-                <div class="widget">
-                    <div class="widget-title">Theme</div>
-                    <button class="theme-toggle" id="btnTheme">
-                        <span class="theme-icon-light">Light</span>
-                        <span class="theme-icon-dark">Dark</span>
-                    </button>
                 </div>
             </div>
         </aside>
@@ -1120,23 +1127,61 @@ We'll scope your project and assemble the right team.
                 <button class="btn btn-primary btn-full">Send</button>
             </div>
             
+
+            <!-- Theme Toggle - Bottom of right sidebar -->
+            <div class="sidebar-bottom-action">
+                <div class="widget">
+                    <div class="widget-title">Theme</div>
+                    <div class="theme-toggle" id="themeToggle">
+                        <button class="theme-option" data-theme="light">Light</button>
+                        <button class="theme-option" data-theme="system">System</button>
+                        <button class="theme-option" data-theme="dark">Dark</button>
+                    </div>
+                </div>
+            </div>
         </aside>
     </div>
 
     <script>
-        // Theme Toggle
-        const btnTheme = document.getElementById('btnTheme');
+        // Theme Toggle (3-way: Light/System/Dark)
         const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeOptions = themeToggle?.querySelectorAll('.theme-option');
 
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        html.setAttribute('data-theme', savedTheme);
+        function getSystemTheme() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
 
-        btnTheme?.addEventListener('click', () => {
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
+        function applyTheme(theme) {
+            if (theme === 'system') {
+                html.setAttribute('data-theme', getSystemTheme());
+            } else {
+                html.setAttribute('data-theme', theme);
+            }
+            // Update active button
+            themeOptions?.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+        }
+
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('theme-preference') || 'dark';
+        applyTheme(savedTheme);
+
+        // Listen for theme button clicks
+        themeOptions?.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme;
+                localStorage.setItem('theme-preference', theme);
+                applyTheme(theme);
+            });
+        });
+
+        // Listen for system theme changes (when in system mode)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (localStorage.getItem('theme-preference') === 'system') {
+                applyTheme('system');
+            }
         });
 
         // Sidebar Toggles
