@@ -1,0 +1,64 @@
+<!-- Sections Block: Structured titled sections with anchors -->
+<section class="sections-block" {% if data.anchor %}id="{{ data.anchor }}"{% endif %}>
+    <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+
+    {% if data.title %}
+    <h2>{{ data.title }}</h2>
+    {% endif %}
+
+    {% if data.subtitle %}
+    <p class="sections-subtitle">{{ data.subtitle }}</p>
+    {% endif %}
+
+    {% if data.sections %}
+    <div class="sections-list">
+        {% for section in data.sections %}
+        <div class="sections-item">
+            {% if section.title %}
+            <h3>{{ section.title }}</h3>
+            {% endif %}
+            {% if section.text %}
+            <div class="sections-text">{{ section.text | safe }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+
+<style>
+.sections-block {
+    padding: var(--space-2xl) 0;
+}
+
+.sections-subtitle {
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+}
+
+.sections-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+.sections-item {
+    padding: var(--space-lg);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+}
+
+.sections-item h3 {
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.sections-text {
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+</style>

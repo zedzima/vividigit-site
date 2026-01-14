@@ -1,153 +1,108 @@
-<!-- Text Block: Rich content with optional title and columns -->
-<section class="text-block {% if data.centered %}text-center{% endif %} {% if data.narrow %}text-narrow{% endif %}">
-    {% if data.tag %}
-    <span class="tag tag-accent">{{ data.tag }}</span>
-    {% endif %}
+<!-- Text Block: Simple markdown/HTML content -->
+<section class="text-block {% if data.centered %}text-centered{% endif %} {% if data.narrow %}text-narrow{% endif %}">
+    <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
 
     {% if data.title %}
     <h2>{{ data.title }}</h2>
     {% endif %}
 
     {% if data.subtitle %}
-    <p class="text-block-subtitle">{{ data.subtitle }}</p>
+    <p class="text-subtitle">{{ data.subtitle }}</p>
     {% endif %}
 
-    {% if data.columns %}
-    <div class="text-columns text-columns-{{ data.columns | length }}">
-        {% for col in data.columns %}
-        <div class="text-column">
-            {% if col.title %}<h3>{{ col.title }}</h3>{% endif %}
-            <div>{{ col.text | safe }}</div>
-        </div>
-        {% endfor %}
-    </div>
-    {% elif data.body %}
+    {% if data.body %}
     <div class="text-body">{{ data.body | safe }}</div>
     {% elif data.text %}
     <div class="text-body">{{ data.text | safe }}</div>
     {% endif %}
-
-    {% if data.note %}
-    <div class="text-note">
-        <span class="text-note-icon">*</span>
-        {{ data.note }}
-    </div>
-    {% endif %}
 </section>
 
 <style>
-    .text-block {
-        padding: var(--space-2xl) 0;
-    }
+.text-block {
+    padding: var(--space-2xl) 0;
+}
 
-    .text-block.text-center {
-        text-align: center;
-    }
+.text-block.text-centered {
+    text-align: center;
+}
 
-    .text-block.text-narrow {
-        max-width: calc(800px * var(--scale));
-        margin: 0 auto;
-    }
+.text-block.text-narrow {
+    max-width: calc(800px * var(--scale));
+    margin: 0 auto;
+}
 
-    .text-block .tag {
-        margin-bottom: var(--space-lg);
-    }
+.text-subtitle {
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+}
 
-    .text-block h2 {
-        margin-bottom: var(--space-md);
-    }
+.text-body {
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
 
-    .text-block-subtitle {
-        font-size: var(--font-size-subtitle);
-        color: var(--text-secondary);
-        margin-bottom: var(--space-xl);
-    }
+.text-body h2, .text-body h3, .text-body h4 {
+    color: var(--text-primary);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+}
 
-    .text-body {
-        font-size: var(--font-size-body);
-        color: var(--text-secondary);
-        line-height: 1.8;
-    }
+.text-body h3 {
+    font-size: var(--font-size-h3);
+}
 
-    .text-body h2, .text-body h3, .text-body h4 {
-        color: var(--text-primary);
-        margin-top: var(--space-xl);
-    }
+.text-body p {
+    margin-bottom: var(--space-md);
+}
 
-    .text-body ul, .text-body ol {
-        margin: var(--space-md) 0;
-        padding-left: var(--space-xl);
-    }
+.text-body ul, .text-body ol {
+    margin: var(--space-md) 0;
+    padding-left: var(--space-xl);
+}
 
-    .text-body li {
-        margin-bottom: var(--space-sm);
-    }
+.text-body li {
+    margin-bottom: var(--space-sm);
+}
 
-    .text-body blockquote {
-        border-left: 3px solid var(--accent-primary);
-        padding-left: var(--space-lg);
-        margin: var(--space-xl) 0;
-        font-style: italic;
-        color: var(--text-secondary);
-    }
+.text-body blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: var(--space-lg);
+    margin: var(--space-xl) 0;
+    font-style: italic;
+    color: var(--text-muted);
+}
 
-    .text-body code {
-        background: var(--bg-tertiary);
-        padding: 2px 6px;
-        border-radius: var(--radius-sm);
-        font-size: var(--font-size-ui);
-    }
+.text-body code {
+    background: var(--bg-tertiary);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+}
 
-    .text-body pre {
-        background: var(--bg-secondary);
-        padding: var(--space-lg);
-        border-radius: var(--radius-md);
-        overflow-x: auto;
-        margin: var(--space-lg) 0;
-        font-size: var(--font-size-ui);
-    }
+.text-body pre {
+    background: var(--bg-secondary);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: var(--space-lg) 0;
+}
 
-    .text-body pre code {
-        background: none;
-        padding: 0;
-    }
+.text-body pre code {
+    background: none;
+    padding: 0;
+}
 
-    .text-columns {
-        display: grid;
-        gap: var(--space-xl);
-    }
+.text-body a {
+    color: var(--accent);
+}
 
-    .text-columns-2 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .text-columns-3 {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .text-column h3 {
-        margin-bottom: var(--space-md);
-    }
-
-    .text-note {
-        margin-top: var(--space-xl);
-        padding: var(--space-md);
-        background: var(--bg-secondary);
-        border-radius: var(--radius-md);
-        font-size: var(--font-size-ui);
-        color: var(--text-muted);
-        display: flex;
-        gap: var(--space-sm);
-    }
-
-    .text-note-icon {
-        color: var(--accent-primary);
-    }
-
-    @media (max-width: 768px) {
-        .text-columns-2,
-        .text-columns-3 {
-            grid-template-columns: 1fr;
-        }
-    }
+.text-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+}
 </style>

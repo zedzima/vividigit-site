@@ -26,18 +26,17 @@
     --space-3xl: calc(64px * var(--scale));
 
     /*
-     * Typography System - 8 sizes
-     * Display (hero numbers), H1, H2, H3, H4, Subtitle, Body, UI, Caption
+     * Typography System - 7 sizes
+     * Display (hero stats), H1-H4 (headings), Body (main text), Caption (small text)
      */
-    --font-size-display: calc(48px * var(--scale)); /* hero numbers, stats, highlighted values */
+    --font-size-display: calc(48px * var(--scale)); /* hero numbers, stats */
     --font-size-h1: calc(32px * var(--scale));
     --font-size-h2: calc(24px * var(--scale));
     --font-size-h3: calc(18px * var(--scale));
-    --font-size-h4: calc(16px * var(--scale));
-    --font-size-subtitle: calc(16px * var(--scale));
-    --font-size-body: calc(14px * var(--scale));
-    --font-size-ui: calc(13px * var(--scale));      /* buttons, inputs, selects, breadcrumbs, tags, tables, nav */
-    --font-size-caption: calc(11px * var(--scale)); /* small labels, notes */
+    --font-size-h4: calc(15px * var(--scale));      /* also for sidebar titles, ui elements */
+    --font-size-body: calc(14px * var(--scale));    /* main text */
+    --font-size-ui: var(--font-size-h4);            /* alias for h4 */
+    --font-size-caption: calc(12px * var(--scale)); /* small labels, notes */
 
     /* Border Radius - scaled */
     --radius-sm: calc(4px * var(--scale));
@@ -65,21 +64,23 @@
     --transition: 0.2s ease;
 }
 
-/* Scale up for wide screens (>2000px) */
+/* Scale up for wide screens - max 1.15x, then only main content stretches */
 @media (min-width: 2000px) {
-    :root { --scale: 1.1; }
-}
-@media (min-width: 2200px) {
-    :root { --scale: 1.2; }
+    :root { --scale: 1.05; }
 }
 @media (min-width: 2400px) {
-    :root { --scale: 1.3; }
-}
-@media (min-width: 2600px) {
-    :root { --scale: 1.4; }
+    :root { --scale: 1.1; }
 }
 @media (min-width: 2800px) {
-    :root { --scale: 1.5; }
+    :root { --scale: 1.15; }
+}
+
+/* Cap sidebar widths at large screens */
+@media (min-width: 2800px) {
+    .sidebar-nav,
+    .sidebar-action {
+        max-width: 400px;
+    }
 }
 
 /* Brand Colors (from logo) */
@@ -175,6 +176,31 @@ body {
     color: var(--text-primary);
     min-height: 100vh;
     line-height: 1.6;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-light) var(--bg-secondary);
 }
 
 a { color: var(--accent); text-decoration: none; }
@@ -287,6 +313,7 @@ a:hover { color: var(--accent-hover); }
     z-index: 90;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
+    overflow: hidden;
 }
 
 .sidebar-nav.open { transform: translateX(0); }
@@ -296,13 +323,19 @@ a:hover { color: var(--accent-hover); }
     .btn-menu { display: none; }
 }
 
-.nav-section { margin-bottom: var(--space-lg); }
+.nav-section {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: var(--space-lg);
+    margin-right: calc(-1 * var(--space-md));
+    padding-right: var(--space-md);
+}
 
 .nav-title {
-    font-size: var(--font-size-caption);
+    font-size: var(--font-size-ui);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.03em;
     color: var(--text-muted);
     margin-bottom: var(--space-sm);
     padding: 0 var(--space-sm);
@@ -421,7 +454,7 @@ a:hover { color: var(--accent-hover); }
    ========================================================================== */
 
 .sidebar-bottom {
-    margin-top: auto;
+    flex-shrink: 0;
     padding-top: var(--space-md);
     border-top: 1px solid var(--border);
 }
@@ -438,14 +471,6 @@ a:hover { color: var(--accent-hover); }
     border-bottom: none;
 }
 
-.sidebar-bottom .widget-title {
-    font-size: var(--font-size-caption);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    margin-bottom: var(--space-sm);
-}
 
 /* ==========================================================================
    Theme Toggle (3-way: Light/System/Dark)
@@ -484,6 +509,260 @@ a:hover { color: var(--accent-hover); }
     color: white;
 }
 
+/* Estimates Widget (prominent pricing display) */
+.widget-estimates {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.1) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.estimates-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.estimate-item {
+    text-align: center;
+}
+
+.estimate-value {
+    font-size: calc(20px * var(--scale));
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.estimate-label {
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* Tabs Toggle (horizontal like theme switcher) */
+.tabs-toggle {
+    display: flex;
+    gap: 0;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: calc(8px * var(--scale)) calc(10px * var(--scale));
+    border: none;
+    border-radius: calc(var(--radius-sm) - 2px);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-caption);
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    background: var(--accent);
+    color: white;
+}
+
+/* Language Dropdown with checkboxes */
+.lang-dropdown {
+    position: relative;
+}
+
+.lang-dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: calc(10px * var(--scale)) calc(12px * var(--scale));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-ui);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.lang-dropdown-toggle:hover {
+    border-color: var(--border-light);
+}
+
+.lang-dropdown.open .lang-dropdown-toggle {
+    border-color: var(--accent);
+}
+
+.dropdown-arrow {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.lang-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.lang-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs);
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.lang-dropdown.open .lang-dropdown-menu {
+    display: block;
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: calc(8px * var(--scale)) calc(10px * var(--scale));
+    border-radius: calc(var(--radius-sm) - 2px);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.lang-option:hover {
+    background: var(--bg-tertiary);
+}
+
+.lang-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.lang-option input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+}
+
+.lang-name {
+    flex: 1;
+    font-size: var(--font-size-ui);
+    color: var(--text-primary);
+}
+
+.lang-extra {
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+}
+
+.lang-required {
+    opacity: 0.7;
+}
+
+.lang-required .lang-name::after {
+    content: " (required)";
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+}
+
+/* Site Language Dropdown (left sidebar) */
+.site-lang-dropdown {
+    position: relative;
+}
+
+.site-lang-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: calc(10px * var(--scale)) calc(12px * var(--scale));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-ui);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.site-lang-toggle:hover {
+    border-color: var(--border-light);
+}
+
+.site-lang-dropdown.open .site-lang-toggle {
+    border-color: var(--accent);
+}
+
+.site-lang-menu {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs);
+    z-index: 100;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.site-lang-dropdown.open .site-lang-menu {
+    display: block;
+}
+
+.site-lang-option {
+    display: block;
+    width: 100%;
+    padding: calc(8px * var(--scale)) calc(10px * var(--scale));
+    border: none;
+    border-radius: calc(var(--radius-sm) - 2px);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-ui);
+    color: var(--text-primary);
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.site-lang-option:hover:not(:disabled) {
+    background: var(--bg-tertiary);
+}
+
+.site-lang-option.active {
+    background: var(--accent);
+    color: white;
+}
+
+.site-lang-option.disabled {
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+/* Widget hint */
+.widget-hint {
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
 /* ==========================================================================
    Right Sidebar - iOS 26 Glass
    ========================================================================== */
@@ -499,13 +778,42 @@ a:hover { color: var(--accent-hover); }
     -webkit-backdrop-filter: blur(40px) saturate(180%);
     border-left: 1px solid var(--border);
     box-shadow: var(--shadow-glass);
-    padding: var(--space-lg) var(--space-md);
+    padding: 0 var(--space-md);
     overflow-y: auto;
     z-index: 90;
     transform: translateX(100%);
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Right sidebar widgets: border on top, not bottom */
+.sidebar-content .widget {
+    border-bottom: none;
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-lg);
+    padding-bottom: 0;
+    margin-bottom: var(--space-lg);
+}
+
+.sidebar-content .widget:first-child {
+    border-top: none;
+    padding-top: var(--space-lg);
+}
+
+.sidebar-content .widget:last-child {
+    margin-bottom: 0;
+}
+
+/* Preserve estimates widget padding */
+.sidebar-content .widget-estimates {
+    padding: var(--space-md);
+    margin-top: 0;
 }
 
 .sidebar-action.open { transform: translateX(0); }
@@ -515,10 +823,11 @@ a:hover { color: var(--accent-hover); }
     .btn-action { display: none; }
 }
 
-/* Right sidebar bottom (theme toggle) */
+/* Right sidebar bottom (theme toggle) - fixed at bottom */
 .sidebar-bottom-action {
-    margin-top: auto;
+    flex-shrink: 0;
     padding-top: var(--space-md);
+    padding-bottom: var(--space-lg);
     border-top: 1px solid var(--border);
 }
 
@@ -534,10 +843,13 @@ a:hover { color: var(--accent-hover); }
 
 main {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     padding: var(--space-xl) var(--space-lg);
     max-width: var(--content-max-width);
     width: 100%;
     text-align: left;
+    min-height: calc(100vh - 60px);
 }
 
 /* Left sidebar visible - limit content width */
@@ -625,6 +937,7 @@ main {
 
 .btn-primary:hover {
     background: var(--accent-hover);
+    color: white;
     transform: translateY(-1px);
     box-shadow: var(--shadow);
 }
@@ -698,6 +1011,14 @@ select.form-input {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     color: var(--text-secondary);
+}
+
+/* Consistent spacing: headings after tags get margin-top (global rule) */
+.tag + h1,
+.tag + h2,
+.tag + h3,
+.tag + div {
+    margin-top: var(--space-lg) !important;
 }
 
 .tag-accent {

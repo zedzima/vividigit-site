@@ -1,17 +1,51 @@
-<!-- Nested Lists Block -->
+<!-- Nested Block: For complex nested list structures -->
 <section class="nested-block">
+    <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+
     {% if data.title %}
     <h2>{{ data.title }}</h2>
     {% endif %}
 
+    {% if data.subtitle %}
+    <p class="nested-subtitle">{{ data.subtitle }}</p>
+    {% endif %}
+
     {% if data.content %}
     <div class="nested-content">{{ data.content | safe }}</div>
+    {% endif %}
+
+    {% if data.groups %}
+    <div class="nested-items">
+        {% for item in data.groups %}
+        <div class="nested-item">
+            <h3>{{ item.title }}</h3>
+            {% if item.description %}
+            <p>{{ item.description }}</p>
+            {% endif %}
+            {% if item.children %}
+            <ul class="nested-children">
+                {% for child in item.children %}
+                <li>
+                    <strong>{{ child.title }}</strong>
+                    {% if child.text %}<span>{{ child.text }}</span>{% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
     {% endif %}
 </section>
 
 <style>
 .nested-block {
     padding: var(--space-2xl) 0;
+}
+
+.nested-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
 }
 
 .nested-content {
@@ -26,5 +60,61 @@
 
 .nested-content li {
     margin-bottom: var(--space-sm);
+}
+
+.nested-content ol ol, .nested-content ul ul {
+    margin-top: var(--space-sm);
+}
+
+.nested-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+.nested-item {
+    padding: var(--space-lg);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+}
+
+.nested-item h3 {
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.nested-item > p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    margin-bottom: var(--space-md);
+}
+
+.nested-children {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.nested-children li {
+    display: flex;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-ui);
+}
+
+.nested-children li strong {
+    color: var(--text-primary);
+}
+
+.nested-children li span {
+    color: var(--text-muted);
 }
 </style>

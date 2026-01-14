@@ -96,20 +96,91 @@
                 </div>
                 
                 
+                
+                <!-- Collection with children -->
+                <div class="nav-item ">
+                    <div class="nav-item-header">
+                        <a href="blocks/" class="nav-item-link">Blocks</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="nav-subitems">
+                        
+                        <a href="blocks/sections/" class="nav-sublink ">Sections</a>
+                        
+                        <a href="blocks/testimonials/" class="nav-sublink ">Testimonials</a>
+                        
+                        <a href="blocks/framework/" class="nav-sublink ">Framework</a>
+                        
+                        <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
+                        
+                        <a href="blocks/services-grid/" class="nav-sublink ">Services Grid</a>
+                        
+                        <a href="blocks/cta/" class="nav-sublink ">CTA</a>
+                        
+                        <a href="blocks/cards/" class="nav-sublink ">Cards</a>
+                        
+                        <a href="blocks/catalog/" class="nav-sublink ">Catalog</a>
+                        
+                        <a href="blocks/bloglist/" class="nav-sublink ">Blog List</a>
+                        
+                        <a href="blocks/features/" class="nav-sublink ">Features</a>
+                        
+                        <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
+                        
+                        <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/comparison/" class="nav-sublink ">Comparison</a>
+                        
+                        <a href="blocks/benefits/" class="nav-sublink ">Benefits</a>
+                        
+                        <a href="blocks/text/" class="nav-sublink ">Text</a>
+                        
+                        <a href="blocks/columns/" class="nav-sublink ">Columns</a>
+                        
+                        <a href="blocks/article/" class="nav-sublink ">Article</a>
+                        
+                        <a href="blocks/hero/" class="nav-sublink ">Hero</a>
+                        
+                        <a href="blocks/nested/" class="nav-sublink ">Nested</a>
+                        
+                        <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/services/" class="nav-sublink ">Services</a>
+                        
+                        <a href="blocks/process/" class="nav-sublink ">Process</a>
+                        
+                        <a href="blocks/media/" class="nav-sublink ">Media</a>
+                        
+                    </div>
+                </div>
+                
+                
             </div>
 
             <div class="sidebar-bottom">
                 <!-- Language Dropdown -->
                 <div class="widget">
                     <div class="widget-title">Language</div>
-                    <select class="form-input" id="langSelect">
-                        <option value="en" selected>English</option>
-                        <option value="de" disabled>Deutsch (coming soon)</option>
-                        <option value="fr" disabled>Français (coming soon)</option>
-                        <option value="es" disabled>Español (coming soon)</option>
-                        <option value="ru" disabled>Русский (coming soon)</option>
-                        <option value="zh" disabled>中文 (coming soon)</option>
-                    </select>
+                    <div class="site-lang-dropdown" id="siteLangDropdown">
+                        <button class="site-lang-toggle" id="siteLangToggle">
+                            <span id="siteLangText">English</span>
+                            <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="site-lang-menu" id="siteLangMenu">
+                            <button class="site-lang-option active" data-lang="en">English</button>
+                            <button class="site-lang-option disabled" data-lang="de" disabled>Deutsch (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="fr" disabled>Français (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="es" disabled>Español (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="ru" disabled>Русский (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="zh" disabled>中文 (coming soon)</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -122,7 +193,7 @@
             <div class="block">
                 <!-- Hero Block: Main landing section with gradient accent -->
 <section class="hero-block">
-    
+    <span class="tag tag-accent">hero</span>
 
     <h1>
         
@@ -237,6 +308,7 @@
             <div class="block">
                 <!-- Pillars Block (3 columns) -->
 <section class="pillars-block">
+    <span class="tag tag-accent">pillars</span>
     
     <h2>What We Deliver</h2>
     
@@ -383,6 +455,7 @@
             <div class="block">
                 <!-- Process/How It Works Tabs Block -->
 <section class="process-tabs-block">
+    <span class="tag tag-accent">process</span>
     
     <h2>How It Works</h2>
     
@@ -708,259 +781,205 @@
             </div>
             
             <div class="block">
-                <!-- Services List Block: Grid of service cards with filtering -->
-<section class="services-block">
+                <!-- Services Grid Block (for featured services) -->
+<section class="services-grid-block">
+    <span class="tag tag-accent">services</span>
     
-    <div class="services-header">
-        <div>
-            
-            <h2>Featured Services</h2>
-            <p>Most popular productized marketing services</p>
-        </div>
-    </div>
+    <h2>Featured Services</h2>
     
 
     
+    <p class="services-grid-subtitle">Most popular productized marketing services</p>
+    
 
-    <div class="services-grid grid grid-3">
+    
+    <div class="services-grid">
         
-        <a href="#" class="service-card card" data-category="SEO">
-            
-
+        <a href="/services/seo-audit" class="service-card glass">
+            <div class="service-card-header">
+                <span class="service-category tag tag-accent">SEO</span>
+                
+                <span class="service-rating">★ 4.9</span>
+                
+            </div>
             <h3>SEO Audit &amp; Strategy</h3>
-
-            
             <p>Comprehensive technical audit with actionable recommendations.</p>
-            
-
-            
-
-            
-
-            <span class="service-link">Learn more &rarr;</span>
+            <div class="service-card-footer">
+                <span class="service-price">From $1500</span>
+                <span class="service-cta">View →</span>
+            </div>
         </a>
         
-        <a href="#" class="service-card card" data-category="Content">
-            
-
+        <a href="/services/content-strategy" class="service-card glass">
+            <div class="service-card-header">
+                <span class="service-category tag tag-accent">Content</span>
+                
+                <span class="service-rating">★ 4.8</span>
+                
+            </div>
             <h3>Content Strategy</h3>
-
-            
             <p>Data-driven content plan aligned with your business goals.</p>
-            
-
-            
-
-            
-
-            <span class="service-link">Learn more &rarr;</span>
+            <div class="service-card-footer">
+                <span class="service-price">From $2000</span>
+                <span class="service-cta">View →</span>
+            </div>
         </a>
         
-        <a href="#" class="service-card card" data-category="PPC">
-            
-
+        <a href="/services/ppc-management" class="service-card glass">
+            <div class="service-card-header">
+                <span class="service-category tag tag-accent">PPC</span>
+                
+                <span class="service-rating">★ 4.7</span>
+                
+            </div>
             <h3>PPC Campaign Setup</h3>
-
-            
             <p>Launch optimized paid campaigns across Google and social.</p>
-            
-
-            
-
-            
-
-            <span class="service-link">Learn more &rarr;</span>
+            <div class="service-card-footer">
+                <span class="service-price">From $1800</span>
+                <span class="service-cta">View →</span>
+            </div>
         </a>
         
-        <a href="#" class="service-card card" data-category="Localization">
-            
-
+        <a href="/services/localization" class="service-card glass">
+            <div class="service-card-header">
+                <span class="service-category tag tag-accent">Localization</span>
+                
+                <span class="service-rating">★ 4.9</span>
+                
+            </div>
             <h3>Website Localization</h3>
-
-            
             <p>Professional translation and cultural adaptation.</p>
-            
-
-            
-
-            
-
-            <span class="service-link">Learn more &rarr;</span>
+            <div class="service-card-footer">
+                <span class="service-price">From $2500</span>
+                <span class="service-cta">View →</span>
+            </div>
         </a>
         
-        <a href="#" class="service-card card" data-category="Analytics">
-            
-
+        <a href="/services/analytics-setup" class="service-card glass">
+            <div class="service-card-header">
+                <span class="service-category tag tag-accent">Analytics</span>
+                
+                <span class="service-rating">★ 4.8</span>
+                
+            </div>
             <h3>Analytics Setup</h3>
-
-            
             <p>GA4, GTM, and custom dashboards for data visibility.</p>
-            
-
-            
-
-            
-
-            <span class="service-link">Learn more &rarr;</span>
+            <div class="service-card-footer">
+                <span class="service-price">From $1200</span>
+                <span class="service-cta">View →</span>
+            </div>
         </a>
         
-        <a href="#" class="service-card card" data-category="SEO">
-            
-
+        <a href="/services/link-building" class="service-card glass">
+            <div class="service-card-header">
+                <span class="service-category tag tag-accent">SEO</span>
+                
+                <span class="service-rating">★ 4.6</span>
+                
+            </div>
             <h3>Link Building</h3>
-
-            
             <p>Quality backlinks from relevant, authoritative sources.</p>
-            
-
-            
-
-            
-
-            <span class="service-link">Learn more &rarr;</span>
+            <div class="service-card-footer">
+                <span class="service-price">From $3000</span>
+                <span class="service-cta">View →</span>
+            </div>
         </a>
         
     </div>
+    
 
+    
+    <div class="services-grid-cta">
+        <a href="/services" class="btn btn-secondary">View All Services</a>
+    </div>
     
 </section>
 
 <style>
-    .services-block {
-        padding: var(--space-2xl) 0;
-    }
+.services-grid-block {
+    padding: var(--space-2xl) 0;
+}
 
-    .services-header {
-        margin-bottom: var(--space-xl);
-    }
+.services-grid-block h2 {
+    margin-bottom: var(--space-sm);
+}
 
-    .services-header p {
-        color: var(--text-secondary);
-        max-width: calc(600px * var(--scale));
-    }
+.services-grid-subtitle {
+    color: var(--text-muted);
+    margin-bottom: var(--space-xl);
+}
 
-    .services-filters {
-        display: flex;
-        gap: var(--space-sm);
-        margin-bottom: var(--space-xl);
-        flex-wrap: wrap;
-    }
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
 
-    .filter-btn {
-        padding: var(--space-sm) var(--space-md);
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        color: var(--text-secondary);
-        cursor: pointer;
-        font-family: var(--font-mono);
-        font-size: var(--font-size-ui);
-        transition: all 0.2s ease;
-    }
+.service-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg);
+    text-decoration: none;
+    transition: var(--transition);
+}
 
-    .filter-btn:hover {
-        border-color: var(--border-light);
-        color: var(--text-primary);
-    }
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+}
 
-    .filter-btn.active {
-        background: var(--accent-gradient);
-        border-color: transparent;
-        color: white;
-    }
+.service-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
 
-    .service-card {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-md);
-        text-decoration: none;
-        transition: all 0.2s ease;
-    }
+.service-rating {
+    font-size: var(--font-size-ui);
+    color: #f59e0b;
+    font-weight: 500;
+}
 
-    .service-card:hover {
-        transform: translateY(-4px);
-        border-color: var(--accent-primary);
-    }
+.service-card h3 {
+    color: var(--text-primary);
+    font-size: var(--font-size-body);
+    margin-bottom: var(--space-sm);
+}
 
-    .service-icon {
-        font-size: var(--font-size-h1);
-        width: 56px;
-        height: 56px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--bg-tertiary);
-        border-radius: var(--radius-lg);
-    }
+.service-card p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    line-height: 1.6;
+    flex: 1;
+    margin-bottom: var(--space-md);
+}
 
-    .service-card h3 {
-        font-size: var(--font-size-subtitle);
-        margin: 0;
-        color: var(--text-primary);
-    }
+.service-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+}
 
-    .service-card p {
-        font-size: var(--font-size-ui);
-        margin: 0;
-        flex: 1;
-    }
+.service-price {
+    font-weight: 600;
+    color: var(--text-primary);
+}
 
-    .service-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-xs);
-    }
+.service-cta {
+    color: var(--accent);
+    font-weight: 500;
+    font-size: var(--font-size-ui);
+}
 
-    .service-price {
-        display: flex;
-        align-items: baseline;
-        gap: var(--space-xs);
-    }
-
-    .price-from {
-        font-size: var(--font-size-caption);
-        color: var(--text-muted);
-    }
-
-    .price-value {
-        font-size: var(--font-size-h3);
-        font-weight: 600;
-        color: var(--accent-primary);
-    }
-
-    .service-link {
-        font-size: var(--font-size-ui);
-        color: var(--accent-primary);
-        font-weight: 500;
-    }
-
-    .service-card.hidden {
-        display: none;
-    }
+.services-grid-cta {
+    text-align: center;
+    margin-top: var(--space-xl);
+}
 </style>
-
-<script>
-(function() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.service-card');
-
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const filter = btn.dataset.filter;
-            cards.forEach(card => {
-                if (filter === 'all' || card.dataset.category === filter) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
-        });
-    });
-})();
-</script>
             </div>
             
             <div class="block">
@@ -969,7 +988,7 @@
     <div class="cta-inner">
         
 
-        
+        <span class="tag tag-accent">cta</span>
 
         <h2>Ready to Get Started?</h2>
 
@@ -1103,10 +1122,73 @@ We'll scope your project and assemble the right team.
 </style>
             </div>
             
+
+            <!-- Global Footer -->
+            <footer class="global-footer">
+                <div class="footer-grid">
+                    <div class="footer-logo">
+                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M39 40H33L21 8L12 32H6L9 24H3L0 16H6L9 24L15 8H21L18 0H24L39 40Z" fill="url(#paint0_linear_footer)"/>
+                            <defs>
+                                <linearGradient id="paint0_linear_footer" x1="19.5" y1="0" x2="19.5" y2="40" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.0482922" stop-color="#5A24F2"/>
+                                    <stop offset="0.85138" stop-color="#A530E8"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about/">About Us</a></li>
+                            <li><a href="careers/">Careers</a></li>
+                            <li><a href="contact/">Contact</a></li>
+                            <li><a href="blog/">Blog</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Services</h4>
+                        <ul>
+                            <li><a href="services/seo-audit/">SEO Audit</a></li>
+                            <li><a href="services/ai-optimisation/">AI Optimization</a></li>
+                            <li><a href="services/content-strategy/">Content Strategy</a></li>
+                            <li><a href="services/">All Services</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="docs/">Documentation</a></li>
+                            <li><a href="cases/">Case Studies</a></li>
+                            <li><a href="support/">Support</a></li>
+                            <li><a href="faq/">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="privacy/">Privacy Policy</a></li>
+                            <li><a href="terms/">Terms of Service</a></li>
+                            <li><a href="cookies/">Cookie Policy</a></li>
+                            <li><a href="gdpr/">GDPR</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div class="footer-social">
+                        <a href="https://facebook.com" class="social-link" title="Facebook">f</a>
+                        <a href="https://twitter.com" class="social-link" title="Twitter">X</a>
+                        <a href="https://linkedin.com" class="social-link" title="LinkedIn">in</a>
+                        <a href="https://github.com" class="social-link" title="GitHub">&lt;&gt;</a>
+                    </div>
+                    <p class="footer-text">&copy; 2025 VIVIDIGIT. All rights reserved. Productized multilingual marketing services marketplace.</p>
+                </div>
+            </footer>
         </main>
 
         <!-- Right Sidebar: Contextual Actions -->
         <aside class="sidebar-action" id="sidebarAction">
+            <div class="sidebar-content">
             
             <!-- Home / Default: Lead CTA -->
             <div class="widget">
@@ -1127,6 +1209,7 @@ We'll scope your project and assemble the right team.
                 <button class="btn btn-primary btn-full">Send</button>
             </div>
             
+            </div>
 
             <!-- Theme Toggle - Bottom of right sidebar -->
             <div class="sidebar-bottom-action">
@@ -1141,6 +1224,127 @@ We'll scope your project and assemble the right team.
             </div>
         </aside>
     </div>
+
+    <style>
+    .global-footer {
+        padding: var(--space-xl) 0;
+        margin-top: auto;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--space-xl);
+        margin-bottom: var(--space-lg);
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .footer-logo svg {
+        width: auto;
+        height: 80%;
+        align-self: center;
+    }
+
+    .footer-column h4 {
+        font-size: var(--font-size-ui);
+        font-weight: 600;
+        margin-bottom: var(--space-md);
+        color: var(--text-primary);
+    }
+
+    .footer-column ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-column li {
+        margin-bottom: var(--space-sm);
+    }
+
+    .footer-column a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: var(--font-size-ui);
+        transition: color 0.2s ease;
+    }
+
+    .footer-column a:hover {
+        color: var(--accent);
+    }
+
+    .footer-bottom {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        padding-top: var(--space-md);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .footer-social {
+        display: flex;
+        gap: var(--space-xs);
+    }
+
+    .footer-social .social-link {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: var(--font-size-ui);
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .footer-social .social-link:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+    }
+
+    .footer-text {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    @media (max-width: 900px) {
+        .footer-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .footer-logo {
+            grid-column: 1 / -1;
+            justify-content: center;
+        }
+
+        .footer-logo svg {
+            height: 40px;
+        }
+
+        .footer-bottom {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--space-sm);
+        }
+    }
+
+    @media (max-width: 500px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    </style>
 
     <script>
         // Theme Toggle (3-way: Light/System/Dark)
@@ -1211,26 +1415,121 @@ We'll scope your project and assemble the right team.
 
         overlay?.addEventListener('click', closeSidebars);
 
-        // Price Calculator (for service pages)
+        // Service Configurator Calculator
         function calculatePrice() {
-            const tariff = parseInt(document.getElementById('tariff')?.value || 0);
-            const speed = parseFloat(document.getElementById('speed')?.value || 1);
+            // Get tariff from active tab
+            const tariffBtn = document.querySelector('#tariffToggle .tab-btn.active');
+            const tariff = parseInt(tariffBtn?.dataset.value || 0);
+
+            // Get speed coefficient from active tab
+            // Slow = 0.9 (-10%), Standard = 1.0 (0%), Fast = 1.1 (+10%)
+            const speedBtn = document.querySelector('#speedToggle .tab-btn.active');
+            const speedCoef = parseFloat(speedBtn?.dataset.value || 1);
+            const timeLabel = speedBtn?.dataset.label || '2-3 weeks';
+
+            // Sum modules
             let modules = 0;
             document.querySelectorAll('.module-check:checked').forEach(cb => {
                 modules += parseInt(cb.dataset.price || 0);
             });
-            const total = Math.round((tariff + modules) * speed);
-            const display = document.getElementById('totalPrice');
-            if (display) display.textContent = '$' + total.toLocaleString();
+
+            // Count total languages selected (including English)
+            const langCount = document.querySelectorAll('.lang-check:checked').length;
+            // Each extra language = +60% (1 lang = 1.0, 2 = 1.6, 3 = 2.2, etc.)
+            const langMultiplier = 1 + ((langCount - 1) * 0.6);
+
+            // Price = (tariff + modules) × langMultiplier × speedCoef
+            const total = Math.round((tariff + modules) * langMultiplier * speedCoef);
+
+            // Update displays
+            const priceDisplay = document.getElementById('totalPrice');
+            const timeDisplay = document.getElementById('totalTime');
+            if (priceDisplay) priceDisplay.textContent = '$' + total.toLocaleString();
+            if (timeDisplay) timeDisplay.textContent = timeLabel;
         }
 
-        document.getElementById('tariff')?.addEventListener('change', calculatePrice);
-        document.getElementById('speed')?.addEventListener('change', calculatePrice);
+        function updateLangText() {
+            const checked = document.querySelectorAll('.lang-check:checked');
+            const names = Array.from(checked).map(cb => cb.dataset.name);
+            const text = names.length > 2
+                ? `${names.slice(0, 2).join(', ')} +${names.length - 2}`
+                : names.join(', ');
+            const display = document.getElementById('langSelectedText');
+            if (display) display.textContent = text || 'English';
+        }
+
+        // Tariff tabs
+        document.querySelectorAll('#tariffToggle .tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#tariffToggle .tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                calculatePrice();
+            });
+        });
+
+        // Speed tabs
+        document.querySelectorAll('#speedToggle .tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#speedToggle .tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                calculatePrice();
+            });
+        });
+
+        // Order Language dropdown toggle (right sidebar)
+        const langDropdown = document.getElementById('langDropdown');
+        const langToggleBtn = document.getElementById('langToggleBtn');
+
+        langToggleBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown?.classList.toggle('open');
+        });
+
+        // Site Language dropdown toggle (left sidebar)
+        const siteLangDropdown = document.getElementById('siteLangDropdown');
+        const siteLangToggle = document.getElementById('siteLangToggle');
+
+        siteLangToggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            siteLangDropdown?.classList.toggle('open');
+        });
+
+        // Site language option click
+        document.querySelectorAll('.site-lang-option:not(:disabled)').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.site-lang-option').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const text = document.getElementById('siteLangText');
+                if (text) text.textContent = btn.textContent;
+                siteLangDropdown?.classList.remove('open');
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (langDropdown && !langDropdown.contains(e.target)) {
+                langDropdown.classList.remove('open');
+            }
+            if (siteLangDropdown && !siteLangDropdown.contains(e.target)) {
+                siteLangDropdown.classList.remove('open');
+            }
+        });
+
+        // Language checkboxes
+        document.querySelectorAll('.lang-check').forEach(cb => {
+            cb.addEventListener('change', () => {
+                updateLangText();
+                calculatePrice();
+            });
+        });
+
+        // Modules checkboxes
         document.querySelectorAll('.module-check').forEach(cb => {
             cb.addEventListener('change', calculatePrice);
         });
 
         // Initial calculation
+        updateLangText();
         calculatePrice();
     </script>
 </body>

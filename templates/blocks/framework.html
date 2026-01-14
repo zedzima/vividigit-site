@@ -1,9 +1,7 @@
 <!-- Framework Block: Card grid for principles/criteria -->
 <section class="framework-block">
     <div class="framework-header text-center">
-        {% if data.tag %}
-        <span class="tag tag-accent">{{ data.tag }}</span>
-        {% endif %}
+        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
         <h2>{{ data.title }}</h2>
         {% if data.subtitle %}
         <p class="framework-subtitle">{{ data.subtitle }}</p>
@@ -37,10 +35,6 @@
 
     .framework-header {
         margin-bottom: var(--space-3xl);
-    }
-
-    .framework-header .tag {
-        margin-bottom: var(--space-lg);
     }
 
     .framework-header h2 {

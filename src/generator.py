@@ -46,6 +46,7 @@ class Generator:
             "config": page_data.get("config", {}),
             "meta": page_data.get("meta", {}),
             "translations": page_data.get("translations", {}),
+            "sidebar": page_data.get("sidebar", {}),
             "blocks": [],
             "sitemap": sitemap,
             "navigation": navigation or []
@@ -54,18 +55,35 @@ class Generator:
         # Render each block
         for block in page_data.get("blocks", []):
             block_type = block["type"]
-            template_name = f"blocks/{block_type}.html"
+            original_key = block.get("original_key", block_type)
 
-            try:
-                template = self.env.get_template(template_name)
-                rendered_block = template.render(data=block["data"])
-                context["blocks"].append(rendered_block)
-            except TemplateNotFound:
-                error_msg = f"Missing template: {template_name}"
+            # Try full name first (e.g., main_content.html), then shortened (e.g., main.html)
+            template_names = [f"blocks/{original_key}.html"]
+            if original_key != block_type:
+                template_names.append(f"blocks/{block_type}.html")
+
+            template = None
+            template_name = None
+            for tname in template_names:
+                try:
+                    template = self.env.get_template(tname)
+                    template_name = tname
+                    break
+                except TemplateNotFound:
+                    continue
+
+            if template is None:
+                error_msg = f"Missing template: {template_names}"
                 if self.strict:
                     raise RuntimeError(error_msg)
                 print(f"  ⚠ {error_msg}")
                 context["blocks"].append(f"<!-- {error_msg} -->")
+                continue
+
+            try:
+                # Pass block_type so templates can use it as default tag
+                rendered_block = template.render(data=block["data"], block_type=block_type)
+                context["blocks"].append(rendered_block)
             except Exception as e:
                 error_msg = f"Error rendering block '{block_type}': {e}"
                 if self.strict:

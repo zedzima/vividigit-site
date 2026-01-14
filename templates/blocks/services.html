@@ -3,7 +3,7 @@
     {% if data.title %}
     <div class="services-header">
         <div>
-            {% if data.tag %}<span class="tag tag-accent">{{ data.tag }}</span>{% endif %}
+            <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
             <h2>{{ data.title }}</h2>
             {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
         </div>

@@ -2,6 +2,7 @@
 <section class="catalog-block">
     {% if data.title %}
     <div class="catalog-header">
+        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
         <h1>{{ data.title }}</h1>
         {% if data.subtitle %}
         <p class="catalog-subtitle">{{ data.subtitle }}</p>
@@ -187,6 +188,25 @@
     font-weight: 500;
     font-size: var(--font-size-ui);
 }
+
+.service-languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: var(--space-md);
+}
+
+.service-lang {
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-muted);
+}
 </style>
 
 <script>
@@ -206,6 +226,7 @@
             description: "Comprehensive technical SEO audit with actionable recommendations to improve your search visibility.",
             category: "SEO",
             tags: ["Technical SEO", "Audit", "Strategy"],
+            languages: ["EN", "DE"],
             price: 1500,
             rating: 4.9,
             reviews: 127,
@@ -218,6 +239,7 @@
             description: "Data-driven content plan aligned with your business goals and target audience needs.",
             category: "Content",
             tags: ["Strategy", "Planning", "Research"],
+            languages: ["EN", "DE", "FR"],
             price: 2000,
             rating: 4.8,
             reviews: 89,
@@ -230,6 +252,7 @@
             description: "Launch optimized paid campaigns across Google Ads and social media platforms.",
             category: "PPC",
             tags: ["Google Ads", "Social Ads", "Setup"],
+            languages: ["EN"],
             price: 1800,
             rating: 4.7,
             reviews: 156,
@@ -242,6 +265,7 @@
             description: "Professional translation and cultural adaptation for global markets.",
             category: "Localization",
             tags: ["Translation", "i18n", "Global"],
+            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
             price: 2500,
             rating: 4.9,
             reviews: 73,
@@ -254,6 +278,7 @@
             description: "GA4, GTM, and custom dashboards for complete data visibility.",
             category: "Analytics",
             tags: ["GA4", "GTM", "Dashboards"],
+            languages: ["EN", "DE"],
             price: 1200,
             rating: 4.8,
             reviews: 94,
@@ -266,6 +291,7 @@
             description: "Quality backlinks from relevant, authoritative sources in your niche.",
             category: "SEO",
             tags: ["Backlinks", "Outreach", "PR"],
+            languages: ["EN"],
             price: 3000,
             rating: 4.6,
             reviews: 62,
@@ -278,7 +304,8 @@
             description: "Optimize your content and strategy for AI-powered search and assistants.",
             category: "SEO",
             tags: ["AI", "LLM", "Future-proof"],
-            price: 3500,
+            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
+            price: 2500,
             rating: 4.9,
             reviews: 45,
             orders: 89
@@ -290,6 +317,7 @@
             description: "End-to-end social media strategy and content management.",
             category: "Content",
             tags: ["Social", "Community", "Engagement"],
+            languages: ["EN", "DE", "RU"],
             price: 2200,
             rating: 4.7,
             reviews: 112,
@@ -302,6 +330,7 @@
             description: "A/B testing and UX improvements to boost your conversion rates.",
             category: "Analytics",
             tags: ["CRO", "A/B Testing", "UX"],
+            languages: ["EN", "DE"],
             price: 2800,
             rating: 4.8,
             reviews: 67,
@@ -314,6 +343,10 @@
             `<span class="service-tag">${t}</span>`
         ).join('');
 
+        const languages = (service.languages || []).map(lang =>
+            `<span class="service-lang">${lang}</span>`
+        ).join('');
+
         return `
             <a href="${service.url || '/services/' + service.slug}" class="service-card">
                 <div class="service-card-header">
@@ -323,6 +356,7 @@
                 <h3>${service.title}</h3>
                 <p>${service.description || ''}</p>
                 ${tags ? `<div class="service-tags">${tags}</div>` : ''}
+                ${languages ? `<div class="service-languages">${languages}</div>` : ''}
                 <div class="service-card-footer">
                     <span class="service-price">From $${(service.price || 0).toLocaleString()}</span>
                     <span class="service-cta">View →</span>

@@ -1,12 +1,54 @@
-<!-- Media Block -->
-<section class="media-block">
+<!-- Media Block: Images, videos, or embedded content -->
+<section class="media-block {% if data.fullwidth %}media-fullwidth{% endif %}">
+    <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+
     {% if data.title %}
     <h2>{{ data.title }}</h2>
     {% endif %}
 
-    {% if data.body %}
-    <div class="media-content">{{ data.body | safe }}</div>
+    {% if data.subtitle %}
+    <p class="media-subtitle">{{ data.subtitle }}</p>
     {% endif %}
+
+    <div class="media-container">
+        {% if data.type == 'video' and data.video_url %}
+        <div class="media-video">
+            <iframe
+                src="{{ data.video_url }}"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+        {% elif data.type == 'embed' and data.embed_code %}
+        <div class="media-embed">
+            {{ data.embed_code | safe }}
+        </div>
+        {% elif data.image %}
+        <figure class="media-figure">
+            <img src="{{ data.image }}" alt="{{ data.alt | default(data.title | default('')) }}" loading="lazy">
+            {% if data.caption %}
+            <figcaption>{{ data.caption }}</figcaption>
+            {% endif %}
+        </figure>
+        {% elif data.gallery %}
+        <div class="media-gallery media-gallery-{{ data.gallery | length }}">
+            {% for item in data.gallery %}
+            <figure class="gallery-item">
+                <img src="{{ item.image }}" alt="{{ item.alt | default('') }}" loading="lazy">
+                {% if item.caption %}
+                <figcaption>{{ item.caption }}</figcaption>
+                {% endif %}
+            </figure>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="media-placeholder">
+            <span class="placeholder-icon">&#9654;</span>
+            <p>No media configured</p>
+        </div>
+        {% endif %}
+    </div>
 </section>
 
 <style>
@@ -14,19 +56,120 @@
     padding: var(--space-2xl) 0;
 }
 
-.media-content {
-    color: var(--text-secondary);
-    line-height: 1.8;
+.media-fullwidth {
+    margin-left: calc(var(--space-xl) * -1);
+    margin-right: calc(var(--space-xl) * -1);
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
 }
 
-.media-content img {
-    max-width: 100%;
+.media-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+}
+
+.media-container {
+    margin-top: var(--space-lg);
+}
+
+.media-figure {
+    margin: 0;
+}
+
+.media-figure img {
+    width: 100%;
     height: auto;
     border-radius: var(--radius-lg);
-    margin: var(--space-lg) 0;
+    border: 1px solid var(--border-color);
 }
 
-.media-content a {
-    color: var(--accent);
+.media-figure figcaption {
+    margin-top: var(--space-md);
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.media-video {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.media-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.media-embed {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.media-gallery {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.media-gallery-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.media-gallery-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.media-gallery-4 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.gallery-item {
+    margin: 0;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.gallery-item figcaption {
+    margin-top: var(--space-sm);
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+}
+
+.media-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3xl);
+    background: var(--bg-secondary);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    color: var(--text-muted);
+}
+
+.placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+    opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+    .media-gallery-2,
+    .media-gallery-3,
+    .media-gallery-4 {
+        grid-template-columns: 1fr;
+    }
 }
 </style>

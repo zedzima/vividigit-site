@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/vividigit-site/">
+    <title>Catalog Block — Blocks Library</title>
+    <meta name="description" content="Display a filterable catalog of items.">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="header-btn btn-menu" id="btnMenu" aria-label="Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <a href="./" class="logo">
+            <img src="images/logo-white.svg" alt="VVDGT" class="logo-text logo-dark">
+            <img src="images/logo-dark.svg" alt="VVDGT" class="logo-text logo-light">
+        </a>
+
+        <div class="header-right">
+            <button class="header-btn btn-action" id="btnAction" aria-label="Actions">
+                <!-- Arrow up-right icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Layout -->
+    <div class="layout">
+        <!-- Left Sidebar: Navigation (auto-generated) -->
+        <aside class="sidebar-nav" id="sidebarNav">
+            <div class="nav-section">
+                <div class="nav-title">Menu</div>
+
+                
+                
+                <!-- Simple link -->
+                <a href="./" class="nav-link ">Home</a>
+                
+                
+                
+                <!-- Collection with children -->
+                <div class="nav-item ">
+                    <div class="nav-item-header">
+                        <a href="blog/" class="nav-item-link">Blog</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="nav-subitems">
+                        
+                        <a href="blog/how-ai-chooses-sources/" class="nav-sublink ">How AI Chooses Sources</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <!-- Collection with children -->
+                <div class="nav-item ">
+                    <div class="nav-item-header">
+                        <a href="services/" class="nav-item-link">Services</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="nav-subitems">
+                        
+                        <a href="services/ai-optimisation/" class="nav-sublink ">AI Optimisation</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <!-- Collection with children -->
+                <div class="nav-item active expanded">
+                    <div class="nav-item-header">
+                        <a href="blocks/" class="nav-item-link">Blocks</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="nav-subitems">
+                        
+                        <a href="blocks/sections/" class="nav-sublink ">Sections</a>
+                        
+                        <a href="blocks/testimonials/" class="nav-sublink ">Testimonials</a>
+                        
+                        <a href="blocks/framework/" class="nav-sublink ">Framework</a>
+                        
+                        <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
+                        
+                        <a href="blocks/services-grid/" class="nav-sublink ">Services Grid</a>
+                        
+                        <a href="blocks/cta/" class="nav-sublink ">CTA</a>
+                        
+                        <a href="blocks/cards/" class="nav-sublink ">Cards</a>
+                        
+                        <a href="blocks/catalog/" class="nav-sublink active">Catalog</a>
+                        
+                        <a href="blocks/bloglist/" class="nav-sublink ">Blog List</a>
+                        
+                        <a href="blocks/features/" class="nav-sublink ">Features</a>
+                        
+                        <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
+                        
+                        <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/comparison/" class="nav-sublink ">Comparison</a>
+                        
+                        <a href="blocks/benefits/" class="nav-sublink ">Benefits</a>
+                        
+                        <a href="blocks/text/" class="nav-sublink ">Text</a>
+                        
+                        <a href="blocks/columns/" class="nav-sublink ">Columns</a>
+                        
+                        <a href="blocks/article/" class="nav-sublink ">Article</a>
+                        
+                        <a href="blocks/hero/" class="nav-sublink ">Hero</a>
+                        
+                        <a href="blocks/nested/" class="nav-sublink ">Nested</a>
+                        
+                        <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/services/" class="nav-sublink ">Services</a>
+                        
+                        <a href="blocks/process/" class="nav-sublink ">Process</a>
+                        
+                        <a href="blocks/media/" class="nav-sublink ">Media</a>
+                        
+                    </div>
+                </div>
+                
+                
+            </div>
+
+            <div class="sidebar-bottom">
+                <!-- Language Dropdown -->
+                <div class="widget">
+                    <div class="widget-title">Language</div>
+                    <div class="site-lang-dropdown" id="siteLangDropdown">
+                        <button class="site-lang-toggle" id="siteLangToggle">
+                            <span id="siteLangText">English</span>
+                            <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="site-lang-menu" id="siteLangMenu">
+                            <button class="site-lang-option active" data-lang="en">English</button>
+                            <button class="site-lang-option disabled" data-lang="de" disabled>Deutsch (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="fr" disabled>Français (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="es" disabled>Español (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="ru" disabled>Русский (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="zh" disabled>中文 (coming soon)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            
+            <nav class="breadcrumbs">
+                <a href="./">Home</a>
+                <span>/</span>
+                
+                <a href="blocks/">Blocks</a>
+                <span>/</span>
+                
+                <span>Catalog Block — Blocks Library</span>
+            </nav>
+            
+
+            
+            <div class="block">
+                <!-- Catalog Block (Services Grid with client-side filtering) -->
+<section class="catalog-block">
+    
+    <div class="catalog-header">
+        <span class="tag tag-accent">catalog</span>
+        <h1>Filterable Catalog</h1>
+        
+        <p class="catalog-subtitle">Dynamic listing with category filters. Works with sidebar filter controls.</p>
+        
+    </div>
+    
+
+    <div class="catalog-toolbar">
+        <div class="catalog-count">
+            <span id="resultsCount">0</span> services found
+        </div>
+        <div class="catalog-sort">
+            <select id="sortBy" class="form-input">
+                <option value="popular">Popular</option>
+                <option value="rating">Highest Rated</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="catalog-grid" id="catalogGrid">
+        <!-- Cards will be rendered by JavaScript -->
+        <div class="catalog-loading">Loading services...</div>
+    </div>
+</section>
+
+<style>
+.catalog-block {
+    padding: var(--space-lg) 0;
+}
+
+.catalog-header {
+    margin-bottom: var(--space-xl);
+}
+
+.catalog-header h1 {
+    margin-bottom: var(--space-sm);
+}
+
+.catalog-subtitle {
+    color: var(--text-muted);
+}
+
+.catalog-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border);
+}
+
+.catalog-count {
+    font-size: var(--font-size-ui);
+    color: var(--text-muted);
+}
+
+.catalog-sort select {
+    min-width: 180px;
+}
+
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+}
+
+.catalog-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-2xl);
+    color: var(--text-muted);
+}
+
+.catalog-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-2xl);
+    color: var(--text-muted);
+}
+
+/* Service Card */
+.service-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+}
+
+.service-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-md);
+}
+
+.service-category {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 4px;
+    color: var(--accent);
+}
+
+.service-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-size-ui);
+    color: #f59e0b;
+    font-weight: 500;
+}
+
+.service-card h3 {
+    color: var(--text-primary);
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.service-card p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    line-height: 1.6;
+    flex: 1;
+    margin-bottom: var(--space-md);
+}
+
+.service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: var(--space-md);
+}
+
+.service-tag {
+    padding: 2px 8px;
+    font-size: var(--font-size-caption);
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    color: var(--text-muted);
+}
+
+.service-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+}
+
+.service-price {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.service-stats {
+    display: flex;
+    gap: var(--space-md);
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+}
+
+.service-cta {
+    color: var(--accent);
+    font-weight: 500;
+    font-size: var(--font-size-ui);
+}
+
+.service-languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: var(--space-md);
+}
+
+.service-lang {
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-muted);
+}
+</style>
+
+<script>
+(function() {
+    const grid = document.getElementById('catalogGrid');
+    const countEl = document.getElementById('resultsCount');
+    const sortEl = document.getElementById('sortBy');
+
+    let allServices = [];
+
+    // Mock services data (in production, this comes from /data/services.json)
+    const mockServices = [
+        {
+            slug: "seo-audit",
+            url: "/services/seo-audit",
+            title: "SEO Audit & Strategy",
+            description: "Comprehensive technical SEO audit with actionable recommendations to improve your search visibility.",
+            category: "SEO",
+            tags: ["Technical SEO", "Audit", "Strategy"],
+            languages: ["EN", "DE"],
+            price: 1500,
+            rating: 4.9,
+            reviews: 127,
+            orders: 340
+        },
+        {
+            slug: "content-strategy",
+            url: "/services/content-strategy",
+            title: "Content Strategy",
+            description: "Data-driven content plan aligned with your business goals and target audience needs.",
+            category: "Content",
+            tags: ["Strategy", "Planning", "Research"],
+            languages: ["EN", "DE", "FR"],
+            price: 2000,
+            rating: 4.8,
+            reviews: 89,
+            orders: 215
+        },
+        {
+            slug: "ppc-setup",
+            url: "/services/ppc-setup",
+            title: "PPC Campaign Setup",
+            description: "Launch optimized paid campaigns across Google Ads and social media platforms.",
+            category: "PPC",
+            tags: ["Google Ads", "Social Ads", "Setup"],
+            languages: ["EN"],
+            price: 1800,
+            rating: 4.7,
+            reviews: 156,
+            orders: 428
+        },
+        {
+            slug: "localization",
+            url: "/services/localization",
+            title: "Website Localization",
+            description: "Professional translation and cultural adaptation for global markets.",
+            category: "Localization",
+            tags: ["Translation", "i18n", "Global"],
+            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
+            price: 2500,
+            rating: 4.9,
+            reviews: 73,
+            orders: 189
+        },
+        {
+            slug: "analytics-setup",
+            url: "/services/analytics-setup",
+            title: "Analytics Setup",
+            description: "GA4, GTM, and custom dashboards for complete data visibility.",
+            category: "Analytics",
+            tags: ["GA4", "GTM", "Dashboards"],
+            languages: ["EN", "DE"],
+            price: 1200,
+            rating: 4.8,
+            reviews: 94,
+            orders: 267
+        },
+        {
+            slug: "link-building",
+            url: "/services/link-building",
+            title: "Link Building Campaign",
+            description: "Quality backlinks from relevant, authoritative sources in your niche.",
+            category: "SEO",
+            tags: ["Backlinks", "Outreach", "PR"],
+            languages: ["EN"],
+            price: 3000,
+            rating: 4.6,
+            reviews: 62,
+            orders: 143
+        },
+        {
+            slug: "ai-optimisation",
+            url: "/services/ai-optimisation",
+            title: "AI Optimization",
+            description: "Optimize your content and strategy for AI-powered search and assistants.",
+            category: "SEO",
+            tags: ["AI", "LLM", "Future-proof"],
+            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
+            price: 2500,
+            rating: 4.9,
+            reviews: 45,
+            orders: 89
+        },
+        {
+            slug: "social-media",
+            url: "/services/social-media",
+            title: "Social Media Management",
+            description: "End-to-end social media strategy and content management.",
+            category: "Content",
+            tags: ["Social", "Community", "Engagement"],
+            languages: ["EN", "DE", "RU"],
+            price: 2200,
+            rating: 4.7,
+            reviews: 112,
+            orders: 298
+        },
+        {
+            slug: "conversion-optimization",
+            url: "/services/conversion-optimization",
+            title: "Conversion Optimization",
+            description: "A/B testing and UX improvements to boost your conversion rates.",
+            category: "Analytics",
+            tags: ["CRO", "A/B Testing", "UX"],
+            languages: ["EN", "DE"],
+            price: 2800,
+            rating: 4.8,
+            reviews: 67,
+            orders: 156
+        }
+    ];
+
+    function renderCard(service) {
+        const tags = (service.tags || []).slice(0, 3).map(t =>
+            `<span class="service-tag">${t}</span>`
+        ).join('');
+
+        const languages = (service.languages || []).map(lang =>
+            `<span class="service-lang">${lang}</span>`
+        ).join('');
+
+        return `
+            <a href="${service.url || '/services/' + service.slug}" class="service-card">
+                <div class="service-card-header">
+                    <span class="service-category">${service.category || 'Service'}</span>
+                    ${service.rating ? `<span class="service-rating">★ ${service.rating}</span>` : ''}
+                </div>
+                <h3>${service.title}</h3>
+                <p>${service.description || ''}</p>
+                ${tags ? `<div class="service-tags">${tags}</div>` : ''}
+                ${languages ? `<div class="service-languages">${languages}</div>` : ''}
+                <div class="service-card-footer">
+                    <span class="service-price">From $${(service.price || 0).toLocaleString()}</span>
+                    <span class="service-cta">View →</span>
+                </div>
+            </a>
+        `;
+    }
+
+    function renderGrid(services) {
+        if (services.length === 0) {
+            grid.innerHTML = '<div class="catalog-empty">No services match your criteria</div>';
+        } else {
+            grid.innerHTML = services.map(renderCard).join('');
+        }
+        countEl.textContent = services.length;
+    }
+
+    function sortServices(services, by) {
+        const sorted = [...services];
+        switch (by) {
+            case 'rating':
+                sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+                break;
+            case 'price-low':
+                sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+                break;
+            case 'price-high':
+                sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+                break;
+            case 'popular':
+            default:
+                sorted.sort((a, b) => (b.orders || 0) - (a.orders || 0));
+        }
+        return sorted;
+    }
+
+    function applyFilters() {
+        let filtered = [...allServices];
+
+        // Get filter values from sidebar
+        const categoryFilter = document.querySelector('[name="category"]');
+        const minPrice = document.querySelector('[name="minPrice"]');
+        const maxPrice = document.querySelector('[name="maxPrice"]');
+
+        if (categoryFilter && categoryFilter.value) {
+            filtered = filtered.filter(s => s.category === categoryFilter.value);
+        }
+
+        if (minPrice && minPrice.value) {
+            filtered = filtered.filter(s => (s.price || 0) >= parseInt(minPrice.value));
+        }
+
+        if (maxPrice && maxPrice.value) {
+            filtered = filtered.filter(s => (s.price || 0) <= parseInt(maxPrice.value));
+        }
+
+        // Delivery mode filters
+        const deliveryChecks = document.querySelectorAll('[name="delivery"]:checked');
+        if (deliveryChecks.length > 0 && deliveryChecks.length < 2) {
+            // Apply filter only if not all selected
+        }
+
+        return sortServices(filtered, sortEl?.value || 'popular');
+    }
+
+    function init() {
+        // Try to load from JSON, fall back to mock
+        fetch('/data/services.json')
+            .then(res => res.ok ? res.json() : Promise.reject())
+            .then(data => {
+                // Merge with mock data for richer display
+                allServices = mockServices.map(mock => {
+                    const real = data.find(d => d.slug === mock.slug);
+                    return real ? { ...mock, ...real } : mock;
+                });
+                // Add any services from JSON not in mock
+                data.forEach(item => {
+                    if (!allServices.find(s => s.slug === item.slug)) {
+                        allServices.push(item);
+                    }
+                });
+                renderGrid(applyFilters());
+            })
+            .catch(() => {
+                allServices = mockServices;
+                renderGrid(applyFilters());
+            });
+
+        // Sort change handler
+        sortEl?.addEventListener('change', () => {
+            renderGrid(applyFilters());
+        });
+
+        // Filter change handlers (sidebar)
+        document.querySelectorAll('.sidebar-action select, .sidebar-action input').forEach(el => {
+            el.addEventListener('change', () => {
+                renderGrid(applyFilters());
+            });
+        });
+
+        // Reset filters button
+        const resetBtn = document.querySelector('.btn-reset-filters');
+        resetBtn?.addEventListener('click', () => {
+            document.querySelectorAll('.sidebar-action select').forEach(el => el.value = '');
+            document.querySelectorAll('.sidebar-action input[type="number"]').forEach(el => el.value = '');
+            document.querySelectorAll('.sidebar-action input[type="checkbox"]').forEach(el => el.checked = true);
+            renderGrid(applyFilters());
+        });
+    }
+
+    // Initialize when DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+            </div>
+            
+
+            <!-- Global Footer -->
+            <footer class="global-footer">
+                <div class="footer-grid">
+                    <div class="footer-logo">
+                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M39 40H33L21 8L12 32H6L9 24H3L0 16H6L9 24L15 8H21L18 0H24L39 40Z" fill="url(#paint0_linear_footer)"/>
+                            <defs>
+                                <linearGradient id="paint0_linear_footer" x1="19.5" y1="0" x2="19.5" y2="40" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.0482922" stop-color="#5A24F2"/>
+                                    <stop offset="0.85138" stop-color="#A530E8"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about/">About Us</a></li>
+                            <li><a href="careers/">Careers</a></li>
+                            <li><a href="contact/">Contact</a></li>
+                            <li><a href="blog/">Blog</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Services</h4>
+                        <ul>
+                            <li><a href="services/seo-audit/">SEO Audit</a></li>
+                            <li><a href="services/ai-optimisation/">AI Optimization</a></li>
+                            <li><a href="services/content-strategy/">Content Strategy</a></li>
+                            <li><a href="services/">All Services</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="docs/">Documentation</a></li>
+                            <li><a href="cases/">Case Studies</a></li>
+                            <li><a href="support/">Support</a></li>
+                            <li><a href="faq/">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="privacy/">Privacy Policy</a></li>
+                            <li><a href="terms/">Terms of Service</a></li>
+                            <li><a href="cookies/">Cookie Policy</a></li>
+                            <li><a href="gdpr/">GDPR</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div class="footer-social">
+                        <a href="https://facebook.com" class="social-link" title="Facebook">f</a>
+                        <a href="https://twitter.com" class="social-link" title="Twitter">X</a>
+                        <a href="https://linkedin.com" class="social-link" title="LinkedIn">in</a>
+                        <a href="https://github.com" class="social-link" title="GitHub">&lt;&gt;</a>
+                    </div>
+                    <p class="footer-text">&copy; 2025 VIVIDIGIT. All rights reserved. Productized multilingual marketing services marketplace.</p>
+                </div>
+            </footer>
+        </main>
+
+        <!-- Right Sidebar: Contextual Actions -->
+        <aside class="sidebar-action" id="sidebarAction">
+            <div class="sidebar-content">
+            
+            <!-- Home / Default: Lead CTA -->
+            <div class="widget">
+                <div class="widget-title">Get Started</div>
+                <p class="widget-text">Ready to grow? Browse our services or request a custom quote.</p>
+                <a href="services/" class="btn btn-primary btn-full btn-mb">Browse Services</a>
+                <button class="btn btn-secondary btn-full">Request Quote</button>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Quick Contact</div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" rows="3" placeholder="Your message"></textarea>
+                </div>
+                <button class="btn btn-primary btn-full">Send</button>
+            </div>
+            
+            </div>
+
+            <!-- Theme Toggle - Bottom of right sidebar -->
+            <div class="sidebar-bottom-action">
+                <div class="widget">
+                    <div class="widget-title">Theme</div>
+                    <div class="theme-toggle" id="themeToggle">
+                        <button class="theme-option" data-theme="light">Light</button>
+                        <button class="theme-option" data-theme="system">System</button>
+                        <button class="theme-option" data-theme="dark">Dark</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <style>
+    .global-footer {
+        padding: var(--space-xl) 0;
+        margin-top: auto;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--space-xl);
+        margin-bottom: var(--space-lg);
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .footer-logo svg {
+        width: auto;
+        height: 80%;
+        align-self: center;
+    }
+
+    .footer-column h4 {
+        font-size: var(--font-size-ui);
+        font-weight: 600;
+        margin-bottom: var(--space-md);
+        color: var(--text-primary);
+    }
+
+    .footer-column ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-column li {
+        margin-bottom: var(--space-sm);
+    }
+
+    .footer-column a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: var(--font-size-ui);
+        transition: color 0.2s ease;
+    }
+
+    .footer-column a:hover {
+        color: var(--accent);
+    }
+
+    .footer-bottom {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        padding-top: var(--space-md);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .footer-social {
+        display: flex;
+        gap: var(--space-xs);
+    }
+
+    .footer-social .social-link {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: var(--font-size-ui);
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .footer-social .social-link:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+    }
+
+    .footer-text {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    @media (max-width: 900px) {
+        .footer-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .footer-logo {
+            grid-column: 1 / -1;
+            justify-content: center;
+        }
+
+        .footer-logo svg {
+            height: 40px;
+        }
+
+        .footer-bottom {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--space-sm);
+        }
+    }
+
+    @media (max-width: 500px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    </style>
+
+    <script>
+        // Theme Toggle (3-way: Light/System/Dark)
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeOptions = themeToggle?.querySelectorAll('.theme-option');
+
+        function getSystemTheme() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'system') {
+                html.setAttribute('data-theme', getSystemTheme());
+            } else {
+                html.setAttribute('data-theme', theme);
+            }
+            // Update active button
+            themeOptions?.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+        }
+
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('theme-preference') || 'dark';
+        applyTheme(savedTheme);
+
+        // Listen for theme button clicks
+        themeOptions?.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme;
+                localStorage.setItem('theme-preference', theme);
+                applyTheme(theme);
+            });
+        });
+
+        // Listen for system theme changes (when in system mode)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (localStorage.getItem('theme-preference') === 'system') {
+                applyTheme('system');
+            }
+        });
+
+        // Sidebar Toggles
+        const btnMenu = document.getElementById('btnMenu');
+        const btnAction = document.getElementById('btnAction');
+        const sidebarNav = document.getElementById('sidebarNav');
+        const sidebarAction = document.getElementById('sidebarAction');
+        const overlay = document.getElementById('overlay');
+
+        function closeSidebars() {
+            sidebarNav?.classList.remove('open');
+            sidebarAction?.classList.remove('open');
+            overlay?.classList.remove('active');
+        }
+
+        btnMenu?.addEventListener('click', () => {
+            sidebarNav?.classList.toggle('open');
+            overlay?.classList.toggle('active');
+            sidebarAction?.classList.remove('open');
+        });
+
+        btnAction?.addEventListener('click', () => {
+            sidebarAction?.classList.toggle('open');
+            overlay?.classList.toggle('active');
+            sidebarNav?.classList.remove('open');
+        });
+
+        overlay?.addEventListener('click', closeSidebars);
+
+        // Service Configurator Calculator
+        function calculatePrice() {
+            // Get tariff from active tab
+            const tariffBtn = document.querySelector('#tariffToggle .tab-btn.active');
+            const tariff = parseInt(tariffBtn?.dataset.value || 0);
+
+            // Get speed coefficient from active tab
+            // Slow = 0.9 (-10%), Standard = 1.0 (0%), Fast = 1.1 (+10%)
+            const speedBtn = document.querySelector('#speedToggle .tab-btn.active');
+            const speedCoef = parseFloat(speedBtn?.dataset.value || 1);
+            const timeLabel = speedBtn?.dataset.label || '2-3 weeks';
+
+            // Sum modules
+            let modules = 0;
+            document.querySelectorAll('.module-check:checked').forEach(cb => {
+                modules += parseInt(cb.dataset.price || 0);
+            });
+
+            // Count total languages selected (including English)
+            const langCount = document.querySelectorAll('.lang-check:checked').length;
+            // Each extra language = +60% (1 lang = 1.0, 2 = 1.6, 3 = 2.2, etc.)
+            const langMultiplier = 1 + ((langCount - 1) * 0.6);
+
+            // Price = (tariff + modules) × langMultiplier × speedCoef
+            const total = Math.round((tariff + modules) * langMultiplier * speedCoef);
+
+            // Update displays
+            const priceDisplay = document.getElementById('totalPrice');
+            const timeDisplay = document.getElementById('totalTime');
+            if (priceDisplay) priceDisplay.textContent = '$' + total.toLocaleString();
+            if (timeDisplay) timeDisplay.textContent = timeLabel;
+        }
+
+        function updateLangText() {
+            const checked = document.querySelectorAll('.lang-check:checked');
+            const names = Array.from(checked).map(cb => cb.dataset.name);
+            const text = names.length > 2
+                ? `${names.slice(0, 2).join(', ')} +${names.length - 2}`
+                : names.join(', ');
+            const display = document.getElementById('langSelectedText');
+            if (display) display.textContent = text || 'English';
+        }
+
+        // Tariff tabs
+        document.querySelectorAll('#tariffToggle .tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#tariffToggle .tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                calculatePrice();
+            });
+        });
+
+        // Speed tabs
+        document.querySelectorAll('#speedToggle .tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#speedToggle .tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                calculatePrice();
+            });
+        });
+
+        // Order Language dropdown toggle (right sidebar)
+        const langDropdown = document.getElementById('langDropdown');
+        const langToggleBtn = document.getElementById('langToggleBtn');
+
+        langToggleBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown?.classList.toggle('open');
+        });
+
+        // Site Language dropdown toggle (left sidebar)
+        const siteLangDropdown = document.getElementById('siteLangDropdown');
+        const siteLangToggle = document.getElementById('siteLangToggle');
+
+        siteLangToggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            siteLangDropdown?.classList.toggle('open');
+        });
+
+        // Site language option click
+        document.querySelectorAll('.site-lang-option:not(:disabled)').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.site-lang-option').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const text = document.getElementById('siteLangText');
+                if (text) text.textContent = btn.textContent;
+                siteLangDropdown?.classList.remove('open');
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (langDropdown && !langDropdown.contains(e.target)) {
+                langDropdown.classList.remove('open');
+            }
+            if (siteLangDropdown && !siteLangDropdown.contains(e.target)) {
+                siteLangDropdown.classList.remove('open');
+            }
+        });
+
+        // Language checkboxes
+        document.querySelectorAll('.lang-check').forEach(cb => {
+            cb.addEventListener('change', () => {
+                updateLangText();
+                calculatePrice();
+            });
+        });
+
+        // Modules checkboxes
+        document.querySelectorAll('.module-check').forEach(cb => {
+            cb.addEventListener('change', calculatePrice);
+        });
+
+        // Initial calculation
+        updateLangText();
+        calculatePrice();
+    </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <section class="faq-block">
     {% if data.title %}
     <div class="faq-header {% if data.centered %}text-center{% endif %}">
-        {% if data.tag %}<span class="tag tag-accent">{{ data.tag }}</span>{% endif %}
+        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
         <h2>{{ data.title }}</h2>
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
     </div>

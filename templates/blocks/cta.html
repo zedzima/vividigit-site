@@ -5,9 +5,7 @@
         <span class="cta-icon">{{ data.icon }}</span>
         {% endif %}
 
-        {% if data.tag %}
-        <span class="tag {% if data.style == 'gradient' %}tag-white{% else %}tag-accent{% endif %}">{{ data.tag }}</span>
-        {% endif %}
+        <span class="tag {% if data.style == 'gradient' %}tag-white{% else %}tag-accent{% endif %}">{{ data.tag | default(block_type) }}</span>
 
         <h2>{{ data.title | default(data.label) }}</h2>
 

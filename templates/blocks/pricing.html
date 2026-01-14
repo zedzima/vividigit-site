@@ -1,9 +1,7 @@
 <!-- Pricing Block: Product/Service pricing info (form is in sidebar) -->
 <section class="pricing-block" id="audit">
     <div class="pricing-header text-center">
-        {% if data.tag %}
-        <span class="tag tag-accent">{{ data.tag }}</span>
-        {% endif %}
+        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
         <h2>{{ data.title }}</h2>
         {% if data.subtitle %}
         <p class="pricing-subtitle">{{ data.subtitle }}</p>
@@ -86,10 +84,6 @@
 
     .pricing-header {
         margin-bottom: var(--space-2xl);
-    }
-
-    .pricing-header .tag {
-        margin-bottom: var(--space-lg);
     }
 
     .pricing-header h2 {

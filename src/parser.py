@@ -143,6 +143,7 @@ def process_markdown_content(frontmatter: Dict[str, Any], body: str) -> Dict[str
             block_type = key.split("_")[0] if "_" in key else key
             blocks.append({
                 "type": block_type,
+                "original_key": key,
                 "data": process_markdown_fields(value)
             })
 
@@ -185,15 +186,23 @@ def process_content(data: Dict[str, Any]) -> Dict[str, Any]:
         if clean_k == "translations":
             translations_data = v
 
+    # Extract sidebar data for layout
+    sidebar_data = {}
+    for k, v in data.items():
+        clean_k = k.lstrip("^").lstrip("_")
+        if clean_k == "sidebar":
+            sidebar_data = v
+
     processed = {
         "config": config_data,
         "meta": meta_data,
         "translations": translations_data,
+        "sidebar": sidebar_data,
         "blocks": []
     }
     
     # System fields that should not be rendered as content blocks
-    SYSTEM_FIELDS = {"config", "meta", "log", "changes", "stats", "translations"}
+    SYSTEM_FIELDS = {"config", "meta", "log", "changes", "stats", "translations", "sidebar"}
 
     for key, value in data.items():
         clean_key = key.lstrip("^").lstrip("_")
@@ -205,10 +214,12 @@ def process_content(data: Dict[str, Any]) -> Dict[str, Any]:
         # This is a block
         # Support naming convention: "text_problem" -> uses "text" template
         # This allows multiple blocks of the same type on one page
+        # But first try full name (main_content.html), then shortened (main.html)
         block_type = clean_key.split("_")[0] if "_" in clean_key else clean_key
 
         block = {
             "type": block_type,
+            "original_key": clean_key,
             "data": value
         }
         

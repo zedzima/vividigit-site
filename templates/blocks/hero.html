@@ -1,8 +1,6 @@
 <!-- Hero Block: Main landing section with gradient accent -->
 <section class="hero-block">
-    {% if data.tag %}
-    <span class="tag tag-accent" style="margin-bottom: var(--space-lg);">{{ data.tag }}</span>
-    {% endif %}
+    <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
 
     <h1>
         {% if data.highlight %}

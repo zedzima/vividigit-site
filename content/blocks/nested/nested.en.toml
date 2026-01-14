@@ -1,0 +1,52 @@
+# Nested Block Demo - UNIQUE: Hierarchical groups with children
+[config]
+lang = "en"
+url = "/blocks/nested"
+menu = "Nested"
+collection = "blocks"
+
+[meta]
+title = "Nested Block — Blocks Library"
+description = "Hierarchical content with parent-child structure."
+
+[nested]
+tag = "nested"
+title = "Nested Block with Hierarchy"
+subtitle = "Unique feature: groups with parent-child structure"
+
+# Groups with children - this is what makes Nested block unique
+[[nested.groups]]
+title = "Phase 1: Discovery"
+description = "Parent item with expandable children below"
+children = [
+    { title = "Research", text = "Analyze market and competitors" },
+    { title = "Audit", text = "Review current state" },
+    { title = "Goals", text = "Define success metrics" }
+]
+
+[[nested.groups]]
+title = "Phase 2: Strategy"
+description = "Each group is a card with nested list items"
+children = [
+    { title = "Planning", text = "Create roadmap" },
+    { title = "Resources", text = "Allocate team and budget" },
+    { title = "Timeline", text = "Set milestones" }
+]
+
+[[nested.groups]]
+title = "Phase 3: Execution"
+description = "Perfect for processes, workflows, or hierarchies"
+children = [
+    { title = "Build", text = "Implement solutions" },
+    { title = "Test", text = "Quality assurance" },
+    { title = "Launch", text = "Go live" }
+]
+
+[[nested.groups]]
+title = "Phase 4: Optimization"
+description = "vs Main block: Nested shows parent-child, Main shows flat sections"
+children = [
+    { title = "Monitor", text = "Track performance" },
+    { title = "Analyze", text = "Find improvements" },
+    { title = "Iterate", text = "Apply learnings" }
+]
