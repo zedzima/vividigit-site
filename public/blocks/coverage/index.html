@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/vividigit-site/">
+    <title>Coverage Block — Blocks Library</title>
+    <meta name="description" content="Tabbed display of industries, countries, and languages with icons.">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="header-btn btn-menu" id="btnMenu" aria-label="Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <a href="./" class="logo">
+            <img src="images/logo-white.svg" alt="VVDGT" class="logo-text logo-dark">
+            <img src="images/logo-dark.svg" alt="VVDGT" class="logo-text logo-light">
+        </a>
+
+        <div class="header-right">
+            <button class="header-btn btn-action" id="btnAction" aria-label="Actions">
+                <!-- Arrow up-right icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Layout -->
+    <div class="layout">
+        <!-- Left Sidebar: Navigation (auto-generated) -->
+        <aside class="sidebar-nav" id="sidebarNav">
+            <div class="nav-section">
+                <div class="nav-title">Menu</div>
+
+                
+                
+                <!-- Simple link -->
+                <a href="./" class="nav-link ">Home</a>
+                
+                
+                
+                <!-- Collection with children -->
+                <div class="nav-item ">
+                    <div class="nav-item-header">
+                        <a href="blog/" class="nav-item-link">Blog</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="nav-subitems">
+                        
+                        <a href="blog/how-ai-chooses-sources/" class="nav-sublink ">How AI Chooses Sources</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <!-- Collection with children -->
+                <div class="nav-item ">
+                    <div class="nav-item-header">
+                        <a href="services/" class="nav-item-link">Services</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="nav-subitems">
+                        
+                        <a href="services/ai-optimisation/" class="nav-sublink ">AI Optimisation</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <!-- Collection with children -->
+                <div class="nav-item active expanded">
+                    <div class="nav-item-header">
+                        <a href="blocks/" class="nav-item-link">Blocks</a>
+                        <button class="nav-expand-btn" onclick="event.preventDefault(); this.closest('.nav-item').classList.toggle('expanded')">
+                            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="nav-subitems">
+                        
+                        <a href="blocks/sections/" class="nav-sublink ">Sections</a>
+                        
+                        <a href="blocks/testimonials/" class="nav-sublink ">Testimonials</a>
+                        
+                        <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
+                        
+                        <a href="blocks/cta/" class="nav-sublink ">CTA</a>
+                        
+                        <a href="blocks/cards/" class="nav-sublink ">Cards</a>
+                        
+                        <a href="blocks/catalog/" class="nav-sublink ">Catalog</a>
+                        
+                        <a href="blocks/bloglist/" class="nav-sublink ">Blog List</a>
+                        
+                        <a href="blocks/features/" class="nav-sublink ">Features</a>
+                        
+                        <a href="blocks/cases/" class="nav-sublink ">Cases</a>
+                        
+                        <a href="blocks/logos/" class="nav-sublink ">Logos</a>
+                        
+                        <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
+                        
+                        <a href="blocks/team/" class="nav-sublink ">Team</a>
+                        
+                        <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/trust/" class="nav-sublink ">Trust</a>
+                        
+                        <a href="blocks/comparison/" class="nav-sublink ">Comparison</a>
+                        
+                        <a href="blocks/benefits/" class="nav-sublink ">Benefits</a>
+                        
+                        <a href="blocks/text/" class="nav-sublink ">Text</a>
+                        
+                        <a href="blocks/columns/" class="nav-sublink ">Columns</a>
+                        
+                        <a href="blocks/article/" class="nav-sublink ">Article</a>
+                        
+                        <a href="blocks/hero/" class="nav-sublink ">Hero</a>
+                        
+                        <a href="blocks/nested/" class="nav-sublink ">Nested</a>
+                        
+                        <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/coverage/" class="nav-sublink active">Coverage</a>
+                        
+                        <a href="blocks/badges/" class="nav-sublink ">Badges</a>
+                        
+                        <a href="blocks/services/" class="nav-sublink ">Services</a>
+                        
+                        <a href="blocks/process/" class="nav-sublink ">Process</a>
+                        
+                        <a href="blocks/media/" class="nav-sublink ">Media</a>
+                        
+                    </div>
+                </div>
+                
+                
+            </div>
+
+            <div class="sidebar-bottom">
+                <!-- Language Dropdown -->
+                <div class="widget">
+                    <div class="widget-title">Language</div>
+                    <div class="site-lang-dropdown" id="siteLangDropdown">
+                        <button class="site-lang-toggle" id="siteLangToggle">
+                            <span id="siteLangText">English</span>
+                            <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="site-lang-menu" id="siteLangMenu">
+                            <button class="site-lang-option active" data-lang="en">English</button>
+                            <button class="site-lang-option disabled" data-lang="de" disabled>Deutsch (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="fr" disabled>Français (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="es" disabled>Español (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="ru" disabled>Русский (coming soon)</button>
+                            <button class="site-lang-option disabled" data-lang="zh" disabled>中文 (coming soon)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            
+            <nav class="breadcrumbs">
+                <a href="./">Home</a>
+                <span>/</span>
+                
+                <a href="blocks/">Blocks</a>
+                <span>/</span>
+                
+                <span>Coverage Block — Blocks Library</span>
+            </nav>
+            
+
+            
+            <div class="block">
+                <!-- Coverage Block: Tabs with icon lists (industries, countries, languages) -->
+<section class="coverage-block">
+    
+    <div class="coverage-tabs">
+        
+        <button class="coverage-tab active" data-tab="1">
+            Industries
+        </button>
+        
+        <button class="coverage-tab " data-tab="2">
+            Countries
+        </button>
+        
+        <button class="coverage-tab " data-tab="3">
+            Languages
+        </button>
+        
+    </div>
+
+    <div class="coverage-panels">
+        
+        <div class="coverage-panel active" data-panel="1">
+            
+            <h2>Industries We Serve</h2>
+            
+
+            
+            <p class="coverage-desc">We&#39;ve helped businesses across diverse sectors improve their AI visibility and capture qualified leads.</p>
+            
+
+            
+            <div class="coverage-list">
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1871)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-tech"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><defs><linearGradient id="icon-grad-1871" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">SaaS &amp; Technology</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2491)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-ecommerce"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/><defs><linearGradient id="icon-grad-2491" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">E-commerce &amp; Retail</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6307)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-fintech"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/><defs><linearGradient id="icon-grad-6307" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Fintech &amp; Finance</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2842)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-healthcare"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/><defs><linearGradient id="icon-grad-2842" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Healthcare &amp; Medical</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3321)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-education"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/><defs><linearGradient id="icon-grad-3321" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Education &amp; EdTech</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9791)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-realestate"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><defs><linearGradient id="icon-grad-9791" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Real Estate</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5759)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-legal"><path d="M12 3v18"/><path d="M5 6l7-3 7 3"/><path d="M5 6v3a7 7 0 0 0 7 7 7 7 0 0 0 7-7V6"/><path d="M5 21h14"/><defs><linearGradient id="icon-grad-5759" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Legal Services</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1225)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-manufacturing"><path d="M2 20h20"/><path d="M5 20V8l5 4V8l5 4V4l5 4v12"/><defs><linearGradient id="icon-grad-1225" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Manufacturing</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6220)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-travel"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/><defs><linearGradient id="icon-grad-6220" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Travel &amp; Hospitality</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8071)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-gaming"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4"/><path d="M8 10v4"/><circle cx="17" cy="10" r="1"/><circle cx="15" cy="14" r="1"/><defs><linearGradient id="icon-grad-8071" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Gaming &amp; Entertainment</span>
+                </div>
+                
+            </div>
+            
+
+            
+            <p class="coverage-note">Each industry requires unique strategies tailored to its audience behavior and competitive landscape.</p>
+            
+        </div>
+        
+        <div class="coverage-panel " data-panel="2">
+            
+            <h2>Countries We&#39;ve Worked In</h2>
+            
+
+            
+            <p class="coverage-desc">Our multilingual team has enabled businesses to improve their AI visibility in various international markets.</p>
+            
+
+            
+            <div class="coverage-list">
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇺🇸</span>
+                    
+                    <span class="coverage-name">United States</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇨🇦</span>
+                    
+                    <span class="coverage-name">Canada</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇬🇧</span>
+                    
+                    <span class="coverage-name">United Kingdom</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇩🇪</span>
+                    
+                    <span class="coverage-name">Germany</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇫🇷</span>
+                    
+                    <span class="coverage-name">France</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇪🇸</span>
+                    
+                    <span class="coverage-name">Spain</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇵🇹</span>
+                    
+                    <span class="coverage-name">Portugal</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇮🇹</span>
+                    
+                    <span class="coverage-name">Italy</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇳🇱</span>
+                    
+                    <span class="coverage-name">Netherlands</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇦🇺</span>
+                    
+                    <span class="coverage-name">Australia</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇯🇵</span>
+                    
+                    <span class="coverage-name">Japan</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇧🇷</span>
+                    
+                    <span class="coverage-name">Brazil</span>
+                </div>
+                
+            </div>
+            
+
+            
+            <p class="coverage-note">For each country we develop unique strategies to resonate with the local audience and prevailing market trends.</p>
+            
+        </div>
+        
+        <div class="coverage-panel " data-panel="3">
+            
+            <h2>Languages We Support</h2>
+            
+
+            
+            <p class="coverage-desc">Native-level content optimization across multiple languages for global AI visibility.</p>
+            
+
+            
+            <div class="coverage-list">
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">EN</span>
+                    
+                    <span class="coverage-name">English</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">DE</span>
+                    
+                    <span class="coverage-name">German</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">FR</span>
+                    
+                    <span class="coverage-name">French</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">ES</span>
+                    
+                    <span class="coverage-name">Spanish</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">PT</span>
+                    
+                    <span class="coverage-name">Portuguese</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">IT</span>
+                    
+                    <span class="coverage-name">Italian</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">NL</span>
+                    
+                    <span class="coverage-name">Dutch</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">JA</span>
+                    
+                    <span class="coverage-name">Japanese</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">ZH</span>
+                    
+                    <span class="coverage-name">Chinese</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">KO</span>
+                    
+                    <span class="coverage-name">Korean</span>
+                </div>
+                
+            </div>
+            
+
+            
+            <p class="coverage-note">Each language version is optimized by native speakers who understand local search patterns and AI behavior.</p>
+            
+        </div>
+        
+    </div>
+    
+
+    
+    <div class="coverage-cta">
+        <a href="/contact" class="btn btn-primary">Let&#39;s discuss your project</a>
+    </div>
+    
+</section>
+
+<style>
+.coverage-block {
+    padding: var(--space-2xl) 0;
+}
+
+.coverage-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.coverage-tab {
+    padding: var(--space-sm) var(--space-lg);
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.coverage-tab:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.coverage-tab.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+.coverage-panel {
+    display: none;
+}
+
+.coverage-panel.active {
+    display: block;
+}
+
+.coverage-panel h2 {
+    margin-bottom: var(--space-sm);
+}
+
+.coverage-desc {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+    max-width: 600px;
+}
+
+.coverage-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm) var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.coverage-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+    min-width: 0;
+}
+
+.coverage-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    flex-shrink: 0;
+}
+
+.coverage-icon .icon {
+    display: block;
+}
+
+.coverage-flag {
+    font-size: 1.25rem;
+    width: 28px;
+    text-align: center;
+}
+
+.coverage-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 20px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.coverage-name {
+    color: var(--text-primary);
+    font-size: var(--font-size-body);
+}
+
+.coverage-note {
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    margin-bottom: var(--space-lg);
+}
+
+.coverage-cta {
+    margin-top: var(--space-lg);
+}
+
+@media (max-width: 900px) {
+    .coverage-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 540px) {
+    .coverage-list {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+(function() {
+    document.querySelectorAll('.coverage-block').forEach(block => {
+        const tabs = block.querySelectorAll('.coverage-tab');
+        const panels = block.querySelectorAll('.coverage-panel');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabNum = tab.dataset.tab;
+
+                tabs.forEach(t => t.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
+
+                tab.classList.add('active');
+                block.querySelector(`[data-panel="${tabNum}"]`).classList.add('active');
+            });
+        });
+    });
+})();
+</script>
+            </div>
+            
+
+            <!-- Global Footer -->
+            <footer class="global-footer">
+                <div class="footer-grid">
+                    <div class="footer-logo">
+                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M39 40H33L21 8L12 32H6L9 24H3L0 16H6L9 24L15 8H21L18 0H24L39 40Z" fill="url(#paint0_linear_footer)"/>
+                            <defs>
+                                <linearGradient id="paint0_linear_footer" x1="19.5" y1="0" x2="19.5" y2="40" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.0482922" stop-color="#5A24F2"/>
+                                    <stop offset="0.85138" stop-color="#A530E8"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about/">About Us</a></li>
+                            <li><a href="careers/">Careers</a></li>
+                            <li><a href="contact/">Contact</a></li>
+                            <li><a href="blog/">Blog</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Services</h4>
+                        <ul>
+                            <li><a href="services/seo-audit/">SEO Audit</a></li>
+                            <li><a href="services/ai-optimisation/">AI Optimization</a></li>
+                            <li><a href="services/content-strategy/">Content Strategy</a></li>
+                            <li><a href="services/">All Services</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="docs/">Documentation</a></li>
+                            <li><a href="cases/">Case Studies</a></li>
+                            <li><a href="support/">Support</a></li>
+                            <li><a href="faq/">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="privacy/">Privacy Policy</a></li>
+                            <li><a href="terms/">Terms of Service</a></li>
+                            <li><a href="cookies/">Cookie Policy</a></li>
+                            <li><a href="gdpr/">GDPR</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div class="footer-social">
+                        <a href="https://facebook.com" class="social-link" title="Facebook">f</a>
+                        <a href="https://twitter.com" class="social-link" title="Twitter">X</a>
+                        <a href="https://linkedin.com" class="social-link" title="LinkedIn">in</a>
+                        <a href="https://github.com" class="social-link" title="GitHub">&lt;&gt;</a>
+                    </div>
+                    <p class="footer-text">&copy; 2025 VIVIDIGIT. All rights reserved. Productized multilingual marketing services marketplace.</p>
+                </div>
+            </footer>
+        </main>
+
+        <!-- Right Sidebar: Contextual Actions -->
+        <aside class="sidebar-action" id="sidebarAction">
+            <div class="sidebar-content">
+            
+            <!-- Home / Default: Lead CTA -->
+            <div class="widget">
+                <div class="widget-title">Get Started</div>
+                <p class="widget-text">Ready to grow? Browse our services or request a custom quote.</p>
+                <a href="services/" class="btn btn-primary btn-full btn-mb">Browse Services</a>
+                <button class="btn btn-secondary btn-full">Request Quote</button>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Quick Contact</div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" rows="3" placeholder="Your message"></textarea>
+                </div>
+                <button class="btn btn-primary btn-full">Send</button>
+            </div>
+            
+            </div>
+
+            <!-- Theme Toggle - Bottom of right sidebar -->
+            <div class="sidebar-bottom-action">
+                <div class="widget">
+                    <div class="widget-title">Theme</div>
+                    <div class="theme-toggle" id="themeToggle">
+                        <button class="theme-option" data-theme="light">Light</button>
+                        <button class="theme-option" data-theme="system">System</button>
+                        <button class="theme-option" data-theme="dark">Dark</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <style>
+    .global-footer {
+        padding: var(--space-xl) 0;
+        margin-top: auto;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--space-xl);
+        margin-bottom: var(--space-lg);
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .footer-logo svg {
+        width: auto;
+        height: 80%;
+        align-self: center;
+    }
+
+    .footer-column h4 {
+        font-size: var(--font-size-ui);
+        font-weight: 600;
+        margin-bottom: var(--space-md);
+        color: var(--text-primary);
+    }
+
+    .footer-column ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-column li {
+        margin-bottom: var(--space-sm);
+    }
+
+    .footer-column a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: var(--font-size-ui);
+        transition: color 0.2s ease;
+    }
+
+    .footer-column a:hover {
+        color: var(--accent);
+    }
+
+    .footer-bottom {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        padding-top: var(--space-md);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .footer-social {
+        display: flex;
+        gap: var(--space-xs);
+    }
+
+    .footer-social .social-link {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: var(--font-size-ui);
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .footer-social .social-link:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+    }
+
+    .footer-text {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    @media (max-width: 900px) {
+        .footer-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .footer-logo {
+            grid-column: 1 / -1;
+            justify-content: center;
+        }
+
+        .footer-logo svg {
+            height: 40px;
+        }
+
+        .footer-bottom {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--space-sm);
+        }
+    }
+
+    @media (max-width: 500px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    </style>
+
+    <script>
+        // Theme Toggle (3-way: Light/System/Dark)
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeOptions = themeToggle?.querySelectorAll('.theme-option');
+
+        function getSystemTheme() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'system') {
+                html.setAttribute('data-theme', getSystemTheme());
+            } else {
+                html.setAttribute('data-theme', theme);
+            }
+            // Update active button
+            themeOptions?.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+        }
+
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('theme-preference') || 'dark';
+        applyTheme(savedTheme);
+
+        // Listen for theme button clicks
+        themeOptions?.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme;
+                localStorage.setItem('theme-preference', theme);
+                applyTheme(theme);
+            });
+        });
+
+        // Listen for system theme changes (when in system mode)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (localStorage.getItem('theme-preference') === 'system') {
+                applyTheme('system');
+            }
+        });
+
+        // Sidebar Toggles
+        const btnMenu = document.getElementById('btnMenu');
+        const btnAction = document.getElementById('btnAction');
+        const sidebarNav = document.getElementById('sidebarNav');
+        const sidebarAction = document.getElementById('sidebarAction');
+        const overlay = document.getElementById('overlay');
+
+        function closeSidebars() {
+            sidebarNav?.classList.remove('open');
+            sidebarAction?.classList.remove('open');
+            overlay?.classList.remove('active');
+        }
+
+        btnMenu?.addEventListener('click', () => {
+            sidebarNav?.classList.toggle('open');
+            overlay?.classList.toggle('active');
+            sidebarAction?.classList.remove('open');
+        });
+
+        btnAction?.addEventListener('click', () => {
+            sidebarAction?.classList.toggle('open');
+            overlay?.classList.toggle('active');
+            sidebarNav?.classList.remove('open');
+        });
+
+        overlay?.addEventListener('click', closeSidebars);
+
+        // Service Configurator Calculator
+        function calculatePrice() {
+            // Get tariff from active tab
+            const tariffBtn = document.querySelector('#tariffToggle .tab-btn.active');
+            const tariff = parseInt(tariffBtn?.dataset.value || 0);
+
+            // Get speed coefficient from active tab
+            // Slow = 0.9 (-10%), Standard = 1.0 (0%), Fast = 1.1 (+10%)
+            const speedBtn = document.querySelector('#speedToggle .tab-btn.active');
+            const speedCoef = parseFloat(speedBtn?.dataset.value || 1);
+            const timeLabel = speedBtn?.dataset.label || '2-3 weeks';
+
+            // Sum modules
+            let modules = 0;
+            document.querySelectorAll('.module-check:checked').forEach(cb => {
+                modules += parseInt(cb.dataset.price || 0);
+            });
+
+            // Count total languages selected (including English)
+            const langCount = document.querySelectorAll('.lang-check:checked').length;
+            // Each extra language = +60% (1 lang = 1.0, 2 = 1.6, 3 = 2.2, etc.)
+            const langMultiplier = 1 + ((langCount - 1) * 0.6);
+
+            // Price = (tariff + modules) × langMultiplier × speedCoef
+            const total = Math.round((tariff + modules) * langMultiplier * speedCoef);
+
+            // Update displays
+            const priceDisplay = document.getElementById('totalPrice');
+            const timeDisplay = document.getElementById('totalTime');
+            if (priceDisplay) priceDisplay.textContent = '$' + total.toLocaleString();
+            if (timeDisplay) timeDisplay.textContent = timeLabel;
+        }
+
+        function updateLangText() {
+            const checked = document.querySelectorAll('.lang-check:checked');
+            const names = Array.from(checked).map(cb => cb.dataset.name);
+            const text = names.length > 2
+                ? `${names.slice(0, 2).join(', ')} +${names.length - 2}`
+                : names.join(', ');
+            const display = document.getElementById('langSelectedText');
+            if (display) display.textContent = text || 'English';
+        }
+
+        // Tariff tabs
+        document.querySelectorAll('#tariffToggle .tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#tariffToggle .tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                calculatePrice();
+            });
+        });
+
+        // Speed tabs
+        document.querySelectorAll('#speedToggle .tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#speedToggle .tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                calculatePrice();
+            });
+        });
+
+        // Order Language dropdown toggle (right sidebar)
+        const langDropdown = document.getElementById('langDropdown');
+        const langToggleBtn = document.getElementById('langToggleBtn');
+
+        langToggleBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown?.classList.toggle('open');
+        });
+
+        // Site Language dropdown toggle (left sidebar)
+        const siteLangDropdown = document.getElementById('siteLangDropdown');
+        const siteLangToggle = document.getElementById('siteLangToggle');
+
+        siteLangToggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            siteLangDropdown?.classList.toggle('open');
+        });
+
+        // Site language option click
+        document.querySelectorAll('.site-lang-option:not(:disabled)').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.site-lang-option').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const text = document.getElementById('siteLangText');
+                if (text) text.textContent = btn.textContent;
+                siteLangDropdown?.classList.remove('open');
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (langDropdown && !langDropdown.contains(e.target)) {
+                langDropdown.classList.remove('open');
+            }
+            if (siteLangDropdown && !siteLangDropdown.contains(e.target)) {
+                siteLangDropdown.classList.remove('open');
+            }
+        });
+
+        // Language checkboxes
+        document.querySelectorAll('.lang-check').forEach(cb => {
+            cb.addEventListener('change', () => {
+                updateLangText();
+                calculatePrice();
+            });
+        });
+
+        // Modules checkboxes
+        document.querySelectorAll('.module-check').forEach(cb => {
+            cb.addEventListener('change', calculatePrice);
+        });
+
+        // Initial calculation
+        updateLangText();
+        calculatePrice();
+    </script>
+</body>
+</html>

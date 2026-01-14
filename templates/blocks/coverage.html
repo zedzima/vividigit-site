@@ -1,0 +1,201 @@
+<!-- Coverage Block: Tabs with icon lists (industries, countries, languages) -->
+<section class="coverage-block">
+    {% if data.tabs %}
+    <div class="coverage-tabs">
+        {% for tab in data.tabs %}
+        <button class="coverage-tab {% if loop.first %}active{% endif %}" data-tab="{{ loop.index }}">
+            {{ tab.label }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <div class="coverage-panels">
+        {% for tab in data.tabs %}
+        <div class="coverage-panel {% if loop.first %}active{% endif %}" data-panel="{{ loop.index }}">
+            {% if tab.title %}
+            <h2>{{ tab.title }}</h2>
+            {% endif %}
+
+            {% if tab.description %}
+            <p class="coverage-desc">{{ tab.description }}</p>
+            {% endif %}
+
+            {% if tab.list %}
+            <div class="coverage-list">
+                {% for item in tab.list %}
+                <div class="coverage-item">
+                    {% if item.icon %}
+                    <span class="coverage-icon">{{ icon(item.icon) }}</span>
+                    {% elif item.flag %}
+                    <span class="coverage-flag">{{ item.flag }}</span>
+                    {% elif item.code %}
+                    <span class="coverage-code">{{ item.code }}</span>
+                    {% endif %}
+                    <span class="coverage-name">{{ item.name }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if tab.note %}
+            <p class="coverage-note">{{ tab.note }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if data.cta_label and data.cta_url %}
+    <div class="coverage-cta">
+        <a href="{{ data.cta_url }}" class="btn btn-primary">{{ data.cta_label }}</a>
+    </div>
+    {% endif %}
+</section>
+
+<style>
+.coverage-block {
+    padding: var(--space-2xl) 0;
+}
+
+.coverage-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.coverage-tab {
+    padding: var(--space-sm) var(--space-lg);
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.coverage-tab:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.coverage-tab.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+.coverage-panel {
+    display: none;
+}
+
+.coverage-panel.active {
+    display: block;
+}
+
+.coverage-panel h2 {
+    margin-bottom: var(--space-sm);
+}
+
+.coverage-desc {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+    max-width: 600px;
+}
+
+.coverage-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm) var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.coverage-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+    min-width: 0;
+}
+
+.coverage-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    flex-shrink: 0;
+}
+
+.coverage-icon .icon {
+    display: block;
+}
+
+.coverage-flag {
+    font-size: 1.25rem;
+    width: 28px;
+    text-align: center;
+}
+
+.coverage-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 20px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.coverage-name {
+    color: var(--text-primary);
+    font-size: var(--font-size-body);
+}
+
+.coverage-note {
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    margin-bottom: var(--space-lg);
+}
+
+.coverage-cta {
+    margin-top: var(--space-lg);
+}
+
+@media (max-width: 900px) {
+    .coverage-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 540px) {
+    .coverage-list {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+(function() {
+    document.querySelectorAll('.coverage-block').forEach(block => {
+        const tabs = block.querySelectorAll('.coverage-tab');
+        const panels = block.querySelectorAll('.coverage-panel');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabNum = tab.dataset.tab;
+
+                tabs.forEach(t => t.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
+
+                tab.classList.add('active');
+                block.querySelector(`[data-panel="${tabNum}"]`).classList.add('active');
+            });
+        });
+    });
+})();
+</script>

@@ -15,7 +15,7 @@
         {% for card in data.cards %}
         <div class="cards-item">
             {% if card.icon %}
-            <span class="cards-icon">{{ card.icon }}</span>
+            <span class="cards-icon">{% if card.icon | length > 2 %}{{ icon(card.icon, 28) }}{% else %}{{ card.icon }}{% endif %}</span>
             {% endif %}
             <h3>{{ card.title }}</h3>
             <p>{{ card.text }}</p>

@@ -9,15 +9,17 @@
     {% endif %}
 
     <div class="comparison-table-wrapper">
+        {% for option in data.options %}
+            {% if option.highlighted and option.badge %}
+        <span class="comparison-badge" data-col="{{ loop.index }}">{{ option.badge }}</span>
+            {% endif %}
+        {% endfor %}
         <table class="comparison-table">
             <thead>
                 <tr>
                     <th class="feature-col">{{ data.feature_label | default('Feature') }}</th>
                     {% for option in data.options %}
-                    <th class="option-col {% if option.highlighted %}option-highlighted{% endif %}">
-                        {% if option.badge %}
-                        <span class="option-badge">{{ option.badge }}</span>
-                        {% endif %}
+                    <th class="option-col {% if option.highlighted %}option-highlighted{% endif %}" data-col="{{ loop.index }}">
                         <span class="option-name">{{ option.name }}</span>
                         {% if option.description %}
                         <span class="option-desc">{{ option.description }}</span>
@@ -83,7 +85,11 @@
     }
 
     .comparison-table-wrapper {
-        overflow-x: auto;
+        position: relative;
+        overflow: visible;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-xl);
+        background: var(--bg-card);
     }
 
     .comparison-table {
@@ -106,6 +112,26 @@
         padding-bottom: var(--space-lg);
     }
 
+    .comparison-table thead tr th:first-child {
+        border-top-left-radius: var(--radius-xl);
+    }
+
+    .comparison-table thead tr th:last-child {
+        border-top-right-radius: var(--radius-xl);
+    }
+
+    .comparison-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .comparison-table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: var(--radius-xl);
+    }
+
+    .comparison-table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: var(--radius-xl);
+    }
+
     .feature-col,
     .feature-cell {
         text-align: left;
@@ -125,24 +151,23 @@
         background: rgba(168, 85, 247, 0.05);
     }
 
-    .option-badge {
+    .comparison-badge {
         position: absolute;
-        top: var(--space-sm);
-        left: 50%;
-        transform: translateX(-50%);
+        top: calc(var(--space-xl) * -0.5);
         background: var(--accent-gradient);
         color: white;
-        padding: 2px var(--space-sm);
+        padding: var(--space-xs) var(--space-md);
         border-radius: var(--radius-full);
         font-size: var(--font-size-caption);
+        font-weight: 600;
         white-space: nowrap;
+        z-index: 10;
     }
 
     .option-name {
         display: block;
         font-size: var(--font-size-subtitle);
         color: var(--text-primary);
-        margin-top: var(--space-md);
     }
 
     .option-desc {
@@ -207,6 +232,10 @@
     }
 
     @media (max-width: 768px) {
+        .comparison-table-wrapper {
+            overflow-x: auto;
+        }
+
         .comparison-table {
             font-size: var(--font-size-caption);
         }
@@ -226,3 +255,27 @@
         }
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.comparison-table-wrapper').forEach(function(wrapper) {
+        var badge = wrapper.querySelector('.comparison-badge');
+        if (!badge) return;
+
+        var colIndex = badge.getAttribute('data-col');
+        var th = wrapper.querySelector('th[data-col="' + colIndex + '"]');
+        if (!th) return;
+
+        function positionBadge() {
+            var thRect = th.getBoundingClientRect();
+            var wrapperRect = wrapper.getBoundingClientRect();
+            var left = thRect.left - wrapperRect.left + thRect.width / 2;
+            badge.style.left = left + 'px';
+            badge.style.transform = 'translateX(-50%)';
+        }
+
+        positionBadge();
+        window.addEventListener('resize', positionBadge);
+    });
+});
+</script>

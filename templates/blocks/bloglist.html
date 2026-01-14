@@ -17,13 +17,14 @@
             gap: var(--space-lg);
         }
         .blog-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: var(--space-lg);
             transition: all 0.2s ease;
         }
         .blog-card:hover {
+            background: var(--bg-card-hover);
             border-color: var(--accent);
             transform: translateY(-2px);
         }
@@ -96,7 +97,7 @@
 
                     articles.forEach(article => {
                         const card = document.createElement('article');
-                        card.className = 'blog-card';
+                        card.className = 'blog-card glass';
                         card.innerHTML = `
                             ${article.category ? `<div class="blog-card-category">${article.category}</div>` : ''}
                             <h3 class="blog-card-title">

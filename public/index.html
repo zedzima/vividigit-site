@@ -113,11 +113,7 @@
                         
                         <a href="blocks/testimonials/" class="nav-sublink ">Testimonials</a>
                         
-                        <a href="blocks/framework/" class="nav-sublink ">Framework</a>
-                        
                         <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
-                        
-                        <a href="blocks/services-grid/" class="nav-sublink ">Services Grid</a>
                         
                         <a href="blocks/cta/" class="nav-sublink ">CTA</a>
                         
@@ -129,9 +125,17 @@
                         
                         <a href="blocks/features/" class="nav-sublink ">Features</a>
                         
+                        <a href="blocks/cases/" class="nav-sublink ">Cases</a>
+                        
+                        <a href="blocks/logos/" class="nav-sublink ">Logos</a>
+                        
                         <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
                         
+                        <a href="blocks/team/" class="nav-sublink ">Team</a>
+                        
                         <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/trust/" class="nav-sublink ">Trust</a>
                         
                         <a href="blocks/comparison/" class="nav-sublink ">Comparison</a>
                         
@@ -148,6 +152,10 @@
                         <a href="blocks/nested/" class="nav-sublink ">Nested</a>
                         
                         <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/coverage/" class="nav-sublink ">Coverage</a>
+                        
+                        <a href="blocks/badges/" class="nav-sublink ">Badges</a>
                         
                         <a href="blocks/services/" class="nav-sublink ">Services</a>
                         
@@ -191,51 +199,74 @@
 
             
             <div class="block">
-                <!-- Hero Block: Main landing section with gradient accent -->
-<section class="hero-block">
-    <span class="tag tag-accent">hero</span>
+                <!-- Hero Block: Main landing section with multiple style variants -->
 
-    <h1>
-        
-        Buy outcomes, not freelancers
-        
-    </h1>
 
-    
-    <p class="hero-subtitle">Order marketing results. We assemble the global team, execute, deliver.
+<section class="hero-block hero-clean">
+    <div class="hero-content">
+        
+
+        <h1>
+            
+            Buy <span class="text-gradient">outcomes</span>, not freelancers
+            
+        </h1>
+
+        
+        <p class="hero-subtitle">Order marketing results. We assemble the global team, execute, deliver.
 
 **Productized services** with transparent pricing and predictable timelines.
 </p>
-    
-
-    
-
-    
-    <div class="hero-actions">
         
-        <a href="/services" class="btn btn-primary">
-            Browse Services
-        </a>
+
         
+
+        
+        <div class="hero-actions">
+            
+            <a href="/services" class="btn btn-primary">
+                Browse Services
+            </a>
+            
+            
+        </div>
+        
+
+        
+        <div class="hero-stats">
+            
+            <div class="hero-stat">
+                <span class="hero-stat-value text-gradient">100+</span>
+                <span class="hero-stat-label">Customers</span>
+            </div>
+            
+            <div class="hero-stat">
+                <span class="hero-stat-value text-gradient">15+</span>
+                <span class="hero-stat-label">Years experience</span>
+            </div>
+            
+            <div class="hero-stat">
+                <span class="hero-stat-value text-gradient">$3M+</span>
+                <span class="hero-stat-label">Ad spend managed</span>
+            </div>
+            
+        </div>
         
     </div>
-    
-
-    
 
     
 </section>
 
 <style>
+    /* Base Hero Styles */
     .hero-block {
-        text-align: center;
         padding: var(--space-3xl) 0;
+        position: relative;
     }
 
     .hero-block h1 {
         font-size: var(--font-size-display);
         max-width: calc(900px * var(--scale));
-        margin: var(--space-lg) auto;
         line-height: 1.2;
     }
 
@@ -243,20 +274,20 @@
         font-size: var(--font-size-subtitle);
         color: var(--text-secondary);
         max-width: calc(700px * var(--scale));
-        margin: 0 auto var(--space-lg);
+        margin-top: var(--space-lg);
     }
 
     .hero-text {
         font-size: var(--font-size-body);
         color: var(--text-secondary);
         max-width: calc(600px * var(--scale));
-        margin: 0 auto var(--space-xl);
+        margin-top: var(--space-md);
+        line-height: 1.7;
     }
 
     .hero-actions {
         display: flex;
         gap: var(--space-md);
-        justify-content: center;
         flex-wrap: wrap;
         margin-top: var(--space-xl);
     }
@@ -264,7 +295,6 @@
     .hero-stats {
         display: flex;
         gap: var(--space-2xl);
-        justify-content: center;
         margin-top: var(--space-2xl);
     }
 
@@ -283,17 +313,198 @@
         color: var(--text-muted);
     }
 
-    .hero-image {
-        margin-top: var(--space-3xl);
+    .hero-visual {
         border-radius: var(--radius-xl);
         overflow: hidden;
         border: 1px solid var(--border-color);
     }
 
-    .hero-image img {
+    .hero-visual img {
         width: 100%;
         height: auto;
         display: block;
+    }
+
+    /* Style 1: Clean (centered) */
+    .hero-clean {
+        text-align: center;
+    }
+
+    .hero-clean .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-clean .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-clean .hero-stats {
+        justify-content: center;
+    }
+
+    .hero-clean .hero-visual {
+        margin-top: var(--space-3xl);
+    }
+
+    /* Style 2: Gradient background */
+    .hero-gradient {
+        text-align: center;
+        background: var(--accent-gradient);
+        color: white;
+        padding: var(--space-3xl);
+        border-radius: var(--radius-xl);
+    }
+
+    .hero-gradient .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-gradient h1 {
+        color: white;
+    }
+
+    .hero-gradient .text-gradient {
+        background: white;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-gradient .tag {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .hero-gradient .hero-subtitle,
+    .hero-gradient .hero-text {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-gradient .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-gradient .btn-primary {
+        background: white;
+        color: var(--brand-purple);
+    }
+
+    .hero-gradient .btn-secondary {
+        background: transparent;
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+    }
+
+    .hero-gradient .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: white;
+    }
+
+    .hero-gradient .hero-stats {
+        justify-content: center;
+    }
+
+    .hero-gradient .hero-stat-value {
+        background: white;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-gradient .hero-stat-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-gradient .hero-visual {
+        margin-top: var(--space-3xl);
+    }
+
+    /* Style 3: Split (content left, image right) */
+    .hero-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-3xl);
+        align-items: center;
+    }
+
+    .hero-split .hero-content {
+        text-align: left;
+    }
+
+    .hero-split h1 {
+        margin: 0;
+    }
+
+    .hero-split .hero-subtitle,
+    .hero-split .hero-text {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .hero-split .hero-stats {
+        justify-content: flex-start;
+    }
+
+    .hero-split .hero-visual {
+        height: 100%;
+        min-height: 400px;
+    }
+
+    .hero-split .hero-visual img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-visual-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(192, 38, 211, 0.1) 100%);
+    }
+
+    .hero-visual-icon {
+        font-size: 6rem;
+        font-weight: 700;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        opacity: 0.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+        .hero-split {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-split .hero-content {
+            text-align: center;
+        }
+
+        .hero-split .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-split .hero-actions {
+            justify-content: center;
+        }
+
+        .hero-split .hero-stats {
+            justify-content: center;
+        }
+
+        .hero-split .hero-visual {
+            order: -1;
+            min-height: 300px;
+        }
     }
 
     @media (max-width: 768px) {
@@ -301,24 +512,303 @@
             flex-direction: column;
             gap: var(--space-lg);
         }
+
+        .hero-gradient {
+            margin: 0;
+            border-radius: 0;
+        }
     }
+</style>
+            </div>
+            
+            <div class="block">
+                <!-- Logos Block: Client logos strip (static or marquee) -->
+
+
+<section class="logos-block logos-marquee">
+    
+
+    
+    <p class="logos-title">Trusted by industry leaders</p>
+    
+
+    
+    <div class="logos-container">
+        
+        <div class="logos-track">
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Cryomed</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Porto Montenegro</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Minto</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Weestep</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Alfacash</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Bamboo Group</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">KISA</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Promwad</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Alvadi</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Alfa Coins</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Infatica</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Ethplorer</span>
+                
+            </div>
+            
+            
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Cryomed</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Porto Montenegro</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Minto</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Weestep</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Alfacash</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Bamboo Group</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">KISA</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Promwad</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Alvadi</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Alfa Coins</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Infatica</span>
+                
+            </div>
+            
+            <div class="logos-item">
+                
+                <span class="logos-text">Ethplorer</span>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</section>
+
+<style>
+.logos-block {
+    padding: var(--space-xl) 0;
+}
+
+.logos-title {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: var(--font-size-ui);
+    margin-bottom: var(--space-lg);
+}
+
+/* Static Grid */
+.logos-static .logos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-xl) var(--space-2xl);
+}
+
+.logos-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logos-item img {
+    max-height: 32px;
+    width: auto;
+    opacity: 0.6;
+    transition: var(--transition);
+}
+
+.logos-item:hover img {
+    opacity: 1;
+}
+
+.logos-item a {
+    display: flex;
+    align-items: center;
+}
+
+.logos-text {
+    font-size: var(--font-size-h3);
+    font-weight: 600;
+    color: var(--text-muted);
+    opacity: 0.5;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.logos-item:hover .logos-text {
+    opacity: 0.8;
+}
+
+/* Marquee Style */
+.logos-marquee .logos-container {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+
+.logos-marquee .logos-track {
+    display: flex;
+    gap: var(--space-2xl);
+    animation: marquee 30s linear infinite;
+    width: max-content;
+}
+
+.logos-marquee .logos-item {
+    flex-shrink: 0;
+    padding: 0 var(--space-md);
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.logos-marquee:hover .logos-track {
+    animation-play-state: paused;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .logos-static .logos-grid {
+        gap: var(--space-lg) var(--space-xl);
+    }
+
+    .logos-item img {
+        max-height: 24px;
+    }
+
+    .logos-text {
+        font-size: var(--font-size-body);
+    }
+}
 </style>
             </div>
             
             <div class="block">
                 <!-- Pillars Block (3 columns) -->
 <section class="pillars-block">
-    <span class="tag tag-accent">pillars</span>
-    
-    <h2>What We Deliver</h2>
-    
+    <div class="pillars-header">
+        <span class="tag tag-accent">pillars</span>
+        
+        <h2>What We Deliver</h2>
+        
+    </div>
 
     
     <div class="pillars-grid">
         
         <div class="pillar-card glass">
             
-            <div class="pillar-icon">📊</div>
+            <div class="pillar-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8467)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><defs><linearGradient id="icon-grad-8467" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></div>
             
             <h3>Market Visibility</h3>
             <p>Get found by your target audience across search engines and platforms.</p>
@@ -337,7 +827,10 @@
         
         <div class="pillar-card glass">
             
-            <div class="pillar-icon">🎯</div>
+            <div class="pillar-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2702)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-2702" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></div>
             
             <h3>Decision Intelligence</h3>
             <p>Make data-driven decisions with comprehensive analytics and insights.</p>
@@ -356,7 +849,10 @@
         
         <div class="pillar-card glass">
             
-            <div class="pillar-icon">📈</div>
+            <div class="pillar-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4135)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/><defs><linearGradient id="icon-grad-4135" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></div>
             
             <h3>Growth Efficiency</h3>
             <p>Scale your marketing operations without scaling your team.</p>
@@ -382,9 +878,17 @@
     padding: var(--space-2xl) 0;
 }
 
-.pillars-block h2 {
+.pillars-header {
     text-align: center;
     margin-bottom: var(--space-xl);
+}
+
+.pillars-header .tag {
+    margin-bottom: var(--space-sm);
+}
+
+.pillars-header h2 {
+    margin-top: var(--space-sm);
 }
 
 .pillars-grid {
@@ -413,6 +917,12 @@
 .pillar-icon {
     font-size: 2.5rem;
     margin-bottom: var(--space-md);
+    display: flex;
+    justify-content: center;
+}
+
+.pillar-icon .icon {
+    display: block;
 }
 
 .pillar-card h3 {
@@ -453,8 +963,389 @@
             </div>
             
             <div class="block">
-                <!-- Process/How It Works Tabs Block -->
-<section class="process-tabs-block">
+                <!-- Coverage Block: Tabs with icon lists (industries, countries, languages) -->
+<section class="coverage-block">
+    
+    <div class="coverage-tabs">
+        
+        <button class="coverage-tab active" data-tab="1">
+            Industries
+        </button>
+        
+        <button class="coverage-tab " data-tab="2">
+            Countries
+        </button>
+        
+        <button class="coverage-tab " data-tab="3">
+            Languages
+        </button>
+        
+    </div>
+
+    <div class="coverage-panels">
+        
+        <div class="coverage-panel active" data-panel="1">
+            
+            <h2>Industries We Serve</h2>
+            
+
+            
+            <p class="coverage-desc">We&#39;ve helped businesses across diverse sectors improve their visibility and growth.</p>
+            
+
+            
+            <div class="coverage-list">
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2283)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-tech"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><defs><linearGradient id="icon-grad-2283" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">SaaS &amp; Technology</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6591)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-ecommerce"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/><defs><linearGradient id="icon-grad-6591" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">E-commerce &amp; Retail</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2236)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-fintech"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/><defs><linearGradient id="icon-grad-2236" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Fintech &amp; Finance</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7259)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-healthcare"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/><defs><linearGradient id="icon-grad-7259" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Healthcare</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3288)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-education"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/><defs><linearGradient id="icon-grad-3288" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Education</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8371)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-realestate"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><defs><linearGradient id="icon-grad-8371" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+                    
+                    <span class="coverage-name">Real Estate</span>
+                </div>
+                
+            </div>
+            
+
+            
+        </div>
+        
+        <div class="coverage-panel " data-panel="2">
+            
+            <h2>Global Reach</h2>
+            
+
+            
+            <p class="coverage-desc">Our team delivers results in markets worldwide.</p>
+            
+
+            
+            <div class="coverage-list">
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇺🇸</span>
+                    
+                    <span class="coverage-name">United States</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇬🇧</span>
+                    
+                    <span class="coverage-name">United Kingdom</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇩🇪</span>
+                    
+                    <span class="coverage-name">Germany</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇫🇷</span>
+                    
+                    <span class="coverage-name">France</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇪🇸</span>
+                    
+                    <span class="coverage-name">Spain</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-flag">🇦🇺</span>
+                    
+                    <span class="coverage-name">Australia</span>
+                </div>
+                
+            </div>
+            
+
+            
+        </div>
+        
+        <div class="coverage-panel " data-panel="3">
+            
+            <h2>Multilingual Expertise</h2>
+            
+
+            
+            <p class="coverage-desc">Native-level content and optimization in major languages.</p>
+            
+
+            
+            <div class="coverage-list">
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">EN</span>
+                    
+                    <span class="coverage-name">English</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">DE</span>
+                    
+                    <span class="coverage-name">German</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">FR</span>
+                    
+                    <span class="coverage-name">French</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">ES</span>
+                    
+                    <span class="coverage-name">Spanish</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">PT</span>
+                    
+                    <span class="coverage-name">Portuguese</span>
+                </div>
+                
+                <div class="coverage-item">
+                    
+                    <span class="coverage-code">IT</span>
+                    
+                    <span class="coverage-name">Italian</span>
+                </div>
+                
+            </div>
+            
+
+            
+        </div>
+        
+    </div>
+    
+
+    
+    <div class="coverage-cta">
+        <a href="/contact" class="btn btn-primary">Discuss Your Project</a>
+    </div>
+    
+</section>
+
+<style>
+.coverage-block {
+    padding: var(--space-2xl) 0;
+}
+
+.coverage-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.coverage-tab {
+    padding: var(--space-sm) var(--space-lg);
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.coverage-tab:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.coverage-tab.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+.coverage-panel {
+    display: none;
+}
+
+.coverage-panel.active {
+    display: block;
+}
+
+.coverage-panel h2 {
+    margin-bottom: var(--space-sm);
+}
+
+.coverage-desc {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+    max-width: 600px;
+}
+
+.coverage-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm) var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.coverage-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+    min-width: 0;
+}
+
+.coverage-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    flex-shrink: 0;
+}
+
+.coverage-icon .icon {
+    display: block;
+}
+
+.coverage-flag {
+    font-size: 1.25rem;
+    width: 28px;
+    text-align: center;
+}
+
+.coverage-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 20px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.coverage-name {
+    color: var(--text-primary);
+    font-size: var(--font-size-body);
+}
+
+.coverage-note {
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    margin-bottom: var(--space-lg);
+}
+
+.coverage-cta {
+    margin-top: var(--space-lg);
+}
+
+@media (max-width: 900px) {
+    .coverage-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 540px) {
+    .coverage-list {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+(function() {
+    document.querySelectorAll('.coverage-block').forEach(block => {
+        const tabs = block.querySelectorAll('.coverage-tab');
+        const panels = block.querySelectorAll('.coverage-panel');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabNum = tab.dataset.tab;
+
+                tabs.forEach(t => t.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
+
+                tab.classList.add('active');
+                block.querySelector(`[data-panel="${tabNum}"]`).classList.add('active');
+            });
+        });
+    });
+})();
+</script>
+            </div>
+            
+            <div class="block">
+                <!-- Process Block: Step-by-step with tabs (horizontal or sidebar) -->
+
+
+<section class="process-block process-tabs">
     <span class="tag tag-accent">process</span>
     
     <h2>How It Works</h2>
@@ -465,46 +1356,49 @@
     
 
     
-    <div class="process-tabs">
-        <div class="tabs-nav">
+    <div class="process-container">
+        <div class="process-nav">
             
-            <button class="tab-btn active" data-tab="1">
-                <span class="tab-num">1</span>
-                <span class="tab-label">Request</span>
+            <button class="process-btn active" data-tab="1">
+                <span class="process-num">1</span>
+                <span class="process-label">Request</span>
             </button>
             
-            <button class="tab-btn " data-tab="2">
-                <span class="tab-num">2</span>
-                <span class="tab-label">Scope</span>
+            <button class="process-btn " data-tab="2">
+                <span class="process-num">2</span>
+                <span class="process-label">Scope</span>
             </button>
             
-            <button class="tab-btn " data-tab="3">
-                <span class="tab-num">3</span>
-                <span class="tab-label">Team Assembly</span>
+            <button class="process-btn " data-tab="3">
+                <span class="process-num">3</span>
+                <span class="process-label">Team Assembly</span>
             </button>
             
-            <button class="tab-btn " data-tab="4">
-                <span class="tab-num">4</span>
-                <span class="tab-label">Execution</span>
+            <button class="process-btn " data-tab="4">
+                <span class="process-num">4</span>
+                <span class="process-label">Execution</span>
             </button>
             
-            <button class="tab-btn " data-tab="5">
-                <span class="tab-num">5</span>
-                <span class="tab-label">Delivery</span>
+            <button class="process-btn " data-tab="5">
+                <span class="process-num">5</span>
+                <span class="process-label">Delivery</span>
             </button>
             
         </div>
-        <div class="tabs-content">
+        <div class="process-content">
             
-            <div class="tab-panel active" data-panel="1">
-                <div class="tab-panel-inner">
+            <div class="process-panel active" data-panel="1">
+                <div class="process-panel-inner">
                     
-                    <div class="tab-icon">📝</div>
+                    <div class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8289)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/><defs><linearGradient id="icon-grad-8289" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></div>
                     
                     <h3>Request</h3>
                     <p>Tell us what you need. Fill out a brief or book a call to discuss your goals and requirements.</p>
                     
-                    <ul class="tab-details">
+                    <ul class="process-details">
                         
                         <li>Describe your business goals</li>
                         
@@ -517,15 +1411,18 @@
                 </div>
             </div>
             
-            <div class="tab-panel " data-panel="2">
-                <div class="tab-panel-inner">
+            <div class="process-panel " data-panel="2">
+                <div class="process-panel-inner">
                     
-                    <div class="tab-icon">🔍</div>
+                    <div class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6394)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40" class="icon icon-search"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><defs><linearGradient id="icon-grad-6394" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></div>
                     
                     <h3>Scope</h3>
                     <p>We analyze your request and create a detailed scope with clear deliverables and timeline.</p>
                     
-                    <ul class="tab-details">
+                    <ul class="process-details">
                         
                         <li>Requirements analysis</li>
                         
@@ -538,15 +1435,18 @@
                 </div>
             </div>
             
-            <div class="tab-panel " data-panel="3">
-                <div class="tab-panel-inner">
+            <div class="process-panel " data-panel="3">
+                <div class="process-panel-inner">
                     
-                    <div class="tab-icon">👥</div>
+                    <div class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2371)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-2371" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></div>
                     
                     <h3>Team Assembly</h3>
                     <p>We match the right experts to your project from our global network of specialists.</p>
                     
-                    <ul class="tab-details">
+                    <ul class="process-details">
                         
                         <li>Skill matching</li>
                         
@@ -559,15 +1459,18 @@
                 </div>
             </div>
             
-            <div class="tab-panel " data-panel="4">
-                <div class="tab-panel-inner">
+            <div class="process-panel " data-panel="4">
+                <div class="process-panel-inner">
                     
-                    <div class="tab-icon">⚡</div>
+                    <div class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2567)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40" class="icon icon-lightning"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/><defs><linearGradient id="icon-grad-2567" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></div>
                     
                     <h3>Execution</h3>
                     <p>Our team executes the work according to the agreed scope, keeping you updated throughout.</p>
                     
-                    <ul class="tab-details">
+                    <ul class="process-details">
                         
                         <li>Work in progress updates</li>
                         
@@ -580,15 +1483,18 @@
                 </div>
             </div>
             
-            <div class="tab-panel " data-panel="5">
-                <div class="tab-panel-inner">
+            <div class="process-panel " data-panel="5">
+                <div class="process-panel-inner">
                     
-                    <div class="tab-icon">✅</div>
+                    <div class="process-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5063)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40" class="icon icon-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/><defs><linearGradient id="icon-grad-5063" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></div>
                     
                     <h3>Delivery</h3>
                     <p>Receive your deliverables with comprehensive reporting and documentation.</p>
                     
-                    <ul class="tab-details">
+                    <ul class="process-details">
                         
                         <li>Final deliverables</li>
                         
@@ -607,11 +1513,11 @@
 </section>
 
 <style>
-.process-tabs-block {
+.process-block {
     padding: var(--space-2xl) 0;
 }
 
-.process-tabs-block h2 {
+.process-block h2 {
     margin-bottom: var(--space-sm);
 }
 
@@ -620,54 +1526,14 @@
     margin-bottom: var(--space-xl);
 }
 
-.process-tabs {
+.process-container {
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
     overflow: hidden;
 }
 
-.tabs-nav {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.tabs-nav::-webkit-scrollbar {
-    display: none;
-}
-
-.tab-btn {
-    flex: 1;
-    min-width: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: var(--space-md) var(--space-lg);
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: var(--font-size-ui);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.tab-btn:hover {
-    background: var(--bg-input);
-    color: var(--text-secondary);
-}
-
-.tab-btn.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-    background: var(--bg-input);
-}
-
-.tab-num {
+.process-num {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -677,56 +1543,57 @@
     border-radius: 50%;
     font-weight: 600;
     font-size: var(--font-size-ui);
+    flex-shrink: 0;
 }
 
-.tab-btn.active .tab-num {
-    background: var(--accent);
+.process-btn.active .process-num {
+    background: var(--accent-gradient);
     color: white;
 }
 
-.tab-label {
+.process-label {
     font-weight: 500;
     white-space: nowrap;
 }
 
-.tabs-content {
+.process-content {
     padding: var(--space-xl);
 }
 
-.tab-panel {
+.process-panel {
     display: none;
 }
 
-.tab-panel.active {
+.process-panel.active {
     display: block;
 }
 
-.tab-panel-inner {
+.process-panel-inner {
     max-width: calc(600px * var(--scale));
 }
 
-.tab-icon {
+.process-icon {
     font-size: var(--font-size-display);
     margin-bottom: var(--space-md);
 }
 
-.tab-panel h3 {
+.process-panel h3 {
     color: var(--text-primary);
     margin-bottom: var(--space-sm);
 }
 
-.tab-panel p {
+.process-panel p {
     color: var(--text-secondary);
     line-height: 1.7;
     margin-bottom: var(--space-md);
 }
 
-.tab-details {
+.process-details {
     list-style: none;
     padding: 0;
 }
 
-.tab-details li {
+.process-details li {
     display: flex;
     align-items: flex-start;
     gap: var(--space-sm);
@@ -735,23 +1602,139 @@
     font-size: var(--font-size-ui);
 }
 
-.tab-details li::before {
-    content: "→";
-    color: var(--accent);
+.process-details li::before {
+    content: "+";
+    color: var(--accent-primary);
     font-weight: bold;
 }
 
-@media (max-width: 768px) {
-    .tabs-nav {
-        flex-wrap: nowrap;
-    }
+/* ===== TABS STYLE (horizontal) ===== */
+.process-tabs .process-container {
+    display: flex;
+    flex-direction: column;
+}
 
-    .tab-btn {
+.process-tabs .process-nav {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.process-tabs .process-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.process-tabs .process-btn {
+    flex: 1;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-md) var(--space-lg);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: var(--font-size-ui);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.process-tabs .process-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+.process-tabs .process-btn.active {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
+    background: var(--bg-secondary);
+}
+
+/* ===== SIDEBAR STYLE (vertical) ===== */
+.process-sidebar .process-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.process-sidebar .process-nav {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+}
+
+.process-sidebar .process-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: transparent;
+    border: none;
+    border-right: 2px solid transparent;
+    margin-right: -1px;
+    color: var(--text-muted);
+    font-size: var(--font-size-ui);
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.process-sidebar .process-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+.process-sidebar .process-btn.active {
+    color: var(--accent-primary);
+    border-right-color: var(--accent-primary);
+    background: var(--bg-secondary);
+}
+
+.process-sidebar .process-label {
+    white-space: nowrap;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .process-tabs .process-btn {
         min-width: 100px;
         padding: var(--space-sm) var(--space-md);
     }
 
-    .tab-label {
+    .process-tabs .process-label {
+        font-size: var(--font-size-caption);
+    }
+
+    .process-sidebar .process-container {
+        grid-template-columns: 1fr;
+    }
+
+    .process-sidebar .process-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .process-sidebar .process-btn {
+        flex-direction: column;
+        min-width: 100px;
+        padding: var(--space-sm) var(--space-md);
+        text-align: center;
+        border-right: none;
+        border-bottom: 2px solid transparent;
+        margin-right: 0;
+        margin-bottom: -1px;
+    }
+
+    .process-sidebar .process-btn.active {
+        border-right-color: transparent;
+        border-bottom-color: var(--accent-primary);
+    }
+
+    .process-sidebar .process-label {
         font-size: var(--font-size-caption);
     }
 }
@@ -759,21 +1742,20 @@
 
 <script>
 (function() {
-    const block = document.querySelector('.process-tabs-block');
-    if (!block) return;
+    document.querySelectorAll('.process-block').forEach(block => {
+        const btns = block.querySelectorAll('.process-btn');
+        const panels = block.querySelectorAll('.process-panel');
 
-    const tabs = block.querySelectorAll('.tab-btn');
-    const panels = block.querySelectorAll('.tab-panel');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabNum = btn.dataset.tab;
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabNum = tab.dataset.tab;
+                btns.forEach(b => b.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
 
-            tabs.forEach(t => t.classList.remove('active'));
-            panels.forEach(p => p.classList.remove('active'));
-
-            tab.classList.add('active');
-            block.querySelector(`[data-panel="${tabNum}"]`).classList.add('active');
+                btn.classList.add('active');
+                block.querySelector(`[data-panel="${tabNum}"]`).classList.add('active');
+            });
         });
     });
 })();
@@ -781,15 +1763,380 @@
             </div>
             
             <div class="block">
-                <!-- Services Grid Block (for featured services) -->
-<section class="services-grid-block">
+                <!-- Testimonials Block: Customer reviews and social proof -->
+<section class="testimonials-block">
+    
+    <div class="testimonials-header">
+        <div class="testimonials-header-text">
+            <span class="tag tag-accent">testimonials</span>
+            <h2>What Clients Say</h2>
+            
+        </div>
+        <div class="testimonials-nav">
+            <button class="testimonials-nav-btn" data-dir="prev" aria-label="Previous">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button class="testimonials-nav-btn" data-dir="next" aria-label="Next">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 6 15 12 9 18"></polyline>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+
+    <div class="testimonials-carousel">
+        <div class="testimonials-track">
+            
+            <div class="testimonial-card card ">
+            
+
+            <blockquote class="testimonial-quote">
+                "They transformed our SEO strategy completely. Traffic increased 340% in 6 months."
+            </blockquote>
+
+            <div class="testimonial-author">
+                
+                <div class="testimonial-avatar-placeholder">
+                    S
+                </div>
+                
+                <div class="testimonial-author-info">
+                    <strong>Sarah Chen</strong>
+                    
+                    <span>CMO, TechFlow</span>
+                    
+                </div>
+            </div>
+
+            
+        </div>
+        
+            <div class="testimonial-card card ">
+            
+
+            <blockquote class="testimonial-quote">
+                "Professional, responsive, and results-driven. Our go-to marketing partner."
+            </blockquote>
+
+            <div class="testimonial-author">
+                
+                <div class="testimonial-avatar-placeholder">
+                    M
+                </div>
+                
+                <div class="testimonial-author-info">
+                    <strong>Marcus Weber</strong>
+                    
+                    <span>Founder, ShopWave</span>
+                    
+                </div>
+            </div>
+
+            
+        </div>
+        
+            <div class="testimonial-card card ">
+            
+
+            <blockquote class="testimonial-quote">
+                "The multilingual content they created opened 3 new markets for us."
+            </blockquote>
+
+            <div class="testimonial-author">
+                
+                <div class="testimonial-avatar-placeholder">
+                    E
+                </div>
+                
+                <div class="testimonial-author-info">
+                    <strong>Elena Rodriguez</strong>
+                    
+                    <span>Head of Growth, FinSecure</span>
+                    
+                </div>
+            </div>
+
+            
+        </div>
+        
+        </div>
+    </div>
+
+    
+</section>
+
+<style>
+    .testimonials-block {
+        padding: var(--space-2xl) 0;
+    }
+
+    .testimonials-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: var(--space-xl);
+    }
+
+    .testimonials-header-text p {
+        color: var(--text-secondary);
+        max-width: calc(600px * var(--scale));
+    }
+
+    .testimonials-nav {
+        display: flex;
+        gap: var(--space-sm);
+        flex-shrink: 0;
+    }
+
+    .testimonials-nav-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .testimonials-nav-btn:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-color: var(--border-light);
+    }
+
+    .testimonials-carousel {
+        overflow: hidden;
+        margin-bottom: var(--space-2xl);
+    }
+
+    .testimonials-track {
+        display: flex;
+        gap: var(--space-lg);
+        transition: transform 0.4s ease;
+    }
+
+    .testimonial-card {
+        flex: 0 0 calc(50% - var(--space-lg) / 2);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-lg);
+    }
+
+    @media (max-width: 768px) {
+        .testimonial-card {
+            flex: 0 0 100%;
+        }
+    }
+
+    .testimonial-rating {
+        display: flex;
+        gap: 2px;
+    }
+
+    .testimonial-rating .star {
+        color: var(--warning);
+        font-size: var(--font-size-subtitle);
+    }
+
+    .card-gradient .testimonial-rating .star {
+        color: white;
+    }
+
+    .testimonial-quote {
+        font-size: var(--font-size-subtitle);
+        line-height: 1.6;
+        color: var(--text-primary);
+        margin: 0;
+        flex: 1;
+    }
+
+    .card-gradient .testimonial-quote {
+        color: white;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+    }
+
+    .testimonial-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-full);
+        object-fit: cover;
+    }
+
+    .testimonial-avatar-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-full);
+        background: var(--accent-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: white;
+    }
+
+    .testimonial-author-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .testimonial-author-info strong {
+        color: var(--text-primary);
+    }
+
+    .card-gradient .testimonial-author-info strong {
+        color: white;
+    }
+
+    .testimonial-author-info span {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .card-gradient .testimonial-author-info span {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .testimonial-metrics {
+        display: flex;
+        gap: var(--space-lg);
+        padding-top: var(--space-lg);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .card-gradient .testimonial-metrics {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .testimonial-metric {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .metric-value {
+        font-size: var(--font-size-h3);
+        font-weight: 600;
+        color: var(--accent-primary);
+    }
+
+    .card-gradient .metric-value {
+        color: white;
+    }
+
+    .metric-label {
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+    }
+
+    .card-gradient .metric-label {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .testimonials-logos {
+        margin-top: var(--space-3xl);
+    }
+
+    .logos-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: var(--space-2xl);
+        flex-wrap: wrap;
+        margin-top: var(--space-lg);
+    }
+
+    .logo-img {
+        height: 32px;
+        opacity: 0.5;
+        filter: grayscale(100%);
+        transition: all 0.2s ease;
+    }
+
+    .logo-img:hover {
+        opacity: 1;
+        filter: grayscale(0);
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.testimonials-block').forEach(function(block) {
+        const track = block.querySelector('.testimonials-track');
+        const cards = block.querySelectorAll('.testimonial-card');
+        const prevBtn = block.querySelector('[data-dir="prev"]');
+        const nextBtn = block.querySelector('[data-dir="next"]');
+
+        if (!track || cards.length === 0) return;
+
+        let currentIndex = 0;
+
+        function getVisibleCards() {
+            return window.innerWidth <= 768 ? 1 : 2;
+        }
+
+        function getMaxIndex() {
+            return Math.max(0, cards.length - getVisibleCards());
+        }
+
+        function updateCarousel() {
+            const card = cards[0];
+            const cardWidth = card.offsetWidth;
+            const gap = parseInt(getComputedStyle(track).gap) || 24;
+            const offset = currentIndex * (cardWidth + gap);
+            track.style.transform = 'translateX(-' + offset + 'px)';
+        }
+
+        function next() {
+            currentIndex++;
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = 0;
+            }
+            updateCarousel();
+        }
+
+        function prev() {
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', prev);
+        if (nextBtn) nextBtn.addEventListener('click', next);
+
+        window.addEventListener('resize', function() {
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        });
+    });
+});
+</script>
+            </div>
+            
+            <div class="block">
+                <!-- Services Block: Grid of service cards -->
+<section class="services-block">
     <span class="tag tag-accent">services</span>
     
     <h2>Featured Services</h2>
     
 
     
-    <p class="services-grid-subtitle">Most popular productized marketing services</p>
+    <p class="services-subtitle">Most popular productized marketing services</p>
     
 
     
@@ -889,22 +2236,22 @@
     
 
     
-    <div class="services-grid-cta">
+    <div class="services-cta">
         <a href="/services" class="btn btn-secondary">View All Services</a>
     </div>
     
 </section>
 
 <style>
-.services-grid-block {
+.services-block {
     padding: var(--space-2xl) 0;
 }
 
-.services-grid-block h2 {
+.services-block h2 {
     margin-bottom: var(--space-sm);
 }
 
-.services-grid-subtitle {
+.services-subtitle {
     color: var(--text-muted);
     margin-bottom: var(--space-xl);
 }
@@ -975,10 +2322,178 @@
     font-size: var(--font-size-ui);
 }
 
-.services-grid-cta {
+.services-cta {
     text-align: center;
     margin-top: var(--space-xl);
 }
+</style>
+            </div>
+            
+            <div class="block">
+                <!-- FAQ Block: Accordion-style questions and answers -->
+<section class="faq-block">
+    
+    <div class="faq-header ">
+        <span class="tag tag-accent">faq</span>
+        <h2>Frequently Asked Questions</h2>
+        
+    </div>
+    
+
+    <div class="faq-list ">
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span>How does the productized model work?</span>
+                <span class="faq-icon">+</span>
+            </summary>
+            <div class="faq-answer">
+                <p>You choose a service from our catalog, we scope the work, assemble the right team, and deliver results. No hourly billing, no surprises — just clear deliverables and pricing.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span>What&#39;s the typical turnaround time?</span>
+                <span class="faq-icon">+</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Most projects are delivered within 2-4 weeks depending on scope. We provide clear timelines upfront and keep you updated throughout.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span>Do you offer ongoing support?</span>
+                <span class="faq-icon">+</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Yes, we offer retainer packages for ongoing work. Many clients start with a one-time project and then move to monthly engagements.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span>How do I get started?</span>
+                <span class="faq-icon">+</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Browse our services, pick what you need, and submit a request. We'll get back to you within 48 hours with a detailed scope and quote.</p>
+            </div>
+        </details>
+        
+    </div>
+
+    
+</section>
+
+<style>
+    .faq-block {
+        padding: var(--space-2xl) 0;
+        max-width: calc(900px * var(--scale));
+        margin: 0 auto;
+    }
+
+    .faq-header {
+        margin-bottom: var(--space-2xl);
+    }
+
+    .faq-header p {
+        color: var(--text-secondary);
+    }
+
+    .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    .faq-two-columns {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+    }
+
+    .faq-item {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        transition: border-color 0.2s ease;
+    }
+
+    .faq-item:hover {
+        border-color: var(--border-light);
+    }
+
+    .faq-item[open] {
+        border-color: var(--accent-primary);
+    }
+
+    .faq-question {
+        padding: var(--space-lg);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-md);
+        font-weight: 500;
+        color: var(--text-primary);
+        list-style: none;
+    }
+
+    .faq-question::-webkit-details-marker {
+        display: none;
+    }
+
+    .faq-question:hover {
+        color: var(--accent-primary);
+    }
+
+    .faq-icon {
+        font-size: var(--font-size-h3);
+        color: var(--text-muted);
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .faq-item[open] .faq-icon {
+        transform: rotate(45deg);
+        color: var(--accent-primary);
+    }
+
+    .faq-answer {
+        padding: 0 var(--space-lg) var(--space-lg);
+        color: var(--text-secondary);
+        line-height: 1.7;
+    }
+
+    .faq-answer p:last-child {
+        margin-bottom: 0;
+    }
+
+    .faq-answer ul, .faq-answer ol {
+        margin: var(--space-md) 0;
+        padding-left: var(--space-xl);
+    }
+
+    .faq-answer li {
+        margin-bottom: var(--space-xs);
+    }
+
+    .faq-contact {
+        background: var(--bg-tertiary);
+    }
+
+    .faq-contact p {
+        margin-bottom: var(--space-md);
+    }
+
+    @media (max-width: 768px) {
+        .faq-two-columns {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
             </div>
             
@@ -1022,7 +2537,29 @@ We'll scope your project and assemble the right team.
 
     .cta-default {
         background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
+        border: none;
+        position: relative;
+    }
+
+    .cta-default::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius-xl);
+        padding: 1px;
+        background: var(--accent-gradient);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+    .cta-default h2 {
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     .cta-gradient {
@@ -1079,29 +2616,6 @@ We'll scope your project and assemble the right team.
 
     .cta-gradient .cta-note {
         color: rgba(255, 255, 255, 0.6);
-    }
-
-    /* White button for gradient background */
-    .btn-white {
-        background: white;
-        color: var(--bg-primary);
-    }
-
-    .btn-white:hover {
-        background: rgba(255, 255, 255, 0.9);
-        color: var(--bg-primary);
-        transform: translateY(-2px);
-    }
-
-    .btn-ghost-white {
-        background: transparent;
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .btn-ghost-white:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
     }
 
     .tag-white {

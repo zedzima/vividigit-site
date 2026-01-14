@@ -9,37 +9,79 @@ collection = "blocks"
 title = "Pricing Block — Blocks Library"
 description = "Product/service pricing information display."
 
+# Style 1: Packages - subscription tiers
 [pricing]
-tag = "pricing"
-title = "Service Pricing Display"
-subtitle = "Shows price, description, and what's included"
+tag = "pricing · packages"
+style = "packages"
+title = "Ongoing Monitoring Plans"
+subtitle = "Track your AI visibility and citations over time"
+note = "All plans include initial setup and onboarding call"
+yearly_discount = 20
 
-badge = "Most Popular"
-
-price = 2500
-price_period = "one-time"
-
-description = """
-The pricing block displays service or product information in a two-column layout. The left side contains the description and includes list, while the right side shows the pricing card.
-
-**Key features:**
-- Badge for highlighting popular options
-- Price with optional period
-- Tier selector for multiple options
-- Guarantees or trust signals
-"""
-
-includes = [
-    "Feature or deliverable one",
-    "Feature or deliverable two",
-    "Feature or deliverable three",
-    "Feature or deliverable four",
-    "Feature or deliverable five"
+[[pricing.packages]]
+name = "Starter"
+description = "For small businesses"
+price = 299
+period = "/month"
+features = [
+    "Monthly visibility report",
+    "Track 10 key queries",
+    "3 competitor tracking",
+    "Email alerts for changes",
+    "Quarterly strategy call"
 ]
+button_label = "Start Starter"
+button_url = "#"
+
+[[pricing.packages]]
+name = "Growth"
+description = "For growing companies"
+price = 599
+period = "/month"
+highlighted = true
+badge = "Popular"
+features = [
+    "Weekly visibility reports",
+    "Track 50 key queries",
+    "10 competitor tracking",
+    "Real-time alerts",
+    "Monthly strategy calls",
+    "Content recommendations"
+]
+button_label = "Start Growth"
+button_url = "#"
+
+[[pricing.packages]]
+name = "Enterprise"
+description = "For large organizations"
+price = 1499
+period = "/month"
+features = [
+    "Daily visibility reports",
+    "Unlimited query tracking",
+    "Unlimited competitors",
+    "API access",
+    "Dedicated account manager",
+    "Custom integrations"
+]
+button_label = "Contact Sales"
+button_url = "#"
+note = "Custom pricing available"
+
+# Style 2: Simple - minimal promo
+[pricing_simple]
+tag = "pricing · simple"
+style = "simple"
+title = "Quick Start Package"
+subtitle = "Everything you need to get started with AI visibility"
+
+description = "One-time audit with actionable recommendations for improving your AI citation readiness."
+price = 990
+price_prefix = "from"
 
 button_label = "Get Started"
 button_url = "#"
-button_secondary_label = "Ask a Question"
+button_secondary_label = "See Details"
 button_secondary_url = "#"
 
-guarantees = ["Money-back guarantee", "No hidden fees", "Cancel anytime"]
+note = "30-day money-back guarantee"

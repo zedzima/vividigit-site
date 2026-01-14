@@ -1,5 +1,9 @@
-<!-- Pricing Block: Product/Service pricing info (form is in sidebar) -->
-<section class="pricing-block" id="audit">
+<!-- Pricing Block: Multiple style variants -->
+{% set pricing_style = data.style | default('spotlight') %}
+
+<section class="pricing-block pricing-{{ pricing_style }}" {% if data.anchor %}id="{{ data.anchor }}"{% endif %}>
+
+    {% if data.title and pricing_style != 'simple' %}
     <div class="pricing-header text-center">
         <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
         <h2>{{ data.title }}</h2>
@@ -7,7 +11,10 @@
         <p class="pricing-subtitle">{{ data.subtitle }}</p>
         {% endif %}
     </div>
+    {% endif %}
 
+    {% if pricing_style == 'spotlight' %}
+    <!-- Style 1: Spotlight - single service with description + sticky CTA card -->
     <div class="pricing-content">
         <div class="pricing-main">
             {% if data.description %}
@@ -18,7 +25,7 @@
 
             {% if data.includes %}
             <div class="pricing-includes">
-                <h4>What's included:</h4>
+                <h4>{{ data.includes_label | default("What's included:") }}</h4>
                 <ul>
                     {% for item in data.includes %}
                     <li><span class="check">+</span> {{ item }}</li>
@@ -37,7 +44,7 @@
                 {% if data.price_original %}
                 <span class="price-original">${{ data.price_original }}</span>
                 {% endif %}
-                <span class="price-label">from</span>
+                <span class="price-label">{{ data.price_prefix | default('from') }}</span>
                 <span class="price-current">${{ data.price }}</span>
                 {% if data.price_period %}
                 <span class="price-period">{{ data.price_period }}</span>
@@ -56,8 +63,8 @@
             </div>
             {% endif %}
 
-            <a href="{{ data.button_url | default('#audit') }}" class="btn btn-primary btn-full pricing-cta-btn">
-                {{ data.button_label | default('Request Audit') }}
+            <a href="{{ data.button_url | default('#') }}" class="btn btn-primary btn-full pricing-cta-btn">
+                {{ data.button_label | default('Get Started') }}
             </a>
 
             {% if data.button_secondary_label %}
@@ -75,6 +82,108 @@
             {% endif %}
         </div>
     </div>
+
+    {% elif pricing_style == 'packages' %}
+    <!-- Style 2: Packages - horizontal cards for subscription tiers -->
+    {% if data.yearly_discount %}
+    <div class="pricing-toggle">
+        <button class="pricing-toggle-btn active" data-period="monthly">Monthly</button>
+        <button class="pricing-toggle-btn" data-period="yearly">
+            Yearly
+            <span class="pricing-toggle-badge">-{{ data.yearly_discount }}%</span>
+        </button>
+    </div>
+    {% endif %}
+
+    <div class="pricing-packages-grid" data-discount="{{ data.yearly_discount | default(20) }}">
+        {% for pkg in data.packages %}
+        <div class="pricing-package {% if pkg.highlighted %}pricing-package-highlighted{% endif %}">
+            {% if pkg.badge %}
+            <span class="package-badge">{{ pkg.badge }}</span>
+            {% endif %}
+
+            <div class="package-header">
+                <h3>{{ pkg.name }}</h3>
+                {% if pkg.description %}
+                <p>{{ pkg.description }}</p>
+                {% endif %}
+            </div>
+
+            <div class="package-price">
+                <span class="price-current" data-monthly="{{ pkg.price }}">${{ pkg.price }}</span>
+                <span class="price-period">/month</span>
+                {% if data.yearly_discount %}
+                <span class="package-savings">
+                    Save $<span class="savings-amount">0</span>/year
+                </span>
+                {% endif %}
+            </div>
+
+            {% if pkg.features %}
+            <ul class="package-features">
+                {% for feature in pkg.features %}
+                <li><span class="check">+</span> {{ feature }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <a href="{{ pkg.button_url | default('#') }}" class="btn {% if pkg.highlighted %}btn-primary{% else %}btn-secondary{% endif %} btn-full">
+                {{ pkg.button_label | default('Choose Plan') }}
+            </a>
+
+            {% if pkg.note %}
+            <span class="package-note">{{ pkg.note }}</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if data.note %}
+    <p class="pricing-note text-center">{{ data.note }}</p>
+    {% endif %}
+
+    {% elif pricing_style == 'simple' %}
+    <!-- Style 3: Simple - split layout -->
+    <div class="pricing-simple-grid">
+        <div class="pricing-simple-left">
+            <div class="pricing-simple-info">
+                <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+                {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+                {% if data.subtitle %}<p class="pricing-subtitle">{{ data.subtitle }}</p>{% endif %}
+                {% if data.description %}<p class="pricing-simple-desc">{{ data.description }}</p>{% endif %}
+            </div>
+        </div>
+        <div class="pricing-simple-right">
+            <div class="pricing-simple-card card">
+                <div class="pricing-simple-price">
+                    {% if data.price_prefix %}
+                    <span class="price-label">{{ data.price_prefix }}</span>
+                    {% endif %}
+                    <span class="price-current">${{ data.price }}</span>
+                    {% if data.price_period %}
+                    <span class="price-period">{{ data.price_period }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="pricing-simple-actions">
+                    <a href="{{ data.button_url | default('#') }}" class="btn btn-primary btn-full">
+                        {{ data.button_label | default('Get Started') }}
+                    </a>
+                    {% if data.button_secondary_label %}
+                    <a href="{{ data.button_secondary_url | default('#') }}" class="btn btn-secondary btn-full">
+                        {{ data.button_secondary_label }}
+                    </a>
+                    {% endif %}
+                </div>
+
+                {% if data.note %}
+                <span class="pricing-simple-note">{{ data.note }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 </section>
 
 <style>
@@ -97,7 +206,36 @@
         margin: 0 auto;
     }
 
-    .pricing-content {
+    /* Common price styles */
+    .price-label {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .price-original {
+        font-size: var(--font-size-subtitle);
+        color: var(--text-muted);
+        text-decoration: line-through;
+    }
+
+    .price-current {
+        font-size: var(--font-size-4xl);
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .price-period {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+    }
+
+    .check {
+        color: var(--success);
+        font-weight: 600;
+    }
+
+    /* ===== SPOTLIGHT STYLE ===== */
+    .pricing-spotlight .pricing-content {
         display: grid;
         grid-template-columns: 1fr 400px;
         gap: var(--space-3xl);
@@ -132,12 +270,6 @@
         color: var(--text-secondary);
     }
 
-    .pricing-includes .check {
-        color: var(--success);
-        font-weight: 600;
-    }
-
-    /* CTA Card */
     .pricing-cta-card {
         position: sticky;
         top: 100px;
@@ -158,33 +290,11 @@
         font-weight: 600;
     }
 
-    .pricing-price {
+    .pricing-spotlight .pricing-price {
         display: flex;
         align-items: baseline;
         gap: var(--space-sm);
         flex-wrap: wrap;
-    }
-
-    .price-label {
-        font-size: var(--font-size-ui);
-        color: var(--text-muted);
-    }
-
-    .price-original {
-        font-size: var(--font-size-subtitle);
-        color: var(--text-muted);
-        text-decoration: line-through;
-    }
-
-    .price-current {
-        font-size: var(--font-size-4xl);
-        font-weight: 700;
-        color: var(--text-primary);
-    }
-
-    .price-period {
-        font-size: var(--font-size-ui);
-        color: var(--text-muted);
     }
 
     .pricing-tiers {
@@ -241,27 +351,310 @@
         color: var(--text-muted);
     }
 
+    /* ===== PACKAGES STYLE ===== */
+    .pricing-toggle {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-xs);
+        margin-bottom: var(--space-2xl);
+        padding: var(--space-xs);
+        background: var(--bg-secondary);
+        border-radius: var(--radius-full);
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .pricing-toggle-btn {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+        padding: var(--space-sm) var(--space-lg);
+        border: none;
+        background: transparent;
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-ui);
+        font-weight: 500;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .pricing-toggle-btn:hover {
+        color: var(--text-primary);
+    }
+
+    .pricing-toggle-btn.active {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .pricing-toggle-badge {
+        color: var(--text-primary);
+        font-size: var(--font-size-caption);
+        font-weight: 600;
+    }
+
+    .pricing-packages-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+        gap: var(--space-lg);
+    }
+
+    .pricing-package {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-xl);
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-xl);
+        transition: var(--transition);
+    }
+
+    .pricing-package-highlighted {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 1px var(--accent-primary);
+    }
+
+    .package-badge {
+        position: absolute;
+        top: calc(var(--space-md) * -0.5);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent-gradient);
+        color: white;
+        padding: var(--space-xs) var(--space-md);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-caption);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .package-header {
+        margin-bottom: var(--space-lg);
+    }
+
+    .package-header h3 {
+        font-size: var(--font-size-h3);
+        margin-bottom: var(--space-xs);
+    }
+
+    .package-header p {
+        font-size: var(--font-size-ui);
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .package-price {
+        position: relative;
+        display: flex;
+        align-items: baseline;
+        gap: var(--space-xs);
+    }
+
+    .package-price .price-current {
+        font-size: var(--font-size-display);
+    }
+
+    .package-savings {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translateY(-50%);
+        background: var(--accent-gradient);
+        color: white;
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-caption);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .package-features {
+        margin-top: var(--space-lg);
+        list-style: none;
+        padding: 0;
+        margin: 0 0 var(--space-xl);
+        flex-grow: 1;
+    }
+
+    .package-features li {
+        display: flex;
+        gap: var(--space-sm);
+        margin-bottom: var(--space-sm);
+        color: var(--text-secondary);
+        font-size: var(--font-size-ui);
+    }
+
+    .package-note {
+        display: block;
+        margin-top: var(--space-md);
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    .pricing-note {
+        margin-top: var(--space-xl);
+        color: var(--text-muted);
+        font-size: var(--font-size-ui);
+    }
+
+    /* ===== SIMPLE STYLE ===== */
+    .pricing-simple-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-lg);
+    }
+
+    .pricing-simple-left,
+    .pricing-simple-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-lg);
+    }
+
+    .pricing-simple-info {
+        max-width: 400px;
+    }
+
+    .pricing-simple-info h2 {
+        margin-bottom: var(--space-sm);
+    }
+
+    .pricing-simple-info .pricing-subtitle {
+        margin-bottom: var(--space-md);
+    }
+
+    .pricing-simple-desc {
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.7;
+    }
+
+    .pricing-simple-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-lg);
+        text-align: center;
+        max-width: 350px;
+        width: 100%;
+    }
+
+    .pricing-simple-price {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: var(--space-sm);
+    }
+
+    .pricing-simple-price .price-current {
+        font-size: var(--font-size-display);
+    }
+
+    .pricing-simple-actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .pricing-simple-note {
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+        padding-top: var(--space-md);
+        border-top: 1px solid var(--border-color);
+    }
+
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 968px) {
-        .pricing-content {
+        .pricing-spotlight .pricing-content {
             grid-template-columns: 1fr;
         }
 
         .pricing-cta-card {
             position: static;
         }
+
+        .pricing-simple-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .pricing-simple-left {
+            text-align: center;
+        }
+
+        .pricing-simple-info {
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 968px) {
+        .pricing-packages-grid {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+            margin: 0 auto;
+        }
     }
 </style>
 
 <script>
 (function() {
-    // CTA button opens sidebar on mobile
+    // Sidebar toggle for CTA buttons
     document.querySelectorAll('.pricing-cta-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             if (window.innerWidth < 2200) {
-                e.preventDefault();
                 const actionToggle = document.getElementById('actionToggle');
-                if (actionToggle) actionToggle.click();
+                if (actionToggle && btn.getAttribute('href') === '#sidebar') {
+                    e.preventDefault();
+                    actionToggle.click();
+                }
             }
+        });
+    });
+
+    // Monthly/Yearly toggle for packages
+    document.querySelectorAll('.pricing-toggle').forEach(toggle => {
+        const buttons = toggle.querySelectorAll('.pricing-toggle-btn');
+        const grid = toggle.nextElementSibling;
+        if (!grid || !grid.classList.contains('pricing-packages-grid')) return;
+
+        const discount = parseInt(grid.dataset.discount) || 20;
+        const packages = grid.querySelectorAll('.pricing-package');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const isYearly = btn.dataset.period === 'yearly';
+
+                packages.forEach(pkg => {
+                    const priceEl = pkg.querySelector('.price-current');
+                    const savingsEl = pkg.querySelector('.package-savings');
+                    const savingsAmount = pkg.querySelector('.savings-amount');
+
+                    const monthlyPrice = parseInt(priceEl.dataset.monthly);
+
+                    if (isYearly) {
+                        const yearlyMonthly = Math.round(monthlyPrice * (100 - discount) / 100);
+                        const yearlySavings = (monthlyPrice - yearlyMonthly) * 12;
+                        priceEl.textContent = '$' + yearlyMonthly;
+                        if (savingsEl) {
+                            savingsEl.style.display = 'block';
+                            savingsAmount.textContent = yearlySavings;
+                        }
+                    } else {
+                        priceEl.textContent = '$' + monthlyPrice;
+                        if (savingsEl) {
+                            savingsEl.style.display = 'none';
+                        }
+                    }
+                });
+            });
         });
     });
 })();

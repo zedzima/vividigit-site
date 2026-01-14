@@ -113,11 +113,7 @@
                         
                         <a href="blocks/testimonials/" class="nav-sublink ">Testimonials</a>
                         
-                        <a href="blocks/framework/" class="nav-sublink ">Framework</a>
-                        
                         <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
-                        
-                        <a href="blocks/services-grid/" class="nav-sublink ">Services Grid</a>
                         
                         <a href="blocks/cta/" class="nav-sublink ">CTA</a>
                         
@@ -129,9 +125,17 @@
                         
                         <a href="blocks/features/" class="nav-sublink ">Features</a>
                         
+                        <a href="blocks/cases/" class="nav-sublink ">Cases</a>
+                        
+                        <a href="blocks/logos/" class="nav-sublink ">Logos</a>
+                        
                         <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
                         
+                        <a href="blocks/team/" class="nav-sublink ">Team</a>
+                        
                         <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/trust/" class="nav-sublink ">Trust</a>
                         
                         <a href="blocks/comparison/" class="nav-sublink active">Comparison</a>
                         
@@ -148,6 +152,10 @@
                         <a href="blocks/nested/" class="nav-sublink ">Nested</a>
                         
                         <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/coverage/" class="nav-sublink ">Coverage</a>
+                        
+                        <a href="blocks/badges/" class="nav-sublink ">Badges</a>
                         
                         <a href="blocks/services/" class="nav-sublink ">Services</a>
                         
@@ -212,31 +220,35 @@
     
 
     <div class="comparison-table-wrapper">
+        
+            
+        
+            
+        <span class="comparison-badge" data-col="2">Popular</span>
+            
+        
+            
+        
         <table class="comparison-table">
             <thead>
                 <tr>
                     <th class="feature-col">Feature</th>
                     
-                    <th class="option-col ">
-                        
+                    <th class="option-col " data-col="1">
                         <span class="option-name">Basic</span>
                         
                         <span class="option-desc">For individuals</span>
                         
                     </th>
                     
-                    <th class="option-col option-highlighted">
-                        
-                        <span class="option-badge">Popular</span>
-                        
+                    <th class="option-col option-highlighted" data-col="2">
                         <span class="option-name">Pro</span>
                         
                         <span class="option-desc">For teams</span>
                         
                     </th>
                     
-                    <th class="option-col ">
-                        
+                    <th class="option-col " data-col="3">
                         <span class="option-name">Enterprise</span>
                         
                         <span class="option-desc">For organizations</span>
@@ -410,7 +422,11 @@
     }
 
     .comparison-table-wrapper {
-        overflow-x: auto;
+        position: relative;
+        overflow: visible;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-xl);
+        background: var(--bg-card);
     }
 
     .comparison-table {
@@ -433,6 +449,26 @@
         padding-bottom: var(--space-lg);
     }
 
+    .comparison-table thead tr th:first-child {
+        border-top-left-radius: var(--radius-xl);
+    }
+
+    .comparison-table thead tr th:last-child {
+        border-top-right-radius: var(--radius-xl);
+    }
+
+    .comparison-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .comparison-table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: var(--radius-xl);
+    }
+
+    .comparison-table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: var(--radius-xl);
+    }
+
     .feature-col,
     .feature-cell {
         text-align: left;
@@ -452,24 +488,23 @@
         background: rgba(168, 85, 247, 0.05);
     }
 
-    .option-badge {
+    .comparison-badge {
         position: absolute;
-        top: var(--space-sm);
-        left: 50%;
-        transform: translateX(-50%);
+        top: calc(var(--space-xl) * -0.5);
         background: var(--accent-gradient);
         color: white;
-        padding: 2px var(--space-sm);
+        padding: var(--space-xs) var(--space-md);
         border-radius: var(--radius-full);
         font-size: var(--font-size-caption);
+        font-weight: 600;
         white-space: nowrap;
+        z-index: 10;
     }
 
     .option-name {
         display: block;
         font-size: var(--font-size-subtitle);
         color: var(--text-primary);
-        margin-top: var(--space-md);
     }
 
     .option-desc {
@@ -534,6 +569,10 @@
     }
 
     @media (max-width: 768px) {
+        .comparison-table-wrapper {
+            overflow-x: auto;
+        }
+
         .comparison-table {
             font-size: var(--font-size-caption);
         }
@@ -553,6 +592,30 @@
         }
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.comparison-table-wrapper').forEach(function(wrapper) {
+        var badge = wrapper.querySelector('.comparison-badge');
+        if (!badge) return;
+
+        var colIndex = badge.getAttribute('data-col');
+        var th = wrapper.querySelector('th[data-col="' + colIndex + '"]');
+        if (!th) return;
+
+        function positionBadge() {
+            var thRect = th.getBoundingClientRect();
+            var wrapperRect = wrapper.getBoundingClientRect();
+            var left = thRect.left - wrapperRect.left + thRect.width / 2;
+            badge.style.left = left + 'px';
+            badge.style.transform = 'translateX(-50%)';
+        }
+
+        positionBadge();
+        window.addEventListener('resize', positionBadge);
+    });
+});
+</script>
             </div>
             
 

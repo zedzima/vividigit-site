@@ -7,12 +7,15 @@ collection = "blocks"
 
 [meta]
 title = "Text Block — Blocks Library"
-description = "Simple rich text content block."
+description = "Simple rich text content block with left-aligned and centered variants."
 
-[text]
-tag = "text"
-title = "Text Block"
-subtitle = "Simple block for markdown or HTML content"
+# Variant 1: Left-aligned (default)
+[text_left]
+tag = "text · left"
+title = "Left-Aligned Text"
+subtitle = "Default style for long-form content"
+centered = false
+narrow = false
 body = """
 <p>The Text block is for <strong>simple, free-form content</strong>. Write markdown or HTML and it renders with proper typography.</p>
 
@@ -36,6 +39,48 @@ body = """
 
 <pre><code>const message = "Hello, World!";
 console.log(message);</code></pre>
+"""
 
-<p>For multi-column layouts, use <strong>Columns</strong> block. For icon cards, use <strong>Cards</strong> block. For titled sections, use <strong>Sections</strong> block.</p>
+# Variant 2: Centered
+[text_centered]
+tag = "text · centered"
+title = "Centered Text"
+subtitle = "Great for introductions and summaries"
+centered = true
+narrow = true
+body = """
+<p>Centered text works best for <strong>short, impactful content</strong> — introductions, mission statements, or key messages that need visual emphasis.</p>
+
+<p>Combined with <code>narrow = true</code>, it creates a focused reading experience with optimal line length for readability.</p>
+
+<blockquote>
+    "Good design is as little design as possible."<br>
+    — Dieter Rams
+</blockquote>
+
+<p>Use this variant when you want to draw attention to a specific message or create visual breathing room between dense content sections.</p>
+"""
+
+# Variant 3: Narrow left-aligned
+[text_narrow]
+tag = "text · narrow"
+title = "Narrow Column"
+subtitle = "Optimal line length for reading"
+centered = false
+narrow = true
+body = """
+<p>This variant uses <code>narrow = true</code> with left alignment. It's ideal for <strong>long-form articles</strong> where readability matters.</p>
+
+<p>The optimal line length for reading is 50-75 characters. Narrow text blocks enforce this constraint automatically, making dense content easier to read.</p>
+
+<h3>When to Use</h3>
+
+<ul>
+    <li>Blog posts and articles</li>
+    <li>Documentation pages</li>
+    <li>Terms and conditions</li>
+    <li>Any text-heavy content</li>
+</ul>
+
+<p>For wider layouts with multiple elements, use the default full-width variant instead.</p>
 """

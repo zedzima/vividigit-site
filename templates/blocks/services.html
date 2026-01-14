@@ -1,199 +1,124 @@
-<!-- Services List Block: Grid of service cards with filtering -->
+<!-- Services Block: Grid of service cards -->
 <section class="services-block">
+    <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
     {% if data.title %}
-    <div class="services-header">
-        <div>
-            <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
-            <h2>{{ data.title }}</h2>
-            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
-        </div>
-    </div>
+    <h2>{{ data.title }}</h2>
     {% endif %}
 
-    {% if data.categories %}
-    <div class="services-filters">
-        <button class="filter-btn active" data-filter="all">All</button>
-        {% for cat in data.categories %}
-        <button class="filter-btn" data-filter="{{ cat.id }}">{{ cat.label }}</button>
-        {% endfor %}
-    </div>
+    {% if data.subtitle %}
+    <p class="services-subtitle">{{ data.subtitle }}</p>
     {% endif %}
 
-    <div class="services-grid grid grid-{{ data.columns | default(3) }}">
+    {% if data.services %}
+    <div class="services-grid">
         {% for service in data.services %}
-        <a href="{{ service.url | default('#') }}" class="service-card card" data-category="{{ service.category | default('') }}">
-            {% if service.icon %}
-            <span class="service-icon">{{ service.icon }}</span>
-            {% endif %}
-
+        <a href="{{ service.url | default('/services/' + service.slug) }}" class="service-card glass">
+            <div class="service-card-header">
+                <span class="service-category tag tag-accent">{{ service.category }}</span>
+                {% if service.rating %}
+                <span class="service-rating">★ {{ service.rating }}</span>
+                {% endif %}
+            </div>
             <h3>{{ service.title }}</h3>
-
-            {% if service.description %}
             <p>{{ service.description }}</p>
-            {% endif %}
-
-            {% if service.tags %}
-            <div class="service-tags">
-                {% for tag in service.tags %}
-                <span class="tag">{{ tag }}</span>
-                {% endfor %}
+            <div class="service-card-footer">
+                <span class="service-price">From ${{ service.from_price | default(service.fromPrice) }}</span>
+                <span class="service-cta">View →</span>
             </div>
-            {% endif %}
-
-            {% if service.price %}
-            <div class="service-price">
-                <span class="price-from">from</span>
-                <span class="price-value">${{ service.price }}</span>
-            </div>
-            {% endif %}
-
-            <span class="service-link">Learn more &rarr;</span>
         </a>
         {% endfor %}
     </div>
+    {% endif %}
 
-    {% if data.button_label %}
-    <div class="services-footer text-center mt-xl">
-        <a href="{{ data.button_url | default('#') }}" class="btn btn-secondary">
-            {{ data.button_label }}
-        </a>
+    {% if data.cta_label and data.cta_url %}
+    <div class="services-cta">
+        <a href="{{ data.cta_url }}" class="btn btn-secondary">{{ data.cta_label }}</a>
     </div>
     {% endif %}
 </section>
 
 <style>
-    .services-block {
-        padding: var(--space-2xl) 0;
-    }
+.services-block {
+    padding: var(--space-2xl) 0;
+}
 
-    .services-header {
-        margin-bottom: var(--space-xl);
-    }
+.services-block h2 {
+    margin-bottom: var(--space-sm);
+}
 
-    .services-header p {
-        color: var(--text-secondary);
-        max-width: calc(600px * var(--scale));
-    }
+.services-subtitle {
+    color: var(--text-muted);
+    margin-bottom: var(--space-xl);
+}
 
-    .services-filters {
-        display: flex;
-        gap: var(--space-sm);
-        margin-bottom: var(--space-xl);
-        flex-wrap: wrap;
-    }
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
 
-    .filter-btn {
-        padding: var(--space-sm) var(--space-md);
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        color: var(--text-secondary);
-        cursor: pointer;
-        font-family: var(--font-mono);
-        font-size: var(--font-size-ui);
-        transition: all 0.2s ease;
-    }
+.service-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg);
+    text-decoration: none;
+    transition: var(--transition);
+}
 
-    .filter-btn:hover {
-        border-color: var(--border-light);
-        color: var(--text-primary);
-    }
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+}
 
-    .filter-btn.active {
-        background: var(--accent-gradient);
-        border-color: transparent;
-        color: white;
-    }
+.service-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
 
-    .service-card {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-md);
-        text-decoration: none;
-        transition: all 0.2s ease;
-    }
+.service-rating {
+    font-size: var(--font-size-ui);
+    color: #f59e0b;
+    font-weight: 500;
+}
 
-    .service-card:hover {
-        transform: translateY(-4px);
-        border-color: var(--accent-primary);
-    }
+.service-card h3 {
+    color: var(--text-primary);
+    font-size: var(--font-size-body);
+    margin-bottom: var(--space-sm);
+}
 
-    .service-icon {
-        font-size: var(--font-size-h1);
-        width: 56px;
-        height: 56px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--bg-tertiary);
-        border-radius: var(--radius-lg);
-    }
+.service-card p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    line-height: 1.6;
+    flex: 1;
+    margin-bottom: var(--space-md);
+}
 
-    .service-card h3 {
-        font-size: var(--font-size-subtitle);
-        margin: 0;
-        color: var(--text-primary);
-    }
+.service-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+}
 
-    .service-card p {
-        font-size: var(--font-size-ui);
-        margin: 0;
-        flex: 1;
-    }
+.service-price {
+    font-weight: 600;
+    color: var(--text-primary);
+}
 
-    .service-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-xs);
-    }
+.service-cta {
+    color: var(--accent);
+    font-weight: 500;
+    font-size: var(--font-size-ui);
+}
 
-    .service-price {
-        display: flex;
-        align-items: baseline;
-        gap: var(--space-xs);
-    }
-
-    .price-from {
-        font-size: var(--font-size-caption);
-        color: var(--text-muted);
-    }
-
-    .price-value {
-        font-size: var(--font-size-h3);
-        font-weight: 600;
-        color: var(--accent-primary);
-    }
-
-    .service-link {
-        font-size: var(--font-size-ui);
-        color: var(--accent-primary);
-        font-weight: 500;
-    }
-
-    .service-card.hidden {
-        display: none;
-    }
+.services-cta {
+    text-align: center;
+    margin-top: var(--space-xl);
+}
 </style>
-
-<script>
-(function() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.service-card');
-
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const filter = btn.dataset.filter;
-            cards.forEach(card => {
-                if (filter === 'all' || card.dataset.category === filter) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
-        });
-    });
-})();
-</script>

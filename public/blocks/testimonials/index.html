@@ -113,11 +113,7 @@
                         
                         <a href="blocks/testimonials/" class="nav-sublink active">Testimonials</a>
                         
-                        <a href="blocks/framework/" class="nav-sublink ">Framework</a>
-                        
                         <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
-                        
-                        <a href="blocks/services-grid/" class="nav-sublink ">Services Grid</a>
                         
                         <a href="blocks/cta/" class="nav-sublink ">CTA</a>
                         
@@ -129,9 +125,17 @@
                         
                         <a href="blocks/features/" class="nav-sublink ">Features</a>
                         
+                        <a href="blocks/cases/" class="nav-sublink ">Cases</a>
+                        
+                        <a href="blocks/logos/" class="nav-sublink ">Logos</a>
+                        
                         <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
                         
+                        <a href="blocks/team/" class="nav-sublink ">Team</a>
+                        
                         <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/trust/" class="nav-sublink ">Trust</a>
                         
                         <a href="blocks/comparison/" class="nav-sublink ">Comparison</a>
                         
@@ -148,6 +152,10 @@
                         <a href="blocks/nested/" class="nav-sublink ">Nested</a>
                         
                         <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/coverage/" class="nav-sublink ">Coverage</a>
+                        
+                        <a href="blocks/badges/" class="nav-sublink ">Badges</a>
                         
                         <a href="blocks/services/" class="nav-sublink ">Services</a>
                         
@@ -204,28 +212,43 @@
                 <!-- Testimonials Block: Customer reviews and social proof -->
 <section class="testimonials-block">
     
-    <div class="testimonials-header text-center">
-        <span class="tag tag-accent">testimonials</span>
-        <h2>What Customers Say</h2>
-        <p>Real feedback from real users</p>
+    <div class="testimonials-header">
+        <div class="testimonials-header-text">
+            <span class="tag tag-accent">testimonials</span>
+            <h2>What Customers Say</h2>
+            <p>Real feedback from real users</p>
+        </div>
+        <div class="testimonials-nav">
+            <button class="testimonials-nav-btn" data-dir="prev" aria-label="Previous">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button class="testimonials-nav-btn" data-dir="next" aria-label="Next">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 6 15 12 9 18"></polyline>
+                </svg>
+            </button>
+        </div>
     </div>
     
 
-    <div class="testimonials-grid grid grid-2">
-        
-        <div class="testimonial-card card card-gradient">
+    <div class="testimonials-carousel">
+        <div class="testimonials-track">
+            
+            <div class="testimonial-card card card-gradient">
             
             <div class="testimonial-rating">
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
             </div>
             
@@ -260,19 +283,19 @@
             
         </div>
         
-        <div class="testimonial-card card ">
+            <div class="testimonial-card card ">
             
             <div class="testimonial-rating">
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
             </div>
             
@@ -298,7 +321,7 @@
             
         </div>
         
-        <div class="testimonial-card card ">
+            <div class="testimonial-card card ">
             
 
             <blockquote class="testimonial-quote">
@@ -336,17 +359,17 @@
             
         </div>
         
-        <div class="testimonial-card card ">
+            <div class="testimonial-card card ">
             
             <div class="testimonial-rating">
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
-                <span class="star">*</span>
+                <span class="star">★</span>
                 
             </div>
             
@@ -372,6 +395,7 @@
             
         </div>
         
+        </div>
     </div>
 
     
@@ -383,23 +407,65 @@
     }
 
     .testimonials-header {
-        margin-bottom: var(--space-2xl);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: var(--space-xl);
     }
 
-    .testimonials-header p {
+    .testimonials-header-text p {
         color: var(--text-secondary);
         max-width: calc(600px * var(--scale));
-        margin: 0 auto;
     }
 
-    .testimonials-grid {
+    .testimonials-nav {
+        display: flex;
+        gap: var(--space-sm);
+        flex-shrink: 0;
+    }
+
+    .testimonials-nav-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .testimonials-nav-btn:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-color: var(--border-light);
+    }
+
+    .testimonials-carousel {
+        overflow: hidden;
         margin-bottom: var(--space-2xl);
+    }
+
+    .testimonials-track {
+        display: flex;
+        gap: var(--space-lg);
+        transition: transform 0.4s ease;
     }
 
     .testimonial-card {
+        flex: 0 0 calc(50% - var(--space-lg) / 2);
         display: flex;
         flex-direction: column;
         gap: var(--space-lg);
+    }
+
+    @media (max-width: 768px) {
+        .testimonial-card {
+            flex: 0 0 100%;
+        }
     }
 
     .testimonial-rating {
@@ -535,6 +601,63 @@
         filter: grayscale(0);
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.testimonials-block').forEach(function(block) {
+        const track = block.querySelector('.testimonials-track');
+        const cards = block.querySelectorAll('.testimonial-card');
+        const prevBtn = block.querySelector('[data-dir="prev"]');
+        const nextBtn = block.querySelector('[data-dir="next"]');
+
+        if (!track || cards.length === 0) return;
+
+        let currentIndex = 0;
+
+        function getVisibleCards() {
+            return window.innerWidth <= 768 ? 1 : 2;
+        }
+
+        function getMaxIndex() {
+            return Math.max(0, cards.length - getVisibleCards());
+        }
+
+        function updateCarousel() {
+            const card = cards[0];
+            const cardWidth = card.offsetWidth;
+            const gap = parseInt(getComputedStyle(track).gap) || 24;
+            const offset = currentIndex * (cardWidth + gap);
+            track.style.transform = 'translateX(-' + offset + 'px)';
+        }
+
+        function next() {
+            currentIndex++;
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = 0;
+            }
+            updateCarousel();
+        }
+
+        function prev() {
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', prev);
+        if (nextBtn) nextBtn.addEventListener('click', next);
+
+        window.addEventListener('resize', function() {
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        });
+    });
+});
+</script>
             </div>
             
 

@@ -7,7 +7,9 @@ Navigation is auto-generated from directory structure.
 
 import os
 import sys
+import re
 from jinja2 import Environment, FileSystemLoader, select_autoescape, TemplateNotFound
+from markupsafe import Markup
 from typing import Dict, Any, List, Optional
 
 
@@ -20,6 +22,47 @@ class Generator:
         self.output_dir = output_dir
         self.site_config = site_config or {}
         self.strict = strict
+        self.icons_dir = os.path.join(os.path.dirname(template_dir), "assets", "icons")
+
+        # Register global icon function
+        self.env.globals['icon'] = self._icon_func
+
+    def _icon_func(self, name: str, size: int = 24, gradient: bool = True) -> str:
+        """
+        Load SVG icon by name and optionally apply gradient.
+        Usage in templates: {{ icon('tech') }} or {{ icon('check', 16, false) }}
+        """
+        icon_path = os.path.join(self.icons_dir, f"{name}.svg")
+        if not os.path.exists(icon_path):
+            return f'<!-- Icon not found: {name} -->'
+
+        with open(icon_path, 'r', encoding='utf-8') as f:
+            svg = f.read()
+
+        # Add size and class
+        svg = re.sub(
+            r'<svg([^>]*)>',
+            f'<svg\\1 width="{size}" height="{size}" class="icon icon-{name}">',
+            svg,
+            count=1
+        )
+
+        # Apply gradient stroke if enabled
+        if gradient:
+            # Generate unique ID for this icon instance
+            import random
+            uid = f"icon-grad-{random.randint(1000, 9999)}"
+
+            # Add gradient definition and apply it
+            gradient_def = f'''<defs><linearGradient id="{uid}" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs>'''
+
+            svg = svg.replace('stroke="currentColor"', f'stroke="url(#{uid})"')
+            svg = svg.replace('</svg>', f'{gradient_def}</svg>')
+
+        return Markup(svg)
 
     def render_page(
         self,
@@ -81,8 +124,12 @@ class Generator:
                 continue
 
             try:
-                # Pass block_type so templates can use it as default tag
-                rendered_block = template.render(data=block["data"], block_type=block_type)
+                # Pass block_type and site so templates can use them
+                rendered_block = template.render(
+                    data=block["data"],
+                    block_type=block_type,
+                    site=self.site_config.get("site", {})
+                )
                 context["blocks"].append(rendered_block)
             except Exception as e:
                 error_msg = f"Error rendering block '{block_type}': {e}"

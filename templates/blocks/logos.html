@@ -1,0 +1,154 @@
+<!-- Logos Block: Client logos strip (static or marquee) -->
+{% set logos_style = data.style | default('static') %}
+
+<section class="logos-block logos-{{ logos_style }}">
+    {% if data.tag %}
+    <span class="tag tag-accent">{{ data.tag }}</span>
+    {% endif %}
+
+    {% if data.title %}
+    <p class="logos-title">{{ data.title }}</p>
+    {% endif %}
+
+    {% if data.logos %}
+    <div class="logos-container">
+        {% if logos_style == 'marquee' %}
+        <div class="logos-track">
+            {% for logo in data.logos %}
+            <div class="logos-item">
+                {% if logo.image %}
+                <img src="{{ site.base_url }}{{ logo.image[1:] }}" alt="{{ logo.name }}" loading="lazy">
+                {% else %}
+                <span class="logos-text">{{ logo.name }}</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {# Duplicate for seamless loop #}
+            {% for logo in data.logos %}
+            <div class="logos-item">
+                {% if logo.image %}
+                <img src="{{ site.base_url }}{{ logo.image[1:] }}" alt="{{ logo.name }}" loading="lazy">
+                {% else %}
+                <span class="logos-text">{{ logo.name }}</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="logos-grid">
+            {% for logo in data.logos %}
+            <div class="logos-item">
+                {% if logo.url %}<a href="{{ logo.url }}" target="_blank" rel="noopener">{% endif %}
+                {% if logo.image %}
+                <img src="{{ site.base_url }}{{ logo.image[1:] }}" alt="{{ logo.name }}" loading="lazy">
+                {% else %}
+                <span class="logos-text">{{ logo.name }}</span>
+                {% endif %}
+                {% if logo.url %}</a>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+
+<style>
+.logos-block {
+    padding: var(--space-xl) 0;
+}
+
+.logos-title {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: var(--font-size-ui);
+    margin-bottom: var(--space-lg);
+}
+
+/* Static Grid */
+.logos-static .logos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-xl) var(--space-2xl);
+}
+
+.logos-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logos-item img {
+    max-height: 32px;
+    width: auto;
+    opacity: 0.6;
+    transition: var(--transition);
+}
+
+.logos-item:hover img {
+    opacity: 1;
+}
+
+.logos-item a {
+    display: flex;
+    align-items: center;
+}
+
+.logos-text {
+    font-size: var(--font-size-h3);
+    font-weight: 600;
+    color: var(--text-muted);
+    opacity: 0.5;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.logos-item:hover .logos-text {
+    opacity: 0.8;
+}
+
+/* Marquee Style */
+.logos-marquee .logos-container {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+
+.logos-marquee .logos-track {
+    display: flex;
+    gap: var(--space-2xl);
+    animation: marquee 30s linear infinite;
+    width: max-content;
+}
+
+.logos-marquee .logos-item {
+    flex-shrink: 0;
+    padding: 0 var(--space-md);
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.logos-marquee:hover .logos-track {
+    animation-play-state: paused;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .logos-static .logos-grid {
+        gap: var(--space-lg) var(--space-xl);
+    }
+
+    .logos-item img {
+        max-height: 24px;
+    }
+
+    .logos-text {
+        font-size: var(--font-size-body);
+    }
+}
+</style>

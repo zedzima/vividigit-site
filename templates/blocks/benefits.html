@@ -1,20 +1,37 @@
 <!-- Benefits Block -->
 <section class="benefits-block">
-    <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
-    {% if data.title %}
-    <h2>{{ data.title }}</h2>
-    {% endif %}
+    <div class="benefits-header text-center">
+        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+        {% if data.title %}
+        <h2>{{ data.title }}</h2>
+        {% endif %}
+        {% if data.subtitle %}
+        <p>{{ data.subtitle }}</p>
+        {% endif %}
+    </div>
 
     {% if data.intro %}
     <p class="benefits-intro">{{ data.intro | safe }}</p>
     {% endif %}
 
     {% if data.benefits %}
-    <ul class="benefits-list">
+    <div class="benefits-grid">
         {% for benefit in data.benefits %}
-        <li>{{ benefit }}</li>
+        <div class="benefit-card">
+            {% if benefit.icon %}
+            <span class="benefit-icon">{% if benefit.icon | length > 2 %}{{ icon(benefit.icon, 24) }}{% else %}{{ benefit.icon }}{% endif %}</span>
+            {% endif %}
+            {% if benefit.title %}
+            <h3>{{ benefit.title }}</h3>
+            {% endif %}
+            {% if benefit.text %}
+            <p>{{ benefit.text }}</p>
+            {% elif benefit is string %}
+            <p>{{ benefit }}</p>
+            {% endif %}
+        </div>
         {% endfor %}
-    </ul>
+    </div>
     {% endif %}
 </section>
 
@@ -23,32 +40,64 @@
     padding: var(--space-2xl) 0;
 }
 
+.benefits-header {
+    margin-bottom: var(--space-2xl);
+}
+
+.benefits-header h2 {
+    margin-bottom: var(--space-md);
+}
+
+.benefits-header p {
+    font-size: var(--font-size-subtitle);
+    color: var(--text-secondary);
+    max-width: calc(600px * var(--scale));
+    margin: 0 auto;
+}
+
 .benefits-intro {
     font-size: var(--font-size-subtitle);
     color: var(--text-secondary);
     margin-bottom: var(--space-xl);
+    text-align: center;
 }
 
-.benefits-list {
+.benefits-grid {
     display: grid;
-    gap: var(--space-md);
-    list-style: none;
-    padding: 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: var(--space-lg);
 }
 
-.benefits-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-md);
-    padding: var(--space-md);
+.benefit-card {
+    padding: var(--space-lg);
     background: var(--bg-secondary);
-    border-radius: var(--radius-md);
-    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    text-align: center;
 }
 
-.benefits-list li::before {
-    content: "✓";
-    color: var(--accent);
-    font-weight: bold;
+.benefit-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto var(--space-md);
+    background: var(--accent-gradient);
+    color: white;
+    font-weight: 700;
+    font-size: var(--font-size-h3);
+    border-radius: var(--radius-md);
+}
+
+.benefit-card h3 {
+    font-size: var(--font-size-subtitle);
+    margin-bottom: var(--space-sm);
+}
+
+.benefit-card p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-body);
+    margin: 0;
 }
 </style>

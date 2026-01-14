@@ -43,7 +43,29 @@
 
     .cta-default {
         background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
+        border: none;
+        position: relative;
+    }
+
+    .cta-default::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius-xl);
+        padding: 1px;
+        background: var(--accent-gradient);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+    .cta-default h2 {
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     .cta-gradient {
@@ -100,29 +122,6 @@
 
     .cta-gradient .cta-note {
         color: rgba(255, 255, 255, 0.6);
-    }
-
-    /* White button for gradient background */
-    .btn-white {
-        background: white;
-        color: var(--bg-primary);
-    }
-
-    .btn-white:hover {
-        background: rgba(255, 255, 255, 0.9);
-        color: var(--bg-primary);
-        transform: translateY(-2px);
-    }
-
-    .btn-ghost-white {
-        background: transparent;
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .btn-ghost-white:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
     }
 
     .tag-white {

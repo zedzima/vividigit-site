@@ -1,4 +1,4 @@
-<!-- Columns Block: Multi-column layout with footnote -->
+<!-- Columns Block: Vertical sections with footnote -->
 <section class="columns-block">
     <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
 
@@ -11,11 +11,13 @@
     {% endif %}
 
     {% if data.columns %}
-    <div class="columns-grid columns-grid-{{ data.columns | length }}">
+    <div class="columns-list">
         {% for col in data.columns %}
         <div class="columns-item">
             {% if col.title %}<h3>{{ col.title }}</h3>{% endif %}
+            {% if col.text %}
             <div class="columns-text">{{ col.text | safe }}</div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
@@ -40,23 +42,23 @@
     margin-bottom: var(--space-xl);
 }
 
-.columns-grid {
+.columns-list {
     display: grid;
-    gap: var(--space-xl);
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: var(--space-lg);
 }
 
-.columns-grid-2 {
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.columns-grid-3 {
-    grid-template-columns: repeat(3, 1fr);
+.columns-item {
+    padding: var(--space-lg);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
 }
 
 .columns-item h3 {
     font-size: var(--font-size-body);
     font-weight: 600;
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-sm);
     color: var(--text-primary);
 }
 
@@ -77,7 +79,7 @@
 .columns-note {
     margin-top: var(--space-xl);
     padding: var(--space-md);
-    background: var(--bg-secondary);
+    background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     font-size: var(--font-size-ui);
@@ -87,14 +89,7 @@
 }
 
 .columns-note-icon {
-    color: var(--accent);
+    color: var(--accent-primary);
     font-weight: 600;
-}
-
-@media (max-width: 768px) {
-    .columns-grid-2,
-    .columns-grid-3 {
-        grid-template-columns: 1fr;
-    }
 }
 </style>

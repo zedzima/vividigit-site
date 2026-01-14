@@ -1,5 +1,7 @@
-<!-- Process/How It Works Tabs Block -->
-<section class="process-tabs-block">
+<!-- Process Block: Step-by-step with tabs (horizontal or sidebar) -->
+{% set process_style = data.style | default('tabs') %}
+
+<section class="process-block process-{{ process_style }}">
     <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
     {% if data.title %}
     <h2>{{ data.title }}</h2>
@@ -10,26 +12,26 @@
     {% endif %}
 
     {% if data.steps %}
-    <div class="process-tabs">
-        <div class="tabs-nav">
+    <div class="process-container">
+        <div class="process-nav">
             {% for step in data.steps %}
-            <button class="tab-btn {% if loop.first %}active{% endif %}" data-tab="{{ loop.index }}">
-                <span class="tab-num">{{ loop.index }}</span>
-                <span class="tab-label">{{ step.title }}</span>
+            <button class="process-btn {% if loop.first %}active{% endif %}" data-tab="{{ loop.index }}">
+                <span class="process-num">{{ loop.index }}</span>
+                <span class="process-label">{{ step.title }}</span>
             </button>
             {% endfor %}
         </div>
-        <div class="tabs-content">
+        <div class="process-content">
             {% for step in data.steps %}
-            <div class="tab-panel {% if loop.first %}active{% endif %}" data-panel="{{ loop.index }}">
-                <div class="tab-panel-inner">
+            <div class="process-panel {% if loop.first %}active{% endif %}" data-panel="{{ loop.index }}">
+                <div class="process-panel-inner">
                     {% if step.icon %}
-                    <div class="tab-icon">{{ step.icon }}</div>
+                    <div class="process-icon">{% if step.icon | length > 2 %}{{ icon(step.icon, 40) }}{% else %}{{ step.icon }}{% endif %}</div>
                     {% endif %}
                     <h3>{{ step.title }}</h3>
                     <p>{{ step.description }}</p>
                     {% if step.details %}
-                    <ul class="tab-details">
+                    <ul class="process-details">
                         {% for detail in step.details %}
                         <li>{{ detail }}</li>
                         {% endfor %}
@@ -44,11 +46,11 @@
 </section>
 
 <style>
-.process-tabs-block {
+.process-block {
     padding: var(--space-2xl) 0;
 }
 
-.process-tabs-block h2 {
+.process-block h2 {
     margin-bottom: var(--space-sm);
 }
 
@@ -57,54 +59,14 @@
     margin-bottom: var(--space-xl);
 }
 
-.process-tabs {
+.process-container {
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
     overflow: hidden;
 }
 
-.tabs-nav {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.tabs-nav::-webkit-scrollbar {
-    display: none;
-}
-
-.tab-btn {
-    flex: 1;
-    min-width: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: var(--space-md) var(--space-lg);
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: var(--font-size-ui);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.tab-btn:hover {
-    background: var(--bg-input);
-    color: var(--text-secondary);
-}
-
-.tab-btn.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-    background: var(--bg-input);
-}
-
-.tab-num {
+.process-num {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -114,56 +76,57 @@
     border-radius: 50%;
     font-weight: 600;
     font-size: var(--font-size-ui);
+    flex-shrink: 0;
 }
 
-.tab-btn.active .tab-num {
-    background: var(--accent);
+.process-btn.active .process-num {
+    background: var(--accent-gradient);
     color: white;
 }
 
-.tab-label {
+.process-label {
     font-weight: 500;
     white-space: nowrap;
 }
 
-.tabs-content {
+.process-content {
     padding: var(--space-xl);
 }
 
-.tab-panel {
+.process-panel {
     display: none;
 }
 
-.tab-panel.active {
+.process-panel.active {
     display: block;
 }
 
-.tab-panel-inner {
+.process-panel-inner {
     max-width: calc(600px * var(--scale));
 }
 
-.tab-icon {
+.process-icon {
     font-size: var(--font-size-display);
     margin-bottom: var(--space-md);
 }
 
-.tab-panel h3 {
+.process-panel h3 {
     color: var(--text-primary);
     margin-bottom: var(--space-sm);
 }
 
-.tab-panel p {
+.process-panel p {
     color: var(--text-secondary);
     line-height: 1.7;
     margin-bottom: var(--space-md);
 }
 
-.tab-details {
+.process-details {
     list-style: none;
     padding: 0;
 }
 
-.tab-details li {
+.process-details li {
     display: flex;
     align-items: flex-start;
     gap: var(--space-sm);
@@ -172,23 +135,139 @@
     font-size: var(--font-size-ui);
 }
 
-.tab-details li::before {
-    content: "→";
-    color: var(--accent);
+.process-details li::before {
+    content: "+";
+    color: var(--accent-primary);
     font-weight: bold;
 }
 
-@media (max-width: 768px) {
-    .tabs-nav {
-        flex-wrap: nowrap;
-    }
+/* ===== TABS STYLE (horizontal) ===== */
+.process-tabs .process-container {
+    display: flex;
+    flex-direction: column;
+}
 
-    .tab-btn {
+.process-tabs .process-nav {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.process-tabs .process-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.process-tabs .process-btn {
+    flex: 1;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-md) var(--space-lg);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: var(--font-size-ui);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.process-tabs .process-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+.process-tabs .process-btn.active {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
+    background: var(--bg-secondary);
+}
+
+/* ===== SIDEBAR STYLE (vertical) ===== */
+.process-sidebar .process-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.process-sidebar .process-nav {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+}
+
+.process-sidebar .process-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: transparent;
+    border: none;
+    border-right: 2px solid transparent;
+    margin-right: -1px;
+    color: var(--text-muted);
+    font-size: var(--font-size-ui);
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.process-sidebar .process-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+.process-sidebar .process-btn.active {
+    color: var(--accent-primary);
+    border-right-color: var(--accent-primary);
+    background: var(--bg-secondary);
+}
+
+.process-sidebar .process-label {
+    white-space: nowrap;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .process-tabs .process-btn {
         min-width: 100px;
         padding: var(--space-sm) var(--space-md);
     }
 
-    .tab-label {
+    .process-tabs .process-label {
+        font-size: var(--font-size-caption);
+    }
+
+    .process-sidebar .process-container {
+        grid-template-columns: 1fr;
+    }
+
+    .process-sidebar .process-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .process-sidebar .process-btn {
+        flex-direction: column;
+        min-width: 100px;
+        padding: var(--space-sm) var(--space-md);
+        text-align: center;
+        border-right: none;
+        border-bottom: 2px solid transparent;
+        margin-right: 0;
+        margin-bottom: -1px;
+    }
+
+    .process-sidebar .process-btn.active {
+        border-right-color: transparent;
+        border-bottom-color: var(--accent-primary);
+    }
+
+    .process-sidebar .process-label {
         font-size: var(--font-size-caption);
     }
 }
@@ -196,21 +275,20 @@
 
 <script>
 (function() {
-    const block = document.querySelector('.process-tabs-block');
-    if (!block) return;
+    document.querySelectorAll('.process-block').forEach(block => {
+        const btns = block.querySelectorAll('.process-btn');
+        const panels = block.querySelectorAll('.process-panel');
 
-    const tabs = block.querySelectorAll('.tab-btn');
-    const panels = block.querySelectorAll('.tab-panel');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabNum = btn.dataset.tab;
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabNum = tab.dataset.tab;
+                btns.forEach(b => b.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
 
-            tabs.forEach(t => t.classList.remove('active'));
-            panels.forEach(p => p.classList.remove('active'));
-
-            tab.classList.add('active');
-            block.querySelector(`[data-panel="${tabNum}"]`).classList.add('active');
+                btn.classList.add('active');
+                block.querySelector(`[data-panel="${tabNum}"]`).classList.add('active');
+            });
         });
     });
 })();

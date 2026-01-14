@@ -8,11 +8,15 @@ url = "/services/ai-optimisation"
 slug = "ai-optimisation"
 menu = "AI Optimisation"
 collection = "services"
-category = "ai"
-tags = ["AIO", "GEO", "LLM Citations", "AI Visibility", "Content Strategy"]
-price = 2500
-featured = true
+
+# Catalog card data
+categories = ["SEO", "AEO"]
+industries = ["SaaS", "E-commerce", "Finance", "Healthcare"]
 languages = ["EN", "DE", "FR", "ES", "RU", "ZH"]
+delivery = "one-time"
+price = 2500
+rating = 4.9
+featured = true
 
 [translations]
 ru = "/ru/services/ai-optimisation"
@@ -25,6 +29,7 @@ keywords = ["AI visibility audit", "LLM citations", "AIO", "GEO", "ChatGPT citat
 
 # Hero Section
 [hero]
+style = "split"
 tag = "hero"
 h1 = "Your SEO Works. But AI Still Ignores You."
 highlight = "AI Still Ignores You"
@@ -34,7 +39,6 @@ button_label = "Get AI Visibility Audit"
 button_url = "#audit"
 button_secondary_label = "How It Works"
 button_secondary_url = "#how-it-works"
-image = "assets/services/ai-optimisation/neon-abstract-1.svg"
 
 [[hero.stats]]
 value = "3%"
@@ -47,6 +51,47 @@ label = "guaranteed citations (that's not how it works)"
 [[hero.stats]]
 value = "1"
 label = "question at a time"
+
+# Client Logos
+[logos]
+title = "Trusted by industry leaders"
+style = "marquee"
+
+[[logos.logos]]
+name = "Cryomed"
+
+[[logos.logos]]
+name = "Porto Montenegro"
+
+[[logos.logos]]
+name = "Minto"
+
+[[logos.logos]]
+name = "Weestep"
+
+[[logos.logos]]
+name = "Alfacash"
+
+[[logos.logos]]
+name = "Bamboo Group"
+
+[[logos.logos]]
+name = "KISA"
+
+[[logos.logos]]
+name = "Promwad"
+
+[[logos.logos]]
+name = "Alvadi"
+
+[[logos.logos]]
+name = "Alfa Coins"
+
+[[logos.logos]]
+name = "Infatica"
+
+[[logos.logos]]
+name = "Ethplorer"
 
 # The Problem - Text Block
 [text_problem]
@@ -100,38 +145,35 @@ text = "AI systems are designed to be cautious. They avoid sources that prioriti
 list = ["Heavily promotional = ignored", "Unclear authorship = skipped", "Strong claims without explanation = avoided"]
 
 # Citation Readiness Model - Cards
-[framework]
-tag = "framework"
+[cards]
+tag = "model"
 title = "The Citation Readiness Model"
 subtitle = "Whether a website can be cited by AI comes down to five criteria. If any are missing, the page is unlikely to be used as a reference."
 
-[[framework.cards]]
+[[cards.cards]]
 icon = "A"
 title = "Accessibility"
 text = "Easy to access and parse. Blocked or poorly structured pages are ignored before quality is even considered."
 
-[[framework.cards]]
+[[cards.cards]]
 icon = "C"
 title = "Credibility"
 text = "Clear who created the content and why they're qualified. Anonymous pages are less likely to be cited."
 
-[[framework.cards]]
+[[cards.cards]]
 icon = "C"
 title = "Clarity"
 text = "Key points stated directly. If the main idea requires interpretation, it's harder to reuse as a reference."
 
-[[framework.cards]]
+[[cards.cards]]
 icon = "D"
 title = "Distinctiveness"
 text = "Something that's not interchangeable. Generic explanations give AI no reason to prefer your source."
 
-[[framework.cards]]
+[[cards.cards]]
 icon = "M"
 title = "Maintenance"
 text = "Regularly updated. Outdated content is less reliable as a reference."
-
-[framework.note]
-text = "Citation is not about optimization tricks. It's about whether your page is suitable to support an explanation."
 
 # Comparison Table - Us vs SEO vs Doing Nothing
 [comparison]
@@ -188,60 +230,97 @@ text = "AI visibility is not about control. It's about probability. You can't fo
 button_label = "Check Your AI Visibility"
 button_url = "#audit"
 
-# What We Do - Features
-[features_process]
-tag = "features"
+# What We Do - Process
+[process]
+tag = "process"
+style = "sidebar"
 title = "How We Help You Become a Citable Source"
 subtitle = "We don't promise guaranteed citations. We provide a realistic way to become a reliable reference."
 
-[[features_process.features]]
-title = "Analyze How AI Explains Your Industry"
-icon = "1"
-text = "We look at the questions AI answers, the sources it relies on, and whether businesses appear at all. This establishes a baseline and prevents assumptions about what's working."
-list = ["Map current AI explanations in your space", "Identify which competitors get cited", "Understand what AI treats as usable reference material"]
+[[process.steps]]
+title = "Analyze"
+icon = "search"
+description = "We look at the questions AI answers, the sources it relies on, and whether businesses appear at all. This establishes a baseline and prevents assumptions about what's working."
+details = ["Map current AI explanations in your space", "Identify which competitors get cited", "Understand what AI treats as usable reference material"]
 
-[[features_process.features]]
-title = "Audit Your Content for Citation Readiness"
-icon = "2"
-text = "We assess whether your key pages can realistically be reused as references, whether explanations are clear and extractable, and whether important concepts are missing."
-list = ["Review existing content structure", "Identify extraction barriers", "Find gaps in explanations"]
+[[process.steps]]
+title = "Audit"
+icon = "document"
+description = "We assess whether your key pages can realistically be reused as references, whether explanations are clear and extractable, and whether important concepts are missing."
+details = ["Review existing content structure", "Identify extraction barriers", "Find gaps in explanations"]
 
-[[features_process.features]]
-title = "Create Citation-Ready Content"
-icon = "3"
-text = "Focus shifts from promotion to explanation. We help identify which questions are worth answering, how answers should be structured, and where your expertise provides unique value."
-list = ["One concept per page", "Key points stated explicitly", "Explanation before promotion"]
+[[process.steps]]
+title = "Create"
+icon = "edit"
+description = "Focus shifts from promotion to explanation. We help identify which questions are worth answering, how answers should be structured, and where your expertise provides unique value."
+details = ["One concept per page", "Key points stated explicitly", "Explanation before promotion"]
 
-# Pricing Block (simplified - full configurator in sidebar)
+[[process.steps]]
+title = "Optimize"
+icon = "lightning"
+description = "We refine the content structure for maximum extractability. Clear definitions, direct statements, and logical organization make your content easy for AI to parse and cite."
+details = ["Improve content structure", "Add clear definitions", "Enhance extractability"]
+
+[[process.steps]]
+title = "Monitor"
+icon = "analytics"
+description = "Track how AI tools begin to reference your content over time. Measure changes in visibility and adjust strategy based on what's working."
+details = ["Track AI mentions", "Measure visibility changes", "Iterate on strategy"]
+
+# Pricing Block - Packages
 [pricing]
 tag = "pricing"
+style = "packages"
 title = "AI Visibility & LLM Citation Audit"
-subtitle = "Before changing your content strategy, understand your current position."
+subtitle = "Choose the scope that fits your needs. All packages include a detailed report and actionable recommendations."
 
-badge = "Foundation"
-
-price = 2500
-price_period = "one-time"
-
-description = """
-A business may appear in some AI answers, be mentioned without links in others, or be absent entirely. Without a clear picture, it's difficult to decide what needs to change.
-
-**This audit establishes clarity** — so next steps become much easier to define.
-"""
-
-includes = [
-    "Analysis of how AI tools explain your industry",
-    "Review of which sources and competitors are cited",
-    "Assessment of your content's citation readiness",
-    "Gap analysis: missed opportunities and weak spots",
-    "Prioritized recommendations for improvement",
-    "Recording of findings walkthrough (60 min)"
+[[pricing.packages]]
+name = "Starter"
+description = "For businesses exploring AI visibility"
+price = 1500
+features = [
+    "Your brand analysis",
+    "3 competitor comparison",
+    "AI citation audit (5 pages)",
+    "Gap analysis report",
+    "30-min findings call"
 ]
+button_label = "Get Started"
+button_url = "/contact?service=ai-audit-starter"
 
-button_label = "Configure & Request"
-button_url = "#sidebar"
+[[pricing.packages]]
+name = "Professional"
+description = "Comprehensive audit with recommendations"
+price = 2500
+highlighted = true
+badge = "Most Popular"
+features = [
+    "Your brand + 7 competitors",
+    "AI citation audit (15 pages)",
+    "Full gap analysis",
+    "Content recommendations",
+    "60-min strategy call",
+    "30-day email support"
+]
+button_label = "Choose Professional"
+button_url = "/contact?service=ai-audit-pro"
 
-guarantees = ["Clear deliverables", "No fluff", "Honest assessment"]
+[[pricing.packages]]
+name = "Enterprise"
+description = "Full market mapping + implementation"
+price = 4500
+features = [
+    "Complete market analysis",
+    "AI citation audit (30+ pages)",
+    "Detailed content roadmap",
+    "Implementation guidance",
+    "2x 60-min strategy calls",
+    "90-day priority support"
+]
+button_label = "Contact Us"
+button_url = "/contact?service=ai-audit-enterprise"
+
+note = "All packages are one-time. Custom scopes available on request."
 
 # Why Companies Fail - Text Block
 [text_failures]
@@ -335,82 +414,74 @@ role = "Growth"
 company = "E-commerce Platform"
 metrics = [{ value = "12", label = "pages optimized" }]
 
-# Related Services - Carousel
-[carousel]
-tag = "carousel"
-title = "Explore More Services"
-subtitle = "Other ways we help businesses improve their digital presence"
+# Who Works on Your Project - Team
+[team]
+tag = "team"
+title = "Who Works on Your Project"
+subtitle = "Specialists dedicated to improving your AI visibility"
 
-[[carousel.cards]]
-icon = "@"
-title = "Content Audit"
-text = "Deep analysis of your existing content for structure, clarity, and effectiveness"
-link_url = "/services/content-audit"
-link_label = "Learn more"
+[[team.cards]]
+icon = "search"
+title = "AI Analysts"
+text = "Experts in how LLMs process and cite information. They map the AI landscape in your industry."
 
-[[carousel.cards]]
-icon = "#"
-title = "Technical SEO"
-text = "Ensure search engines and AI can properly access and parse your content"
-link_url = "/services/technical-seo"
-link_label = "Learn more"
+[[team.cards]]
+icon = "content"
+title = "Content Strategists"
+text = "Transform promotional content into citation-ready explanations that AI can use."
 
-[[carousel.cards]]
-icon = ">"
-title = "Content Strategy"
-text = "Long-term planning for content that serves both users and AI systems"
-link_url = "/services/content-strategy"
-link_label = "Learn more"
+[[team.cards]]
+icon = "code"
+title = "Technical Specialists"
+text = "Ensure your content is accessible and parseable by AI crawlers and systems."
 
-[[carousel.cards]]
-icon = "?"
-title = "Competitor Analysis"
-text = "Understand what your competitors are doing right in AI visibility"
-link_url = "/services/competitor-analysis"
-link_label = "Learn more"
+[[team.cards]]
+icon = "analytics"
+title = "Data Analysts"
+text = "Track AI mentions, measure visibility changes, and identify optimization opportunities."
 
-[[carousel.cards]]
-icon = "*"
-title = "Citation Monitoring"
-text = "Track where and how AI tools mention your business over time"
-link_url = "/services/citation-monitoring"
-link_label = "Learn more"
+[team.note]
+text = "Every project is led by a senior strategist with 10+ years in digital marketing and AI visibility."
 
 # All Services - Grid
-[services_list]
+[services_grid]
 tag = "services"
 title = "Full Service Catalog"
 subtitle = "Everything we offer to improve your AI and search visibility"
+cta_label = "View All Services"
+cta_url = "/services"
 
-[[services_list.services]]
+[[services_grid.services]]
+slug = "ai-optimisation"
 title = "AI Visibility Audit"
+category = "AI"
 description = "Comprehensive analysis of how AI tools currently present your business"
-price = 2500
-category = "ai"
-url = "/services/ai-optimisation"
-featured = true
+from_price = 2500
+rating = 4.9
 
-[[services_list.services]]
+[[services_grid.services]]
+slug = "citation-content"
 title = "Citation-Ready Content"
+category = "Content"
 description = "Content designed specifically to be useful for AI citations"
-price = 1500
-category = "content"
-url = "/services/citation-content"
+from_price = 1500
+rating = 4.8
 
-[[services_list.services]]
+[[services_grid.services]]
+slug = "technical-ai"
 title = "Technical AI Optimization"
+category = "AI"
 description = "Ensure your site is accessible and parseable by AI crawlers"
-price = 2000
-category = "ai"
-url = "/services/technical-ai"
+from_price = 2000
+rating = 4.7
 
-[[services_list.services]]
+[[services_grid.services]]
+slug = "monitoring"
 title = "Ongoing Monitoring"
+category = "Monitoring"
 description = "Monthly tracking of your AI visibility and citation metrics"
-price = 500
-price_period = "/mo"
-category = "monitoring"
-url = "/services/monitoring"
+from_price = 500
+rating = 4.8
 
 # CTA Section
 [cta]

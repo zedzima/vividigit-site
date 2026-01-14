@@ -1,20 +1,35 @@
 <!-- Testimonials Block: Customer reviews and social proof -->
 <section class="testimonials-block">
     {% if data.title %}
-    <div class="testimonials-header text-center">
-        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
-        <h2>{{ data.title }}</h2>
-        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+    <div class="testimonials-header">
+        <div class="testimonials-header-text">
+            <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+            <h2>{{ data.title }}</h2>
+            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+        </div>
+        <div class="testimonials-nav">
+            <button class="testimonials-nav-btn" data-dir="prev" aria-label="Previous">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button class="testimonials-nav-btn" data-dir="next" aria-label="Next">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 6 15 12 9 18"></polyline>
+                </svg>
+            </button>
+        </div>
     </div>
     {% endif %}
 
-    <div class="testimonials-grid grid grid-{{ data.columns | default(2) }}">
-        {% for testimonial in data.testimonials %}
-        <div class="testimonial-card card {% if testimonial.featured %}card-gradient{% endif %}">
+    <div class="testimonials-carousel">
+        <div class="testimonials-track">
+            {% for testimonial in data.testimonials %}
+            <div class="testimonial-card card {% if testimonial.featured %}card-gradient{% endif %}">
             {% if testimonial.rating %}
             <div class="testimonial-rating">
                 {% for i in range(testimonial.rating) %}
-                <span class="star">*</span>
+                <span class="star">★</span>
                 {% endfor %}
             </div>
             {% endif %}
@@ -51,6 +66,7 @@
             {% endif %}
         </div>
         {% endfor %}
+        </div>
     </div>
 
     {% if data.logos %}
@@ -71,23 +87,65 @@
     }
 
     .testimonials-header {
-        margin-bottom: var(--space-2xl);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: var(--space-xl);
     }
 
-    .testimonials-header p {
+    .testimonials-header-text p {
         color: var(--text-secondary);
         max-width: calc(600px * var(--scale));
-        margin: 0 auto;
     }
 
-    .testimonials-grid {
+    .testimonials-nav {
+        display: flex;
+        gap: var(--space-sm);
+        flex-shrink: 0;
+    }
+
+    .testimonials-nav-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .testimonials-nav-btn:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-color: var(--border-light);
+    }
+
+    .testimonials-carousel {
+        overflow: hidden;
         margin-bottom: var(--space-2xl);
+    }
+
+    .testimonials-track {
+        display: flex;
+        gap: var(--space-lg);
+        transition: transform 0.4s ease;
     }
 
     .testimonial-card {
+        flex: 0 0 calc(50% - var(--space-lg) / 2);
         display: flex;
         flex-direction: column;
         gap: var(--space-lg);
+    }
+
+    @media (max-width: 768px) {
+        .testimonial-card {
+            flex: 0 0 100%;
+        }
     }
 
     .testimonial-rating {
@@ -223,3 +281,60 @@
         filter: grayscale(0);
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.testimonials-block').forEach(function(block) {
+        const track = block.querySelector('.testimonials-track');
+        const cards = block.querySelectorAll('.testimonial-card');
+        const prevBtn = block.querySelector('[data-dir="prev"]');
+        const nextBtn = block.querySelector('[data-dir="next"]');
+
+        if (!track || cards.length === 0) return;
+
+        let currentIndex = 0;
+
+        function getVisibleCards() {
+            return window.innerWidth <= 768 ? 1 : 2;
+        }
+
+        function getMaxIndex() {
+            return Math.max(0, cards.length - getVisibleCards());
+        }
+
+        function updateCarousel() {
+            const card = cards[0];
+            const cardWidth = card.offsetWidth;
+            const gap = parseInt(getComputedStyle(track).gap) || 24;
+            const offset = currentIndex * (cardWidth + gap);
+            track.style.transform = 'translateX(-' + offset + 'px)';
+        }
+
+        function next() {
+            currentIndex++;
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = 0;
+            }
+            updateCarousel();
+        }
+
+        function prev() {
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', prev);
+        if (nextBtn) nextBtn.addEventListener('click', next);
+
+        window.addEventListener('resize', function() {
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        });
+    });
+});
+</script>

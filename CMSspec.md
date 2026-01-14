@@ -288,10 +288,11 @@ If structure differs between language files, the build must fail.
 Build steps:
 1. Scan the `content/` directory tree.
 2. Select only files matching the active language suffix.
-3. Validate each file against this contract.
+3. Validate block templates and demos (warn if templates lack demos).
 4. Resolve page URLs from directory structure.
 5. For each page:
    - load content blocks,
+   - validate that each block has a corresponding template,
    - match blocks to templates,
    - render blocks,
    - inject blocks into layout.
@@ -317,6 +318,45 @@ Rules:
 - Content accountability only.
 - Not used for rendering or logic.
 - Entries describe what changed and when.
+
+---
+
+## Block templates define the complete contract for content.
+
+Rules:
+1. Pages must not contain any data that is not defined in a corresponding block template.
+2. Block demo TOML files must include ALL parameters that the template supports.
+3. Global styles must be defined only in the global CSS file (`public/css/styles.css`).
+
+Block templates are the source of truth for:
+- which fields are allowed,
+- which fields are required,
+- which fields are optional.
+
+Demo content files in `content/blocks/` serve as complete examples.
+Every parameter a block template can render must be present in its demo file.
+This ensures:
+- templates are fully documented by example,
+- content authors see all available options,
+- AI agents can reference complete parameter lists.
+
+Inline styles in block templates are allowed only for styles unique to that block.
+Any style that could apply to multiple blocks must be in the global CSS.
+
+---
+
+## The build validates block consistency.
+
+Validation runs automatically during build.
+
+Warnings are issued when:
+- A block template in `templates/blocks/` has no demo content in `content/blocks/`.
+
+Errors are issued when:
+- A content file uses a block that has no corresponding template.
+
+If a content file references a block without a matching template, the build must report an error.
+Templates without demo content are allowed but discouraged.
 
 ---
 

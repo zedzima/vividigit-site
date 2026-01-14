@@ -24,9 +24,52 @@ TEMPLATE_DIR = "templates"
 OUTPUT_DIR = "public"
 ASSETS_DIR = "assets"
 GLOBAL_DIR = os.path.join(CONTENT_DIR, "_global")
+BLOCKS_DIR = os.path.join(TEMPLATE_DIR, "blocks")
+BLOCKS_CONTENT_DIR = os.path.join(CONTENT_DIR, "blocks")
 
 # Default language for build
 DEFAULT_LANG = "en"
+
+
+def get_available_blocks() -> set:
+    """Get set of available block names from templates/blocks/*.html"""
+    blocks = set()
+    if os.path.exists(BLOCKS_DIR):
+        for f in os.listdir(BLOCKS_DIR):
+            if f.endswith('.html'):
+                blocks.add(f[:-5])  # Remove .html extension
+    return blocks
+
+
+def get_demo_blocks(lang: str) -> set:
+    """Get set of blocks that have demo content in content/blocks/"""
+    demos = set()
+    if os.path.exists(BLOCKS_CONTENT_DIR):
+        for item in os.listdir(BLOCKS_CONTENT_DIR):
+            item_path = os.path.join(BLOCKS_CONTENT_DIR, item)
+            if os.path.isdir(item_path):
+                # Check if there's a lang-specific file
+                for f in os.listdir(item_path):
+                    if f".{lang}." in f:
+                        demos.add(item.replace('-', '_'))  # Normalize: services-grid → services_grid
+                        break
+    return demos
+
+
+def validate_blocks(available: set, demos: set) -> List[str]:
+    """
+    Validate block consistency.
+    Returns list of warnings.
+    """
+    warnings = []
+
+    # Check for templates without demos
+    for block in available:
+        normalized = block.replace('-', '_')
+        if normalized not in demos and block not in demos:
+            warnings.append(f"Template '{block}' has no demo content in content/blocks/")
+
+    return warnings
 
 
 def load_site_config() -> dict:
@@ -251,6 +294,29 @@ def export_collection_json(collection_name: str, items: List[Dict], output_dir: 
     print(f"  Exported: {json_path} ({len(export_items)} items)")
 
 
+def get_page_blocks(data: Dict[str, Any]) -> set:
+    """Extract block names used in a page's data."""
+    # System sections that are NOT content blocks
+    # blocks = processed list of block objects (handled by generator)
+    # sidebar = layout configuration (handled by generator)
+    system_sections = {"config", "meta", "stats", "changes", "translations", "blocks", "sidebar"}
+    blocks = set()
+    for key in data.keys():
+        if key not in system_sections:
+            # Normalize: services_grid → services-grid for template matching
+            blocks.add(key.replace('_', '-'))
+    return blocks
+
+
+def validate_page_blocks(page_blocks: set, available_blocks: set, filepath: str) -> List[str]:
+    """Validate that all blocks used in a page have corresponding templates."""
+    errors = []
+    for block in page_blocks:
+        if block not in available_blocks:
+            errors.append(f"{filepath}: Block '{block}' has no template in {BLOCKS_DIR}/")
+    return errors
+
+
 def main(lang: str = DEFAULT_LANG):
     """Build site for specified language."""
     print(f"Building site for language: {lang}")
@@ -260,6 +326,18 @@ def main(lang: str = DEFAULT_LANG):
     site_config = load_site_config()
     base_url = site_config.get("site", {}).get("base_url", "/")
     print(f"Base URL: {base_url}")
+
+    # Validate block templates and demos
+    print("\nValidating blocks...")
+    available_blocks = get_available_blocks()
+    demo_blocks = get_demo_blocks(lang)
+    block_warnings = validate_blocks(available_blocks, demo_blocks)
+
+    print(f"  Found {len(available_blocks)} block templates")
+    print(f"  Found {len(demo_blocks)} block demos")
+
+    for warning in block_warnings:
+        print(f"  ⚠ {warning}")
 
     # Initialize generator
     gen = Generator(TEMPLATE_DIR, OUTPUT_DIR, site_config)
@@ -274,11 +352,17 @@ def main(lang: str = DEFAULT_LANG):
     parsed_pages = []
     collections = {}
     errors = []
+    block_errors = []
 
     for file_info in content_files:
         filepath = file_info["filepath"]
         try:
             data = load_file(filepath)
+
+            # Validate blocks used in this page
+            page_blocks = get_page_blocks(data)
+            page_block_errors = validate_page_blocks(page_blocks, available_blocks, filepath)
+            block_errors.extend(page_block_errors)
 
             # Inject URL and collection from directory structure
             data["config"]["url"] = file_info["url"]
@@ -313,6 +397,11 @@ def main(lang: str = DEFAULT_LANG):
 
     if errors:
         print(f"\n⚠ {len(errors)} parsing errors")
+
+    if block_errors:
+        print(f"\n⚠ {len(block_errors)} block validation errors:")
+        for err in block_errors:
+            print(f"  ✗ {err}")
 
     # Build navigation
     print("\nBuilding navigation...")
@@ -363,8 +452,12 @@ def main(lang: str = DEFAULT_LANG):
     # Summary
     print("\n" + "=" * 50)
     print(f"Build complete: {len(parsed_pages)} pages")
-    if errors or render_errors:
-        print(f"Warnings: {len(errors) + len(render_errors)}")
+    total_warnings = len(errors) + len(render_errors) + len(block_warnings)
+    total_errors = len(block_errors)
+    if total_warnings:
+        print(f"Warnings: {total_warnings}")
+    if total_errors:
+        print(f"Block errors: {total_errors} (missing templates)")
 
 
 if __name__ == "__main__":

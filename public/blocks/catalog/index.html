@@ -113,11 +113,7 @@
                         
                         <a href="blocks/testimonials/" class="nav-sublink ">Testimonials</a>
                         
-                        <a href="blocks/framework/" class="nav-sublink ">Framework</a>
-                        
                         <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
-                        
-                        <a href="blocks/services-grid/" class="nav-sublink ">Services Grid</a>
                         
                         <a href="blocks/cta/" class="nav-sublink ">CTA</a>
                         
@@ -129,9 +125,17 @@
                         
                         <a href="blocks/features/" class="nav-sublink ">Features</a>
                         
+                        <a href="blocks/cases/" class="nav-sublink ">Cases</a>
+                        
+                        <a href="blocks/logos/" class="nav-sublink ">Logos</a>
+                        
                         <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
                         
+                        <a href="blocks/team/" class="nav-sublink ">Team</a>
+                        
                         <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/trust/" class="nav-sublink ">Trust</a>
                         
                         <a href="blocks/comparison/" class="nav-sublink ">Comparison</a>
                         
@@ -148,6 +152,10 @@
                         <a href="blocks/nested/" class="nav-sublink ">Nested</a>
                         
                         <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/coverage/" class="nav-sublink ">Coverage</a>
+                        
+                        <a href="blocks/badges/" class="nav-sublink ">Badges</a>
                         
                         <a href="blocks/services/" class="nav-sublink ">Services</a>
                         
@@ -221,14 +229,12 @@
             <select id="sortBy" class="form-input">
                 <option value="popular">Popular</option>
                 <option value="rating">Highest Rated</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
+                <option value="name">A-Z</option>
             </select>
         </div>
     </div>
 
     <div class="catalog-grid" id="catalogGrid">
-        <!-- Cards will be rendered by JavaScript -->
         <div class="catalog-loading">Loading services...</div>
     </div>
 </section>
@@ -274,13 +280,7 @@
     gap: var(--space-lg);
 }
 
-.catalog-loading {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: var(--space-2xl);
-    color: var(--text-muted);
-}
-
+.catalog-loading,
 .catalog-empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -310,7 +310,14 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    gap: var(--space-sm);
     margin-bottom: var(--space-md);
+}
+
+.service-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
 .service-category {
@@ -333,6 +340,7 @@
     font-size: var(--font-size-ui);
     color: #f59e0b;
     font-weight: 500;
+    flex-shrink: 0;
 }
 
 .service-card h3 {
@@ -351,45 +359,19 @@
     margin-bottom: var(--space-md);
 }
 
-.service-tags {
+.service-industries {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: var(--space-md);
 }
 
-.service-tag {
+.service-industry {
     padding: 2px 8px;
     font-size: var(--font-size-caption);
     background: var(--bg-tertiary);
     border-radius: 4px;
     color: var(--text-muted);
-}
-
-.service-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--border);
-}
-
-.service-price {
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.service-stats {
-    display: flex;
-    gap: var(--space-md);
-    font-size: var(--font-size-caption);
-    color: var(--text-muted);
-}
-
-.service-cta {
-    color: var(--accent);
-    font-weight: 500;
-    font-size: var(--font-size-ui);
 }
 
 .service-languages {
@@ -410,6 +392,25 @@
     border-radius: 3px;
     color: var(--text-muted);
 }
+
+.service-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+}
+
+.service-price {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.service-cta {
+    color: var(--accent);
+    font-weight: 500;
+    font-size: var(--font-size-ui);
+}
 </style>
 
 <script>
@@ -420,45 +421,58 @@
 
     let allServices = [];
 
-    // Mock services data (in production, this comes from /data/services.json)
+    // Demo services data
     const mockServices = [
         {
             slug: "seo-audit",
             url: "/services/seo-audit",
             title: "SEO Audit & Strategy",
-            description: "Comprehensive technical SEO audit with actionable recommendations to improve your search visibility.",
-            category: "SEO",
-            tags: ["Technical SEO", "Audit", "Strategy"],
+            description: "Comprehensive technical SEO audit with actionable recommendations.",
+            categories: ["SEO"],
+            industries: ["SaaS", "E-commerce"],
             languages: ["EN", "DE"],
+            delivery: "one-time",
             price: 1500,
             rating: 4.9,
-            reviews: 127,
             orders: 340
         },
         {
             slug: "content-strategy",
             url: "/services/content-strategy",
             title: "Content Strategy",
-            description: "Data-driven content plan aligned with your business goals and target audience needs.",
-            category: "Content",
-            tags: ["Strategy", "Planning", "Research"],
+            description: "Data-driven content plan aligned with your business goals.",
+            categories: ["Content"],
+            industries: ["SaaS", "Finance", "Healthcare"],
             languages: ["EN", "DE", "FR"],
+            delivery: "one-time",
             price: 2000,
             rating: 4.8,
-            reviews: 89,
             orders: 215
+        },
+        {
+            slug: "ai-optimisation",
+            url: "/services/ai-optimisation",
+            title: "AI Visibility Audit",
+            description: "Optimize your content for AI-powered search and LLM citations.",
+            categories: ["SEO", "AEO"],
+            industries: ["SaaS", "E-commerce", "Finance"],
+            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
+            delivery: "one-time",
+            price: 2500,
+            rating: 4.9,
+            orders: 89
         },
         {
             slug: "ppc-setup",
             url: "/services/ppc-setup",
             title: "PPC Campaign Setup",
-            description: "Launch optimized paid campaigns across Google Ads and social media platforms.",
-            category: "PPC",
-            tags: ["Google Ads", "Social Ads", "Setup"],
+            description: "Launch optimized paid campaigns across Google Ads and social.",
+            categories: ["PPC"],
+            industries: ["E-commerce", "SaaS"],
             languages: ["EN"],
+            delivery: "one-time",
             price: 1800,
             rating: 4.7,
-            reviews: 156,
             orders: 428
         },
         {
@@ -466,12 +480,12 @@
             url: "/services/localization",
             title: "Website Localization",
             description: "Professional translation and cultural adaptation for global markets.",
-            category: "Localization",
-            tags: ["Translation", "i18n", "Global"],
+            categories: ["Content", "Localization"],
+            industries: ["SaaS", "E-commerce", "Travel"],
             languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
+            delivery: "one-time",
             price: 2500,
             rating: 4.9,
-            reviews: 73,
             orders: 189
         },
         {
@@ -479,93 +493,71 @@
             url: "/services/analytics-setup",
             title: "Analytics Setup",
             description: "GA4, GTM, and custom dashboards for complete data visibility.",
-            category: "Analytics",
-            tags: ["GA4", "GTM", "Dashboards"],
+            categories: ["Analytics"],
+            industries: ["SaaS", "E-commerce", "Finance"],
             languages: ["EN", "DE"],
+            delivery: "one-time",
             price: 1200,
             rating: 4.8,
-            reviews: 94,
             orders: 267
         },
         {
-            slug: "link-building",
-            url: "/services/link-building",
-            title: "Link Building Campaign",
-            description: "Quality backlinks from relevant, authoritative sources in your niche.",
-            category: "SEO",
-            tags: ["Backlinks", "Outreach", "PR"],
-            languages: ["EN"],
-            price: 3000,
-            rating: 4.6,
-            reviews: 62,
-            orders: 143
-        },
-        {
-            slug: "ai-optimisation",
-            url: "/services/ai-optimisation",
-            title: "AI Optimization",
-            description: "Optimize your content and strategy for AI-powered search and assistants.",
-            category: "SEO",
-            tags: ["AI", "LLM", "Future-proof"],
-            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
-            price: 2500,
-            rating: 4.9,
-            reviews: 45,
-            orders: 89
-        },
-        {
-            slug: "social-media",
-            url: "/services/social-media",
-            title: "Social Media Management",
-            description: "End-to-end social media strategy and content management.",
-            category: "Content",
-            tags: ["Social", "Community", "Engagement"],
-            languages: ["EN", "DE", "RU"],
-            price: 2200,
-            rating: 4.7,
-            reviews: 112,
-            orders: 298
-        },
-        {
-            slug: "conversion-optimization",
-            url: "/services/conversion-optimization",
-            title: "Conversion Optimization",
-            description: "A/B testing and UX improvements to boost your conversion rates.",
-            category: "Analytics",
-            tags: ["CRO", "A/B Testing", "UX"],
+            slug: "seo-ongoing",
+            url: "/services/seo-ongoing",
+            title: "Ongoing SEO Management",
+            description: "Monthly SEO optimization, monitoring and reporting.",
+            categories: ["SEO"],
+            industries: ["SaaS", "E-commerce", "Finance"],
             languages: ["EN", "DE"],
-            price: 2800,
+            delivery: "ongoing",
+            price: 2000,
             rating: 4.8,
-            reviews: 67,
             orders: 156
+        },
+        {
+            slug: "content-ongoing",
+            url: "/services/content-ongoing",
+            title: "Content Retainer",
+            description: "Monthly content creation and publication management.",
+            categories: ["Content"],
+            industries: ["SaaS", "Finance", "Healthcare"],
+            languages: ["EN", "DE", "FR"],
+            delivery: "ongoing",
+            price: 3000,
+            rating: 4.7,
+            orders: 98
         }
     ];
 
     function renderCard(service) {
-        const tags = (service.tags || []).slice(0, 3).map(t =>
-            `<span class="service-tag">${t}</span>`
+        const categories = (service.categories || [service.category]).filter(Boolean).map(c =>
+            '<span class="service-category">' + c + '</span>'
+        ).join('');
+
+        const industries = (service.industries || []).slice(0, 3).map(i =>
+            '<span class="service-industry">' + i + '</span>'
         ).join('');
 
         const languages = (service.languages || []).map(lang =>
-            `<span class="service-lang">${lang}</span>`
+            '<span class="service-lang">' + lang + '</span>'
         ).join('');
 
-        return `
-            <a href="${service.url || '/services/' + service.slug}" class="service-card">
-                <div class="service-card-header">
-                    <span class="service-category">${service.category || 'Service'}</span>
-                    ${service.rating ? `<span class="service-rating">★ ${service.rating}</span>` : ''}
-                </div>
-                <h3>${service.title}</h3>
-                <p>${service.description || ''}</p>
-                ${tags ? `<div class="service-tags">${tags}</div>` : ''}
-                ${languages ? `<div class="service-languages">${languages}</div>` : ''}
-                <div class="service-card-footer">
-                    <span class="service-price">From $${(service.price || 0).toLocaleString()}</span>
-                    <span class="service-cta">View →</span>
-                </div>
-            </a>
-        `;
+        return '\
+            <a href="' + (service.url || '/services/' + service.slug) + '" class="service-card">\
+                <div class="service-card-header">\
+                    <div class="service-categories">' + categories + '</div>\
+                    ' + (service.rating ? '<span class="service-rating">★ ' + service.rating + '</span>' : '') + '\
+                </div>\
+                <h3>' + service.title + '</h3>\
+                <p>' + (service.description || '') + '</p>\
+                ' + (industries ? '<div class="service-industries">' + industries + '</div>' : '') + '\
+                ' + (languages ? '<div class="service-languages">' + languages + '</div>' : '') + '\
+                <div class="service-card-footer">\
+                    <span class="service-price">From $' + (service.price || 0).toLocaleString() + '</span>\
+                    <span class="service-cta">View →</span>\
+                </div>\
+            </a>\
+        ';
     }
 
     function renderGrid(services) {
@@ -578,99 +570,168 @@
     }
 
     function sortServices(services, by) {
-        const sorted = [...services];
+        var sorted = services.slice();
         switch (by) {
             case 'rating':
-                sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+                sorted.sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); });
                 break;
-            case 'price-low':
-                sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
-                break;
-            case 'price-high':
-                sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+            case 'name':
+                sorted.sort(function(a, b) { return a.title.localeCompare(b.title); });
                 break;
             case 'popular':
             default:
-                sorted.sort((a, b) => (b.orders || 0) - (a.orders || 0));
+                sorted.sort(function(a, b) { return (b.orders || 0) - (a.orders || 0); });
         }
         return sorted;
     }
 
+    function getCheckedValues(filterName) {
+        var dropdown = document.querySelector('[data-filter="' + filterName + '"]');
+        if (!dropdown) return [];
+        var checked = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+        return Array.from(checked).map(function(cb) { return cb.value; });
+    }
+
+    function updateDropdownText(dropdown) {
+        var checked = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+        var textEl = dropdown.querySelector('.filter-selected-text');
+        var filterName = dropdown.dataset.filter;
+        var allLabel = {
+            'category': 'All Categories',
+            'industry': 'All Industries',
+            'language': 'All Languages',
+            'delivery': 'All Types'
+        };
+        if (checked.length === 0) {
+            textEl.textContent = allLabel[filterName] || 'All';
+        } else if (checked.length === 1) {
+            textEl.textContent = checked[0].nextElementSibling.textContent;
+        } else {
+            textEl.textContent = checked.length + ' selected';
+        }
+    }
+
     function applyFilters() {
-        let filtered = [...allServices];
+        var filtered = allServices.slice();
 
-        // Get filter values from sidebar
-        const categoryFilter = document.querySelector('[name="category"]');
-        const minPrice = document.querySelector('[name="minPrice"]');
-        const maxPrice = document.querySelector('[name="maxPrice"]');
-
-        if (categoryFilter && categoryFilter.value) {
-            filtered = filtered.filter(s => s.category === categoryFilter.value);
+        // Category filter (multi-select)
+        var categories = getCheckedValues('category');
+        if (categories.length > 0) {
+            filtered = filtered.filter(function(s) {
+                var serviceCats = s.categories || [s.category];
+                return categories.some(function(c) {
+                    return serviceCats.some(function(sc) { return sc === c; });
+                });
+            });
         }
 
-        if (minPrice && minPrice.value) {
-            filtered = filtered.filter(s => (s.price || 0) >= parseInt(minPrice.value));
+        // Industry filter (multi-select)
+        var industries = getCheckedValues('industry');
+        if (industries.length > 0) {
+            filtered = filtered.filter(function(s) {
+                return industries.some(function(ind) {
+                    return (s.industries || []).some(function(si) { return si === ind; });
+                });
+            });
         }
 
-        if (maxPrice && maxPrice.value) {
-            filtered = filtered.filter(s => (s.price || 0) <= parseInt(maxPrice.value));
+        // Language filter (multi-select)
+        var languages = getCheckedValues('language');
+        if (languages.length > 0) {
+            filtered = filtered.filter(function(s) {
+                return languages.some(function(lang) {
+                    return (s.languages || []).some(function(sl) { return sl === lang; });
+                });
+            });
         }
 
-        // Delivery mode filters
-        const deliveryChecks = document.querySelectorAll('[name="delivery"]:checked');
-        if (deliveryChecks.length > 0 && deliveryChecks.length < 2) {
-            // Apply filter only if not all selected
+        // Delivery filter (multi-select)
+        var delivery = getCheckedValues('delivery');
+        if (delivery.length > 0) {
+            filtered = filtered.filter(function(s) {
+                return delivery.some(function(d) { return s.delivery === d; });
+            });
         }
 
-        return sortServices(filtered, sortEl?.value || 'popular');
+        return sortServices(filtered, sortEl ? sortEl.value : 'popular');
     }
 
     function init() {
         // Try to load from JSON, fall back to mock
         fetch('/data/services.json')
-            .then(res => res.ok ? res.json() : Promise.reject())
-            .then(data => {
-                // Merge with mock data for richer display
-                allServices = mockServices.map(mock => {
-                    const real = data.find(d => d.slug === mock.slug);
-                    return real ? { ...mock, ...real } : mock;
+            .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
+            .then(function(data) {
+                allServices = mockServices.map(function(mock) {
+                    var real = data.find(function(d) { return d.slug === mock.slug; });
+                    return real ? Object.assign({}, mock, real) : mock;
                 });
-                // Add any services from JSON not in mock
-                data.forEach(item => {
-                    if (!allServices.find(s => s.slug === item.slug)) {
+                data.forEach(function(item) {
+                    if (!allServices.find(function(s) { return s.slug === item.slug; })) {
                         allServices.push(item);
                     }
                 });
                 renderGrid(applyFilters());
             })
-            .catch(() => {
+            .catch(function() {
                 allServices = mockServices;
                 renderGrid(applyFilters());
             });
 
         // Sort change handler
-        sortEl?.addEventListener('change', () => {
-            renderGrid(applyFilters());
+        if (sortEl) {
+            sortEl.addEventListener('change', function() {
+                renderGrid(applyFilters());
+            });
+        }
+
+        // Filter dropdown toggle
+        document.querySelectorAll('.filter-dropdown-toggle').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var dropdown = btn.closest('.filter-dropdown');
+                var wasOpen = dropdown.classList.contains('open');
+                // Close all dropdowns
+                document.querySelectorAll('.filter-dropdown').forEach(function(d) {
+                    d.classList.remove('open');
+                });
+                // Toggle current
+                if (!wasOpen) dropdown.classList.add('open');
+            });
         });
 
-        // Filter change handlers (sidebar)
-        document.querySelectorAll('.sidebar-action select, .sidebar-action input').forEach(el => {
-            el.addEventListener('change', () => {
+        // Filter checkbox change
+        document.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb) {
+            cb.addEventListener('change', function() {
+                var dropdown = cb.closest('.filter-dropdown');
+                updateDropdownText(dropdown);
                 renderGrid(applyFilters());
             });
         });
 
-        // Reset filters button
-        const resetBtn = document.querySelector('.btn-reset-filters');
-        resetBtn?.addEventListener('click', () => {
-            document.querySelectorAll('.sidebar-action select').forEach(el => el.value = '');
-            document.querySelectorAll('.sidebar-action input[type="number"]').forEach(el => el.value = '');
-            document.querySelectorAll('.sidebar-action input[type="checkbox"]').forEach(el => el.checked = true);
-            renderGrid(applyFilters());
+        // Close dropdowns on outside click
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.filter-dropdown')) {
+                document.querySelectorAll('.filter-dropdown').forEach(function(d) {
+                    d.classList.remove('open');
+                });
+            }
         });
+
+        // Reset filters button
+        var resetBtn = document.querySelector('.btn-reset-filters');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb) {
+                    cb.checked = false;
+                });
+                document.querySelectorAll('.filter-dropdown').forEach(function(dropdown) {
+                    updateDropdownText(dropdown);
+                });
+                renderGrid(applyFilters());
+            });
+        }
     }
 
-    // Initialize when DOM ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {

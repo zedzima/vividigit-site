@@ -113,11 +113,7 @@
                         
                         <a href="blocks/testimonials/" class="nav-sublink ">Testimonials</a>
                         
-                        <a href="blocks/framework/" class="nav-sublink ">Framework</a>
-                        
                         <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
-                        
-                        <a href="blocks/services-grid/" class="nav-sublink ">Services Grid</a>
                         
                         <a href="blocks/cta/" class="nav-sublink ">CTA</a>
                         
@@ -129,9 +125,17 @@
                         
                         <a href="blocks/features/" class="nav-sublink ">Features</a>
                         
+                        <a href="blocks/cases/" class="nav-sublink ">Cases</a>
+                        
+                        <a href="blocks/logos/" class="nav-sublink ">Logos</a>
+                        
                         <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
                         
+                        <a href="blocks/team/" class="nav-sublink ">Team</a>
+                        
                         <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/trust/" class="nav-sublink ">Trust</a>
                         
                         <a href="blocks/comparison/" class="nav-sublink ">Comparison</a>
                         
@@ -148,6 +152,10 @@
                         <a href="blocks/nested/" class="nav-sublink ">Nested</a>
                         
                         <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/coverage/" class="nav-sublink ">Coverage</a>
+                        
+                        <a href="blocks/badges/" class="nav-sublink ">Badges</a>
                         
                         <a href="blocks/services/" class="nav-sublink ">Services</a>
                         
@@ -201,48 +209,45 @@
 
             
             <div class="block">
-                <!-- Hero Block: Main landing section with gradient accent -->
-<section class="hero-block">
-    <span class="tag tag-accent">hero</span>
+                <!-- Hero Block: Main landing section with multiple style variants -->
 
-    <h1>
-        
-        <span class="text-gradient">Blocks</span> Library
-        
-    </h1>
 
-    
-    <p class="hero-subtitle">Visual documentation of all available content blocks. Click any block to see it in isolation with example data.</p>
-    
-
-    
-
-    
-    <div class="hero-actions">
+<section class="hero-block hero-clean">
+    <div class="hero-content">
         
-        <a href="#catalog" class="btn btn-primary">
-            View All Blocks
-        </a>
+        <span class="tag tag-accent">hero</span>
         
+
+        <h1>
+            
+            <span class="text-gradient">Blocks</span> Library
+            
+        </h1>
+
+        
+        <p class="hero-subtitle">Visual documentation of all available content blocks. Click any block to see it in isolation with example data.</p>
+        
+
+        
+
+        
+
         
     </div>
-    
-
-    
 
     
 </section>
 
 <style>
+    /* Base Hero Styles */
     .hero-block {
-        text-align: center;
         padding: var(--space-3xl) 0;
+        position: relative;
     }
 
     .hero-block h1 {
         font-size: var(--font-size-display);
         max-width: calc(900px * var(--scale));
-        margin: var(--space-lg) auto;
         line-height: 1.2;
     }
 
@@ -250,20 +255,20 @@
         font-size: var(--font-size-subtitle);
         color: var(--text-secondary);
         max-width: calc(700px * var(--scale));
-        margin: 0 auto var(--space-lg);
+        margin-top: var(--space-lg);
     }
 
     .hero-text {
         font-size: var(--font-size-body);
         color: var(--text-secondary);
         max-width: calc(600px * var(--scale));
-        margin: 0 auto var(--space-xl);
+        margin-top: var(--space-md);
+        line-height: 1.7;
     }
 
     .hero-actions {
         display: flex;
         gap: var(--space-md);
-        justify-content: center;
         flex-wrap: wrap;
         margin-top: var(--space-xl);
     }
@@ -271,7 +276,6 @@
     .hero-stats {
         display: flex;
         gap: var(--space-2xl);
-        justify-content: center;
         margin-top: var(--space-2xl);
     }
 
@@ -290,17 +294,198 @@
         color: var(--text-muted);
     }
 
-    .hero-image {
-        margin-top: var(--space-3xl);
+    .hero-visual {
         border-radius: var(--radius-xl);
         overflow: hidden;
         border: 1px solid var(--border-color);
     }
 
-    .hero-image img {
+    .hero-visual img {
         width: 100%;
         height: auto;
         display: block;
+    }
+
+    /* Style 1: Clean (centered) */
+    .hero-clean {
+        text-align: center;
+    }
+
+    .hero-clean .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-clean .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-clean .hero-stats {
+        justify-content: center;
+    }
+
+    .hero-clean .hero-visual {
+        margin-top: var(--space-3xl);
+    }
+
+    /* Style 2: Gradient background */
+    .hero-gradient {
+        text-align: center;
+        background: var(--accent-gradient);
+        color: white;
+        padding: var(--space-3xl);
+        border-radius: var(--radius-xl);
+    }
+
+    .hero-gradient .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-gradient h1 {
+        color: white;
+    }
+
+    .hero-gradient .text-gradient {
+        background: white;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-gradient .tag {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .hero-gradient .hero-subtitle,
+    .hero-gradient .hero-text {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-gradient .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-gradient .btn-primary {
+        background: white;
+        color: var(--brand-purple);
+    }
+
+    .hero-gradient .btn-secondary {
+        background: transparent;
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+    }
+
+    .hero-gradient .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: white;
+    }
+
+    .hero-gradient .hero-stats {
+        justify-content: center;
+    }
+
+    .hero-gradient .hero-stat-value {
+        background: white;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-gradient .hero-stat-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-gradient .hero-visual {
+        margin-top: var(--space-3xl);
+    }
+
+    /* Style 3: Split (content left, image right) */
+    .hero-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-3xl);
+        align-items: center;
+    }
+
+    .hero-split .hero-content {
+        text-align: left;
+    }
+
+    .hero-split h1 {
+        margin: 0;
+    }
+
+    .hero-split .hero-subtitle,
+    .hero-split .hero-text {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .hero-split .hero-stats {
+        justify-content: flex-start;
+    }
+
+    .hero-split .hero-visual {
+        height: 100%;
+        min-height: 400px;
+    }
+
+    .hero-split .hero-visual img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-visual-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(192, 38, 211, 0.1) 100%);
+    }
+
+    .hero-visual-icon {
+        font-size: 6rem;
+        font-weight: 700;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        opacity: 0.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+        .hero-split {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-split .hero-content {
+            text-align: center;
+        }
+
+        .hero-split .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-split .hero-actions {
+            justify-content: center;
+        }
+
+        .hero-split .hero-stats {
+            justify-content: center;
+        }
+
+        .hero-split .hero-visual {
+            order: -1;
+            min-height: 300px;
+        }
     }
 
     @media (max-width: 768px) {
@@ -308,488 +493,13 @@
             flex-direction: column;
             gap: var(--space-lg);
         }
+
+        .hero-gradient {
+            margin: 0;
+            border-radius: 0;
+        }
     }
 </style>
-            </div>
-            
-            <div class="block">
-                <!-- Catalog Block (Services Grid with client-side filtering) -->
-<section class="catalog-block">
-    
-    <div class="catalog-header">
-        <span class="tag tag-accent">catalog</span>
-        <h1>Available Blocks</h1>
-        
-        <p class="catalog-subtitle">24 blocks for building pages</p>
-        
-    </div>
-    
-
-    <div class="catalog-toolbar">
-        <div class="catalog-count">
-            <span id="resultsCount">0</span> services found
-        </div>
-        <div class="catalog-sort">
-            <select id="sortBy" class="form-input">
-                <option value="popular">Popular</option>
-                <option value="rating">Highest Rated</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="catalog-grid" id="catalogGrid">
-        <!-- Cards will be rendered by JavaScript -->
-        <div class="catalog-loading">Loading services...</div>
-    </div>
-</section>
-
-<style>
-.catalog-block {
-    padding: var(--space-lg) 0;
-}
-
-.catalog-header {
-    margin-bottom: var(--space-xl);
-}
-
-.catalog-header h1 {
-    margin-bottom: var(--space-sm);
-}
-
-.catalog-subtitle {
-    color: var(--text-muted);
-}
-
-.catalog-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-lg);
-    padding-bottom: var(--space-md);
-    border-bottom: 1px solid var(--border);
-}
-
-.catalog-count {
-    font-size: var(--font-size-ui);
-    color: var(--text-muted);
-}
-
-.catalog-sort select {
-    min-width: 180px;
-}
-
-.catalog-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--space-lg);
-}
-
-.catalog-loading {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: var(--space-2xl);
-    color: var(--text-muted);
-}
-
-.catalog-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: var(--space-2xl);
-    color: var(--text-muted);
-}
-
-/* Service Card */
-.service-card {
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.service-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--accent);
-}
-
-.service-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-md);
-}
-
-.service-category {
-    display: inline-block;
-    padding: 4px 10px;
-    font-size: var(--font-size-caption);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    background: rgba(99, 102, 241, 0.15);
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    border-radius: 4px;
-    color: var(--accent);
-}
-
-.service-rating {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: var(--font-size-ui);
-    color: #f59e0b;
-    font-weight: 500;
-}
-
-.service-card h3 {
-    color: var(--text-primary);
-    font-size: var(--font-size-body);
-    font-weight: 600;
-    margin-bottom: var(--space-sm);
-    line-height: 1.3;
-}
-
-.service-card p {
-    color: var(--text-secondary);
-    font-size: var(--font-size-ui);
-    line-height: 1.6;
-    flex: 1;
-    margin-bottom: var(--space-md);
-}
-
-.service-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: var(--space-md);
-}
-
-.service-tag {
-    padding: 2px 8px;
-    font-size: var(--font-size-caption);
-    background: var(--bg-tertiary);
-    border-radius: 4px;
-    color: var(--text-muted);
-}
-
-.service-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--border);
-}
-
-.service-price {
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.service-stats {
-    display: flex;
-    gap: var(--space-md);
-    font-size: var(--font-size-caption);
-    color: var(--text-muted);
-}
-
-.service-cta {
-    color: var(--accent);
-    font-weight: 500;
-    font-size: var(--font-size-ui);
-}
-
-.service-languages {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: var(--space-md);
-}
-
-.service-lang {
-    padding: 2px 6px;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: var(--text-muted);
-}
-</style>
-
-<script>
-(function() {
-    const grid = document.getElementById('catalogGrid');
-    const countEl = document.getElementById('resultsCount');
-    const sortEl = document.getElementById('sortBy');
-
-    let allServices = [];
-
-    // Mock services data (in production, this comes from /data/services.json)
-    const mockServices = [
-        {
-            slug: "seo-audit",
-            url: "/services/seo-audit",
-            title: "SEO Audit & Strategy",
-            description: "Comprehensive technical SEO audit with actionable recommendations to improve your search visibility.",
-            category: "SEO",
-            tags: ["Technical SEO", "Audit", "Strategy"],
-            languages: ["EN", "DE"],
-            price: 1500,
-            rating: 4.9,
-            reviews: 127,
-            orders: 340
-        },
-        {
-            slug: "content-strategy",
-            url: "/services/content-strategy",
-            title: "Content Strategy",
-            description: "Data-driven content plan aligned with your business goals and target audience needs.",
-            category: "Content",
-            tags: ["Strategy", "Planning", "Research"],
-            languages: ["EN", "DE", "FR"],
-            price: 2000,
-            rating: 4.8,
-            reviews: 89,
-            orders: 215
-        },
-        {
-            slug: "ppc-setup",
-            url: "/services/ppc-setup",
-            title: "PPC Campaign Setup",
-            description: "Launch optimized paid campaigns across Google Ads and social media platforms.",
-            category: "PPC",
-            tags: ["Google Ads", "Social Ads", "Setup"],
-            languages: ["EN"],
-            price: 1800,
-            rating: 4.7,
-            reviews: 156,
-            orders: 428
-        },
-        {
-            slug: "localization",
-            url: "/services/localization",
-            title: "Website Localization",
-            description: "Professional translation and cultural adaptation for global markets.",
-            category: "Localization",
-            tags: ["Translation", "i18n", "Global"],
-            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
-            price: 2500,
-            rating: 4.9,
-            reviews: 73,
-            orders: 189
-        },
-        {
-            slug: "analytics-setup",
-            url: "/services/analytics-setup",
-            title: "Analytics Setup",
-            description: "GA4, GTM, and custom dashboards for complete data visibility.",
-            category: "Analytics",
-            tags: ["GA4", "GTM", "Dashboards"],
-            languages: ["EN", "DE"],
-            price: 1200,
-            rating: 4.8,
-            reviews: 94,
-            orders: 267
-        },
-        {
-            slug: "link-building",
-            url: "/services/link-building",
-            title: "Link Building Campaign",
-            description: "Quality backlinks from relevant, authoritative sources in your niche.",
-            category: "SEO",
-            tags: ["Backlinks", "Outreach", "PR"],
-            languages: ["EN"],
-            price: 3000,
-            rating: 4.6,
-            reviews: 62,
-            orders: 143
-        },
-        {
-            slug: "ai-optimisation",
-            url: "/services/ai-optimisation",
-            title: "AI Optimization",
-            description: "Optimize your content and strategy for AI-powered search and assistants.",
-            category: "SEO",
-            tags: ["AI", "LLM", "Future-proof"],
-            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
-            price: 2500,
-            rating: 4.9,
-            reviews: 45,
-            orders: 89
-        },
-        {
-            slug: "social-media",
-            url: "/services/social-media",
-            title: "Social Media Management",
-            description: "End-to-end social media strategy and content management.",
-            category: "Content",
-            tags: ["Social", "Community", "Engagement"],
-            languages: ["EN", "DE", "RU"],
-            price: 2200,
-            rating: 4.7,
-            reviews: 112,
-            orders: 298
-        },
-        {
-            slug: "conversion-optimization",
-            url: "/services/conversion-optimization",
-            title: "Conversion Optimization",
-            description: "A/B testing and UX improvements to boost your conversion rates.",
-            category: "Analytics",
-            tags: ["CRO", "A/B Testing", "UX"],
-            languages: ["EN", "DE"],
-            price: 2800,
-            rating: 4.8,
-            reviews: 67,
-            orders: 156
-        }
-    ];
-
-    function renderCard(service) {
-        const tags = (service.tags || []).slice(0, 3).map(t =>
-            `<span class="service-tag">${t}</span>`
-        ).join('');
-
-        const languages = (service.languages || []).map(lang =>
-            `<span class="service-lang">${lang}</span>`
-        ).join('');
-
-        return `
-            <a href="${service.url || '/services/' + service.slug}" class="service-card">
-                <div class="service-card-header">
-                    <span class="service-category">${service.category || 'Service'}</span>
-                    ${service.rating ? `<span class="service-rating">★ ${service.rating}</span>` : ''}
-                </div>
-                <h3>${service.title}</h3>
-                <p>${service.description || ''}</p>
-                ${tags ? `<div class="service-tags">${tags}</div>` : ''}
-                ${languages ? `<div class="service-languages">${languages}</div>` : ''}
-                <div class="service-card-footer">
-                    <span class="service-price">From $${(service.price || 0).toLocaleString()}</span>
-                    <span class="service-cta">View →</span>
-                </div>
-            </a>
-        `;
-    }
-
-    function renderGrid(services) {
-        if (services.length === 0) {
-            grid.innerHTML = '<div class="catalog-empty">No services match your criteria</div>';
-        } else {
-            grid.innerHTML = services.map(renderCard).join('');
-        }
-        countEl.textContent = services.length;
-    }
-
-    function sortServices(services, by) {
-        const sorted = [...services];
-        switch (by) {
-            case 'rating':
-                sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-                break;
-            case 'price-low':
-                sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
-                break;
-            case 'price-high':
-                sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
-                break;
-            case 'popular':
-            default:
-                sorted.sort((a, b) => (b.orders || 0) - (a.orders || 0));
-        }
-        return sorted;
-    }
-
-    function applyFilters() {
-        let filtered = [...allServices];
-
-        // Get filter values from sidebar
-        const categoryFilter = document.querySelector('[name="category"]');
-        const minPrice = document.querySelector('[name="minPrice"]');
-        const maxPrice = document.querySelector('[name="maxPrice"]');
-
-        if (categoryFilter && categoryFilter.value) {
-            filtered = filtered.filter(s => s.category === categoryFilter.value);
-        }
-
-        if (minPrice && minPrice.value) {
-            filtered = filtered.filter(s => (s.price || 0) >= parseInt(minPrice.value));
-        }
-
-        if (maxPrice && maxPrice.value) {
-            filtered = filtered.filter(s => (s.price || 0) <= parseInt(maxPrice.value));
-        }
-
-        // Delivery mode filters
-        const deliveryChecks = document.querySelectorAll('[name="delivery"]:checked');
-        if (deliveryChecks.length > 0 && deliveryChecks.length < 2) {
-            // Apply filter only if not all selected
-        }
-
-        return sortServices(filtered, sortEl?.value || 'popular');
-    }
-
-    function init() {
-        // Try to load from JSON, fall back to mock
-        fetch('/data/services.json')
-            .then(res => res.ok ? res.json() : Promise.reject())
-            .then(data => {
-                // Merge with mock data for richer display
-                allServices = mockServices.map(mock => {
-                    const real = data.find(d => d.slug === mock.slug);
-                    return real ? { ...mock, ...real } : mock;
-                });
-                // Add any services from JSON not in mock
-                data.forEach(item => {
-                    if (!allServices.find(s => s.slug === item.slug)) {
-                        allServices.push(item);
-                    }
-                });
-                renderGrid(applyFilters());
-            })
-            .catch(() => {
-                allServices = mockServices;
-                renderGrid(applyFilters());
-            });
-
-        // Sort change handler
-        sortEl?.addEventListener('change', () => {
-            renderGrid(applyFilters());
-        });
-
-        // Filter change handlers (sidebar)
-        document.querySelectorAll('.sidebar-action select, .sidebar-action input').forEach(el => {
-            el.addEventListener('change', () => {
-                renderGrid(applyFilters());
-            });
-        });
-
-        // Reset filters button
-        const resetBtn = document.querySelector('.btn-reset-filters');
-        resetBtn?.addEventListener('click', () => {
-            document.querySelectorAll('.sidebar-action select').forEach(el => el.value = '');
-            document.querySelectorAll('.sidebar-action input[type="number"]').forEach(el => el.value = '');
-            document.querySelectorAll('.sidebar-action input[type="checkbox"]').forEach(el => el.checked = true);
-            renderGrid(applyFilters());
-        });
-    }
-
-    // Initialize when DOM ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
-})();
-</script>
             </div>
             
 

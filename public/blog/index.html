@@ -113,11 +113,7 @@
                         
                         <a href="blocks/testimonials/" class="nav-sublink ">Testimonials</a>
                         
-                        <a href="blocks/framework/" class="nav-sublink ">Framework</a>
-                        
                         <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
-                        
-                        <a href="blocks/services-grid/" class="nav-sublink ">Services Grid</a>
                         
                         <a href="blocks/cta/" class="nav-sublink ">CTA</a>
                         
@@ -129,9 +125,17 @@
                         
                         <a href="blocks/features/" class="nav-sublink ">Features</a>
                         
+                        <a href="blocks/cases/" class="nav-sublink ">Cases</a>
+                        
+                        <a href="blocks/logos/" class="nav-sublink ">Logos</a>
+                        
                         <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
                         
+                        <a href="blocks/team/" class="nav-sublink ">Team</a>
+                        
                         <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/trust/" class="nav-sublink ">Trust</a>
                         
                         <a href="blocks/comparison/" class="nav-sublink ">Comparison</a>
                         
@@ -148,6 +152,10 @@
                         <a href="blocks/nested/" class="nav-sublink ">Nested</a>
                         
                         <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/coverage/" class="nav-sublink ">Coverage</a>
+                        
+                        <a href="blocks/badges/" class="nav-sublink ">Badges</a>
                         
                         <a href="blocks/services/" class="nav-sublink ">Services</a>
                         
@@ -201,39 +209,45 @@
 
             
             <div class="block">
-                <!-- Hero Block: Main landing section with gradient accent -->
-<section class="hero-block">
-    <span class="tag tag-accent">hero</span>
+                <!-- Hero Block: Main landing section with multiple style variants -->
 
-    <h1>
+
+<section class="hero-block hero-clean">
+    <div class="hero-content">
         
-        Insights &amp; Articles
+        <span class="tag tag-accent">hero</span>
         
-    </h1>
 
-    
-    <p class="hero-subtitle">Expert perspectives on AI visibility, SEO, and digital marketing strategy.</p>
-    
+        <h1>
+            
+            Insights &amp; Articles
+            
+        </h1>
 
-    
+        
+        <p class="hero-subtitle">Expert perspectives on AI visibility, SEO, and digital marketing strategy.</p>
+        
 
-    
+        
 
-    
+        
+
+        
+    </div>
 
     
 </section>
 
 <style>
+    /* Base Hero Styles */
     .hero-block {
-        text-align: center;
         padding: var(--space-3xl) 0;
+        position: relative;
     }
 
     .hero-block h1 {
         font-size: var(--font-size-display);
         max-width: calc(900px * var(--scale));
-        margin: var(--space-lg) auto;
         line-height: 1.2;
     }
 
@@ -241,20 +255,20 @@
         font-size: var(--font-size-subtitle);
         color: var(--text-secondary);
         max-width: calc(700px * var(--scale));
-        margin: 0 auto var(--space-lg);
+        margin-top: var(--space-lg);
     }
 
     .hero-text {
         font-size: var(--font-size-body);
         color: var(--text-secondary);
         max-width: calc(600px * var(--scale));
-        margin: 0 auto var(--space-xl);
+        margin-top: var(--space-md);
+        line-height: 1.7;
     }
 
     .hero-actions {
         display: flex;
         gap: var(--space-md);
-        justify-content: center;
         flex-wrap: wrap;
         margin-top: var(--space-xl);
     }
@@ -262,7 +276,6 @@
     .hero-stats {
         display: flex;
         gap: var(--space-2xl);
-        justify-content: center;
         margin-top: var(--space-2xl);
     }
 
@@ -281,23 +294,209 @@
         color: var(--text-muted);
     }
 
-    .hero-image {
-        margin-top: var(--space-3xl);
+    .hero-visual {
         border-radius: var(--radius-xl);
         overflow: hidden;
         border: 1px solid var(--border-color);
     }
 
-    .hero-image img {
+    .hero-visual img {
         width: 100%;
         height: auto;
         display: block;
+    }
+
+    /* Style 1: Clean (centered) */
+    .hero-clean {
+        text-align: center;
+    }
+
+    .hero-clean .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-clean .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-clean .hero-stats {
+        justify-content: center;
+    }
+
+    .hero-clean .hero-visual {
+        margin-top: var(--space-3xl);
+    }
+
+    /* Style 2: Gradient background */
+    .hero-gradient {
+        text-align: center;
+        background: var(--accent-gradient);
+        color: white;
+        padding: var(--space-3xl);
+        border-radius: var(--radius-xl);
+    }
+
+    .hero-gradient .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-gradient h1 {
+        color: white;
+    }
+
+    .hero-gradient .text-gradient {
+        background: white;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-gradient .tag {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .hero-gradient .hero-subtitle,
+    .hero-gradient .hero-text {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-gradient .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-gradient .btn-primary {
+        background: white;
+        color: var(--brand-purple);
+    }
+
+    .hero-gradient .btn-secondary {
+        background: transparent;
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+    }
+
+    .hero-gradient .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: white;
+    }
+
+    .hero-gradient .hero-stats {
+        justify-content: center;
+    }
+
+    .hero-gradient .hero-stat-value {
+        background: white;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-gradient .hero-stat-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-gradient .hero-visual {
+        margin-top: var(--space-3xl);
+    }
+
+    /* Style 3: Split (content left, image right) */
+    .hero-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-3xl);
+        align-items: center;
+    }
+
+    .hero-split .hero-content {
+        text-align: left;
+    }
+
+    .hero-split h1 {
+        margin: 0;
+    }
+
+    .hero-split .hero-subtitle,
+    .hero-split .hero-text {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .hero-split .hero-stats {
+        justify-content: flex-start;
+    }
+
+    .hero-split .hero-visual {
+        height: 100%;
+        min-height: 400px;
+    }
+
+    .hero-split .hero-visual img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-visual-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(192, 38, 211, 0.1) 100%);
+    }
+
+    .hero-visual-icon {
+        font-size: 6rem;
+        font-weight: 700;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        opacity: 0.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+        .hero-split {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-split .hero-content {
+            text-align: center;
+        }
+
+        .hero-split .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-split .hero-actions {
+            justify-content: center;
+        }
+
+        .hero-split .hero-stats {
+            justify-content: center;
+        }
+
+        .hero-split .hero-visual {
+            order: -1;
+            min-height: 300px;
+        }
     }
 
     @media (max-width: 768px) {
         .hero-stats {
             flex-direction: column;
             gap: var(--space-lg);
+        }
+
+        .hero-gradient {
+            margin: 0;
+            border-radius: 0;
         }
     }
 </style>
@@ -323,13 +522,14 @@
             gap: var(--space-lg);
         }
         .blog-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: var(--space-lg);
             transition: all 0.2s ease;
         }
         .blog-card:hover {
+            background: var(--bg-card-hover);
             border-color: var(--accent);
             transform: translateY(-2px);
         }
@@ -402,7 +602,7 @@
 
                     articles.forEach(article => {
                         const card = document.createElement('article');
-                        card.className = 'blog-card';
+                        card.className = 'blog-card glass';
                         card.innerHTML = `
                             ${article.category ? `<div class="blog-card-category">${article.category}</div>` : ''}
                             <h3 class="blog-card-title">

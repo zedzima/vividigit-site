@@ -1,16 +1,18 @@
 <!-- Pillars Block (3 columns) -->
 <section class="pillars-block">
-    <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
-    {% if data.title %}
-    <h2>{{ data.title }}</h2>
-    {% endif %}
+    <div class="pillars-header">
+        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+        {% if data.title %}
+        <h2>{{ data.title }}</h2>
+        {% endif %}
+    </div>
 
     {% if data.pillars %}
     <div class="pillars-grid">
         {% for pillar in data.pillars %}
         <div class="pillar-card glass">
             {% if pillar.icon %}
-            <div class="pillar-icon">{{ pillar.icon }}</div>
+            <div class="pillar-icon">{% if pillar.icon | length > 2 %}{{ icon(pillar.icon, 32) }}{% else %}{{ pillar.icon }}{% endif %}</div>
             {% endif %}
             <h3>{{ pillar.title }}</h3>
             <p>{{ pillar.description }}</p>
@@ -32,9 +34,17 @@
     padding: var(--space-2xl) 0;
 }
 
-.pillars-block h2 {
+.pillars-header {
     text-align: center;
     margin-bottom: var(--space-xl);
+}
+
+.pillars-header .tag {
+    margin-bottom: var(--space-sm);
+}
+
+.pillars-header h2 {
+    margin-top: var(--space-sm);
 }
 
 .pillars-grid {
@@ -63,6 +73,12 @@
 .pillar-icon {
     font-size: 2.5rem;
     margin-bottom: var(--space-md);
+    display: flex;
+    justify-content: center;
+}
+
+.pillar-icon .icon {
+    display: block;
 }
 
 .pillar-card h3 {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/vividigit-site/">
     <title>Text Block — Blocks Library</title>
-    <meta name="description" content="Simple rich text content block.">
+    <meta name="description" content="Simple rich text content block with left-aligned and centered variants.">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,11 +113,7 @@
                         
                         <a href="blocks/testimonials/" class="nav-sublink ">Testimonials</a>
                         
-                        <a href="blocks/framework/" class="nav-sublink ">Framework</a>
-                        
                         <a href="blocks/faq/" class="nav-sublink ">FAQ</a>
-                        
-                        <a href="blocks/services-grid/" class="nav-sublink ">Services Grid</a>
                         
                         <a href="blocks/cta/" class="nav-sublink ">CTA</a>
                         
@@ -129,9 +125,17 @@
                         
                         <a href="blocks/features/" class="nav-sublink ">Features</a>
                         
+                        <a href="blocks/cases/" class="nav-sublink ">Cases</a>
+                        
+                        <a href="blocks/logos/" class="nav-sublink ">Logos</a>
+                        
                         <a href="blocks/carousel/" class="nav-sublink ">Carousel</a>
                         
+                        <a href="blocks/team/" class="nav-sublink ">Team</a>
+                        
                         <a href="blocks/pillars/" class="nav-sublink ">Pillars</a>
+                        
+                        <a href="blocks/trust/" class="nav-sublink ">Trust</a>
                         
                         <a href="blocks/comparison/" class="nav-sublink ">Comparison</a>
                         
@@ -148,6 +152,10 @@
                         <a href="blocks/nested/" class="nav-sublink ">Nested</a>
                         
                         <a href="blocks/pricing/" class="nav-sublink ">Pricing</a>
+                        
+                        <a href="blocks/coverage/" class="nav-sublink ">Coverage</a>
+                        
+                        <a href="blocks/badges/" class="nav-sublink ">Badges</a>
                         
                         <a href="blocks/services/" class="nav-sublink ">Services</a>
                         
@@ -203,14 +211,14 @@
             <div class="block">
                 <!-- Text Block: Simple markdown/HTML content -->
 <section class="text-block  ">
-    <span class="tag tag-accent">text</span>
+    <span class="tag tag-accent">text · left</span>
 
     
-    <h2>Text Block</h2>
+    <h2>Left-Aligned Text</h2>
     
 
     
-    <p class="text-subtitle">Simple block for markdown or HTML content</p>
+    <p class="text-subtitle">Default style for long-form content</p>
     
 
     
@@ -235,9 +243,247 @@
 <h3>Code Example</h3>
 
 <pre><code>const message = "Hello, World!";
-console.log(message);</code></pre>
+console.log(message);</code></pre></div>
+    
+</section>
 
-<p>For multi-column layouts, use <strong>Columns</strong> block. For icon cards, use <strong>Cards</strong> block. For titled sections, use <strong>Sections</strong> block.</p></div>
+<style>
+.text-block {
+    padding: var(--space-2xl) 0;
+}
+
+.text-block.text-centered {
+    text-align: center;
+}
+
+.text-block.text-narrow {
+    max-width: calc(800px * var(--scale));
+    margin: 0 auto;
+}
+
+.text-subtitle {
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+}
+
+.text-body {
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.text-body h2, .text-body h3, .text-body h4 {
+    color: var(--text-primary);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+}
+
+.text-body h3 {
+    font-size: var(--font-size-h3);
+}
+
+.text-body p {
+    margin-bottom: var(--space-md);
+}
+
+.text-body ul, .text-body ol {
+    margin: var(--space-md) 0;
+    padding-left: var(--space-xl);
+}
+
+.text-body li {
+    margin-bottom: var(--space-sm);
+}
+
+.text-body blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: var(--space-lg);
+    margin: var(--space-xl) 0;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.text-body code {
+    background: var(--bg-tertiary);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+}
+
+.text-body pre {
+    background: var(--bg-secondary);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: var(--space-lg) 0;
+}
+
+.text-body pre code {
+    background: none;
+    padding: 0;
+}
+
+.text-body a {
+    color: var(--accent);
+}
+
+.text-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+}
+</style>
+            </div>
+            
+            <div class="block">
+                <!-- Text Block: Simple markdown/HTML content -->
+<section class="text-block text-centered text-narrow">
+    <span class="tag tag-accent">text · centered</span>
+
+    
+    <h2>Centered Text</h2>
+    
+
+    
+    <p class="text-subtitle">Great for introductions and summaries</p>
+    
+
+    
+    <div class="text-body"><p>Centered text works best for <strong>short, impactful content</strong> — introductions, mission statements, or key messages that need visual emphasis.</p>
+
+<p>Combined with <code>narrow = true</code>, it creates a focused reading experience with optimal line length for readability.</p>
+
+<blockquote>
+    "Good design is as little design as possible."<br>
+    — Dieter Rams
+</blockquote>
+
+<p>Use this variant when you want to draw attention to a specific message or create visual breathing room between dense content sections.</p></div>
+    
+</section>
+
+<style>
+.text-block {
+    padding: var(--space-2xl) 0;
+}
+
+.text-block.text-centered {
+    text-align: center;
+}
+
+.text-block.text-narrow {
+    max-width: calc(800px * var(--scale));
+    margin: 0 auto;
+}
+
+.text-subtitle {
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+}
+
+.text-body {
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.text-body h2, .text-body h3, .text-body h4 {
+    color: var(--text-primary);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+}
+
+.text-body h3 {
+    font-size: var(--font-size-h3);
+}
+
+.text-body p {
+    margin-bottom: var(--space-md);
+}
+
+.text-body ul, .text-body ol {
+    margin: var(--space-md) 0;
+    padding-left: var(--space-xl);
+}
+
+.text-body li {
+    margin-bottom: var(--space-sm);
+}
+
+.text-body blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: var(--space-lg);
+    margin: var(--space-xl) 0;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.text-body code {
+    background: var(--bg-tertiary);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+}
+
+.text-body pre {
+    background: var(--bg-secondary);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: var(--space-lg) 0;
+}
+
+.text-body pre code {
+    background: none;
+    padding: 0;
+}
+
+.text-body a {
+    color: var(--accent);
+}
+
+.text-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+}
+</style>
+            </div>
+            
+            <div class="block">
+                <!-- Text Block: Simple markdown/HTML content -->
+<section class="text-block  text-narrow">
+    <span class="tag tag-accent">text · narrow</span>
+
+    
+    <h2>Narrow Column</h2>
+    
+
+    
+    <p class="text-subtitle">Optimal line length for reading</p>
+    
+
+    
+    <div class="text-body"><p>This variant uses <code>narrow = true</code> with left alignment. It's ideal for <strong>long-form articles</strong> where readability matters.</p>
+
+<p>The optimal line length for reading is 50-75 characters. Narrow text blocks enforce this constraint automatically, making dense content easier to read.</p>
+
+<h3>When to Use</h3>
+
+<ul>
+    <li>Blog posts and articles</li>
+    <li>Documentation pages</li>
+    <li>Terms and conditions</li>
+    <li>Any text-heavy content</li>
+</ul>
+
+<p>For wider layouts with multiple elements, use the default full-width variant instead.</p></div>
     
 </section>
 

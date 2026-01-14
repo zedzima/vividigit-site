@@ -30,11 +30,6 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
-                {% if feature.button_label %}
-                <a href="{{ feature.button_url | default('#') }}" class="btn btn-secondary">
-                    {{ feature.button_label }}
-                </a>
-                {% endif %}
             </div>
             <div class="feature-visual">
                 {% if feature.image %}
@@ -50,6 +45,14 @@
         </div>
         {% endfor %}
     </div>
+
+    {% if data.button_label %}
+    <div class="features-footer text-center">
+        <a href="{{ data.button_url | default('#') }}" class="btn btn-primary">
+            {{ data.button_label }}
+        </a>
+    </div>
+    {% endif %}
 </section>
 
 <style>
@@ -82,7 +85,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: var(--space-3xl);
-        align-items: center;
+        align-items: start;
     }
 
     .feature-reversed {
@@ -145,10 +148,11 @@
         border: 1px solid var(--border-color);
         border-radius: var(--radius-xl);
         overflow: hidden;
-        aspect-ratio: 16/10;
         display: flex;
         align-items: center;
         justify-content: center;
+        min-height: 200px;
+        align-self: stretch;
     }
 
     .feature-visual img {
@@ -184,6 +188,10 @@
         -webkit-text-fill-color: transparent;
         background-clip: text;
         opacity: 0.8;
+    }
+
+    .features-footer {
+        margin-top: var(--space-3xl);
     }
 
     @media (max-width: 768px) {
