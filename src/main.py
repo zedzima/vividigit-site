@@ -222,44 +222,44 @@ def build_navigation(pages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 def copy_assets(assets_dir: str, output_dir: str):
     """
-    Copy assets to public directory.
+    Copy assets to public/assets directory.
 
-    assets/_shared/* → public/images/
-    assets/<path>/* → public/assets/<path>/
+    assets/* → public/assets/*
+
+    Structure:
+    - assets/images/site/     → public/assets/images/site/     (site logos, og-image)
+    - assets/images/services/ → public/assets/images/services/ (service images)
+    - assets/images/blog/     → public/assets/images/blog/     (blog images)
+    - assets/icons/           → public/assets/icons/           (SVG icon system)
+    - assets/logos/           → public/assets/logos/           (client logos)
     """
     if not os.path.exists(assets_dir):
         return
 
-    # Copy shared assets to images/
-    shared_dir = os.path.join(assets_dir, "_shared")
-    if os.path.exists(shared_dir):
-        images_dir = os.path.join(output_dir, "images")
-        os.makedirs(images_dir, exist_ok=True)
-        for item in os.listdir(shared_dir):
-            src = os.path.join(shared_dir, item)
-            dst = os.path.join(images_dir, item)
-            if os.path.isfile(src):
-                shutil.copy2(src, dst)
-        print(f"  Copied shared assets to {images_dir}")
-
-    # Copy page-specific assets
     assets_output = os.path.join(output_dir, "assets")
+
+    # Copy all asset folders
     for root, dirs, files in os.walk(assets_dir):
-        # Skip _shared directory
-        dirs[:] = [d for d in dirs if not d.startswith('_')]
+        # Skip hidden directories
+        dirs[:] = [d for d in dirs if not d.startswith('.')]
 
         rel_path = os.path.relpath(root, assets_dir)
-        if rel_path == ".":
-            continue
 
         for filename in files:
+            # Skip hidden files
+            if filename.startswith('.'):
+                continue
+
             src = os.path.join(root, filename)
-            dst_dir = os.path.join(assets_output, rel_path)
+            if rel_path == ".":
+                dst_dir = assets_output
+            else:
+                dst_dir = os.path.join(assets_output, rel_path)
+
             os.makedirs(dst_dir, exist_ok=True)
             shutil.copy2(src, os.path.join(dst_dir, filename))
 
-    if os.path.exists(assets_output):
-        print(f"  Copied page assets to {assets_output}")
+    print(f"  Assets copied to {assets_output}")
 
 
 def export_collection_json(collection_name: str, items: List[Dict], output_dir: str):
@@ -315,6 +315,50 @@ def validate_page_blocks(page_blocks: set, available_blocks: set, filepath: str)
         if block not in available_blocks:
             errors.append(f"{filepath}: Block '{block}' has no template in {BLOCKS_DIR}/")
     return errors
+
+
+def generate_sitemap(pages: List[Dict], site_config: dict, output_dir: str):
+    """Generate sitemap.xml for search engines."""
+    base_url = site_config.get("site", {}).get("domain", "https://example.com")
+
+    xml_lines = ['<?xml version="1.0" encoding="UTF-8"?>']
+    xml_lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+
+    for page in pages:
+        url = page.get("url", "/")
+        # Build full URL
+        full_url = base_url.rstrip("/") + url
+        if not full_url.endswith("/"):
+            full_url += "/"
+
+        xml_lines.append("  <url>")
+        xml_lines.append(f"    <loc>{full_url}</loc>")
+        xml_lines.append("    <changefreq>weekly</changefreq>")
+        xml_lines.append("    <priority>0.8</priority>")
+        xml_lines.append("  </url>")
+
+    xml_lines.append("</urlset>")
+
+    sitemap_path = os.path.join(output_dir, "sitemap.xml")
+    with open(sitemap_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(xml_lines))
+    print(f"  Created: {sitemap_path} ({len(pages)} URLs)")
+
+
+def generate_robots(site_config: dict, output_dir: str):
+    """Generate robots.txt."""
+    base_url = site_config.get("site", {}).get("domain", "https://example.com")
+
+    content = f"""User-agent: *
+Allow: /
+
+Sitemap: {base_url.rstrip('/')}/sitemap.xml
+"""
+
+    robots_path = os.path.join(output_dir, "robots.txt")
+    with open(robots_path, "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"  Created: {robots_path}")
 
 
 def main(lang: str = DEFAULT_LANG):
@@ -448,6 +492,14 @@ def main(lang: str = DEFAULT_LANG):
     # Copy assets
     print("\nCopying assets...")
     copy_assets(ASSETS_DIR, OUTPUT_DIR)
+
+    # Generate sitemap.xml
+    print("\nGenerating sitemap.xml...")
+    generate_sitemap(parsed_pages, site_config, OUTPUT_DIR)
+
+    # Generate robots.txt
+    print("Generating robots.txt...")
+    generate_robots(site_config, OUTPUT_DIR)
 
     # Summary
     print("\n" + "=" * 50)

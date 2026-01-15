@@ -4,14 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="{{ site.base_url | default('/') }}">
-    <title>{{ meta.title | default('V\\V\\D\\G\\T') }}</title>
+    <title>{{ meta.title | default('Vividigit') }}</title>
     <meta name="description" content="{{ meta.description | default('') }}">
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ site.domain }}{{ config.url }}{% if config.url != '/' %}/{% endif %}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ site.name }}">
+    <meta property="og:title" content="{{ meta.title | default(site.name) }}">
+    <meta property="og:description" content="{{ meta.description | default(site.description) }}">
+    <meta property="og:url" content="{{ site.domain }}{{ config.url }}{% if config.url != '/' %}/{% endif %}">
+    <meta property="og:image" content="{{ site.domain }}/{{ meta.og_image | default(site.og_image) }}">
+    <meta property="og:locale" content="{{ site.locale | default('en_US') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="{{ site.twitter }}">
+    <meta name="twitter:title" content="{{ meta.title | default(site.name) }}">
+    <meta name="twitter:description" content="{{ meta.description | default(site.description) }}">
+    <meta name="twitter:image" content="{{ site.domain }}/{{ meta.og_image | default(site.og_image) }}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/site/favicon.svg">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Analytics -->
+    {% if analytics.google_tag_manager %}
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ analytics.google_tag_manager }}');</script>
+    {% elif analytics.google_analytics %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ analytics.google_analytics }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ analytics.google_analytics }}');
+    </script>
+    {% endif %}
 </head>
 <body>
     <!-- Header -->
@@ -27,8 +68,8 @@
         </div>
 
         <a href="./" class="logo">
-            <img src="images/logo-white.svg" alt="VVDGT" class="logo-text logo-dark">
-            <img src="images/logo-dark.svg" alt="VVDGT" class="logo-text logo-light">
+            <img src="assets/images/site/logo-white.svg" alt="Vividigit" class="logo-text logo-dark">
+            <img src="assets/images/site/logo-dark.svg" alt="Vividigit" class="logo-text logo-light">
         </a>
 
         <div class="header-right">

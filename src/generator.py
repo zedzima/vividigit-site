@@ -86,6 +86,7 @@ class Generator:
         # Prepare context
         context = {
             "site": self.site_config.get("site", {}),
+            "analytics": self.site_config.get("analytics", {}),
             "config": page_data.get("config", {}),
             "meta": page_data.get("meta", {}),
             "translations": page_data.get("translations", {}),
