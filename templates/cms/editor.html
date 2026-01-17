@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Edit: {{ page_path }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .editor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .block-section {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .block-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+    }
+
+    .block-header:hover {
+        background: var(--bg-input);
+    }
+
+    .block-name {
+        font-weight: 600;
+        color: var(--accent);
+    }
+
+    .block-content {
+        padding: 1.5rem;
+    }
+
+    .block-content.collapsed {
+        display: none;
+    }
+
+    .field-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 1rem;
+        align-items: start;
+        margin-bottom: 1rem;
+    }
+
+    .field-label {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        padding-top: 0.75rem;
+    }
+
+    .array-item {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .array-controls {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="editor-header">
+    <div>
+        <a href="{{ url_for('index') }}" style="color: var(--text-muted); text-decoration: none;">← Back</a>
+        <h2 style="margin-top: 0.5rem;">Editing: /{{ page_path }}</h2>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+        <button class="btn btn-secondary" onclick="previewPage()">Preview</button>
+        <button class="btn btn-primary" onclick="savePage()">Save</button>
+    </div>
+</div>
+
+<!-- Meta Section -->
+<div class="block-section">
+    <div class="block-header" onclick="toggleBlock(this)">
+        <span class="block-name">meta</span>
+        <span style="color: var(--text-muted);">▼</span>
+    </div>
+    <div class="block-content" id="block-meta">
+        <div class="field-row">
+            <label class="field-label">title</label>
+            <input type="text" name="meta.title" value="{{ data.meta.title or '' }}">
+        </div>
+        <div class="field-row">
+            <label class="field-label">description</label>
+            <textarea name="meta.description" rows="2">{{ data.meta.description or '' }}</textarea>
+        </div>
+    </div>
+</div>
+
+<!-- Content Blocks -->
+{% for block in data.blocks %}
+<div class="block-section" data-block-type="{{ block.type }}">
+    <div class="block-header" onclick="toggleBlock(this)">
+        <span class="block-name">{{ block.original_key or block.type }}</span>
+        <span style="color: var(--text-muted);">▼</span>
+    </div>
+    <div class="block-content" id="block-{{ loop.index }}">
+        {{ render_block_fields(block.type, block.data, loop.index) }}
+    </div>
+</div>
+{% endfor %}
+
+<!-- Add Block Button -->
+<div style="text-align: center; margin-top: 2rem;">
+    <button class="btn btn-secondary" onclick="showAddBlock()">+ Add Block</button>
+</div>
+
+<!-- Add Block Modal -->
+<div id="add-block-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100;">
+    <div style="background: var(--bg-card); max-width: 600px; margin: 10vh auto; border-radius: 12px; padding: 2rem;">
+        <h3 style="margin-bottom: 1rem;">Add Block</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+            {% for block in available_blocks %}
+            <button class="btn btn-secondary" onclick="addBlock('{{ block.name }}')" style="justify-content: flex-start;">
+                {{ block.name }}
+            </button>
+            {% endfor %}
+        </div>
+        <button class="btn btn-secondary" onclick="hideAddBlock()" style="margin-top: 1rem; width: 100%;">Cancel</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const pageData = {{ data | tojson }};
+const pagePath = "{{ page_path }}";
+const allPages = {{ all_pages | tojson }};
+
+function toggleBlock(header) {
+    const content = header.nextElementSibling;
+    content.classList.toggle('collapsed');
+    header.querySelector('span:last-child').textContent =
+        content.classList.contains('collapsed') ? '▶' : '▼';
+}
+
+function collectFormData() {
+    const data = {
+        config: pageData.config || {},
+        meta: {},
+        blocks: []
+    };
+
+    // Collect meta
+    document.querySelectorAll('[name^="meta."]').forEach(input => {
+        const key = input.name.replace('meta.', '');
+        data.meta[key] = input.value;
+    });
+
+    // Collect blocks
+    document.querySelectorAll('.block-section[data-block-type]').forEach(section => {
+        const blockType = section.dataset.blockType;
+        const blockData = {};
+
+        section.querySelectorAll('[name^="block."]').forEach(input => {
+            const key = input.name.replace('block.', '');
+            blockData[key] = input.value;
+        });
+
+        // For now, preserve original block data
+        const originalBlock = pageData.blocks.find(b => b.type === blockType);
+        if (originalBlock) {
+            data[originalBlock.original_key || blockType] = originalBlock.data;
+        }
+    });
+
+    return data;
+}
+
+async function savePage() {
+    const data = collectFormData();
+
+    try {
+        const response = await fetch('/pages/save/' + pagePath, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showToast('Saved!', 'success');
+        } else {
+            showToast('Save failed', 'error');
+        }
+    } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+    }
+}
+
+async function previewPage() {
+    await savePage();
+
+    // Build and open
+    const response = await fetch('/build', { method: 'POST' });
+    const result = await response.json();
+
+    if (result.success) {
+        window.open('/public/' + pagePath, '_blank');
+    } else {
+        showToast('Build failed', 'error');
+    }
+}
+
+function showAddBlock() {
+    document.getElementById('add-block-modal').style.display = 'block';
+}
+
+function hideAddBlock() {
+    document.getElementById('add-block-modal').style.display = 'none';
+}
+
+function addBlock(blockName) {
+    // TODO: Load block schema from demo, add to page
+    hideAddBlock();
+    showToast('Block adding not yet implemented', 'error');
+}
+</script>
+{% endblock %}

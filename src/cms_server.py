@@ -177,6 +177,67 @@ def build_site():
     })
 
 
+@app.template_global()
+def render_block_fields(block_type: str, data: dict, index: int) -> str:
+    """Render form fields for a block."""
+    html = []
+
+    for key, value in data.items():
+        field_id = f"block-{index}-{key}"
+
+        if isinstance(value, str):
+            if len(value) > 100 or '\n' in value:
+                html.append(f'''
+                <div class="field-row">
+                    <label class="field-label">{key}</label>
+                    <textarea name="block.{key}" id="{field_id}" rows="3">{value}</textarea>
+                </div>
+                ''')
+            else:
+                html.append(f'''
+                <div class="field-row">
+                    <label class="field-label">{key}</label>
+                    <input type="text" name="block.{key}" id="{field_id}" value="{value}">
+                </div>
+                ''')
+        elif isinstance(value, bool):
+            checked = 'checked' if value else ''
+            html.append(f'''
+            <div class="field-row">
+                <label class="field-label">{key}</label>
+                <input type="checkbox" name="block.{key}" id="{field_id}" {checked} style="width: auto;">
+            </div>
+            ''')
+        elif isinstance(value, (int, float)):
+            html.append(f'''
+            <div class="field-row">
+                <label class="field-label">{key}</label>
+                <input type="number" name="block.{key}" id="{field_id}" value="{value}">
+            </div>
+            ''')
+        elif isinstance(value, list):
+            html.append(f'''
+            <div class="field-row">
+                <label class="field-label">{key}</label>
+                <div style="color: var(--text-muted); font-size: 0.875rem;">
+                    [{len(value)} items] — array editing coming soon
+                </div>
+            </div>
+            ''')
+        elif isinstance(value, dict):
+            html.append(f'''
+            <div class="field-row">
+                <label class="field-label">{key}</label>
+                <div style="color: var(--text-muted); font-size: 0.875rem;">
+                    {{object}} — nested editing coming soon
+                </div>
+            </div>
+            ''')
+
+    from markupsafe import Markup
+    return Markup('\n'.join(html))
+
+
 if __name__ == "__main__":
     print("CMS Server starting...")
     print(f"Content: {CONTENT_DIR}")
