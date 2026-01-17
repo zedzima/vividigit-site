@@ -375,8 +375,50 @@ Editors and AI agents:
 
 ---
 
+## The CMS provides a local web interface for content management.
+
+The web interface runs on localhost and provides:
+- a dashboard listing all content pages,
+- a form-based editor for page content,
+- a page builder for creating new pages from block templates,
+- a media library for managing assets,
+- build and preview functionality.
+
+The web interface does not replace direct file editing.
+Content managers may edit TOML files directly or use the web interface.
+Both methods produce identical results.
+
+To start the web interface:
+```
+python src/cms_server.py
+```
+
+The interface is available at `http://127.0.0.1:5000/`.
+Site preview is available at `http://127.0.0.1:5000/public/`.
+
+---
+
+## Build modes support local development and production deployment.
+
+The build system supports two modes:
+
+Local development:
+```
+python src/main.py --local
+```
+Sets `base_url="/"` for local preview.
+
+Production (GitHub Pages):
+```
+python src/main.py
+```
+Uses `base_url` from `site.toml` (e.g., `/vividigit-site/`).
+
+The web interface automatically uses local mode for preview.
+
+---
+
 ## This CMS does not aim to:
-- provide visual editors,
 - allow content-driven layout changes,
 - embed styling or behavior in content,
 - infer missing structure,
