@@ -7,7 +7,7 @@ Open: http://localhost:5000
 import os
 import sys
 from pathlib import Path
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, send_from_directory
 
 # Add src to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -31,6 +31,18 @@ app = Flask(
 
 # Configuration
 LANG = "en"
+
+
+@app.route('/assets/<path:filename>')
+def serve_assets(filename):
+    """Serve assets in development."""
+    return send_from_directory(str(ASSETS_DIR), filename)
+
+
+@app.route('/public/<path:filename>')
+def serve_public(filename):
+    """Serve public files for preview."""
+    return send_from_directory(str(BASE_DIR / "public"), filename)
 
 
 def get_all_pages() -> list:
@@ -175,6 +187,64 @@ def build_site():
         "output": result.stdout,
         "error": result.stderr
     })
+
+
+@app.route("/media")
+def media_library():
+    """Media library page."""
+    media_files = []
+
+    if ASSETS_DIR.exists():
+        for root, dirs, files in os.walk(ASSETS_DIR):
+            dirs[:] = [d for d in dirs if not d.startswith('.')]
+
+            for filename in files:
+                if filename.startswith('.'):
+                    continue
+
+                filepath = Path(root) / filename
+                rel_path = filepath.relative_to(ASSETS_DIR)
+
+                media_files.append({
+                    "path": str(rel_path),
+                    "name": filename,
+                    "folder": str(rel_path.parent) if str(rel_path.parent) != '.' else '',
+                    "url": f"/assets/{rel_path}"
+                })
+
+    # Group by folder
+    folders = {}
+    for f in media_files:
+        folder = f["folder"] or "root"
+        if folder not in folders:
+            folders[folder] = []
+        folders[folder].append(f)
+
+    return render_template("media.html", folders=folders)
+
+
+@app.route("/media/upload", methods=["POST"])
+def upload_media():
+    """Upload media file."""
+    if 'file' not in request.files:
+        return jsonify({"success": False, "error": "No file"})
+
+    file = request.files['file']
+    folder = request.form.get('folder', 'images/site')
+
+    if file.filename == '':
+        return jsonify({"success": False, "error": "No filename"})
+
+    # Secure filename
+    from werkzeug.utils import secure_filename
+    filename = secure_filename(file.filename)
+
+    # Save file
+    save_path = ASSETS_DIR / folder / filename
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    file.save(str(save_path))
+
+    return jsonify({"success": True, "path": f"/assets/{folder}/{filename}"})
 
 
 @app.template_global()
