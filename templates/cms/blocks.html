@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Blocks Library{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h2>Blocks Library</h2>
+    <p style="color: var(--text-muted);">Available blocks for building pages</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+    {% for block in blocks %}
+    <div class="card">
+        <h3 style="color: var(--accent); margin-bottom: 0.5rem;">{{ block.name }}</h3>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+            {{ block.description or 'No description' }}
+        </p>
+        <a href="/public/blocks/{{ block.name }}/" target="_blank" class="btn btn-secondary" style="width: 100%; justify-content: center;">
+            View Demo
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
