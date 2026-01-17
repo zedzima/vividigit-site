@@ -361,13 +361,22 @@ Sitemap: {base_url.rstrip('/')}/sitemap.xml
     print(f"  Created: {robots_path}")
 
 
-def main(lang: str = DEFAULT_LANG):
+def main(lang: str = DEFAULT_LANG, local: bool = False):
     """Build site for specified language."""
     print(f"Building site for language: {lang}")
+    if local:
+        print("Mode: LOCAL (base_url=/)")
     print("=" * 50)
 
     # Load site configuration
     site_config = load_site_config()
+
+    # Override base_url for local development
+    if local:
+        if "site" not in site_config:
+            site_config["site"] = {}
+        site_config["site"]["base_url"] = "/"
+
     base_url = site_config.get("site", {}).get("base_url", "/")
     print(f"Base URL: {base_url}")
 
@@ -513,6 +522,9 @@ def main(lang: str = DEFAULT_LANG):
 
 
 if __name__ == "__main__":
-    # Get language from command line argument
-    lang = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_LANG
-    main(lang)
+    import argparse
+    parser = argparse.ArgumentParser(description="Build static site")
+    parser.add_argument("lang", nargs="?", default=DEFAULT_LANG, help="Language code (default: en)")
+    parser.add_argument("--local", action="store_true", help="Build for local development (base_url=/)")
+    args = parser.parse_args()
+    main(args.lang, local=args.local)

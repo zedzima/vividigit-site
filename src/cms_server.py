@@ -207,10 +207,10 @@ def blocks_library():
 
 @app.route("/build", methods=["POST"])
 def build_site():
-    """Run site generator."""
+    """Run site generator with --local flag."""
     import subprocess
     result = subprocess.run(
-        [sys.executable, "src/main.py"],
+        [sys.executable, "src/main.py", "--local"],
         cwd=str(BASE_DIR),
         capture_output=True,
         text=True
