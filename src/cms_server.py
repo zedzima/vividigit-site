@@ -39,6 +39,12 @@ def serve_assets(filename):
     return send_from_directory(str(ASSETS_DIR), filename)
 
 
+@app.route('/css/<path:filename>')
+def serve_css(filename):
+    """Serve CSS files from public/css/."""
+    return send_from_directory(str(BASE_DIR / "public" / "css"), filename)
+
+
 @app.route('/public/')
 @app.route('/public/<path:filename>')
 def serve_public(filename=''):
