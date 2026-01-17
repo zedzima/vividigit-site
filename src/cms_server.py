@@ -39,10 +39,21 @@ def serve_assets(filename):
     return send_from_directory(str(ASSETS_DIR), filename)
 
 
+@app.route('/public/')
 @app.route('/public/<path:filename>')
-def serve_public(filename):
+def serve_public(filename=''):
     """Serve public files for preview."""
-    return send_from_directory(str(BASE_DIR / "public"), filename)
+    public_dir = BASE_DIR / "public"
+
+    # Handle directory requests - serve index.html
+    if filename == '':
+        filename = 'index.html'
+    else:
+        file_path = public_dir / filename
+        if file_path.is_dir():
+            filename = f"{filename}/index.html"
+
+    return send_from_directory(str(public_dir), filename)
 
 
 def get_all_pages() -> list:
