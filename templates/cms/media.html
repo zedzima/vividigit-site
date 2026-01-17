@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Media Library{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Media Library</h2>
+    <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+        Upload File
+    </button>
+    <input type="file" id="file-input" style="display: none;" onchange="uploadFile(this)">
+</div>
+
+{% for folder, files in folders.items() %}
+<div class="card" style="margin-bottom: 1rem;">
+    <h3 style="margin-bottom: 1rem; color: var(--text-muted);">
+        {{ folder if folder != 'root' else 'Root' }}
+    </h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+        {% for file in files %}
+        <div style="text-align: center;">
+            {% if file.name.endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp')) %}
+            <img src="{{ file.url }}" alt="{{ file.name }}"
+                 style="max-width: 100%; max-height: 100px; border-radius: 4px; background: var(--bg);">
+            {% else %}
+            <div style="height: 100px; display: flex; align-items: center; justify-content: center;
+                        background: var(--bg); border-radius: 4px; color: var(--text-muted);">
+                [file]
+            </div>
+            {% endif %}
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;
+                        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ file.name }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+{% if not folders %}
+<div class="card" style="text-align: center; color: var(--text-muted);">
+    No media files. Upload some!
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function uploadFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'images/site');
+
+    try {
+        const response = await fetch('/media/upload', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showToast('Uploaded!', 'success');
+            location.reload();
+        } else {
+            showToast(result.error, 'error');
+        }
+    } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+    }
+
+    input.value = '';
+}
+</script>
+{% endblock %}
