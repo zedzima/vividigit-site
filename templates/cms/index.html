@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Pages{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Pages</h2>
+    <div style="display: flex; gap: 1rem;">
+        <button class="btn btn-secondary" onclick="buildSite()">Rebuild Site</button>
+        <a href="{{ url_for('blocks_library') }}" class="btn btn-primary">+ New Page</a>
+    </div>
+</div>
+
+<div class="pages-list">
+    {% for page in pages %}
+    <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <strong style="color: var(--text);">{{ page.title }}</strong>
+            <div style="color: var(--text-muted); font-size: 0.875rem;">{{ page.url }}</div>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="/pages/edit/{{ page.url[1:] or 'home' }}" class="btn btn-secondary">Edit</a>
+            <a href="/public{{ page.url }}" target="_blank" class="btn btn-secondary">View</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if not pages %}
+<div class="card" style="text-align: center; color: var(--text-muted);">
+    No pages found. Create your first page!
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function buildSite() {
+    showToast('Building site...', 'success');
+
+    try {
+        const response = await fetch('/build', { method: 'POST' });
+        const result = await response.json();
+
+        if (result.success) {
+            showToast('Site built successfully!', 'success');
+        } else {
+            showToast('Build failed: ' + result.error, 'error');
+        }
+    } catch (err) {
+        showToast('Build error: ' + err.message, 'error');
+    }
+}
+</script>
+{% endblock %}
