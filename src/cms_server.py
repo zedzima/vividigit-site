@@ -238,6 +238,75 @@ def render_block_fields(block_type: str, data: dict, index: int) -> str:
     return Markup('\n'.join(html))
 
 
+@app.route("/pages/new")
+def new_page():
+    """Create new page form."""
+    blocks = get_available_blocks()
+    pages = get_all_pages()
+    return render_template("new_page.html", blocks=blocks, pages=pages)
+
+
+@app.route("/pages/create", methods=["POST"])
+def create_page():
+    """Create new page from selected blocks."""
+    data = request.get_json()
+
+    url_path = data.get("url", "").strip("/")
+    title = data.get("title", "New Page")
+    selected_blocks = data.get("blocks", [])
+
+    if not url_path:
+        return jsonify({"success": False, "error": "URL is required"})
+
+    # Determine file path
+    parts = url_path.split("/")
+    if len(parts) == 1:
+        # Root level page
+        filepath = CONTENT_DIR / f"{url_path}.{LANG}.toml"
+    else:
+        # Nested page
+        dir_path = CONTENT_DIR / "/".join(parts)
+        dir_path.mkdir(parents=True, exist_ok=True)
+        filepath = dir_path / f"{parts[-1]}.{LANG}.toml"
+
+    if filepath.exists():
+        return jsonify({"success": False, "error": "Page already exists"})
+
+    # Build page data
+    page_data = {
+        "config": {
+            "lang": LANG,
+            "url": f"/{url_path}",
+            "menu": title
+        },
+        "meta": {
+            "title": title,
+            "description": ""
+        }
+    }
+
+    # Add selected blocks with placeholder content
+    for block_name in selected_blocks:
+        demo_path = BLOCKS_CONTENT_DIR / block_name / f"{block_name}.{LANG}.toml"
+        if demo_path.exists():
+            try:
+                demo_data = load_file(str(demo_path))
+                # Get first block from demo
+                for key, value in demo_data.items():
+                    if key not in ("config", "meta", "stats", "changes", "translations", "blocks", "sidebar"):
+                        page_data[block_name] = value
+                        break
+            except:
+                page_data[block_name] = {"title": f"{block_name} title"}
+        else:
+            page_data[block_name] = {"title": f"{block_name} title"}
+
+    # Save file
+    save_toml(page_data, str(filepath))
+
+    return jsonify({"success": True, "url": f"/pages/edit/{url_path}"})
+
+
 if __name__ == "__main__":
     print("CMS Server starting...")
     print(f"Content: {CONTENT_DIR}")

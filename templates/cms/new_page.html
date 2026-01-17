@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}New Page{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <a href="{{ url_for('index') }}" style="color: var(--text-muted); text-decoration: none;">← Back</a>
+    <h2 style="margin-top: 0.5rem;">Create New Page</h2>
+</div>
+
+<div class="card">
+    <div class="form-group">
+        <label>URL Path</label>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="color: var(--text-muted);">/</span>
+            <input type="text" id="page-url" placeholder="services/new-service">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Page Title</label>
+        <input type="text" id="page-title" placeholder="New Service Page">
+    </div>
+</div>
+
+<div style="margin: 2rem 0 1rem;">
+    <h3>Select Blocks</h3>
+    <p style="color: var(--text-muted); font-size: 0.875rem;">Choose which blocks to include</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem;">
+    {% for block in blocks %}
+    <label class="card" style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; margin: 0; padding: 1rem;">
+        <input type="checkbox" name="blocks" value="{{ block.name }}" style="width: auto;">
+        <span>{{ block.name }}</span>
+    </label>
+    {% endfor %}
+</div>
+
+<div style="margin-top: 2rem;">
+    <button class="btn btn-primary" onclick="createPage()">Create Page</button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function createPage() {
+    const url = document.getElementById('page-url').value;
+    const title = document.getElementById('page-title').value;
+    const blocks = Array.from(document.querySelectorAll('[name="blocks"]:checked'))
+        .map(cb => cb.value);
+
+    if (!url) {
+        showToast('URL is required', 'error');
+        return;
+    }
+
+    if (!title) {
+        showToast('Title is required', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch('/pages/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, title, blocks })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showToast('Page created!', 'success');
+            window.location.href = result.url;
+        } else {
+            showToast(result.error, 'error');
+        }
+    } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+    }
+}
+</script>
+{% endblock %}
