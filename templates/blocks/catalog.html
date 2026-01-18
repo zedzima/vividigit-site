@@ -318,17 +318,30 @@
         }
     ];
 
+    // Display mappings for slugs
+    var langCodeMap = {
+        'english': 'EN', 'german': 'DE', 'french': 'FR',
+        'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH',
+        'italian': 'IT', 'portuguese': 'PT', 'japanese': 'JA'
+    };
+
+    var categoryLabelMap = {
+        'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO',
+        'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics',
+        'localization': 'Localization'
+    };
+
     function renderCard(service) {
         const categories = (service.categories || [service.category]).filter(Boolean).map(c =>
-            '<span class="service-category">' + c + '</span>'
+            '<span class="service-category">' + (categoryLabelMap[c] || c) + '</span>'
         ).join('');
 
         const industries = (service.industries || []).slice(0, 3).map(i =>
-            '<span class="service-industry">' + i + '</span>'
+            '<span class="service-industry">' + i.charAt(0).toUpperCase() + i.slice(1) + '</span>'
         ).join('');
 
         const languages = (service.languages || []).map(lang =>
-            '<span class="service-lang">' + lang + '</span>'
+            '<span class="service-lang">' + (langCodeMap[lang] || lang.toUpperCase().slice(0,2)) + '</span>'
         ).join('');
 
         return '\
@@ -386,9 +399,10 @@
         var textEl = dropdown.querySelector('.filter-selected-text');
         var filterName = dropdown.dataset.filter;
         var allLabel = {
-            'category': 'All Categories',
-            'industry': 'All Industries',
-            'language': 'All Languages',
+            'categories': 'All Categories',
+            'industries': 'All Industries',
+            'languages': 'All Languages',
+            'countries': 'All Countries',
             'delivery': 'All Types'
         };
         if (checked.length === 0) {
@@ -403,19 +417,19 @@
     function applyFilters() {
         var filtered = allServices.slice();
 
-        // Category filter (multi-select)
-        var categories = getCheckedValues('category');
+        // Categories filter (multi-select)
+        var categories = getCheckedValues('categories');
         if (categories.length > 0) {
             filtered = filtered.filter(function(s) {
-                var serviceCats = s.categories || [s.category];
+                var serviceCats = s.categories || [];
                 return categories.some(function(c) {
                     return serviceCats.some(function(sc) { return sc === c; });
                 });
             });
         }
 
-        // Industry filter (multi-select)
-        var industries = getCheckedValues('industry');
+        // Industries filter (multi-select)
+        var industries = getCheckedValues('industries');
         if (industries.length > 0) {
             filtered = filtered.filter(function(s) {
                 return industries.some(function(ind) {
@@ -424,12 +438,22 @@
             });
         }
 
-        // Language filter (multi-select)
-        var languages = getCheckedValues('language');
+        // Languages filter (multi-select)
+        var languages = getCheckedValues('languages');
         if (languages.length > 0) {
             filtered = filtered.filter(function(s) {
                 return languages.some(function(lang) {
                     return (s.languages || []).some(function(sl) { return sl === lang; });
+                });
+            });
+        }
+
+        // Countries filter (multi-select)
+        var countries = getCheckedValues('countries');
+        if (countries.length > 0) {
+            filtered = filtered.filter(function(s) {
+                return countries.some(function(country) {
+                    return (s.countries || []).some(function(sc) { return sc === country; });
                 });
             });
         }
@@ -446,24 +470,47 @@
     }
 
     function init() {
-        // Try to load from JSON, fall back to mock
-        fetch('/data/services.json')
+        // Try to load from services-index.json first (faceted catalog), fall back to services.json, then mock
+        fetch('/data/services-index.json')
             .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
             .then(function(data) {
-                allServices = mockServices.map(function(mock) {
-                    var real = data.find(function(d) { return d.slug === mock.slug; });
-                    return real ? Object.assign({}, mock, real) : mock;
+                // Map services-index format to catalog format
+                allServices = (data.services || []).filter(function(s) { return s.slug; }).map(function(s) {
+                    return {
+                        slug: s.slug,
+                        url: s.url,
+                        title: s.title,
+                        description: s.description,
+                        categories: s.tags?.categories || [],
+                        industries: s.tags?.industries || [],
+                        languages: s.tags?.languages || [],
+                        countries: s.tags?.countries || [],
+                        rating: 4.8,
+                        orders: 100
+                    };
                 });
-                data.forEach(function(item) {
-                    if (!allServices.find(function(s) { return s.slug === item.slug; })) {
-                        allServices.push(item);
+                // Merge with mock data for demo
+                mockServices.forEach(function(mock) {
+                    if (!allServices.find(function(s) { return s.slug === mock.slug; })) {
+                        allServices.push(mock);
                     }
                 });
                 renderGrid(applyFilters());
             })
             .catch(function() {
-                allServices = mockServices;
-                renderGrid(applyFilters());
+                // Fall back to services.json
+                return fetch('/data/services.json')
+                    .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
+                    .then(function(data) {
+                        allServices = mockServices.concat(data.filter(function(item) {
+                            return !mockServices.find(function(s) { return s.slug === item.slug; });
+                        }));
+                        renderGrid(applyFilters());
+                    })
+                    .catch(function() {
+                        allServices = mockServices;
+                        renderGrid(applyFilters());
+                    });
             });
 
         // Sort change handler

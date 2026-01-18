@@ -10,16 +10,25 @@
     <p class="cards-subtitle">{{ data.subtitle }}</p>
     {% endif %}
 
-    {% if data.cards %}
-    <div class="cards-grid">
-        {% for card in data.cards %}
+    {% set card_list = data.cards %}
+    {% if card_list %}
+    <div class="cards-grid {% if data.columns %}cards-cols-{{ data.columns }}{% endif %}">
+        {% for card in card_list %}
+        {% if card.url %}
+        <a href="{{ card.url }}" class="cards-item cards-link">
+        {% else %}
         <div class="cards-item">
+        {% endif %}
             {% if card.icon %}
             <span class="cards-icon">{% if card.icon | length > 2 %}{{ icon(card.icon, 28) }}{% else %}{{ card.icon }}{% endif %}</span>
             {% endif %}
             <h3>{{ card.title }}</h3>
-            <p>{{ card.text }}</p>
+            <p>{{ card.text or card.description }}</p>
+        {% if card.url %}
+        </a>
+        {% else %}
         </div>
+        {% endif %}
         {% endfor %}
     </div>
     {% endif %}
@@ -76,5 +85,28 @@
     color: var(--text-secondary);
     margin: 0;
     line-height: 1.6;
+}
+
+/* Link cards */
+a.cards-link {
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a.cards-link:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+}
+
+/* Column variations */
+.cards-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.cards-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cards-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 768px) {
+    .cards-cols-2, .cards-cols-3, .cards-cols-4 {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
