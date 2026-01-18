@@ -61,21 +61,23 @@ def serve_vividigit(filename=''):
     return send_from_directory(str(public_dir), filename)
 
 
-@app.route('/public/')
-@app.route('/public/<path:filename>')
-def serve_public(filename=''):
-    """Serve public files for preview."""
+@app.route('/<path:filename>')
+def serve_site(filename):
+    """Serve site from public/ at root (like production)."""
     public_dir = BASE_DIR / "public"
 
     # Handle directory requests - serve index.html
-    if filename == '':
-        filename = 'index.html'
-    else:
-        file_path = public_dir / filename
-        if file_path.is_dir():
-            filename = f"{filename}/index.html"
+    file_path = public_dir / filename
+    if file_path.is_dir():
+        filename = f"{filename}/index.html"
 
     return send_from_directory(str(public_dir), filename)
+
+
+@app.route('/')
+def serve_site_root():
+    """Serve site root."""
+    return send_from_directory(str(BASE_DIR / "public"), 'index.html')
 
 
 def get_all_pages() -> list:
@@ -147,14 +149,15 @@ def get_available_blocks() -> list:
     return blocks
 
 
-@app.route("/")
-def index():
+@app.route("/admin")
+@app.route("/admin/")
+def admin_index():
     """Dashboard - list all pages."""
     pages = get_all_pages()
     return render_template("index.html", pages=pages)
 
 
-@app.route("/pages/edit/<path:page_path>")
+@app.route("/admin/pages/edit/<path:page_path>")
 def edit_page(page_path):
     """Edit page form."""
     # Find the file
@@ -180,7 +183,7 @@ def edit_page(page_path):
     )
 
 
-@app.route("/pages/save/<path:page_path>", methods=["POST"])
+@app.route("/admin/pages/save/<path:page_path>", methods=["POST"])
 def save_page(page_path):
     """Save page changes."""
     # Find the file
@@ -198,14 +201,14 @@ def save_page(page_path):
     return jsonify({"success": True, "message": "Saved"})
 
 
-@app.route("/blocks")
+@app.route("/admin/blocks")
 def blocks_library():
     """Show available blocks."""
     blocks = get_available_blocks()
     return render_template("blocks.html", blocks=blocks)
 
 
-@app.route("/build", methods=["POST"])
+@app.route("/admin/build", methods=["POST"])
 def build_site():
     """Run site generator with --local flag."""
     import subprocess
@@ -222,7 +225,7 @@ def build_site():
     })
 
 
-@app.route("/media")
+@app.route("/admin/media")
 def media_library():
     """Media library page."""
     media_files = []
@@ -256,7 +259,7 @@ def media_library():
     return render_template("media.html", folders=folders)
 
 
-@app.route("/media/upload", methods=["POST"])
+@app.route("/admin/media/upload", methods=["POST"])
 def upload_media():
     """Upload media file."""
     if 'file' not in request.files:
@@ -341,7 +344,7 @@ def render_block_fields(block_type: str, data: dict, index: int) -> str:
     return Markup('\n'.join(html))
 
 
-@app.route("/pages/new")
+@app.route("/admin/pages/new")
 def new_page():
     """Create new page form."""
     blocks = get_available_blocks()
@@ -349,7 +352,7 @@ def new_page():
     return render_template("new_page.html", blocks=blocks, pages=pages)
 
 
-@app.route("/pages/create", methods=["POST"])
+@app.route("/admin/pages/create", methods=["POST"])
 def create_page():
     """Create new page from selected blocks."""
     data = request.get_json()
@@ -407,12 +410,13 @@ def create_page():
     # Save file
     save_toml(page_data, str(filepath))
 
-    return jsonify({"success": True, "url": f"/pages/edit/{url_path}"})
+    return jsonify({"success": True, "url": f"/admin/pages/edit/{url_path}"})
 
 
 if __name__ == "__main__":
     print("CMS Server starting...")
     print(f"Content: {CONTENT_DIR}")
     print(f"Templates: {TEMPLATES_DIR}")
-    print("Open http://localhost:5000")
-    app.run(debug=True, port=5000)
+    print("Site:  http://127.0.0.1:5001/")
+    print("Admin: http://127.0.0.1:5001/admin")
+    app.run(debug=True, port=5001)

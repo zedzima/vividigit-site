@@ -4,7 +4,7 @@
 
 {% block content %}
 <div style="margin-bottom: 2rem;">
-    <a href="{{ url_for('index') }}" style="color: var(--text-muted); text-decoration: none;">← Back</a>
+    <a href="{{ url_for('admin_index') }}" style="color: var(--text-muted); text-decoration: none;">← Back</a>
     <h2 style="margin-top: 0.5rem;">Create New Page</h2>
 </div>
 
@@ -61,7 +61,7 @@ async function createPage() {
     }
 
     try {
-        const response = await fetch('/pages/create', {
+        const response = await fetch('/admin/pages/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url, title, blocks })

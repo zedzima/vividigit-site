@@ -10,8 +10,8 @@ cd "/Users/dima/Work AI/CMS"
 ```
 
 Open in browser:
-- **CMS Admin:** http://127.0.0.1:5000/
-- **Site Preview:** http://127.0.0.1:5000/public/
+- **Site:** http://127.0.0.1:5001/
+- **CMS Admin:** http://127.0.0.1:5001/admin
 
 ### Build Commands
 
@@ -27,7 +27,7 @@ python src/main.py
 
 ## Using the Web Interface
 
-### Dashboard (http://127.0.0.1:5000/)
+### Dashboard (http://127.0.0.1:5001/admin)
 
 The dashboard shows all content pages. From here you can:
 - Click **Edit** to modify a page
@@ -53,11 +53,11 @@ The page is created with placeholder content from block demos. Edit to replace w
 4. Click **Preview** to see the result
 5. Click **Rebuild Site** when ready
 
-### Blocks Library (http://127.0.0.1:5000/blocks)
+### Blocks Library (http://127.0.0.1:5001/admin/blocks)
 
 Browse all available block types. Click **View Demo** to see how each block looks.
 
-### Media Library (http://127.0.0.1:5000/media)
+### Media Library (http://127.0.0.1:5001/admin/media)
 
 View and upload media files. Files are organized by folder:
 - `images/site/` — logo, favicon, og-image

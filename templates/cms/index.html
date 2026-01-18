@@ -19,8 +19,8 @@
             <div style="color: var(--text-muted); font-size: 0.875rem;">{{ page.url }}</div>
         </div>
         <div style="display: flex; gap: 0.5rem;">
-            <a href="/pages/edit/{{ page.url[1:] or 'home' }}" class="btn btn-secondary">Edit</a>
-            <a href="/public{{ page.url }}" target="_blank" class="btn btn-secondary">View</a>
+            <a href="/admin/pages/edit/{{ page.url[1:] or 'home' }}" class="btn btn-secondary">Edit</a>
+            <a href="{{ page.url }}" target="_blank" class="btn btn-secondary">View</a>
         </div>
     </div>
     {% endfor %}
@@ -39,7 +39,7 @@ async function buildSite() {
     showToast('Building site...', 'success');
 
     try {
-        const response = await fetch('/build', { method: 'POST' });
+        const response = await fetch('/admin/build', { method: 'POST' });
         const result = await response.json();
 
         if (result.success) {
