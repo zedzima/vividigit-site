@@ -173,7 +173,7 @@ def build_navigation(pages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     collections = {}
 
     # Define collection order (customize as needed)
-    COLLECTION_ORDER = ["blog", "services"]
+    COLLECTION_ORDER = ["blog", "services", "industries", "categories", "countries", "languages"]
 
     for page in pages:
         url = page.get("url", "/")
