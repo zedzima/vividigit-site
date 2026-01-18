@@ -386,9 +386,10 @@
         var textEl = dropdown.querySelector('.filter-selected-text');
         var filterName = dropdown.dataset.filter;
         var allLabel = {
-            'category': 'All Categories',
-            'industry': 'All Industries',
-            'language': 'All Languages',
+            'categories': 'All Categories',
+            'industries': 'All Industries',
+            'languages': 'All Languages',
+            'countries': 'All Countries',
             'delivery': 'All Types'
         };
         if (checked.length === 0) {
@@ -403,19 +404,19 @@
     function applyFilters() {
         var filtered = allServices.slice();
 
-        // Category filter (multi-select)
-        var categories = getCheckedValues('category');
+        // Categories filter (multi-select)
+        var categories = getCheckedValues('categories');
         if (categories.length > 0) {
             filtered = filtered.filter(function(s) {
-                var serviceCats = s.categories || [s.category];
+                var serviceCats = s.categories || [];
                 return categories.some(function(c) {
                     return serviceCats.some(function(sc) { return sc === c; });
                 });
             });
         }
 
-        // Industry filter (multi-select)
-        var industries = getCheckedValues('industry');
+        // Industries filter (multi-select)
+        var industries = getCheckedValues('industries');
         if (industries.length > 0) {
             filtered = filtered.filter(function(s) {
                 return industries.some(function(ind) {
@@ -424,12 +425,22 @@
             });
         }
 
-        // Language filter (multi-select)
-        var languages = getCheckedValues('language');
+        // Languages filter (multi-select)
+        var languages = getCheckedValues('languages');
         if (languages.length > 0) {
             filtered = filtered.filter(function(s) {
                 return languages.some(function(lang) {
                     return (s.languages || []).some(function(sl) { return sl === lang; });
+                });
+            });
+        }
+
+        // Countries filter (multi-select)
+        var countries = getCheckedValues('countries');
+        if (countries.length > 0) {
+            filtered = filtered.filter(function(s) {
+                return countries.some(function(country) {
+                    return (s.countries || []).some(function(sc) { return sc === country; });
                 });
             });
         }

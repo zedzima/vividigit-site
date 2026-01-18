@@ -360,6 +360,10 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
         if config.get("type") != "service" and config.get("collection") != "services":
             continue
 
+        # Skip pages without a slug (catalog pages themselves)
+        if not config.get("slug"):
+            continue
+
         tags = data.get("tags", {})
 
         services.append({

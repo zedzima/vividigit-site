@@ -235,85 +235,29 @@
         <!-- Right Sidebar: Contextual Actions -->
         <aside class="sidebar-action" id="sidebarAction">
             <div class="sidebar-content">
-            {% if config.url == '/services' %}
-            <!-- Catalog Filters -->
+            {% if config.url == '/services' and sidebar.filters %}
+            <!-- Catalog Filters (dynamic from sidebar TOML) -->
+            {% for filter in sidebar.filters %}
             <div class="widget">
-                <div class="widget-title">Category</div>
-                <div class="filter-dropdown" data-filter="category">
+                <div class="widget-title">{{ filter.label }}</div>
+                <div class="filter-dropdown" data-filter="{{ filter.name }}">
                     <button class="filter-dropdown-toggle" type="button">
-                        <span class="filter-selected-text">All Categories</span>
+                        <span class="filter-selected-text">{{ filter.all_label | default('All') }}</span>
                         <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
                     <div class="filter-dropdown-menu">
-                        <label class="filter-option"><input type="checkbox" value="SEO"><span class="filter-option-label">SEO</span></label>
-                        <label class="filter-option"><input type="checkbox" value="AEO"><span class="filter-option-label">AEO</span></label>
-                        <label class="filter-option"><input type="checkbox" value="Content"><span class="filter-option-label">Content</span></label>
-                        <label class="filter-option"><input type="checkbox" value="PPC"><span class="filter-option-label">PPC</span></label>
-                        <label class="filter-option"><input type="checkbox" value="Analytics"><span class="filter-option-label">Analytics</span></label>
-                        <label class="filter-option"><input type="checkbox" value="Localization"><span class="filter-option-label">Localization</span></label>
+                        {% for option in filter.options %}
+                        <label class="filter-option"><input type="checkbox" value="{{ option.value }}"><span class="filter-option-label">{{ option.label }}</span></label>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
+            {% endfor %}
 
             <div class="widget">
-                <div class="widget-title">Industry</div>
-                <div class="filter-dropdown" data-filter="industry">
-                    <button class="filter-dropdown-toggle" type="button">
-                        <span class="filter-selected-text">All Industries</span>
-                        <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-                    <div class="filter-dropdown-menu">
-                        <label class="filter-option"><input type="checkbox" value="SaaS"><span class="filter-option-label">SaaS</span></label>
-                        <label class="filter-option"><input type="checkbox" value="E-commerce"><span class="filter-option-label">E-commerce</span></label>
-                        <label class="filter-option"><input type="checkbox" value="Finance"><span class="filter-option-label">Finance</span></label>
-                        <label class="filter-option"><input type="checkbox" value="Healthcare"><span class="filter-option-label">Healthcare</span></label>
-                        <label class="filter-option"><input type="checkbox" value="Travel"><span class="filter-option-label">Travel</span></label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-title">Language</div>
-                <div class="filter-dropdown" data-filter="language">
-                    <button class="filter-dropdown-toggle" type="button">
-                        <span class="filter-selected-text">All Languages</span>
-                        <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-                    <div class="filter-dropdown-menu">
-                        <label class="filter-option"><input type="checkbox" value="EN"><span class="filter-option-label">English</span></label>
-                        <label class="filter-option"><input type="checkbox" value="DE"><span class="filter-option-label">German</span></label>
-                        <label class="filter-option"><input type="checkbox" value="FR"><span class="filter-option-label">French</span></label>
-                        <label class="filter-option"><input type="checkbox" value="ES"><span class="filter-option-label">Spanish</span></label>
-                        <label class="filter-option"><input type="checkbox" value="RU"><span class="filter-option-label">Russian</span></label>
-                        <label class="filter-option"><input type="checkbox" value="ZH"><span class="filter-option-label">Chinese</span></label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-title">Delivery</div>
-                <div class="filter-dropdown" data-filter="delivery">
-                    <button class="filter-dropdown-toggle" type="button">
-                        <span class="filter-selected-text">All Types</span>
-                        <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-                    <div class="filter-dropdown-menu">
-                        <label class="filter-option"><input type="checkbox" value="one-time"><span class="filter-option-label">One-time</span></label>
-                        <label class="filter-option"><input type="checkbox" value="ongoing"><span class="filter-option-label">Ongoing</span></label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <button class="btn btn-secondary btn-full btn-reset-filters">Reset Filters</button>
+                <button class="btn btn-secondary btn-full btn-reset-filters">{{ sidebar.reset_label | default('Reset Filters') }}</button>
             </div>
 
             {% elif config.collection == 'services' and sidebar %}
