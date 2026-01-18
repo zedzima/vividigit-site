@@ -1,0 +1,144 @@
+<!-- Services List Block: Shows services matching a tag -->
+<section class="services-list-block">
+    {% if data.title %}
+    <h2>{{ data.title }}</h2>
+    {% endif %}
+
+    <div class="services-list-grid" id="servicesListGrid"
+         data-dimension="{{ data.dimension | default('') }}"
+         data-filter="{{ data.filter_value | default('') }}">
+        <div class="services-list-loading">Loading services...</div>
+    </div>
+</section>
+
+<style>
+.services-list-block {
+    padding: var(--space-xl) 0;
+}
+
+.services-list-block h2 {
+    margin-bottom: var(--space-lg);
+}
+
+.services-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+
+.services-list-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--text-muted);
+}
+
+.services-list-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--text-muted);
+}
+
+/* Service card styles inherited from catalog */
+.services-list-grid .service-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.services-list-grid .service-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+}
+
+.services-list-grid .service-card h3 {
+    color: var(--text-primary);
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+}
+
+.services-list-grid .service-card p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    line-height: 1.5;
+    flex: 1;
+}
+
+.services-list-grid .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+}
+
+.services-list-grid .service-tag {
+    font-size: var(--font-size-caption);
+    padding: 2px 8px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+}
+</style>
+
+<script>
+(function() {
+    const grid = document.getElementById('servicesListGrid');
+    if (!grid) return;
+
+    const dimension = grid.dataset.dimension;
+    const filterValue = grid.dataset.filter;
+
+    function renderCard(service) {
+        const tags = (service.tags?.categories || []).slice(0, 2).map(t =>
+            '<span class="service-tag">' + t.replace(/-/g, ' ') + '</span>'
+        ).join('');
+
+        return `
+            <a href="${service.url}" class="service-card">
+                <h3>${service.title}</h3>
+                <p>${service.description || ''}</p>
+                ${tags ? '<div class="service-tags">' + tags + '</div>' : ''}
+            </a>
+        `;
+    }
+
+    function renderGrid(services) {
+        if (services.length === 0) {
+            grid.innerHTML = '<div class="services-list-empty">No services found</div>';
+        } else {
+            grid.innerHTML = services.map(renderCard).join('');
+        }
+    }
+
+    // Load services from index
+    fetch('/data/services-index.json')
+        .then(res => res.json())
+        .then(data => {
+            let services = data.services || [];
+
+            // Filter by dimension if specified
+            if (dimension && filterValue) {
+                services = services.filter(s => {
+                    const tags = s.tags?.[dimension] || [];
+                    return tags.includes(filterValue);
+                });
+            }
+
+            // Filter out listing pages (no slug)
+            services = services.filter(s => s.slug);
+
+            renderGrid(services);
+        })
+        .catch(() => {
+            grid.innerHTML = '<div class="services-list-empty">Failed to load services</div>';
+        });
+})();
+</script>

@@ -446,24 +446,47 @@
     }
 
     function init() {
-        // Try to load from JSON, fall back to mock
-        fetch('/data/services.json')
+        // Try to load from services-index.json first (faceted catalog), fall back to services.json, then mock
+        fetch('/data/services-index.json')
             .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
             .then(function(data) {
-                allServices = mockServices.map(function(mock) {
-                    var real = data.find(function(d) { return d.slug === mock.slug; });
-                    return real ? Object.assign({}, mock, real) : mock;
+                // Map services-index format to catalog format
+                allServices = (data.services || []).filter(function(s) { return s.slug; }).map(function(s) {
+                    return {
+                        slug: s.slug,
+                        url: s.url,
+                        title: s.title,
+                        description: s.description,
+                        categories: s.tags?.categories || [],
+                        industries: s.tags?.industries || [],
+                        languages: s.tags?.languages || [],
+                        countries: s.tags?.countries || [],
+                        rating: 4.8,
+                        orders: 100
+                    };
                 });
-                data.forEach(function(item) {
-                    if (!allServices.find(function(s) { return s.slug === item.slug; })) {
-                        allServices.push(item);
+                // Merge with mock data for demo
+                mockServices.forEach(function(mock) {
+                    if (!allServices.find(function(s) { return s.slug === mock.slug; })) {
+                        allServices.push(mock);
                     }
                 });
                 renderGrid(applyFilters());
             })
             .catch(function() {
-                allServices = mockServices;
-                renderGrid(applyFilters());
+                // Fall back to services.json
+                return fetch('/data/services.json')
+                    .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
+                    .then(function(data) {
+                        allServices = mockServices.concat(data.filter(function(item) {
+                            return !mockServices.find(function(s) { return s.slug === item.slug; });
+                        }));
+                        renderGrid(applyFilters());
+                    })
+                    .catch(function() {
+                        allServices = mockServices;
+                        renderGrid(applyFilters());
+                    });
             });
 
         // Sort change handler

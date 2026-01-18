@@ -1,0 +1,57 @@
+<!-- Content Block: Pillar page content with markdown support -->
+<section class="content-block">
+    {% if data.title %}
+    <h2>{{ data.title }}</h2>
+    {% endif %}
+
+    {% if data.text %}
+    <div class="content-body">{{ data.text | safe }}</div>
+    {% endif %}
+</section>
+
+<style>
+.content-block {
+    padding: var(--space-xl) 0;
+}
+
+.content-block h2 {
+    margin-bottom: var(--space-lg);
+}
+
+.content-body {
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.content-body h2, .content-body h3, .content-body h4 {
+    color: var(--text-primary);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+}
+
+.content-body h2 {
+    font-size: var(--font-size-h2);
+}
+
+.content-body h3 {
+    font-size: var(--font-size-h3);
+}
+
+.content-body p {
+    margin-bottom: var(--space-md);
+}
+
+.content-body ul, .content-body ol {
+    margin: var(--space-md) 0;
+    padding-left: var(--space-xl);
+}
+
+.content-body li {
+    margin-bottom: var(--space-sm);
+}
+
+.content-body strong {
+    color: var(--text-primary);
+}
+</style>
