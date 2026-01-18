@@ -235,7 +235,7 @@
         <!-- Right Sidebar: Contextual Actions -->
         <aside class="sidebar-action" id="sidebarAction">
             <div class="sidebar-content">
-            {% if config.url == '/services' and sidebar.filters %}
+            {% if sidebar.filters %}
             <!-- Catalog Filters (dynamic from sidebar TOML) -->
             {% for filter in sidebar.filters %}
             <div class="widget">
@@ -258,6 +258,15 @@
 
             <div class="widget">
                 <button class="btn btn-secondary btn-full btn-reset-filters">{{ sidebar.reset_label | default('Reset Filters') }}</button>
+            </div>
+
+            {% elif sidebar.links %}
+            <!-- Navigation Links -->
+            <div class="widget">
+                <div class="widget-title">{{ sidebar.title | default('Navigation') }}</div>
+                {% for link in sidebar.links %}
+                <a href="{{ link.url }}" class="sidebar-link">{{ link.label }}</a>
+                {% endfor %}
             </div>
 
             {% elif config.collection == 'services' and sidebar %}
