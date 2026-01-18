@@ -294,12 +294,115 @@ def export_collection_json(collection_name: str, items: List[Dict], output_dir: 
     print(f"  Exported: {json_path} ({len(export_items)} items)")
 
 
+def build_tag_index(parsed_pages: List[Dict]) -> Dict[str, Dict[str, List[str]]]:
+    """
+    Build reverse index of tags to services.
+
+    Returns:
+    {
+        "categories": {
+            "digital-marketing": ["seo", "ppc", "ai-optimisation"],
+            ...
+        },
+        "industries": {...},
+        "countries": {...},
+        "languages": {...}
+    }
+    """
+    tag_index = {
+        "categories": {},
+        "industries": {},
+        "countries": {},
+        "languages": {}
+    }
+
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+
+        # Only process services
+        if config.get("type") != "service" and config.get("collection") != "services":
+            continue
+
+        service_slug = config.get("slug", "")
+        if not service_slug:
+            continue
+
+        tags = data.get("tags", {})
+
+        for dimension in ["categories", "industries", "countries", "languages"]:
+            for tag_slug in tags.get(dimension, []):
+                if tag_slug not in tag_index[dimension]:
+                    tag_index[dimension][tag_slug] = []
+                if service_slug not in tag_index[dimension][tag_slug]:
+                    tag_index[dimension][tag_slug].append(service_slug)
+
+    return tag_index
+
+
+def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str):
+    """
+    Export services index with tags for client-side filtering.
+
+    Creates public/data/services-index.json
+    """
+    json_dir = os.path.join(output_dir, "data")
+    os.makedirs(json_dir, exist_ok=True)
+
+    services = []
+
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+        meta = data.get("meta", {})
+
+        # Only include services
+        if config.get("type") != "service" and config.get("collection") != "services":
+            continue
+
+        tags = data.get("tags", {})
+
+        services.append({
+            "slug": config.get("slug", ""),
+            "url": config.get("url", ""),
+            "title": meta.get("title", ""),
+            "description": meta.get("description", ""),
+            "tags": {
+                "categories": tags.get("categories", []),
+                "industries": tags.get("industries", []),
+                "countries": tags.get("countries", []),
+                "languages": tags.get("languages", [])
+            }
+        })
+
+    # Build filters list with counts
+    filters = {}
+    for dimension, tag_dict in tag_index.items():
+        filters[dimension] = [
+            {"slug": slug, "count": len(services_list)}
+            for slug, services_list in sorted(tag_dict.items())
+        ]
+
+    index_data = {
+        "services": services,
+        "filters": filters
+    }
+
+    json_path = os.path.join(json_dir, "services-index.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(index_data, f, indent=2, ensure_ascii=False)
+
+    print(f"  Exported: {json_path} ({len(services)} services)")
+
+
 def get_page_blocks(data: Dict[str, Any]) -> set:
     """Extract block names used in a page's data."""
     # System sections that are NOT content blocks
     # blocks = processed list of block objects (handled by generator)
     # sidebar = layout configuration (handled by generator)
-    system_sections = {"config", "meta", "stats", "changes", "translations", "blocks", "sidebar"}
+    # tags = faceted catalog tags (handled by generator)
+    # links = solution links to parent pillars (handled by generator)
+    system_sections = {"config", "meta", "stats", "changes", "translations", "blocks", "sidebar", "tags", "links"}
     blocks = set()
     for key in data.keys():
         if key not in system_sections:
@@ -497,6 +600,17 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
     print("\nExporting collections...")
     for coll_name, items in collections.items():
         export_collection_json(coll_name, items, OUTPUT_DIR)
+
+    # Build tag index for faceted navigation
+    print("\nBuilding tag index...")
+    tag_index = build_tag_index(parsed_pages)
+    for dimension, tags in tag_index.items():
+        if tags:
+            print(f"  {dimension}: {len(tags)} tags")
+
+    # Export services index for client-side filtering
+    print("\nExporting services index...")
+    export_services_index(parsed_pages, tag_index, OUTPUT_DIR)
 
     # Copy assets
     print("\nCopying assets...")

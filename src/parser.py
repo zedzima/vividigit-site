@@ -193,16 +193,32 @@ def process_content(data: Dict[str, Any]) -> Dict[str, Any]:
         if clean_k == "sidebar":
             sidebar_data = v
 
+    # Extract tags data for faceted catalog
+    tags_data = {}
+    for k, v in data.items():
+        clean_k = k.lstrip("^").lstrip("_")
+        if clean_k == "tags":
+            tags_data = v
+
+    # Extract links data for solutions (links to parent pillars)
+    links_data = {}
+    for k, v in data.items():
+        clean_k = k.lstrip("^").lstrip("_")
+        if clean_k == "links":
+            links_data = v
+
     processed = {
         "config": config_data,
         "meta": meta_data,
         "translations": translations_data,
         "sidebar": sidebar_data,
+        "tags": tags_data,
+        "links": links_data,
         "blocks": []
     }
-    
+
     # System fields that should not be rendered as content blocks
-    SYSTEM_FIELDS = {"config", "meta", "log", "changes", "stats", "translations", "sidebar"}
+    SYSTEM_FIELDS = {"config", "meta", "log", "changes", "stats", "translations", "sidebar", "tags", "links"}
 
     for key, value in data.items():
         clean_key = key.lstrip("^").lstrip("_")
