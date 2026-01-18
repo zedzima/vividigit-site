@@ -39,28 +39,6 @@ def serve_assets(filename):
     return send_from_directory(str(ASSETS_DIR), filename)
 
 
-@app.route('/css/<path:filename>')
-def serve_css(filename):
-    """Serve CSS files from public/css/."""
-    return send_from_directory(str(BASE_DIR / "public" / "css"), filename)
-
-
-@app.route('/vividigit-site/')
-@app.route('/vividigit-site/<path:filename>')
-def serve_vividigit(filename=''):
-    """Serve files with /vividigit-site/ prefix (for GitHub Pages base href)."""
-    public_dir = BASE_DIR / "public"
-
-    if filename == '':
-        filename = 'index.html'
-    else:
-        file_path = public_dir / filename
-        if file_path.is_dir():
-            filename = f"{filename}/index.html"
-
-    return send_from_directory(str(public_dir), filename)
-
-
 @app.route('/<path:filename>')
 def serve_site(filename):
     """Serve site from public/ at root (like production)."""
