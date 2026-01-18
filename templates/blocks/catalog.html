@@ -318,17 +318,30 @@
         }
     ];
 
+    // Display mappings for slugs
+    var langCodeMap = {
+        'english': 'EN', 'german': 'DE', 'french': 'FR',
+        'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH',
+        'italian': 'IT', 'portuguese': 'PT', 'japanese': 'JA'
+    };
+
+    var categoryLabelMap = {
+        'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO',
+        'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics',
+        'localization': 'Localization'
+    };
+
     function renderCard(service) {
         const categories = (service.categories || [service.category]).filter(Boolean).map(c =>
-            '<span class="service-category">' + c + '</span>'
+            '<span class="service-category">' + (categoryLabelMap[c] || c) + '</span>'
         ).join('');
 
         const industries = (service.industries || []).slice(0, 3).map(i =>
-            '<span class="service-industry">' + i + '</span>'
+            '<span class="service-industry">' + i.charAt(0).toUpperCase() + i.slice(1) + '</span>'
         ).join('');
 
         const languages = (service.languages || []).map(lang =>
-            '<span class="service-lang">' + lang + '</span>'
+            '<span class="service-lang">' + (langCodeMap[lang] || lang.toUpperCase().slice(0,2)) + '</span>'
         ).join('');
 
         return '\
