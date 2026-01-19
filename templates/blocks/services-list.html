@@ -101,8 +101,9 @@
             '<span class="service-tag">' + t.replace(/-/g, ' ') + '</span>'
         ).join('');
 
+        var serviceUrl = (service.url || '').replace(/^\//, '');
         return `
-            <a href="${service.url}" class="service-card">
+            <a href="${serviceUrl}" class="service-card">
                 <h3>${service.title}</h3>
                 <p>${service.description || ''}</p>
                 ${tags ? '<div class="service-tags">' + tags + '</div>' : ''}
@@ -119,7 +120,7 @@
     }
 
     // Load services from index
-    fetch('/data/services-index.json')
+    fetch('data/services-index.json')
         .then(res => res.json())
         .then(data => {
             let services = data.services || [];

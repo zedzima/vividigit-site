@@ -63,12 +63,12 @@
             </div>
             {% endif %}
 
-            <a href="{{ data.button_url | default('#') }}" class="btn btn-primary btn-full pricing-cta-btn">
+            <a href="{{ (data.button_url | default('#')).lstrip('/') }}" class="btn btn-primary btn-full pricing-cta-btn">
                 {{ data.button_label | default('Get Started') }}
             </a>
 
             {% if data.button_secondary_label %}
-            <a href="{{ data.button_secondary_url | default('#') }}" class="btn btn-ghost btn-full">
+            <a href="{{ (data.button_secondary_url | default('#')).lstrip('/') }}" class="btn btn-ghost btn-full">
                 {{ data.button_secondary_label }}
             </a>
             {% endif %}
@@ -127,7 +127,7 @@
             </ul>
             {% endif %}
 
-            <a href="{{ pkg.button_url | default('#') }}" class="btn {% if pkg.highlighted %}btn-primary{% else %}btn-secondary{% endif %} btn-full">
+            <a href="{{ (pkg.button_url | default('#')).lstrip('/') }}" class="btn {% if pkg.highlighted %}btn-primary{% else %}btn-secondary{% endif %} btn-full">
                 {{ pkg.button_label | default('Choose Plan') }}
             </a>
 
@@ -166,11 +166,11 @@
                 </div>
 
                 <div class="pricing-simple-actions">
-                    <a href="{{ data.button_url | default('#') }}" class="btn btn-primary btn-full">
+                    <a href="{{ (data.button_url | default('#')).lstrip('/') }}" class="btn btn-primary btn-full">
                         {{ data.button_label | default('Get Started') }}
                     </a>
                     {% if data.button_secondary_label %}
-                    <a href="{{ data.button_secondary_url | default('#') }}" class="btn btn-secondary btn-full">
+                    <a href="{{ (data.button_secondary_url | default('#')).lstrip('/') }}" class="btn btn-secondary btn-full">
                         {{ data.button_secondary_label }}
                     </a>
                     {% endif %}

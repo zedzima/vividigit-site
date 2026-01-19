@@ -101,7 +101,7 @@
                         card.innerHTML = `
                             ${article.category ? `<div class="blog-card-category">${article.category}</div>` : ''}
                             <h3 class="blog-card-title">
-                                <a href="${article.url.slice(1)}/">${article.title}</a>
+                                <a href="${article.url.replace(/^\//, '')}/">${article.title}</a>
                             </h3>
                             <p class="blog-card-excerpt">${article.description || ''}</p>
                             <div class="blog-card-meta">

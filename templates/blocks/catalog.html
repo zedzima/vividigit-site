@@ -344,8 +344,9 @@
             '<span class="service-lang">' + (langCodeMap[lang] || lang.toUpperCase().slice(0,2)) + '</span>'
         ).join('');
 
+        var serviceUrl = (service.url || '/services/' + service.slug).replace(/^\//, '');
         return '\
-            <a href="' + (service.url || '/services/' + service.slug) + '" class="service-card">\
+            <a href="' + serviceUrl + '" class="service-card">\
                 <div class="service-card-header">\
                     <div class="service-categories">' + categories + '</div>\
                     ' + (service.rating ? '<span class="service-rating">★ ' + service.rating + '</span>' : '') + '\
@@ -471,7 +472,7 @@
 
     function init() {
         // Try to load from services-index.json first (faceted catalog), fall back to services.json, then mock
-        fetch('/data/services-index.json')
+        fetch('data/services-index.json')
             .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
             .then(function(data) {
                 // Map services-index format to catalog format
@@ -499,7 +500,7 @@
             })
             .catch(function() {
                 // Fall back to services.json
-                return fetch('/data/services.json')
+                return fetch('data/services.json')
                     .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
                     .then(function(data) {
                         allServices = mockServices.concat(data.filter(function(item) {

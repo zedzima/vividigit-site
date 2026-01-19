@@ -16,12 +16,12 @@
         {% if data.button_label or data.button_secondary_label %}
         <div class="cta-actions">
             {% if data.button_label %}
-            <a href="{{ data.button_url | default('#') }}" class="btn {% if data.style == 'gradient' %}btn-white{% else %}btn-primary{% endif %}">
+            <a href="{{ (data.button_url | default('#')).lstrip('/') }}" class="btn {% if data.style == 'gradient' %}btn-white{% else %}btn-primary{% endif %}">
                 {{ data.button_label }}
             </a>
             {% endif %}
             {% if data.button_secondary_label %}
-            <a href="{{ data.button_secondary_url | default('#') }}" class="btn {% if data.style == 'gradient' %}btn-ghost-white{% else %}btn-ghost{% endif %}">
+            <a href="{{ (data.button_secondary_url | default('#')).lstrip('/') }}" class="btn {% if data.style == 'gradient' %}btn-ghost-white{% else %}btn-ghost{% endif %}">
                 {{ data.button_secondary_label }}
             </a>
             {% endif %}

@@ -48,7 +48,7 @@
 
     {% if data.button_label %}
     <div class="features-footer text-center">
-        <a href="{{ data.button_url | default('#') }}" class="btn btn-primary">
+        <a href="{{ (data.button_url | default('#')).lstrip('/') }}" class="btn btn-primary">
             {{ data.button_label }}
         </a>
     </div>

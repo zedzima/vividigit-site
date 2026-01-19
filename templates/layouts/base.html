@@ -344,7 +344,7 @@
             {% endif %}
 
             <div class="widget">
-                <a href="{{ sidebar.button_url | default('#') }}" class="btn btn-primary btn-full">{{ sidebar.button_label | default('Request Quote') }}</a>
+                <a href="{{ (sidebar.button_url | default('#')).lstrip('/') }}" class="btn btn-primary btn-full">{{ sidebar.button_label | default('Request Quote') }}</a>
                 {% if sidebar.note %}
                 <p class="widget-note">{{ sidebar.note }}</p>
                 {% endif %}
@@ -355,7 +355,7 @@
             <div class="widget">
                 <div class="widget-title">Interested?</div>
                 <p class="widget-text">Contact us for pricing and details.</p>
-                <a href="/contact" class="btn btn-primary btn-full">Get Quote</a>
+                <a href="contact/" class="btn btn-primary btn-full">Get Quote</a>
             </div>
 
             {% elif config.collection == 'blog' %}

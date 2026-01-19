@@ -61,7 +61,7 @@
         <h4>{{ data.conclusion.title | default('Our recommendation') }}</h4>
         <p>{{ data.conclusion.text }}</p>
         {% if data.conclusion.button_label %}
-        <a href="{{ data.conclusion.button_url | default('#') }}" class="btn btn-primary">
+        <a href="{{ (data.conclusion.button_url | default('#')).lstrip('/') }}" class="btn btn-primary">
             {{ data.conclusion.button_label }}
         </a>
         {% endif %}

@@ -26,7 +26,7 @@
     <div class="faq-contact card text-center mt-xl">
         <p>{{ data.contact_text }}</p>
         {% if data.contact_button %}
-        <a href="{{ data.contact_url | default('#') }}" class="btn btn-primary">
+        <a href="{{ (data.contact_url | default('#')).lstrip('/') }}" class="btn btn-primary">
             {{ data.contact_button }}
         </a>
         {% endif %}

@@ -26,12 +26,12 @@
         {% if data.button_label or data.button_secondary_label %}
         <div class="hero-actions">
             {% if data.button_label %}
-            <a href="{{ data.button_url | default('#') }}" class="btn btn-primary">
+            <a href="{{ (data.button_url | default('#')).lstrip('/') }}" class="btn btn-primary">
                 {{ data.button_label }}
             </a>
             {% endif %}
             {% if data.button_secondary_label %}
-            <a href="{{ data.button_secondary_url | default('#') }}" class="btn btn-secondary">
+            <a href="{{ (data.button_secondary_url | default('#')).lstrip('/') }}" class="btn btn-secondary">
                 {{ data.button_secondary_label }}
             </a>
             {% endif %}

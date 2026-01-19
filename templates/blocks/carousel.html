@@ -33,7 +33,7 @@
                 <p>{{ item.text | safe }}</p>
                 {% endif %}
                 {% if item.link_label %}
-                <a href="{{ item.link_url | default('#') }}" class="carousel-item-link">
+                <a href="{{ (item.link_url | default('#')).lstrip('/') }}" class="carousel-item-link">
                     {{ item.link_label }} &rarr;
                 </a>
                 {% endif %}

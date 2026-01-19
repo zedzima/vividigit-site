@@ -44,7 +44,7 @@
 
     <div class="cases-grid">
         {% for case in data.cases %}
-        <a href="{{ case.url | default('#') }}" class="case-card card" data-service="{{ case.service | default('') }}" data-industry="{{ case.industry | default('') }}" data-language="{{ case.language | default('') }}">
+        <a href="{{ (case.url | default('#')).lstrip('/') }}" class="case-card card" data-service="{{ case.service | default('') }}" data-industry="{{ case.industry | default('') }}" data-language="{{ case.language | default('') }}">
             <div class="case-image">
                 {% if case.image %}
                 <img src="{{ case.image }}" alt="{{ case.title }}" loading="lazy">
@@ -106,7 +106,7 @@
 
     {% if data.button_label %}
     <div class="cases-footer text-center mt-xl">
-        <a href="{{ data.button_url | default('#') }}" class="btn btn-secondary">
+        <a href="{{ (data.button_url | default('#')).lstrip('/') }}" class="btn btn-secondary">
             {{ data.button_label }}
         </a>
     </div>

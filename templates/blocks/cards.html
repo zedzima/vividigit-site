@@ -15,7 +15,7 @@
     <div class="cards-grid {% if data.columns %}cards-cols-{{ data.columns }}{% endif %}">
         {% for card in card_list %}
         {% if card.url %}
-        <a href="{{ card.url }}" class="cards-item cards-link">
+        <a href="{{ card.url.lstrip('/') }}" class="cards-item cards-link">
         {% else %}
         <div class="cards-item">
         {% endif %}
