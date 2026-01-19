@@ -30,3 +30,32 @@ This symlink (`public/vividigit-site -> .`) is created by the dev server for loc
 ## Block Naming
 
 Block section name in TOML determines template: `[hero]` uses `templates/blocks/hero.html`
+
+## URL Rules (CRITICAL)
+
+**All URLs must be relative (no leading `/`)** to work with `<base href>` tag.
+
+```toml
+# ✅ Correct
+url = "industries/ecommerce"
+button_url = "contact"
+
+# ❌ Wrong - bypasses base tag
+url = "/industries/ecommerce"
+button_url = "/contact"
+```
+
+Templates use `.lstrip('/')` to strip leading slashes. For JavaScript, use `.replace(/^\//, '')`.
+
+## Faceted Architecture
+
+Services use tags for filtering:
+```toml
+[tags]
+categories = ["digital-marketing"]
+industries = ["ecommerce", "saas"]
+countries = ["germany"]
+languages = ["english", "german"]
+```
+
+Pillar pages use `collection` and listing pages use `is_listing = true`. See GUIDE.md for details.

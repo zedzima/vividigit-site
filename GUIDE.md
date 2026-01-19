@@ -116,6 +116,141 @@ See block demos in `content/blocks/` for all available fields. Each block's demo
 
 ---
 
+## Faceted Catalog Architecture
+
+Services are tagged by 4 dimensions (many-to-many relationships):
+
+```
+/services/                    ← catalog with filters
+/services/[service]/          ← service pillar page
+
+/categories/[category]/       ← category pillar + service list
+/industries/[industry]/       ← industry pillar + service list
+/countries/[country]/         ← country pillar + service list
+/languages/[language]/        ← language pillar + service list
+```
+
+### Tagging Services
+
+Add `[tags]` section to any service page:
+
+```toml
+[config]
+lang = "en"
+url = "/services/seo"
+slug = "seo"
+collection = "services"
+
+[tags]
+categories = ["digital-marketing", "content-marketing"]
+industries = ["ecommerce", "saas", "fintech"]
+countries = ["germany", "france", "usa"]
+languages = ["english", "german", "french"]
+```
+
+**Tags = slugs of pillar pages.** The generator auto-builds links and filter index.
+
+### Creating Pillar Pages
+
+Pillar pages aggregate services by dimension:
+
+```toml
+# content/industries/ecommerce/ecommerce.en.toml
+[config]
+lang = "en"
+url = "/industries/ecommerce"
+slug = "ecommerce"
+collection = "industries"
+
+[meta]
+title = "E-commerce Services"
+
+[hero]
+h1 = "E-commerce Marketing"
+# ... expert content
+
+[services-list]
+filter_type = "industries"
+filter_value = "ecommerce"
+```
+
+The `[services-list]` block auto-populates with matching services.
+
+### Creating Listing Pages
+
+Listing pages show all items in a collection with navigation cards:
+
+```toml
+# content/industries/industries.en.toml
+[config]
+lang = "en"
+url = "/industries"
+slug = "industries"
+collection = "industries"
+is_listing = true
+menu = "Industries"
+
+[hero]
+h1 = "Services by Industry"
+
+[cards]
+columns = 2
+
+[[cards.cards]]
+title = "E-commerce"
+description = "Online retail and marketplace solutions"
+url = "industries/ecommerce"
+```
+
+### Filter Index
+
+Build generates `public/data/services-index.json` for client-side filtering:
+
+```json
+{
+  "services": [
+    {
+      "slug": "seo",
+      "title": "SEO Services",
+      "url": "/services/seo/",
+      "tags": {
+        "categories": ["digital-marketing"],
+        "industries": ["ecommerce", "saas"]
+      }
+    }
+  ],
+  "filters": {
+    "categories": [{"slug": "digital-marketing", "title": "Digital Marketing", "count": 5}],
+    "industries": [...]
+  }
+}
+```
+
+---
+
+## URL Guidelines
+
+**IMPORTANT:** All URLs in content and templates must be relative (no leading `/`).
+
+```toml
+# ✅ Correct - relative URLs
+url = "industries/ecommerce"
+button_url = "contact"
+cta_url = "services"
+
+# ❌ Wrong - absolute URLs bypass <base> tag
+url = "/industries/ecommerce"
+button_url = "/contact"
+```
+
+The `<base href="{{ site.base_url }}">` tag in HTML head handles path prefixing:
+- **Local:** `base_url = "/"` → `services/` → `/services/`
+- **GitHub Pages:** `base_url = "/vividigit-site/"` → `services/` → `/vividigit-site/services/`
+
+Templates use `.lstrip('/')` to ensure URLs are relative.
+
+---
+
 ## Deployment
 
 ### GitHub Pages (Automatic)
