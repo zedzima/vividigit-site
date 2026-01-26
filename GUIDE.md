@@ -25,6 +25,49 @@ python src/main.py
 
 ---
 
+## Workflow
+
+### Production Workflow (Recommended)
+
+```
+Edit content (TOML/MD) → Push to main → GitHub Actions builds → Site deployed
+```
+
+1. Edit content files directly or via local CMS
+2. Commit and push to `main` branch
+3. GitHub Actions automatically builds the site
+4. Result deployed to GitHub Pages
+
+**No local build required** — `public/` is in `.gitignore`, GitHub Actions generates it fresh.
+
+### Development Workflow
+
+Use local build when:
+- Developing new blocks/templates
+- Testing changes before push
+- Using CMS web interface for preview
+
+```bash
+# Start CMS with live preview
+.venv/bin/python src/cms_server.py
+
+# Or just build once
+.venv/bin/python src/main.py
+```
+
+### What Gets Committed
+
+```
+✓ content/      — TOML content files
+✓ templates/    — Jinja2 templates
+✓ src/          — Python build scripts
+✓ assets/       — Images, CSS, JS
+✗ public/       — Generated output (gitignored)
+✗ .venv/        — Python environment (gitignored)
+```
+
+---
+
 ## Using the Web Interface
 
 ### Dashboard (http://127.0.0.1:5001/admin)
@@ -255,18 +298,22 @@ Templates use `.lstrip('/')` to ensure URLs are relative.
 
 ### GitHub Pages (Automatic)
 
-Push to `main` branch. GitHub Actions will:
-1. Build the site with production `base_url`
-2. Deploy to GitHub Pages
+Push to `main` branch — that's it. GitHub Actions will:
+1. Install Python dependencies
+2. Run `python src/main.py` with production `base_url`
+3. Deploy generated `public/` to GitHub Pages
 
-### Manual Deployment
+**Note:** Local `public/` folder is gitignored. Each deployment builds fresh from source.
+
+### Manual Deployment (Alternative)
+
+For other hosting (Netlify, Vercel, any static host):
 
 ```bash
 # Build for production
 python src/main.py
 
-# The public/ folder contains the static site
-# Upload public/ contents to any static host
+# Upload public/ contents to your host
 ```
 
 ---

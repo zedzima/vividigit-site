@@ -92,7 +92,12 @@
         '/': 'home',
         '/blog': 'document',
         '/services': 'layers',
-        '/blocks': 'puzzle'
+        '/blocks': 'puzzle',
+        '/industries': 'target',
+        '/categories': 'content',
+        '/countries': 'globe',
+        '/languages': 'translate',
+        '/solutions': 'rocket'
     } %}
 
     <div class="layout">
@@ -102,7 +107,7 @@
             <div class="icon-bar">
                 <div class="icon-bar-nav">
                     {% for item in navigation %}
-                    {% set item_icon = nav_icons.get(item.url, 'layers') %}
+                    {% set item_icon = nav_icons.get(item.url) or (nav_icons.get('/solutions') if item.url.startswith('/solutions') else 'star') %}
                     <a href="{% if item.url == '/' %}./{% else %}{{ item.url[1:] }}/{% endif %}"
                        class="icon-bar-link {% if config.url == item.url or (item.children and config.url.startswith(item.url + '/')) %}active{% endif %}"
                        data-nav-index="{{ loop.index0 }}"
@@ -227,7 +232,7 @@
                         <a href="https://linkedin.com" class="social-link" title="LinkedIn">in</a>
                         <a href="https://github.com" class="social-link" title="GitHub">&lt;&gt;</a>
                     </div>
-                    <p class="footer-text">&copy; 2025 VIVIDIGIT. All rights reserved. Productized multilingual marketing services marketplace.</p>
+                    <p class="footer-text">&copy; 2025 VIVIDIGIT. All rights reserved. Productized multilingual marketing services marketplace. <a href="http://127.0.0.1:5001/admin" class="footer-admin-link">Admin</a></p>
                 </div>
             </footer>
         </main>
