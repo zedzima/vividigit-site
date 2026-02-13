@@ -24,6 +24,9 @@
             {% endif %}
             <h3>{{ card.title }}</h3>
             <p>{{ card.text or card.description }}</p>
+            {% if card.badge %}
+            <span class="cards-badge">{{ card.badge }}</span>
+            {% endif %}
         {% if card.url %}
         </a>
         {% else %}
@@ -85,6 +88,17 @@
     color: var(--text-secondary);
     margin: 0;
     line-height: 1.6;
+}
+
+.cards-badge {
+    display: inline-block;
+    margin-top: var(--space-sm);
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    color: var(--accent-primary);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(192, 38, 211, 0.1) 100%);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
 }
 
 /* Link cards */

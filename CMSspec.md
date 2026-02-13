@@ -67,7 +67,7 @@ Each language build is deployed independently, typically to its own subdomain
 ---
 
 Each content file may contain the following system sections:
-`config`, `meta`, `stats`, `changes`.
+`config`, `meta`, `stats`, `changes`, `tags`, `relationships`, `sidebar`, `links`, `translations`.
 
 All other top-level sections are treated as content blocks.
 
@@ -81,7 +81,8 @@ It is never translated and never affects layout or rendering.
 
 It may contain:
 - language identifier (must match file suffix),
-- routing or menu flags,
+- routing or menu flags (slug, collection, is_listing, type),
+- entity-specific attributes (category, etc.),
 - versioning and timestamps,
 - editor identifiers.
 
@@ -225,9 +226,18 @@ Content files do not define menu structure or layout.
 
 A collection is a directory inside `content/` that contains multiple child pages of the same type.
 
-Example collections:
+Collections:
+- `content/services/` — service offerings (with embedded task-picker blocks)
+- `content/team/` — specialist profiles
+- `content/cases/` — case studies
 - `content/blog/` — blog articles
-- `content/services/` — service offerings
+- `content/categories/` — category pillar pages
+- `content/industries/` — industry pillar pages
+- `content/countries/` — country pillar pages
+- `content/languages/` — language aggregator pages
+- `content/solutions/` — problem-focused landing pages
+
+> **Note:** Tasks exist as data but are not a routable collection. They are embedded in service pages via the `task-picker` block. Task data files are stored in `content/_tasks/` as an archive.
 
 Rules:
 - A collection directory may have its own content file (e.g., `blog.en.toml`) for the listing page.
@@ -239,18 +249,22 @@ Example structure:
 
 ```
 content/
-    blog/
-        blog.en.toml              # listing page
-        how-ai-works/
-            how-ai-works.en.toml  # article
-        seo-trends/
-            seo-trends.en.toml    # article
     services/
-        services.en.toml          # listing page
-        seo/
-            seo.en.toml           # service
-        ppc/
-            ppc.en.toml           # service
+        services.en.toml              # listing page
+        technical-seo/
+            technical-seo.en.toml     # service (with task-picker block)
+    team/
+        team.en.toml                  # listing page
+        ivan-petrov/
+            ivan-petrov.en.toml       # specialist profile
+    cases/
+        cases.en.toml                 # listing page
+        ecommerce-migration/
+            ecommerce-migration.en.toml  # case study
+    blog/
+        blog.en.toml                  # listing page
+        how-ai-works/
+            how-ai-works.en.toml      # article
 ```
 
 ---
@@ -264,11 +278,114 @@ The index contains:
 - titles,
 - descriptions,
 - tags and categories,
+- relationships (references to other entities),
 - other filterable metadata.
 
-This index is used for client-side filtering and search.
+This index is used for client-side filtering, search, and cross-entity navigation.
 
 JSON files are output to `public/data/<collection>.json`.
+
+---
+
+## The `tags` section defines faceted classification.
+
+Tags create many-to-many relationships between content items and pillar dimensions.
+Tag values are slugs that match existing pillar page slugs.
+
+```toml
+[tags]
+categories = ["seo", "content-marketing"]
+industries = ["ecommerce", "saas"]
+countries = ["germany", "usa"]
+languages = ["english", "german"]
+```
+
+Tags are used by the generator to build reverse indexes and populate pillar pages.
+
+---
+
+## The `relationships` section defines graph edges to other entities.
+
+Relationships are reference attributes — arrays of slugs pointing to pages in other collections.
+They create bidirectional navigation links between entities.
+
+```toml
+[relationships]
+part_of_services = ["technical-seo", "ecommerce-seo"]
+specialists = ["ivan-petrov"]
+related_tasks = ["schema-markup-setup"]
+cases = ["ecommerce-migration-2025"]
+```
+
+Rules:
+- Relationship values are slugs of pages in other collections.
+- Relationships are stored in content but rendered by templates.
+- The generator uses relationships to build graph indexes for cross-entity linking.
+- If a relationship references a non-existent slug, the link is silently skipped.
+
+---
+
+## The `sidebar` section defines right sidebar configuration.
+
+The sidebar section controls what appears in the right action panel.
+Its structure varies by page type:
+
+- **Service pages**: order cart (`type = "order-cart"`) showing selected tasks, tiers, order modifiers, and live total
+- **Catalog pages**: filter controls
+- **Other pages**: CTA panels, links, or custom widgets
+
+### Order Cart Sidebar (`type = "order-cart"`)
+
+Used on service pages. Receives task selections from the `task-picker` block via CustomEvents.
+
+```toml
+[sidebar]
+title = "Your Order"
+type = "order-cart"
+button_label = "Request Quote"
+button_url = "contact/?service=technical-seo"
+note = "Estimated pricing. Final quote after brief."
+language_fee = 200        # USD per additional language (default: 200)
+country_fee = 100         # USD per additional country (default: 100)
+extra_languages = true    # Show language modifier counter
+extra_countries = true    # Show country modifier counter
+```
+
+---
+
+## The `task-picker` block embeds interactive task selection in service pages.
+
+This is a content block (not a system section). It displays tasks with checkboxes,
+expandable details, deliverables, and tier selectors.
+
+Template: `templates/blocks/task-picker.html`
+
+```toml
+[task-picker]
+tag = "tasks"
+title = "Available Tasks"
+subtitle = "Select tasks and choose the volume tier that fits your needs."
+
+[[task-picker.tasks]]
+slug = "site-audit"                  # Required. Unique identifier.
+title = "Technical Site Audit"       # Required. Display name.
+description = "..."                  # Optional. Short description.
+delivery_type = "one-time"           # Required. "one-time" | "monthly" | "both"
+unit_type = "pages"                  # Required. Unit label for tiers.
+door_opener = true                   # Optional. Pre-selects and auto-expands. Default: false.
+deliverables = [                     # Optional. Shown as checklist in expanded view.
+    "Crawl report",
+    "Action plan"
+]
+
+[[task-picker.tasks.tiers]]          # Required. At least one tier per task.
+name = "S"                           # Required. Tier code (S/M/L/XL).
+label = "Up to 100 pages"           # Required. Human-readable description.
+price = 500                          # Required. USD. 0 = custom pricing.
+```
+
+Tasks communicate with the order-cart sidebar via `taskToggled` and `tierChanged` CustomEvents.
+See TR.md section 6.6 for the complete event API.
 
 ---
 

@@ -1,0 +1,122 @@
+<!-- Related Entities Block: Grid of related tasks/services/specialists -->
+<section class="related-block">
+    <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+
+    {% if data.title %}
+    <h2>{{ data.title }}</h2>
+    {% endif %}
+
+    {% if data.subtitle %}
+    <p class="related-subtitle">{{ data.subtitle }}</p>
+    {% endif %}
+
+    {% if data.items %}
+    <div class="related-grid {% if data.columns %}related-cols-{{ data.columns }}{% endif %}">
+        {% for item in data.items %}
+        {% if item.url %}
+        <a href="{{ item.url.lstrip('/') }}" class="related-card related-link">
+        {% else %}
+        <div class="related-card">
+        {% endif %}
+            {% if item.badge %}
+            <span class="related-badge">{{ item.badge }}</span>
+            {% endif %}
+            <h3>{{ item.title }}</h3>
+            {% if item.description %}
+            <p>{{ item.description }}</p>
+            {% endif %}
+            {% if item.meta %}
+            <div class="related-meta">
+                {% for m in item.meta %}
+                <span class="tag">{{ m }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% if item.url %}
+        </a>
+        {% else %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+
+<style>
+.related-block {
+    padding: var(--space-2xl) 0;
+}
+
+.related-subtitle {
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+}
+
+.related-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.related-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.related-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.related-card {
+    padding: var(--space-lg);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    position: relative;
+}
+
+a.related-link {
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a.related-link:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-primary);
+}
+
+.related-badge {
+    display: inline-block;
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    color: var(--accent-primary);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(192, 38, 211, 0.1) 100%);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.related-card h3 {
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.related-card p {
+    font-size: var(--font-size-ui);
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.related-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+}
+
+@media (max-width: 768px) {
+    .related-cols-2, .related-cols-3, .related-cols-4 {
+        grid-template-columns: 1fr;
+    }
+}
+</style>

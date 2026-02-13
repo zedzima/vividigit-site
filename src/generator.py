@@ -91,6 +91,7 @@ class Generator:
             "meta": page_data.get("meta", {}),
             "translations": page_data.get("translations", {}),
             "sidebar": page_data.get("sidebar", {}),
+            "relationships": page_data.get("relationships", {}),
             "blocks": [],
             "sitemap": sitemap,
             "navigation": navigation or []

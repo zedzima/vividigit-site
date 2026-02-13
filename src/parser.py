@@ -207,6 +207,13 @@ def process_content(data: Dict[str, Any]) -> Dict[str, Any]:
         if clean_k == "links":
             links_data = v
 
+    # Extract relationships data for graph edges
+    relationships_data = {}
+    for k, v in data.items():
+        clean_k = k.lstrip("^").lstrip("_")
+        if clean_k == "relationships":
+            relationships_data = v
+
     processed = {
         "config": config_data,
         "meta": meta_data,
@@ -214,11 +221,12 @@ def process_content(data: Dict[str, Any]) -> Dict[str, Any]:
         "sidebar": sidebar_data,
         "tags": tags_data,
         "links": links_data,
+        "relationships": relationships_data,
         "blocks": []
     }
 
     # System fields that should not be rendered as content blocks
-    SYSTEM_FIELDS = {"config", "meta", "log", "changes", "stats", "translations", "sidebar", "tags", "links"}
+    SYSTEM_FIELDS = {"config", "meta", "log", "changes", "stats", "translations", "sidebar", "tags", "links", "relationships"}
 
     for key, value in data.items():
         clean_key = key.lstrip("^").lstrip("_")

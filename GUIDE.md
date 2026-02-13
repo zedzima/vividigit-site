@@ -159,18 +159,25 @@ See block demos in `content/blocks/` for all available fields. Each block's demo
 
 ---
 
-## Faceted Catalog Architecture
+## Content Graph Architecture
 
-Services are tagged by 4 dimensions (many-to-many relationships):
+The site is a graph of connected entities. Each entity type has its own collection:
 
 ```
-/services/                    ← catalog with filters
-/services/[service]/          ← service pillar page
+/services/                    ← service catalog
+/services/[service]/          ← service page (task-picker block + order-cart sidebar)
 
-/categories/[category]/       ← category pillar + service list
+/team/                        ← all specialists
+/team/[specialist]/           ← specialist profile
+
+/cases/                       ← all case studies
+/cases/[case]/                ← case study with results
+
+/categories/[category]/       ← category pillar + door opener task
 /industries/[industry]/       ← industry pillar + service list
 /countries/[country]/         ← country pillar + service list
-/languages/[language]/        ← language pillar + service list
+/languages/[language]/        ← language aggregator + service list
+/solutions/[solution]/        ← problem-focused landing page
 ```
 
 ### Tagging Services
@@ -180,18 +187,147 @@ Add `[tags]` section to any service page:
 ```toml
 [config]
 lang = "en"
-url = "/services/seo"
-slug = "seo"
+url = "/services/technical-seo"
+slug = "technical-seo"
 collection = "services"
+type = "service"
 
 [tags]
-categories = ["digital-marketing", "content-marketing"]
+categories = ["seo"]
 industries = ["ecommerce", "saas", "fintech"]
 countries = ["germany", "france", "usa"]
 languages = ["english", "german", "french"]
+
+[relationships]
+available_tasks = ["site-audit", "schema-markup-setup", "site-speed-optimization"]
+door_opener_task = "site-audit"
+specialists = ["ivan-petrov"]
+cases = ["ecommerce-migration-2025"]
 ```
 
 **Tags = slugs of pillar pages.** The generator auto-builds links and filter index.
+**Relationships = slugs of pages in other collections.** They create graph edges for cross-entity linking.
+
+### Adding Tasks to a Service Page
+
+Tasks are not standalone pages. They are embedded within service pages via the `task-picker` block.
+The right sidebar uses `type = "order-cart"` to show a live order summary.
+
+**Step 1: Add the task-picker block** (in the service TOML, after features or pricing):
+
+```toml
+[task-picker]
+tag = "tasks"
+title = "Available Tasks"
+subtitle = "Select tasks and choose the volume tier that fits your needs."
+
+[[task-picker.tasks]]
+slug = "site-audit"
+title = "Technical Site Audit"
+description = "Comprehensive crawl analysis and prioritized fix roadmap."
+delivery_type = "one-time"
+unit_type = "pages"
+door_opener = true
+deliverables = [
+    "Crawl report with 47+ technical checks",
+    "Prioritized issues list with severity levels",
+    "Action plan with effort estimates",
+    "30-minute walkthrough call"
+]
+
+[[task-picker.tasks.tiers]]
+name = "S"
+label = "Up to 100 pages"
+price = 500
+
+[[task-picker.tasks.tiers]]
+name = "M"
+label = "Up to 1,000 pages"
+price = 1200
+
+[[task-picker.tasks.tiers]]
+name = "L"
+label = "Up to 10,000 pages"
+price = 2500
+
+[[task-picker.tasks.tiers]]
+name = "XL"
+label = "50,000+ pages"
+price = 0
+```
+
+**Step 2: Set the sidebar to order-cart** (replaces any existing sidebar config):
+
+```toml
+[sidebar]
+title = "Your Order"
+type = "order-cart"
+button_label = "Request Quote"
+button_url = "contact/?service=technical-seo"
+note = "Estimated pricing. Final quote after brief."
+language_fee = 200
+country_fee = 100
+extra_languages = true
+extra_countries = true
+```
+
+**How it works:**
+- `door_opener = true` tasks are pre-checked and appear in the cart on page load
+- Users can check/uncheck tasks, expand details, and switch tiers
+- The cart sidebar updates live — no page reload needed
+- Tier with `price = 0` shows "Custom" instead of a dollar amount
+- Reference data for tasks is archived in `content/_tasks/` for consistency
+
+### Creating Specialist Pages
+
+```toml
+[config]
+lang = "en"
+url = "/team/ivan-petrov"
+slug = "ivan-petrov"
+collection = "team"
+type = "specialist"
+
+[relationships]
+tasks = ["site-audit", "schema-markup-setup"]
+languages = ["english", "german", "russian"]
+countries = ["germany", "austria", "usa"]
+cases = ["ecommerce-migration-2025"]
+
+[hero]
+h1 = "Ivan Petrov"
+subtitle = "Technical SEO Specialist"
+
+[[hero.stats]]
+value = "47"
+label = "Projects completed"
+```
+
+### Creating Case Studies
+
+```toml
+[config]
+lang = "en"
+url = "/cases/ecommerce-migration-2025"
+slug = "ecommerce-migration-2025"
+collection = "cases"
+type = "case"
+
+[relationships]
+industry = "ecommerce"
+country = "germany"
+services_used = ["technical-seo"]
+tasks_used = ["site-audit"]
+specialists = ["ivan-petrov"]
+
+[hero]
+h1 = "E-commerce Platform Migration"
+subtitle = "Fashion Retailer — Germany"
+
+[[hero.stats]]
+value = "120%"
+label = "Traffic recovery"
+```
 
 ### Creating Pillar Pages
 
@@ -245,29 +381,13 @@ description = "Online retail and marketplace solutions"
 url = "industries/ecommerce"
 ```
 
-### Filter Index
+### Filter & Graph Indexes
 
-Build generates `public/data/services-index.json` for client-side filtering:
+Build generates JSON indexes for client-side filtering and cross-entity navigation:
 
-```json
-{
-  "services": [
-    {
-      "slug": "seo",
-      "title": "SEO Services",
-      "url": "/services/seo/",
-      "tags": {
-        "categories": ["digital-marketing"],
-        "industries": ["ecommerce", "saas"]
-      }
-    }
-  ],
-  "filters": {
-    "categories": [{"slug": "digital-marketing", "title": "Digital Marketing", "count": 5}],
-    "industries": [...]
-  }
-}
-```
+- `public/data/services-index.json` — services with tags for catalog filtering
+- `public/data/team.json` — specialists with tasks, languages, countries
+- `public/data/cases.json` — case studies with results, services used
 
 ---
 

@@ -13,7 +13,7 @@
         <div class="feature-item {% if loop.index is odd %}feature-normal{% else %}feature-reversed{% endif %}">
             <div class="feature-content">
                 {% if feature.icon %}
-                <span class="feature-icon">{{ feature.icon }}</span>
+                <span class="feature-icon">{% if feature.icon | length > 2 %}{{ icon(feature.icon, 32) }}{% else %}{{ feature.icon }}{% endif %}</span>
                 {% endif %}
                 {% if feature.tag %}
                 <span class="tag">{{ feature.tag }}</span>
@@ -38,7 +38,7 @@
                 <pre><code>{{ feature.code }}</code></pre>
                 {% else %}
                 <div class="feature-visual-placeholder">
-                    <span class="feature-visual-icon">{{ feature.icon | default('*') }}</span>
+                    <span class="feature-visual-icon">{% if feature.icon and feature.icon | length > 2 %}{{ icon(feature.icon, 64, true) }}{% else %}{{ feature.icon | default('*') }}{% endif %}</span>
                 </div>
                 {% endif %}
             </div>

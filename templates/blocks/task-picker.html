@@ -1,0 +1,470 @@
+<!-- Task Picker Block: Interactive task selector for service pages -->
+<section class="task-picker-block" {% if data.anchor %}id="{{ data.anchor }}"{% else %}id="task-picker"{% endif %}>
+
+    {% if data.title %}
+    <div class="task-picker-header-section">
+        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+        <h2>{{ data.title }}</h2>
+        {% if data.subtitle %}
+        <p class="task-picker-subtitle">{{ data.subtitle }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if data.tasks %}
+    <div class="task-picker-items">
+        {% for task in data.tasks %}
+        <div class="task-picker-item {% if task.door_opener %}task-picker-opener{% endif %}" data-task-slug="{{ task.slug }}">
+
+            <!-- Task Header (always visible) -->
+            <div class="task-picker-head">
+                <label class="task-picker-check" onclick="event.stopPropagation()">
+                    <input type="checkbox" class="task-select-cb"
+                           data-slug="{{ task.slug }}"
+                           data-title="{{ task.title }}"
+                           {% if task.door_opener %}checked{% endif %}>
+                    <span class="task-check-box"></span>
+                </label>
+                <div class="task-picker-info">
+                    <div class="task-picker-title-row">
+                        <h3>{{ task.title }}</h3>
+                        <div class="task-picker-badges">
+                            {% if task.door_opener %}
+                            <span class="task-badge badge-opener">Door Opener</span>
+                            {% endif %}
+                            {% if task.delivery_type %}
+                            <span class="task-badge badge-delivery">{{ task.delivery_type }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if task.description %}
+                    <p class="task-picker-desc">{{ task.description }}</p>
+                    {% endif %}
+                </div>
+                <button class="task-picker-toggle" aria-label="Expand details">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Task Details (expandable) -->
+            <div class="task-picker-details">
+                <div class="task-picker-details-inner">
+
+                    {% if task.deliverables %}
+                    <div class="task-picker-deliverables">
+                        <h4>Deliverables</h4>
+                        <ul>
+                            {% for item in task.deliverables %}
+                            <li><span class="check-icon">{{ icon('check', 14) }}</span> {{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    {% if task.tiers %}
+                    <div class="task-picker-tiers">
+                        <h4>{{ task.unit_type | default('Volume') | capitalize }} Tiers</h4>
+                        <div class="tier-selector" data-task-slug="{{ task.slug }}">
+                            {% for tier in task.tiers %}
+                            <button class="tier-btn {% if loop.first %}active{% endif %}"
+                                    data-price="{{ tier.price }}"
+                                    data-tier-name="{{ tier.name }}"
+                                    data-tier-label="{{ tier.label }}"
+                                    {% if tier.price == 0 %}data-custom="true"{% endif %}
+                                    type="button">
+                                <span class="tier-btn-name">{{ tier.name }}</span>
+                                <span class="tier-btn-label">{{ tier.label }}</span>
+                                {% if tier.price > 0 %}
+                                <span class="tier-btn-price">${{ tier.price | int }}</span>
+                                {% else %}
+                                <span class="tier-btn-price tier-btn-custom">Custom</span>
+                                {% endif %}
+                            </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</section>
+
+<style>
+/* ========================================
+   Task Picker Block
+   ======================================== */
+.task-picker-block {
+    padding: var(--space-2xl) 0;
+}
+
+.task-picker-header-section {
+    margin-bottom: var(--space-xl);
+}
+
+.task-picker-header-section h2 {
+    margin-bottom: var(--space-sm);
+}
+
+.task-picker-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-size-subtitle);
+    max-width: calc(600px * var(--scale));
+}
+
+/* Items container */
+.task-picker-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* Individual task card */
+.task-picker-item {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-picker-item.selected {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.task-picker-opener {
+    border-color: rgba(124, 58, 237, 0.3);
+}
+
+/* Task header (always visible) */
+.task-picker-head {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    cursor: pointer;
+}
+
+/* Custom checkbox */
+.task-picker-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding-top: 2px;
+}
+
+.task-picker-check input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.task-check-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    background: var(--bg-primary);
+}
+
+.task-picker-check input:checked + .task-check-box {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.task-picker-check input:checked + .task-check-box::after {
+    content: '';
+    width: 6px;
+    height: 10px;
+    border: 2px solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-top: -2px;
+}
+
+/* Info section */
+.task-picker-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-picker-title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-xs);
+}
+
+.task-picker-title-row h3 {
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.task-picker-badges {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.task-badge {
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    padding: 2px var(--space-sm);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+
+.badge-opener {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.12) 0%, rgba(192, 38, 211, 0.12) 100%);
+    color: var(--accent-primary);
+}
+
+.badge-delivery {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.task-picker-desc {
+    font-size: var(--font-size-ui);
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Toggle button */
+.task-picker-toggle {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.task-picker-toggle:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+}
+
+.task-picker-toggle svg {
+    transition: transform 0.3s ease;
+}
+
+.task-picker-item.expanded .task-picker-toggle svg {
+    transform: rotate(180deg);
+}
+
+/* Expandable details */
+.task-picker-details {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+}
+
+.task-picker-item.expanded .task-picker-details {
+    grid-template-rows: 1fr;
+}
+
+.task-picker-details-inner {
+    overflow: hidden;
+}
+
+.task-picker-item.expanded .task-picker-details-inner {
+    padding: 0 var(--space-lg) var(--space-lg);
+    padding-left: calc(var(--space-lg) + 20px + var(--space-md));
+}
+
+/* Deliverables */
+.task-picker-deliverables {
+    margin-bottom: var(--space-lg);
+}
+
+.task-picker-deliverables h4 {
+    font-size: var(--font-size-ui);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.task-picker-deliverables ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.task-picker-deliverables li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+    font-size: var(--font-size-ui);
+    color: var(--text-secondary);
+}
+
+.check-icon {
+    color: var(--accent-primary);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Tier selector */
+.task-picker-tiers h4 {
+    font-size: var(--font-size-ui);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.tier-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-sm);
+}
+
+.tier-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.tier-btn:hover {
+    border-color: var(--accent-primary);
+}
+
+.tier-btn.active {
+    border-color: var(--accent-primary);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.06) 0%, rgba(192, 38, 211, 0.06) 100%);
+    box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.tier-btn-name {
+    font-size: var(--font-size-ui);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.tier-btn-label {
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+}
+
+.tier-btn-price {
+    font-size: var(--font-size-ui);
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.tier-btn-custom {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .task-picker-head {
+        padding: var(--space-md);
+    }
+
+    .task-picker-item.expanded .task-picker-details-inner {
+        padding: 0 var(--space-md) var(--space-md);
+        padding-left: var(--space-md);
+    }
+
+    .task-picker-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tier-selector {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+
+<script>
+(function() {
+    // Expand/collapse on toggle button or header click
+    document.querySelectorAll('.task-picker-head').forEach(function(header) {
+        header.addEventListener('click', function(e) {
+            if (e.target.closest('.task-picker-check')) return;
+            header.closest('.task-picker-item').classList.toggle('expanded');
+        });
+    });
+
+    // Auto-expand door openers on load
+    document.querySelectorAll('.task-picker-opener').forEach(function(item) {
+        item.classList.add('expanded', 'selected');
+    });
+
+    // Tier selection within a task
+    document.querySelectorAll('.tier-selector').forEach(function(selector) {
+        selector.querySelectorAll('.tier-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selector.querySelectorAll('.tier-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                document.dispatchEvent(new CustomEvent('tierChanged', {
+                    detail: {
+                        taskSlug: selector.dataset.taskSlug,
+                        tierName: btn.dataset.tierName,
+                        tierLabel: btn.dataset.tierLabel,
+                        price: parseInt(btn.dataset.price) || 0,
+                        custom: btn.dataset.custom === 'true'
+                    }
+                }));
+            });
+        });
+    });
+
+    // Checkbox changes
+    document.querySelectorAll('.task-select-cb').forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            var item = cb.closest('.task-picker-item');
+            item.classList.toggle('selected', cb.checked);
+            if (cb.checked) item.classList.add('expanded');
+
+            var activeTier = item.querySelector('.tier-btn.active');
+            document.dispatchEvent(new CustomEvent('taskToggled', {
+                detail: {
+                    slug: cb.dataset.slug,
+                    title: cb.dataset.title,
+                    selected: cb.checked,
+                    tierName: activeTier ? activeTier.dataset.tierName : 'S',
+                    tierLabel: activeTier ? activeTier.dataset.tierLabel : '',
+                    price: activeTier ? (parseInt(activeTier.dataset.price) || 0) : 0,
+                    custom: activeTier ? activeTier.dataset.custom === 'true' : false
+                }
+            }));
+        });
+
+    });
+})();
+</script>

@@ -38,6 +38,48 @@
 - Use compact spacing but don't shrink fonts artificially
 - If content doesn't fit, reduce number of widgets, not font sizes
 
+### Task-Picker Block (Service Pages)
+Interactive task selector displayed in main content area.
+
+**Card structure (collapsed):**
+- Custom checkbox (left) + task title + badges (door_opener, delivery_type) + expand chevron (right)
+- Description text below title
+- Background: `--bg-secondary`, border: `--border-color`, radius: `--radius-lg`
+
+**Card structure (expanded):**
+- Deliverables: checklist with accent-colored check icons
+- Tier selector: grid of buttons (S/M/L/XL) with name, label, and price
+- Active tier: accent border + gradient background (`rgba(124,58,237,0.06)`)
+
+**States:**
+- `.selected`: accent border + box-shadow highlight
+- `.expanded`: chevron rotates 180°, details panel slides open via `grid-template-rows: 0fr → 1fr`
+- Door opener (`.task-picker-opener`): purple-tinted border, pre-expanded + pre-selected
+
+**Badges:**
+- Door Opener: gradient background (purple), accent text
+- Delivery type: tertiary background, secondary text
+
+### Order Cart Sidebar (Service Pages, `type = "order-cart"`)
+Right sidebar showing live order summary, driven by task-picker events.
+
+**Cart items:**
+- Each line: task title + tier label (left) | price + remove button (right)
+- Empty state: centered muted message "Select tasks below to build your order."
+
+**Modifiers section** (hidden until tasks selected):
+- Language counter: label + fee + (−/+) buttons with value display
+- Country counter: same layout
+- Counters use `--bg-tertiary` background, `--radius-sm` buttons
+
+**Totals section** (hidden until tasks selected):
+- Subtotal row, Modifier fees row, Total row (bold, accent color)
+- "From $X" prefix when any task has custom pricing
+
+**CTA:**
+- Full-width primary button ("Request Quote")
+- Note text below in muted caption
+
 ## Left Sidebar (Navigation)
 
 - Icon bar: 64px width, always visible on desktop (>800px)
@@ -51,3 +93,29 @@
 | >1400px | Icon bar visible | Visible |
 | 800-1400px | Icon bar visible | Hidden (button in header) |
 | <800px | Hidden (button) | Hidden (button) |
+
+## Page Type Layouts
+
+### Specialist Page
+- Hero: name + role + photo
+- Stats row: projects count, rating, hourly rate
+- Tasks grid: cards of tasks this specialist performs
+- Languages/Countries: badge rows
+- Cases: carousel of case studies this specialist worked on
+- Right sidebar: "Book Consultation" CTA, availability info
+
+### Case Page
+- Hero: project name + client + industry tag
+- Results: metric cards (value + label + timeframe)
+- Problem/Solution: two-column or sequential narrative
+- Tasks & Services used: linked badge list
+- Specialist attribution: small profile card
+- Testimonial: styled quote block
+- Right sidebar: "Similar Services" links, results summary
+
+### Category Pillar Page
+- Hero: category name + description
+- Door opener CTA: prominent block featuring the entry-point task with price
+- Services in this category: cards with task counts
+- Featured tasks: grid of key tasks
+- Right sidebar: "Start with [door opener task]" CTA

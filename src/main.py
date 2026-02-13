@@ -173,7 +173,7 @@ def build_navigation(pages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     collections = {}
 
     # Define collection order (customize as needed)
-    COLLECTION_ORDER = ["blog", "services", "industries", "categories", "countries", "languages"]
+    COLLECTION_ORDER = ["blog", "services", "team", "cases", "solutions", "industries", "categories", "countries", "languages"]
 
     for page in pages:
         url = page.get("url", "/")
@@ -320,12 +320,14 @@ def build_tag_index(parsed_pages: List[Dict]) -> Dict[str, Dict[str, List[str]]]
         data = page.get("data", {})
         config = data.get("config", {})
 
-        # Only process services
-        if config.get("type") != "service" and config.get("collection") != "services":
+        # Process services for tag index
+        is_service = config.get("type") == "service" or config.get("collection") == "services"
+
+        if not is_service:
             continue
 
-        service_slug = config.get("slug", "")
-        if not service_slug:
+        item_slug = config.get("slug", "")
+        if not item_slug:
             continue
 
         tags = data.get("tags", {})
@@ -334,8 +336,8 @@ def build_tag_index(parsed_pages: List[Dict]) -> Dict[str, Dict[str, List[str]]]
             for tag_slug in tags.get(dimension, []):
                 if tag_slug not in tag_index[dimension]:
                     tag_index[dimension][tag_slug] = []
-                if service_slug not in tag_index[dimension][tag_slug]:
-                    tag_index[dimension][tag_slug].append(service_slug)
+                if item_slug not in tag_index[dimension][tag_slug]:
+                    tag_index[dimension][tag_slug].append(item_slug)
 
     return tag_index
 
@@ -399,6 +401,103 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
     print(f"  Exported: {json_path} ({len(services)} services)")
 
 
+
+def export_team_index(parsed_pages: List[Dict], output_dir: str):
+    """
+    Export team/specialists index.
+
+    Creates public/data/team.json
+    """
+    json_dir = os.path.join(output_dir, "data")
+    os.makedirs(json_dir, exist_ok=True)
+
+    specialists = []
+
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+
+        if config.get("type") != "specialist" and config.get("collection") != "team":
+            continue
+        if page.get("is_listing"):
+            continue
+
+        if not config.get("slug"):
+            continue
+
+        relationships = data.get("relationships", {})
+        sidebar = data.get("sidebar", {})
+
+        specialists.append({
+            "slug": config.get("slug", ""),
+            "url": config.get("url", ""),
+            "title": data.get("meta", {}).get("title", ""),
+            "description": data.get("meta", {}).get("description", ""),
+            "role": sidebar.get("role", ""),
+            "rating": sidebar.get("rating"),
+            "projects": sidebar.get("projects"),
+            "hourly_rate": sidebar.get("hourly_rate"),
+            "relationships": {
+                "tasks": relationships.get("tasks", []),
+                "languages": relationships.get("languages", []),
+                "countries": relationships.get("countries", []),
+                "cases": relationships.get("cases", [])
+            }
+        })
+
+    json_path = os.path.join(json_dir, "team.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"specialists": specialists}, f, indent=2, ensure_ascii=False)
+
+    print(f"  Exported: {json_path} ({len(specialists)} specialists)")
+
+
+def export_cases_index(parsed_pages: List[Dict], output_dir: str):
+    """
+    Export cases index.
+
+    Creates public/data/cases.json
+    """
+    json_dir = os.path.join(output_dir, "data")
+    os.makedirs(json_dir, exist_ok=True)
+
+    cases = []
+
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+
+        if config.get("type") != "case" and config.get("collection") != "cases":
+            continue
+        if page.get("is_listing"):
+            continue
+
+        if not config.get("slug"):
+            continue
+
+        relationships = data.get("relationships", {})
+
+        cases.append({
+            "slug": config.get("slug", ""),
+            "url": config.get("url", ""),
+            "title": data.get("meta", {}).get("title", ""),
+            "description": data.get("meta", {}).get("description", ""),
+            "relationships": {
+                "industry": relationships.get("industry", ""),
+                "country": relationships.get("country", ""),
+                "services_used": relationships.get("services_used", []),
+                "tasks_used": relationships.get("tasks_used", []),
+                "specialists": relationships.get("specialists", [])
+            }
+        })
+
+    json_path = os.path.join(json_dir, "cases.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"cases": cases}, f, indent=2, ensure_ascii=False)
+
+    print(f"  Exported: {json_path} ({len(cases)} cases)")
+
+
 def get_page_blocks(data: Dict[str, Any]) -> set:
     """Extract block names used in a page's data."""
     # System sections that are NOT content blocks
@@ -406,7 +505,7 @@ def get_page_blocks(data: Dict[str, Any]) -> set:
     # sidebar = layout configuration (handled by generator)
     # tags = faceted catalog tags (handled by generator)
     # links = solution links to parent pillars (handled by generator)
-    system_sections = {"config", "meta", "stats", "changes", "translations", "blocks", "sidebar", "tags", "links"}
+    system_sections = {"config", "meta", "stats", "changes", "translations", "blocks", "sidebar", "tags", "links", "relationships"}
     blocks = set()
     for key in data.keys():
         if key not in system_sections:
@@ -615,6 +714,14 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
     # Export services index for client-side filtering
     print("\nExporting services index...")
     export_services_index(parsed_pages, tag_index, OUTPUT_DIR)
+
+    # Export team index
+    print("\nExporting team index...")
+    export_team_index(parsed_pages, OUTPUT_DIR)
+
+    # Export cases index
+    print("\nExporting cases index...")
+    export_cases_index(parsed_pages, OUTPUT_DIR)
 
     # Copy assets
     print("\nCopying assets...")

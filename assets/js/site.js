@@ -33,93 +33,147 @@ btnAction?.addEventListener('click', () => {
 overlay?.addEventListener('click', closeSidebars);
 
 // ========================================
-// Service Configurator Calculator
+// Order Cart
 // ========================================
-function calculatePrice() {
-    // Get tariff from active tab
-    const tariffBtn = document.querySelector('#tariffToggle .tab-btn.active');
-    const tariff = parseInt(tariffBtn?.dataset.value || 0);
+const cart = {
+    items: {},
 
-    // Get speed coefficient from active tab
-    // Slow = 0.9 (-10%), Standard = 1.0 (0%), Fast = 1.1 (+10%)
-    const speedBtn = document.querySelector('#speedToggle .tab-btn.active');
-    const speedCoef = parseFloat(speedBtn?.dataset.value || 1);
-    const timeLabel = speedBtn?.dataset.label || '2-3 weeks';
+    add(slug, title, tierName, tierLabel, price, custom) {
+        this.items[slug] = { title, tierName, tierLabel, price, custom };
+        this.render();
+    },
 
-    // Sum modules
-    let modules = 0;
-    document.querySelectorAll('.module-check:checked').forEach(cb => {
-        modules += parseInt(cb.dataset.price || 0);
+    remove(slug) {
+        delete this.items[slug];
+        const cb = document.querySelector('.task-select-cb[data-slug="' + slug + '"]');
+        if (cb) {
+            cb.checked = false;
+            const item = cb.closest('.task-picker-item');
+            if (item) item.classList.remove('selected');
+        }
+        this.render();
+    },
+
+    updateTier(slug, tierName, tierLabel, price, custom) {
+        if (this.items[slug]) {
+            this.items[slug].tierName = tierName;
+            this.items[slug].tierLabel = tierLabel;
+            this.items[slug].price = price;
+            this.items[slug].custom = custom;
+            this.render();
+        }
+    },
+
+    render() {
+        const container = document.getElementById('cartItems');
+        const modifiers = document.getElementById('cartModifiers');
+        const totals = document.getElementById('cartTotals');
+        if (!container) return;
+
+        const keys = Object.keys(this.items);
+
+        if (keys.length === 0) {
+            container.innerHTML = '<p class="cart-empty-msg">Select tasks below to build your order.</p>';
+            if (modifiers) modifiers.style.display = 'none';
+            if (totals) totals.style.display = 'none';
+            return;
+        }
+
+        if (modifiers) modifiers.style.display = '';
+        if (totals) totals.style.display = '';
+
+        let html = '';
+        let subtotal = 0;
+        let hasCustom = false;
+
+        for (const slug of keys) {
+            const item = this.items[slug];
+            if (item.custom) hasCustom = true;
+            subtotal += item.price;
+            html += '<div class="cart-line-item">' +
+                '<div class="cart-item-info">' +
+                    '<span class="cart-item-title">' + item.title + '</span>' +
+                    '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + '</span>' +
+                '</div>' +
+                '<div class="cart-item-actions">' +
+                    '<span class="cart-item-price">' + (item.price > 0 ? '$' + item.price.toLocaleString() : 'Custom') + '</span>' +
+                    '<button class="cart-item-remove" data-slug="' + slug + '" title="Remove">&times;</button>' +
+                '</div>' +
+            '</div>';
+        }
+        container.innerHTML = html;
+
+        // Bind remove buttons
+        container.querySelectorAll('.cart-item-remove').forEach(function(btn) {
+            btn.addEventListener('click', function() { cart.remove(btn.dataset.slug); });
+        });
+
+        // Calculate modifiers
+        const langCount = parseInt(document.getElementById('langCount')?.textContent) || 0;
+        const countryCount = parseInt(document.getElementById('countryCount')?.textContent) || 0;
+        const langFeeEl = document.querySelector('.cart-counter[data-type="lang"]');
+        const countryFeeEl = document.querySelector('.cart-counter[data-type="country"]');
+        const langFee = parseInt(langFeeEl?.dataset.fee) || 200;
+        const countryFee = parseInt(countryFeeEl?.dataset.fee) || 100;
+        const modifierTotal = (langCount * langFee) + (countryCount * countryFee);
+
+        // Update displays
+        const subtotalEl = document.getElementById('cartSubtotal');
+        const feesEl = document.getElementById('cartFees');
+        const totalEl = document.getElementById('cartTotal');
+
+        if (subtotalEl) subtotalEl.textContent = (hasCustom ? 'From $' : '$') + subtotal.toLocaleString();
+        if (feesEl) feesEl.textContent = modifierTotal > 0 ? '+$' + modifierTotal.toLocaleString() : '$0';
+        if (totalEl) totalEl.textContent = (hasCustom ? 'From $' : '$') + (subtotal + modifierTotal).toLocaleString();
+    }
+};
+
+// Listen for events from task-picker block
+document.addEventListener('taskToggled', function(e) {
+    const d = e.detail;
+    if (d.selected) {
+        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom);
+    } else {
+        cart.remove(d.slug);
+    }
+});
+
+document.addEventListener('tierChanged', function(e) {
+    const d = e.detail;
+    cart.updateTier(d.taskSlug, d.tierName, d.tierLabel, d.price, d.custom);
+});
+
+// Initialize cart with pre-checked tasks (door openers)
+document.querySelectorAll('.task-select-cb:checked').forEach(function(cb) {
+    const item = cb.closest('.task-picker-item');
+    const activeTier = item?.querySelector('.tier-btn.active');
+    cart.add(
+        cb.dataset.slug,
+        cb.dataset.title,
+        activeTier ? activeTier.dataset.tierName : 'S',
+        activeTier ? activeTier.dataset.tierLabel : '',
+        activeTier ? (parseInt(activeTier.dataset.price) || 0) : 0,
+        activeTier ? activeTier.dataset.custom === 'true' : false
+    );
+});
+
+// Counter +/- buttons for order modifiers
+document.querySelectorAll('.cart-counter').forEach(function(counter) {
+    counter.querySelector('.counter-minus')?.addEventListener('click', function() {
+        const valEl = counter.querySelector('.counter-value');
+        let val = parseInt(valEl.textContent) || 0;
+        val = Math.max(0, val - 1);
+        valEl.textContent = val;
+        cart.render();
     });
-
-    // Count total languages selected (including English)
-    const langCount = document.querySelectorAll('.lang-check:checked').length;
-    // Each extra language = +60% (1 lang = 1.0, 2 = 1.6, 3 = 2.2, etc.)
-    const langMultiplier = 1 + ((langCount - 1) * 0.6);
-
-    // Price = (tariff + modules) × langMultiplier × speedCoef
-    const total = Math.round((tariff + modules) * langMultiplier * speedCoef);
-
-    // Update displays
-    const priceDisplay = document.getElementById('totalPrice');
-    const timeDisplay = document.getElementById('totalTime');
-    if (priceDisplay) priceDisplay.textContent = '$' + total.toLocaleString();
-    if (timeDisplay) timeDisplay.textContent = timeLabel;
-}
-
-function updateLangText() {
-    const checked = document.querySelectorAll('.lang-check:checked');
-    const names = Array.from(checked).map(cb => cb.dataset.name);
-    const text = names.length > 2
-        ? `${names.slice(0, 2).join(', ')} +${names.length - 2}`
-        : names.join(', ');
-    const display = document.getElementById('langSelectedText');
-    if (display) display.textContent = text || 'English';
-}
-
-// Tariff tabs
-document.querySelectorAll('#tariffToggle .tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('#tariffToggle .tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        calculatePrice();
+    counter.querySelector('.counter-plus')?.addEventListener('click', function() {
+        const valEl = counter.querySelector('.counter-value');
+        let val = parseInt(valEl.textContent) || 0;
+        val++;
+        valEl.textContent = val;
+        cart.render();
     });
 });
-
-// Speed tabs
-document.querySelectorAll('#speedToggle .tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('#speedToggle .tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        calculatePrice();
-    });
-});
-
-// Order Language dropdown toggle (right sidebar - service configurator)
-const orderLangDropdown = document.getElementById('orderLangDropdown');
-const orderLangToggleBtn = document.getElementById('orderLangToggleBtn');
-
-orderLangToggleBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    orderLangDropdown?.classList.toggle('open');
-});
-
-// Language checkboxes (service configurator)
-document.querySelectorAll('.lang-check').forEach(cb => {
-    cb.addEventListener('change', () => {
-        updateLangText();
-        calculatePrice();
-    });
-});
-
-// Modules checkboxes
-document.querySelectorAll('.module-check').forEach(cb => {
-    cb.addEventListener('change', calculatePrice);
-});
-
-// Initial calculation
-updateLangText();
-calculatePrice();
 
 // ========================================
 // Theme System
@@ -208,7 +262,6 @@ document.querySelectorAll('#langDropdownMenu .dropdown-option:not(:disabled)').f
 function closeAllDropdowns() {
     themeDropdown?.classList.remove('open');
     langDropdownMenu?.classList.remove('open');
-    orderLangDropdown?.classList.remove('open');
 }
 
 function positionDropdown(dropdown, trigger) {
@@ -225,8 +278,5 @@ document.addEventListener('click', (e) => {
     }
     if (langDropdownMenu && !langDropdownMenu.contains(e.target) && e.target !== langToggleBtnIcon && !langToggleBtnIcon?.contains(e.target)) {
         langDropdownMenu.classList.remove('open');
-    }
-    if (orderLangDropdown && !orderLangDropdown.contains(e.target)) {
-        orderLangDropdown.classList.remove('open');
     }
 });

@@ -17,10 +17,16 @@ rating = 4.9
 featured = true
 
 [tags]
-categories = ["digital-marketing"]
+categories = ["aeo"]
 industries = ["ecommerce", "saas", "fintech", "healthcare"]
 countries = ["germany", "france", "usa", "uk"]
 languages = ["english", "german", "french", "spanish", "russian", "chinese"]
+
+[relationships]
+door_opener_task = "ai-visibility-audit"
+available_tasks = ["ai-visibility-audit", "ai-optimized-content", "knowledge-panel-optimization", "ai-citation-building", "entity-seo-setup"]
+specialists = ["ivan-petrov"]
+cases = []
 
 [translations]
 ru = "/ru/services/ai-optimisation"
@@ -255,7 +261,7 @@ details = ["Review existing content structure", "Identify extraction barriers", 
 
 [[process.steps]]
 title = "Create"
-icon = "edit"
+icon = "document"
 description = "Focus shifts from promotion to explanation. We help identify which questions are worth answering, how answers should be structured, and where your expertise provides unique value."
 details = ["One concept per page", "Key points stated explicitly", "Explanation before promotion"]
 
@@ -325,6 +331,114 @@ button_label = "Contact Us"
 button_url = "/contact?service=ai-audit-enterprise"
 
 note = "All packages are one-time. Custom scopes available on request."
+
+# Available Tasks - Interactive Picker
+[task-picker]
+tag = "tasks"
+title = "Available Tasks"
+subtitle = "Select individual tasks and volume tiers to build a custom order."
+
+[[task-picker.tasks]]
+slug = "ai-visibility-audit"
+title = "AI Visibility Audit"
+description = "Analyze how AI tools like ChatGPT, Perplexity, and Claude present your business. Understand why competitors get cited while you don't."
+delivery_type = "one-time"
+unit_type = "queries"
+door_opener = true
+deliverables = [
+    "AI landscape map — how AI explains your industry",
+    "Citation analysis — which sources get cited and why",
+    "Gap report — what's missing from your content",
+    "Action plan with prioritized recommendations"
+]
+
+[[task-picker.tasks.tiers]]
+name = "S"
+label = "20 queries"
+price = 500
+
+[[task-picker.tasks.tiers]]
+name = "M"
+label = "50 queries"
+price = 900
+
+[[task-picker.tasks.tiers]]
+name = "L"
+label = "100 queries"
+price = 1500
+
+[[task-picker.tasks.tiers]]
+name = "XL"
+label = "300+ queries"
+price = 0
+
+[[task-picker.tasks]]
+slug = "ai-optimized-content"
+title = "AI-Optimized Content"
+description = "Create content structured for AI citation — clear definitions, extractable answers, and logical organization."
+delivery_type = "one-time"
+unit_type = "pages"
+door_opener = false
+deliverables = [
+    "Content audit for citation readiness",
+    "Rewritten/restructured pages",
+    "Schema markup additions",
+    "Citation-ready formatting"
+]
+
+[[task-picker.tasks.tiers]]
+name = "S"
+label = "5 pages"
+price = 800
+
+[[task-picker.tasks.tiers]]
+name = "M"
+label = "15 pages"
+price = 2000
+
+[[task-picker.tasks.tiers]]
+name = "L"
+label = "30 pages"
+price = 3500
+
+[[task-picker.tasks.tiers]]
+name = "XL"
+label = "50+ pages"
+price = 0
+
+[[task-picker.tasks]]
+slug = "entity-seo-setup"
+title = "Entity SEO Setup"
+description = "Build structured data and knowledge graph presence so AI tools can identify and reference your brand as an authority."
+delivery_type = "one-time"
+unit_type = "entities"
+door_opener = false
+deliverables = [
+    "Entity mapping and knowledge graph analysis",
+    "Schema markup implementation",
+    "Wikipedia/Wikidata presence assessment",
+    "Brand entity optimization plan"
+]
+
+[[task-picker.tasks.tiers]]
+name = "S"
+label = "1 entity"
+price = 600
+
+[[task-picker.tasks.tiers]]
+name = "M"
+label = "5 entities"
+price = 1500
+
+[[task-picker.tasks.tiers]]
+name = "L"
+label = "15 entities"
+price = 3000
+
+[[task-picker.tasks.tiers]]
+name = "XL"
+label = "30+ entities"
+price = 0
 
 # Why Companies Fail - Text Block
 [text_failures]
@@ -499,88 +613,17 @@ button_secondary_label = "Read the Full Article"
 button_secondary_url = "/blog/how-ai-chooses-which-websites-to-cite"
 note = "No guarantees. No fluff. Just clarity."
 
-# Sidebar Configurator
+# Sidebar — Order Cart
 [sidebar]
-title = "Configure Service"
-price_label = "Estimated total"
+title = "Your Order"
+type = "order-cart"
 button_label = "Request Quote"
-button_url = "/contact?service=ai-audit"
-note = "Estimated. Final quote after brief."
-
-[[sidebar.tariffs]]
-name = "Core"
-description = "Your brand + 3 competitors"
-price = 1600
-selected = true
-
-[[sidebar.tariffs]]
-name = "Extended"
-description = "Your brand + 7 competitors"
-price = 2000
-
-[[sidebar.tariffs]]
-name = "Full Market"
-description = "Complete market mapping"
-price = 2400
-
-[[sidebar.modules]]
-name = "Competitor deep-dive"
-price = 800
-
-[[sidebar.modules]]
-name = "Content recommendations"
-price = 1200
-selected = true
-
-[[sidebar.modules]]
-name = "Implementation support"
-price = 2000
-
-[[sidebar.speeds]]
-name = "Slow"
-multiplier = 0.9
-label = "3-4 weeks"
-
-[[sidebar.speeds]]
-name = "Standard"
-multiplier = 1.0
-label = "2-3 weeks"
-selected = true
-
-[[sidebar.speeds]]
-name = "Fast"
-multiplier = 1.1
-label = "1-2 weeks"
-
-[[sidebar.languages]]
-code = "en"
-name = "English"
-selected = true
-
-[[sidebar.languages]]
-code = "de"
-name = "German"
-price = 800
-
-[[sidebar.languages]]
-code = "fr"
-name = "French"
-price = 800
-
-[[sidebar.languages]]
-code = "es"
-name = "Spanish"
-price = 800
-
-[[sidebar.languages]]
-code = "ru"
-name = "Russian"
-price = 1000
-
-[[sidebar.languages]]
-code = "zh"
-name = "Chinese"
-price = 1200
+button_url = "contact/?service=ai-optimisation"
+note = "Estimated pricing. Final quote after brief."
+language_fee = 200
+country_fee = 100
+extra_languages = true
+extra_countries = true
 
 # Metadata
 [stats]

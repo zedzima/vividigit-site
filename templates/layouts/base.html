@@ -92,6 +92,8 @@
         '/': 'home',
         '/blog': 'document',
         '/services': 'layers',
+        '/team': 'users',
+        '/cases': 'award',
         '/blocks': 'puzzle',
         '/industries': 'target',
         '/categories': 'content',
@@ -274,82 +276,133 @@
                 {% endfor %}
             </div>
 
-            {% elif config.collection == 'services' and sidebar %}
-            <!-- Service Configurator (for individual service pages) -->
+            {% elif sidebar.type == 'specialist' %}
+            <!-- Specialist Profile Sidebar -->
             <div class="widget">
-                <div class="widget-title">{{ sidebar.title | default('Configure Service') }}</div>
+                <div class="widget-title">{{ sidebar.title | default('Specialist') }}</div>
+                {% if sidebar.role %}
+                <p class="widget-text">{{ sidebar.role }}</p>
+                {% endif %}
             </div>
+
+            {% if sidebar.rating or sidebar.projects %}
             <div class="widget widget-estimates">
                 <div class="estimates-grid">
+                    {% if sidebar.rating %}
                     <div class="estimate-item">
-                        <div class="estimate-value" id="totalPrice">${{ sidebar.tariffs[0].price | default(0) | int }}</div>
-                        <div class="estimate-label">Estimated total</div>
+                        <div class="estimate-value">{{ sidebar.rating }}</div>
+                        <div class="estimate-label">Rating</div>
                     </div>
+                    {% endif %}
+                    {% if sidebar.projects %}
                     <div class="estimate-item">
-                        <div class="estimate-value" id="totalTime">2-3 weeks</div>
-                        <div class="estimate-label">Estimated time</div>
+                        <div class="estimate-value">{{ sidebar.projects }}</div>
+                        <div class="estimate-label">Projects</div>
                     </div>
-                </div>
-            </div>
-
-            {% if sidebar.tariffs %}
-            <div class="widget">
-                <div class="widget-title">Tariff</div>
-                <div class="tabs-toggle" id="tariffToggle">
-                    {% for tariff in sidebar.tariffs %}
-                    <button class="tab-btn {% if tariff.selected %}active{% endif %}" data-value="{{ tariff.price }}" data-name="{{ tariff.name }}">{{ tariff.name }}</button>
-                    {% endfor %}
+                    {% endif %}
+                    {% if sidebar.hourly_rate %}
+                    <div class="estimate-item">
+                        <div class="estimate-value">${{ sidebar.hourly_rate | int }}</div>
+                        <div class="estimate-label">Hourly rate</div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% endif %}
 
-            {% if sidebar.modules %}
             <div class="widget">
-                <div class="widget-title">Modules</div>
-                {% for module in sidebar.modules %}
-                <label class="widget-checkbox">
-                    <input type="checkbox" class="module-check" data-price="{{ module.price }}" {% if module.selected %}checked{% endif %}> {{ module.name }} (+${{ module.price | int }})
-                </label>
+                <a href="{{ (sidebar.button_url | default('#')).lstrip('/') }}" class="btn btn-primary btn-full">{{ sidebar.button_label | default('Book Consultation') }}</a>
+            </div>
+
+            {% elif config.type == 'case' %}
+            <!-- Case Study Sidebar -->
+            <div class="widget">
+                <div class="widget-title">Related Services</div>
+                {% for svc in relationships.services_used | default([]) %}
+                <a href="services/{{ svc }}/" class="sidebar-link">{{ svc | replace('-', ' ') | title }}</a>
                 {% endfor %}
             </div>
-            {% endif %}
 
-            {% if sidebar.languages %}
             <div class="widget">
-                <div class="widget-title">Languages</div>
-                <div class="lang-dropdown" id="orderLangDropdown">
-                    <button class="lang-dropdown-toggle" id="orderLangToggleBtn">
-                        <span id="langSelectedText">English</span>
-                        <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-                    <div class="lang-dropdown-menu" id="langMenu">
-                        {% for lang in sidebar.languages %}
-                        <label class="lang-option {% if lang.code == 'en' %}lang-required{% endif %}">
-                            <input type="checkbox" class="lang-check" data-code="{{ lang.code }}" data-name="{{ lang.name }}" {% if lang.selected or lang.code == 'en' %}checked{% endif %} {% if lang.code == 'en' %}disabled{% endif %}>
-                            <span class="lang-name">{{ lang.name }}</span>
-                            {% if lang.code != 'en' %}<span class="lang-extra">+60%</span>{% endif %}
-                        </label>
-                        {% endfor %}
+                <div class="widget-title">Specialist</div>
+                {% for spec in relationships.specialists | default([]) %}
+                <a href="team/{{ spec }}/" class="sidebar-link">{{ spec | replace('-', ' ') | title }}</a>
+                {% endfor %}
+            </div>
+
+            <div class="widget">
+                <a href="cases/" class="btn btn-secondary btn-full">View All Cases</a>
+            </div>
+
+            {% elif sidebar.type == 'order-cart' %}
+            <!-- Order Cart (for service pages with task picker) -->
+            <div class="widget">
+                <div class="widget-title">{{ sidebar.title | default('Your Order') }}</div>
+            </div>
+
+            <!-- Cart Items (populated by JavaScript) -->
+            <div class="widget" id="cartItems">
+                <p class="cart-empty-msg">Select tasks below to build your order.</p>
+            </div>
+
+            <!-- Order Modifiers -->
+            {% if sidebar.extra_languages or sidebar.extra_countries %}
+            <div class="widget cart-modifiers" id="cartModifiers" style="display:none;">
+                <div class="widget-title">Order Options</div>
+
+                {% if sidebar.extra_languages %}
+                <div class="cart-modifier">
+                    <div class="cart-modifier-info">
+                        <span class="cart-modifier-label">Additional Languages</span>
+                        <span class="cart-modifier-price">+${{ sidebar.language_fee | default(200) }} each</span>
+                    </div>
+                    <div class="cart-counter" data-fee="{{ sidebar.language_fee | default(200) }}" data-type="lang">
+                        <button class="counter-btn counter-minus" type="button">−</button>
+                        <span class="counter-value" id="langCount">0</span>
+                        <button class="counter-btn counter-plus" type="button">+</button>
                     </div>
                 </div>
+                {% endif %}
+
+                {% if sidebar.extra_countries %}
+                <div class="cart-modifier">
+                    <div class="cart-modifier-info">
+                        <span class="cart-modifier-label">Additional Countries</span>
+                        <span class="cart-modifier-price">+${{ sidebar.country_fee | default(100) }} each</span>
+                    </div>
+                    <div class="cart-counter" data-fee="{{ sidebar.country_fee | default(100) }}" data-type="country">
+                        <button class="counter-btn counter-minus" type="button">−</button>
+                        <span class="counter-value" id="countryCount">0</span>
+                        <button class="counter-btn counter-plus" type="button">+</button>
+                    </div>
+                </div>
+                {% endif %}
             </div>
             {% endif %}
 
-            {% if sidebar.speeds %}
-            <div class="widget">
-                <div class="widget-title">Speed</div>
-                <div class="tabs-toggle" id="speedToggle">
-                    {% for speed in sidebar.speeds %}
-                    <button class="tab-btn {% if speed.selected %}active{% endif %}" data-value="{{ speed.multiplier }}" data-label="{{ speed.label }}">{{ speed.name }}</button>
-                    {% endfor %}
+            <!-- Totals -->
+            <div class="widget widget-estimates" id="cartTotals" style="display:none;">
+                <div class="estimates-grid">
+                    <div class="estimate-item">
+                        <div class="estimate-value" id="cartSubtotal">$0</div>
+                        <div class="estimate-label">Tasks</div>
+                    </div>
+                    <div class="estimate-item">
+                        <div class="estimate-value" id="cartFees">$0</div>
+                        <div class="estimate-label">Modifiers</div>
+                    </div>
+                </div>
+                <div class="cart-total-row">
+                    <span class="cart-total-label">Estimated Total</span>
+                    <span class="cart-total-value" id="cartTotal">$0</span>
                 </div>
             </div>
-            {% endif %}
 
+            <!-- CTA -->
             <div class="widget">
-                <a href="{{ (sidebar.button_url | default('#')).lstrip('/') }}" class="btn btn-primary btn-full">{{ sidebar.button_label | default('Request Quote') }}</a>
+                <a href="{{ (sidebar.button_url | default('#')).lstrip('/') }}" class="btn btn-primary btn-full" id="cartCta">
+                    {{ sidebar.button_label | default('Request Quote') }}
+                </a>
                 {% if sidebar.note %}
                 <p class="widget-note">{{ sidebar.note }}</p>
                 {% endif %}
