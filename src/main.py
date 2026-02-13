@@ -368,7 +368,7 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
 
         tags = data.get("tags", {})
 
-        services.append({
+        entry = {
             "slug": config.get("slug", ""),
             "url": config.get("url", ""),
             "title": meta.get("title", ""),
@@ -379,7 +379,15 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
                 "countries": tags.get("countries", []),
                 "languages": tags.get("languages", [])
             }
-        })
+        }
+
+        # Include rating and price if available
+        if config.get("rating"):
+            entry["rating"] = config["rating"]
+        if config.get("price"):
+            entry["from_price"] = config["price"]
+
+        services.append(entry)
 
     # Build filters list with counts
     filters = {}
