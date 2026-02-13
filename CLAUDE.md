@@ -1,5 +1,12 @@
 # CMS Project Instructions
 
+## Language Convention
+
+- **Communication**: Russian (with the user)
+- **Code, documentation, comments**: Always English
+
+This applies to all files: TOML, HTML, JS, CSS, Markdown, etc.
+
 ## Before Git Push
 
 **IMPORTANT:** Before committing/pushing, always check for and remove the symlink:
