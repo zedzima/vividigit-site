@@ -163,7 +163,7 @@ def edit_page(page_path):
 
 @app.route("/admin/pages/save/<path:page_path>", methods=["POST"])
 def save_page(page_path):
-    """Save page changes."""
+    """Save page changes, merging with original file to preserve unedited fields."""
     # Find the file
     if page_path == "home":
         filepath = CONTENT_DIR / f"home.{LANG}.toml"
@@ -171,12 +171,35 @@ def save_page(page_path):
         filepath = CONTENT_DIR / page_path / f"{page_path.split('/')[-1]}.{LANG}.toml"
 
     # Get JSON data from request
-    data = request.get_json()
+    incoming = request.get_json()
+
+    # Load original raw TOML (not parsed through process_content)
+    # to preserve all fields including those not shown in editor
+    original = {}
+    if filepath.exists():
+        import tomllib
+        with open(filepath, "rb") as f:
+            original = tomllib.load(f)
+
+    # Deep merge: incoming values override original, but original fields
+    # not present in incoming are preserved
+    merged = _deep_merge(original, incoming)
 
     # Save to TOML
-    save_toml(data, str(filepath))
+    save_toml(merged, str(filepath))
 
     return jsonify({"success": True, "message": "Saved"})
+
+
+def _deep_merge(base: dict, override: dict) -> dict:
+    """Recursively merge override into base. Override values win."""
+    result = dict(base)
+    for key, value in override.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = _deep_merge(result[key], value)
+        else:
+            result[key] = value
+    return result
 
 
 @app.route("/admin/blocks")
@@ -261,65 +284,146 @@ def upload_media():
     return jsonify({"success": True, "path": f"/assets/{folder}/{filename}"})
 
 
+def _escape(text):
+    """Escape HTML entities in text for safe rendering in attributes/content."""
+    if not isinstance(text, str):
+        return str(text)
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+def _render_field(key: str, value, prefix: str = "block") -> str:
+    """Render a single form field. Recursive for nested structures."""
+    field_name = f"{prefix}.{key}"
+
+    # Markdown fields get special editor
+    markdown_keys = {"body", "content", "answer", "description_md"}
+
+    if isinstance(value, bool):
+        checked = 'checked' if value else ''
+        return f'''<div class="field-row">
+            <label class="field-label">{_escape(key)}</label>
+            <input type="checkbox" name="{field_name}" data-type="bool" {checked} style="width: auto;">
+        </div>'''
+
+    if isinstance(value, (int, float)):
+        return f'''<div class="field-row">
+            <label class="field-label">{_escape(key)}</label>
+            <input type="number" name="{field_name}" data-type="number" value="{value}" step="any">
+        </div>'''
+
+    if isinstance(value, str):
+        if key in markdown_keys:
+            return f'''<div class="field-row markdown-editor">
+                <label class="field-label">{_escape(key)} <span style="color:var(--text-muted);font-size:0.75rem">markdown</span></label>
+                <div class="md-tabs">
+                    <button type="button" class="md-tab active" onclick="mdTab(this,'edit')">Edit</button>
+                    <button type="button" class="md-tab" onclick="mdTab(this,'preview')">Preview</button>
+                </div>
+                <textarea name="{field_name}" rows="8" class="md-textarea">{_escape(value)}</textarea>
+                <div class="md-preview" style="display:none;"></div>
+            </div>'''
+        if len(value) > 100 or '\n' in value:
+            return f'''<div class="field-row">
+                <label class="field-label">{_escape(key)}</label>
+                <textarea name="{field_name}" rows="3">{_escape(value)}</textarea>
+            </div>'''
+        return f'''<div class="field-row">
+            <label class="field-label">{_escape(key)}</label>
+            <input type="text" name="{field_name}" value="{_escape(value)}">
+        </div>'''
+
+    if isinstance(value, list):
+        items_html = []
+        if all(isinstance(item, str) for item in value):
+            # String array
+            for i, item in enumerate(value):
+                items_html.append(f'''<div class="array-item" data-index="{i}">
+                    <input type="text" name="{field_name}[{i}]" value="{_escape(item)}">
+                    <button type="button" class="btn-remove-item" onclick="removeArrayItem(this)" title="Remove">&times;</button>
+                </div>''')
+            return f'''<div class="field-row">
+                <label class="field-label">{_escape(key)} <span style="color:var(--text-muted);font-size:0.75rem">[{len(value)} items]</span></label>
+                <div class="array-editor" data-field="{field_name}" data-item-type="string">
+                    {''.join(items_html)}
+                    <button type="button" class="btn-add-item" onclick="addStringItem(this)">+ Add item</button>
+                </div>
+            </div>'''
+
+        if all(isinstance(item, dict) for item in value):
+            # Object array
+            for i, item in enumerate(value):
+                fields_html = []
+                for sub_key, sub_value in item.items():
+                    fields_html.append(_render_field(sub_key, sub_value, f"{field_name}[{i}]"))
+                items_html.append(f'''<details class="array-item-obj" data-index="{i}">
+                    <summary>{_escape(item.get('title', item.get('name', item.get('label', item.get('slug', item.get('question', item.get('value', f'Item {i+1}')))))))}
+                        <button type="button" class="btn-remove-item" onclick="event.stopPropagation();removeArrayItem(this.closest('.array-item-obj'))" title="Remove">&times;</button>
+                    </summary>
+                    <div class="array-item-fields">{''.join(fields_html)}</div>
+                </details>''')
+            return f'''<div class="field-row">
+                <label class="field-label">{_escape(key)} <span style="color:var(--text-muted);font-size:0.75rem">[{len(value)} items]</span></label>
+                <div class="array-editor" data-field="{field_name}" data-item-type="object">
+                    {''.join(items_html)}
+                    <button type="button" class="btn-add-item" onclick="addObjectItem(this)">+ Add item</button>
+                </div>
+            </div>'''
+
+        # Mixed array — show as JSON
+        import json
+        return f'''<div class="field-row">
+            <label class="field-label">{_escape(key)} <span style="color:var(--text-muted);font-size:0.75rem">mixed array</span></label>
+            <textarea name="{field_name}" data-type="json" rows="4">{_escape(json.dumps(value, indent=2, ensure_ascii=False))}</textarea>
+        </div>'''
+
+    if isinstance(value, dict):
+        fields_html = []
+        for sub_key, sub_value in value.items():
+            fields_html.append(_render_field(sub_key, sub_value, field_name))
+        return f'''<div class="field-row nested-editor">
+            <label class="field-label">{_escape(key)}</label>
+            <div class="nested-fields">{''.join(fields_html)}</div>
+        </div>'''
+
+    return ''
+
+
 @app.template_global()
 def render_block_fields(block_type: str, data: dict, index: int) -> str:
     """Render form fields for a block."""
     html = []
-
     for key, value in data.items():
-        field_id = f"block-{index}-{key}"
-
-        if isinstance(value, str):
-            if len(value) > 100 or '\n' in value:
-                html.append(f'''
-                <div class="field-row">
-                    <label class="field-label">{key}</label>
-                    <textarea name="block.{key}" id="{field_id}" rows="3">{value}</textarea>
-                </div>
-                ''')
-            else:
-                html.append(f'''
-                <div class="field-row">
-                    <label class="field-label">{key}</label>
-                    <input type="text" name="block.{key}" id="{field_id}" value="{value}">
-                </div>
-                ''')
-        elif isinstance(value, bool):
-            checked = 'checked' if value else ''
-            html.append(f'''
-            <div class="field-row">
-                <label class="field-label">{key}</label>
-                <input type="checkbox" name="block.{key}" id="{field_id}" {checked} style="width: auto;">
-            </div>
-            ''')
-        elif isinstance(value, (int, float)):
-            html.append(f'''
-            <div class="field-row">
-                <label class="field-label">{key}</label>
-                <input type="number" name="block.{key}" id="{field_id}" value="{value}">
-            </div>
-            ''')
-        elif isinstance(value, list):
-            html.append(f'''
-            <div class="field-row">
-                <label class="field-label">{key}</label>
-                <div style="color: var(--text-muted); font-size: 0.875rem;">
-                    [{len(value)} items] — array editing coming soon
-                </div>
-            </div>
-            ''')
-        elif isinstance(value, dict):
-            html.append(f'''
-            <div class="field-row">
-                <label class="field-label">{key}</label>
-                <div style="color: var(--text-muted); font-size: 0.875rem;">
-                    {{object}} — nested editing coming soon
-                </div>
-            </div>
-            ''')
+        html.append(_render_field(key, value, "block"))
 
     from markupsafe import Markup
     return Markup('\n'.join(html))
+
+
+@app.template_global()
+def render_section_fields(section_name: str, data) -> str:
+    """Render form fields for a system section (meta, sidebar, tags, etc.)."""
+    if not isinstance(data, dict):
+        return ''
+    html = []
+    for key, value in data.items():
+        html.append(_render_field(key, value, section_name))
+
+    from markupsafe import Markup
+    return Markup('\n'.join(html))
+
+
+@app.route("/admin/blocks/demo/<block_name>")
+def get_block_demo(block_name):
+    """Return demo data for a block type."""
+    demo_path = BLOCKS_CONTENT_DIR / block_name / f"{block_name}.{LANG}.toml"
+    if demo_path.exists():
+        try:
+            data = load_file(str(demo_path))
+            for block in data.get("blocks", []):
+                return jsonify(block.get("data", {}))
+        except Exception:
+            pass
+    return jsonify({"title": f"New {block_name}"})
 
 
 @app.route("/admin/pages/new")

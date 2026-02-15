@@ -301,7 +301,7 @@ a:hover { color: var(--accent-hover); }
    ========================================================================== */
 
 :root {
-    --icon-bar-width: 64px;
+    --icon-bar-width: 96px;
 }
 
 .sidebar-nav {
@@ -341,8 +341,8 @@ a:hover { color: var(--accent-hover); }
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
+    width: 72px;
+    height: 56px;
     border-radius: var(--radius-md);
     color: var(--text-muted);
     text-decoration: none;
@@ -360,13 +360,13 @@ a:hover { color: var(--accent-hover); }
 }
 
 .icon-bar-link svg {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
 }
 
 .icon-bar-label {
-    font-size: 9px;
-    margin-top: 2px;
+    font-size: 11px;
+    margin-top: 3px;
     text-transform: uppercase;
     letter-spacing: 0.02em;
     opacity: 0.8;
@@ -385,8 +385,8 @@ a:hover { color: var(--accent-hover); }
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 56px;
+    height: 56px;
     border: none;
     border-radius: var(--radius-md);
     background: transparent;
@@ -401,8 +401,8 @@ a:hover { color: var(--accent-hover); }
 }
 
 .icon-bar-btn svg {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
 }
 
 
@@ -1044,6 +1044,20 @@ a:hover { color: var(--accent-hover); }
     margin-bottom: 0;
 }
 
+/* Specialist profile card */
+.widget-profile .profile-name {
+    font-size: var(--font-size-h3);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.widget-profile .profile-role {
+    font-size: var(--font-size-ui);
+    color: var(--text-secondary);
+    margin-top: var(--space-xs);
+}
+
 /* Estimates widget */
 .sidebar-content .widget-estimates {
     padding: var(--space-md);
@@ -1365,6 +1379,22 @@ main {
 }
 
 .form-input::placeholder { color: var(--text-muted); }
+
+textarea.form-input {
+    resize: vertical;
+    min-height: calc(80px * var(--scale));
+    font-family: var(--font-mono);
+}
+
+.quick-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.quick-contact-form .btn {
+    margin-top: var(--space-xs);
+}
 
 /* Select dropdown */
 select.form-input {

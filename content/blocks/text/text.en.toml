@@ -7,21 +7,35 @@ collection = "blocks"
 
 [meta]
 title = "Text Block — Blocks Library"
-description = "Simple rich text content block with left-aligned and centered variants."
+description = "Rich text content block with full-width, centered, and narrow variants."
 
-# Variant 1: Left-aligned (default)
+# Variant 1: Full width (default) — used on category, industry, country, language, solution pages
+[text_full]
+tag = "text · full width"
+title = "Why This Matters"
+text = """
+Organic search drives over 50% of all website traffic. Unlike paid channels, SEO compounds over time — the work you invest today continues to deliver results months and years into the future.
+
+## Our Approach
+
+We combine technical excellence with content strategy:
+
+- **Data-driven analysis** — every recommendation backed by research
+- **Transparent reporting** — no black-box tactics
+- **Measurable results** — every implementation tracked and measured
+
+A well-executed strategy goes beyond just rankings. It improves user experience, builds brand credibility, and drives high-intent traffic that converts at significantly higher rates than most other channels.
+"""
+
+# Variant 2: Left-aligned with subtitle
 [text_left]
 tag = "text · left"
 title = "Left-Aligned Text"
-subtitle = "Default style for long-form content"
-centered = false
-narrow = false
+subtitle = "Default style with subtitle for long-form content"
 body = """
 <p>The Text block is for <strong>simple, free-form content</strong>. Write markdown or HTML and it renders with proper typography.</p>
 
 <h3>Supported Elements</h3>
-
-<p>Text block supports all standard HTML elements:</p>
 
 <ul>
     <li>Headings (h2, h3, h4)</li>
@@ -34,15 +48,10 @@ body = """
 <blockquote>
     Use Text block for articles, descriptions, documentation, or any content that needs rich formatting without special layout.
 </blockquote>
-
-<h3>Code Example</h3>
-
-<pre><code>const message = "Hello, World!";
-console.log(message);</code></pre>
 """
 
-# Variant 2: Centered
-[text_centered]
+# Variant 3: Centered
+[text_center]
 tag = "text · centered"
 title = "Centered Text"
 subtitle = "Great for introductions and summaries"
@@ -61,12 +70,11 @@ body = """
 <p>Use this variant when you want to draw attention to a specific message or create visual breathing room between dense content sections.</p>
 """
 
-# Variant 3: Narrow left-aligned
+# Variant 4: Narrow left-aligned
 [text_narrow]
 tag = "text · narrow"
 title = "Narrow Column"
 subtitle = "Optimal line length for reading"
-centered = false
 narrow = true
 body = """
 <p>This variant uses <code>narrow = true</code> with left alignment. It's ideal for <strong>long-form articles</strong> where readability matters.</p>

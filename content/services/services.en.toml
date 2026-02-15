@@ -1,25 +1,75 @@
 # Services Catalog Page
 [config]
-encoding = "UTF-8"
 lang = "en"
-url = "/services"
+url = "services"
+slug = "services"
+collection = "services"
+is_listing = true
 menu = "Services"
-version = "1.0"
 
-# SEO metadata
 [meta]
-title = "Services — Digital Marketing Solutions | V\\V\\D\\G\\T"
+title = "Services — Digital Marketing Solutions | VVDGT"
 description = "Browse our catalog of productized digital marketing services. SEO, Content, PPC, Localization, Analytics. Transparent pricing, fast delivery."
 keywords = ["digital marketing services", "SEO services", "content marketing", "PPC management"]
 
-# Catalog Block
-[catalog]
-title = "Services Catalog"
+[hero]
+tag = "services"
+h1 = "Services Catalog"
 subtitle = "Productized marketing services with transparent pricing"
+text = "Every service has a fixed scope, clear deliverables, and a public price. Pick what you need, get it done."
 
-# Sidebar Filters (values must match slugs in services-index.json)
+[catalog]
+source = "services"
+count_label = "services"
+title = "All Services"
+subtitle = "Browse our full catalog of marketing services"
+
+[coverage]
+cta_label = "Discuss Your Project"
+cta_url = "/contact"
+
+[[coverage.tabs]]
+label = "Industries"
+title = "Industries We Serve"
+description = "Specialized marketing services for every vertical."
+list = [
+    { icon = "monitor", name = "SaaS & Technology" },
+    { icon = "ecommerce", name = "E-commerce & Retail" },
+    { icon = "fintech", name = "Fintech & Finance" },
+    { icon = "healthcare", name = "Healthcare" },
+]
+
+[[coverage.tabs]]
+label = "Countries"
+title = "Global Reach"
+description = "Our team delivers results in markets worldwide."
+list = [
+    { flag = "🇺🇸", name = "United States" },
+    { flag = "🇬🇧", name = "United Kingdom" },
+    { flag = "🇩🇪", name = "Germany" },
+    { flag = "🇫🇷", name = "France" },
+    { flag = "🇦🇹", name = "Austria" },
+]
+
+[[coverage.tabs]]
+label = "Languages"
+title = "Multilingual Expertise"
+description = "Native-level content and optimization in major languages."
+list = [
+    { code = "EN", name = "English" },
+    { code = "DE", name = "German" },
+    { code = "FR", name = "French" },
+    { code = "ES", name = "Spanish" },
+    { code = "RU", name = "Russian" },
+    { code = "ZH", name = "Chinese" },
+    { code = "JA", name = "Japanese" },
+]
+
+# Sidebar
 [sidebar]
 title = "Filter Services"
+cta_label = "Get a Quote"
+cta_url = "contact"
 
 [[sidebar.filters]]
 name = "categories"
@@ -28,6 +78,7 @@ all_label = "All Categories"
 options = [
     { value = "seo", label = "SEO" },
     { value = "aeo", label = "AEO" },
+    { value = "digital-marketing", label = "Digital Marketing" },
     { value = "content", label = "Content Marketing" },
     { value = "social-media", label = "Social Media" },
     { value = "ppc", label = "PPC" },
@@ -38,7 +89,7 @@ options = [
     { value = "pr", label = "Public Relations" },
     { value = "automation", label = "Marketing Automation" },
     { value = "ecommerce", label = "E-commerce" },
-    { value = "affiliate", label = "Affiliate Marketing" }
+    { value = "affiliate", label = "Affiliate Marketing" },
 ]
 
 [[sidebar.filters]]
@@ -46,11 +97,10 @@ name = "industries"
 label = "Industry"
 all_label = "All Industries"
 options = [
-    { value = "saas", label = "SaaS" },
     { value = "ecommerce", label = "E-commerce" },
+    { value = "saas", label = "SaaS" },
     { value = "fintech", label = "Fintech" },
     { value = "healthcare", label = "Healthcare" },
-    { value = "travel", label = "Travel" }
 ]
 
 [[sidebar.filters]]
@@ -63,7 +113,8 @@ options = [
     { value = "french", label = "French" },
     { value = "spanish", label = "Spanish" },
     { value = "russian", label = "Russian" },
-    { value = "chinese", label = "Chinese" }
+    { value = "chinese", label = "Chinese" },
+    { value = "japanese", label = "Japanese" },
 ]
 
 [[sidebar.filters]]
@@ -72,9 +123,10 @@ label = "Country"
 all_label = "All Countries"
 options = [
     { value = "germany", label = "Germany" },
+    { value = "austria", label = "Austria" },
     { value = "france", label = "France" },
     { value = "usa", label = "USA" },
-    { value = "uk", label = "UK" }
+    { value = "uk", label = "UK" },
 ]
 
 reset_label = "Reset Filters"

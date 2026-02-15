@@ -2,7 +2,7 @@
 
 [config]
 lang = "en"
-url = "/countries"
+url = "countries"
 slug = "countries"
 collection = "countries"
 is_listing = true
@@ -10,7 +10,7 @@ menu = "Countries"
 
 [meta]
 title = "Services by Country"
-description = "Localized digital marketing services for specific markets. Germany, France, USA, UK, and more."
+description = "Localized digital marketing services for specific markets. Germany, Austria, France, USA, UK, and more."
 keywords = ["country services", "market entry", "localized marketing"]
 
 [hero]
@@ -19,25 +19,63 @@ h1 = "Services by Country"
 subtitle = "Market-specific solutions"
 text = "Expand into new markets with localized strategies and native expertise."
 
-[cards]
-columns = 2
+[catalog]
+source = "countries"
+count_label = "countries"
+tag = "catalog"
+title = "All Countries"
+subtitle = "Market-specific solutions"
 
-[[cards.cards]]
-title = "🇩🇪 Germany"
-description = "DACH market entry, German SEO, and local link building."
-url = "countries/germany"
+# Sidebar
+[sidebar]
+title = "Filter Countries"
+cta_label = "Browse Services"
+cta_url = "services"
 
-[[cards.cards]]
-title = "🇫🇷 France"
-description = "French market localization and Francophone audience reach."
-url = "countries/france"
+[[sidebar.filters]]
+name = "categories"
+label = "Category"
+all_label = "All Categories"
+options = [
+    { value = "seo", label = "SEO" },
+    { value = "aeo", label = "AEO" },
+    { value = "digital-marketing", label = "Digital Marketing" },
+    { value = "content", label = "Content Marketing" },
+    { value = "social-media", label = "Social Media" },
+    { value = "ppc", label = "PPC" },
+    { value = "email", label = "Email Marketing" },
+    { value = "analytics", label = "Analytics & Data" },
+    { value = "cro", label = "CRO" },
+    { value = "video", label = "Video Marketing" },
+    { value = "pr", label = "Public Relations" },
+    { value = "automation", label = "Marketing Automation" },
+    { value = "ecommerce", label = "E-commerce" },
+    { value = "affiliate", label = "Affiliate Marketing" },
+]
 
-[[cards.cards]]
-title = "🇺🇸 USA"
-description = "North American market strategies and US-focused SEO."
-url = "countries/usa"
+[[sidebar.filters]]
+name = "industries"
+label = "Industry"
+all_label = "All Industries"
+options = [
+    { value = "ecommerce", label = "E-commerce" },
+    { value = "saas", label = "SaaS" },
+    { value = "fintech", label = "Fintech" },
+    { value = "healthcare", label = "Healthcare" },
+]
 
-[[cards.cards]]
-title = "🇬🇧 UK"
-description = "British English content and UK market optimization."
-url = "countries/uk"
+[[sidebar.filters]]
+name = "languages"
+label = "Language"
+all_label = "All Languages"
+options = [
+    { value = "english", label = "English" },
+    { value = "german", label = "German" },
+    { value = "french", label = "French" },
+    { value = "spanish", label = "Spanish" },
+    { value = "russian", label = "Russian" },
+    { value = "chinese", label = "Chinese" },
+    { value = "japanese", label = "Japanese" },
+]
+
+reset_label = "Reset Filters"

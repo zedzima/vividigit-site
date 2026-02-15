@@ -10,41 +10,9 @@
     </div>
     {% endif %}
 
-    {% if data.services or data.industries or data.languages %}
-    <div class="cases-filters">
-        {% if data.services %}
-        <div class="filter-group">
-            <span class="filter-label">Service:</span>
-            <button class="filter-btn active" data-filter="service" data-value="all">All</button>
-            {% for svc in data.services %}
-            <button class="filter-btn" data-filter="service" data-value="{{ svc.id }}">{{ svc.label }}</button>
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% if data.industries %}
-        <div class="filter-group">
-            <span class="filter-label">Industry:</span>
-            <button class="filter-btn active" data-filter="industry" data-value="all">All</button>
-            {% for ind in data.industries %}
-            <button class="filter-btn" data-filter="industry" data-value="{{ ind.id }}">{{ ind.label }}</button>
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% if data.languages %}
-        <div class="filter-group">
-            <span class="filter-label">Language:</span>
-            <button class="filter-btn active" data-filter="language" data-value="all">All</button>
-            {% for lang in data.languages %}
-            <button class="filter-btn" data-filter="language" data-value="{{ lang.id }}">{{ lang.label }}</button>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    {% endif %}
-
     <div class="cases-grid">
         {% for case in data.cases %}
-        <a href="{{ (case.url | default('#')).lstrip('/') }}" class="case-card card" data-service="{{ case.service | default('') }}" data-industry="{{ case.industry | default('') }}" data-language="{{ case.language | default('') }}">
+        <a href="{{ (case.url | default('#')).lstrip('/') }}" class="case-card">
             <div class="case-image">
                 {% if case.image %}
                 <img src="{{ case.image }}" alt="{{ case.title }}" loading="lazy">
@@ -56,8 +24,11 @@
             </div>
 
             <div class="case-content">
-                {% if case.client %}
-                <span class="case-client">{{ case.client }}</span>
+                {% if case.industry or case.client %}
+                <div class="case-meta">
+                    {% if case.industry %}<span class="case-industry">{{ case.industry }}</span>{% endif %}
+                    {% if case.client %}<span class="case-client">{{ case.client }}</span>{% endif %}
+                </div>
                 {% endif %}
 
                 <h3>{{ case.title }}</h3>
@@ -68,7 +39,7 @@
 
                 {% if case.results %}
                 <div class="case-results">
-                    {% for result in case.results %}
+                    {% for result in case.results[:2] %}
                     <div class="case-result">
                         <span class="result-value">{{ result.value }}</span>
                         <span class="result-label">{{ result.label }}</span>
@@ -77,28 +48,6 @@
                 </div>
                 {% endif %}
 
-                <div class="case-meta">
-                    {% if case.service_label %}
-                    <div class="case-meta-row">
-                        <span class="case-meta-label">Service:</span>
-                        <span class="tag">{{ case.service_label }}</span>
-                    </div>
-                    {% endif %}
-                    {% if case.industry_label %}
-                    <div class="case-meta-row">
-                        <span class="case-meta-label">Industry:</span>
-                        <span class="tag">{{ case.industry_label }}</span>
-                    </div>
-                    {% endif %}
-                    {% if case.language_codes %}
-                    <div class="case-meta-row">
-                        <span class="case-meta-label">Language:</span>
-                        {% for code in case.language_codes %}
-                        <span class="tag">{{ code }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
             </div>
         </a>
         {% endfor %}
@@ -127,48 +76,6 @@
         max-width: calc(600px * var(--scale));
     }
 
-    .cases-filters {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-md);
-        margin-bottom: var(--space-xl);
-    }
-
-    .filter-group {
-        display: flex;
-        align-items: center;
-        gap: var(--space-sm);
-        flex-wrap: wrap;
-    }
-
-    .filter-label {
-        font-size: var(--font-size-ui);
-        color: var(--text-muted);
-        min-width: 70px;
-    }
-
-    .filter-btn {
-        padding: var(--space-xs) var(--space-md);
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-full);
-        color: var(--text-secondary);
-        cursor: pointer;
-        font-size: var(--font-size-caption);
-        transition: var(--transition);
-    }
-
-    .filter-btn:hover {
-        border-color: var(--border-light);
-        color: var(--text-primary);
-    }
-
-    .filter-btn.active {
-        background: var(--accent-gradient);
-        border-color: transparent;
-        color: white;
-    }
-
     .cases-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
@@ -176,182 +83,27 @@
     }
 
     .case-card {
-        display: flex;
-        flex-direction: column;
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-xl);
-        text-decoration: none;
-        overflow: hidden;
-        transition: var(--transition);
+        display: flex; flex-direction: column;
+        background: var(--bg-card); border: 1px solid var(--border);
+        border-radius: var(--radius-lg); text-decoration: none;
+        overflow: hidden; transition: var(--transition);
     }
+    .case-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow-lg); }
+    .case-image { aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg-tertiary); }
+    .case-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    .case-card:hover .case-image img { transform: scale(1.05); }
+    .case-image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(192,38,211,0.1) 100%); }
+    .case-image-placeholder span { font-size: 4rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; opacity: 0.5; }
+    .case-content { display: flex; flex-direction: column; padding: var(--space-md) var(--space-lg) var(--space-lg); }
+    .case-meta { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .case-industry { padding: 3px 8px; font-size: var(--font-size-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; color: var(--text-muted); }
+    .case-client { font-size: var(--font-size-caption); color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .case-card h3 { color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; margin-bottom: var(--space-sm); line-height: 1.3; }
+    .case-card p { color: var(--text-secondary); font-size: var(--font-size-ui); line-height: 1.6; flex: 1; margin-bottom: var(--space-md); }
+    .case-results { display: flex; gap: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid var(--border); }
+    .case-result { display: flex; flex-direction: column; }
+    .result-value { font-size: var(--font-size-h3); font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; }
+    .result-label { font-size: var(--font-size-caption); color: var(--text-muted); margin-top: 2px; }
 
-    .case-card:hover {
-        transform: translateY(-4px);
-        border-color: var(--accent-primary);
-        box-shadow: var(--shadow);
-    }
-
-    .case-image {
-        aspect-ratio: 16 / 10;
-        overflow: hidden;
-        background: var(--bg-tertiary);
-    }
-
-    .case-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-
-    .case-card:hover .case-image img {
-        transform: scale(1.05);
-    }
-
-    .case-image-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(192, 38, 211, 0.1) 100%);
-    }
-
-    .case-image-placeholder span {
-        font-size: 4rem;
-        font-weight: 700;
-        background: var(--accent-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        opacity: 0.5;
-    }
-
-    .case-content {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-sm);
-        padding: var(--space-lg);
-    }
-
-    .case-client {
-        font-size: var(--font-size-caption);
-        color: var(--accent-primary);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .case-card h3 {
-        font-size: var(--font-size-subtitle);
-        margin: 0;
-        color: var(--text-primary);
-    }
-
-    .case-card p {
-        font-size: var(--font-size-ui);
-        color: var(--text-secondary);
-        margin: 0;
-        line-height: 1.6;
-    }
-
-    .case-results {
-        display: flex;
-        gap: var(--space-lg);
-        padding: var(--space-md) 0;
-        border-top: 1px solid var(--border-color);
-        margin-top: var(--space-sm);
-    }
-
-    .case-result {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .result-value {
-        font-size: var(--font-size-h3);
-        font-weight: 700;
-        color: var(--text-primary);
-        background: var(--accent-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .result-label {
-        font-size: var(--font-size-caption);
-        color: var(--text-muted);
-    }
-
-    .case-meta {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-xs);
-        margin-top: var(--space-sm);
-        padding-top: var(--space-sm);
-        border-top: 1px solid var(--border-color);
-    }
-
-    .case-meta-row {
-        display: flex;
-        align-items: center;
-        gap: var(--space-sm);
-    }
-
-    .case-meta-label {
-        font-size: var(--font-size-caption);
-        color: var(--text-muted);
-        min-width: 60px;
-    }
-
-    .case-card.hidden {
-        display: none;
-    }
 </style>
 
-<script>
-(function() {
-    const container = document.querySelector('.cases-block');
-    if (!container) return;
-
-    const filterGroups = container.querySelectorAll('.filter-group');
-    const cards = container.querySelectorAll('.case-card');
-
-    const activeFilters = {
-        service: 'all',
-        industry: 'all',
-        language: 'all'
-    };
-
-    function applyFilters() {
-        cards.forEach(card => {
-            const matchService = activeFilters.service === 'all' || card.dataset.service === activeFilters.service;
-            const matchIndustry = activeFilters.industry === 'all' || card.dataset.industry === activeFilters.industry;
-            const matchLanguage = activeFilters.language === 'all' || card.dataset.language === activeFilters.language;
-
-            if (matchService && matchIndustry && matchLanguage) {
-                card.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-    }
-
-    filterGroups.forEach(group => {
-        const buttons = group.querySelectorAll('.filter-btn');
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                buttons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const filterType = btn.dataset.filter;
-                const filterValue = btn.dataset.value;
-                activeFilters[filterType] = filterValue;
-
-                applyFilters();
-            });
-        });
-    });
-})();
-</script>

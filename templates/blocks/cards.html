@@ -19,7 +19,11 @@
         {% else %}
         <div class="cards-item">
         {% endif %}
-            {% if card.icon %}
+            {% if card.flag %}
+            <span class="cards-icon cards-flag">{{ card.flag }}</span>
+            {% elif card.code %}
+            <span class="cards-icon cards-code">{{ card.code }}</span>
+            {% elif card.icon %}
             <span class="cards-icon">{% if card.icon | length > 2 %}{{ icon(card.icon, 28) }}{% else %}{{ card.icon }}{% endif %}</span>
             {% endif %}
             <h3>{{ card.title }}</h3>
@@ -74,6 +78,23 @@
     font-weight: 600;
     color: var(--accent);
     margin-bottom: var(--space-md);
+}
+
+.cards-flag {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+}
+
+.cards-code {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    border-color: var(--accent-primary);
 }
 
 .cards-item h3 {

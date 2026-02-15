@@ -2,7 +2,7 @@
 
 [config]
 lang = "en"
-url = "/languages"
+url = "languages"
 slug = "languages"
 collection = "languages"
 is_listing = true
@@ -10,7 +10,7 @@ menu = "Languages"
 
 [meta]
 title = "Services by Language"
-description = "Multilingual digital marketing services. English, German, French, Spanish, Russian, Chinese."
+description = "Multilingual digital marketing services. English, German, French, Spanish, Russian, Chinese, Japanese."
 keywords = ["multilingual services", "language services", "translation"]
 
 [hero]
@@ -19,35 +19,61 @@ h1 = "Services by Language"
 subtitle = "Multilingual expertise"
 text = "Reach global audiences with native-quality content in their language."
 
-[cards]
-columns = 3
+[catalog]
+source = "languages"
+count_label = "languages"
+tag = "catalog"
+title = "All Languages"
+subtitle = "Multilingual expertise"
 
-[[cards.cards]]
-title = "🇩🇪 German"
-description = "Native German content for DACH markets."
-url = "languages/german"
+# Sidebar
+[sidebar]
+title = "Filter Languages"
+cta_label = "Browse Services"
+cta_url = "services"
 
-[[cards.cards]]
-title = "🇫🇷 French"
-description = "French content for France, Belgium, Switzerland, Canada."
-url = "languages/french"
+[[sidebar.filters]]
+name = "categories"
+label = "Category"
+all_label = "All Categories"
+options = [
+    { value = "seo", label = "SEO" },
+    { value = "aeo", label = "AEO" },
+    { value = "digital-marketing", label = "Digital Marketing" },
+    { value = "content", label = "Content Marketing" },
+    { value = "social-media", label = "Social Media" },
+    { value = "ppc", label = "PPC" },
+    { value = "email", label = "Email Marketing" },
+    { value = "analytics", label = "Analytics & Data" },
+    { value = "cro", label = "CRO" },
+    { value = "video", label = "Video Marketing" },
+    { value = "pr", label = "Public Relations" },
+    { value = "automation", label = "Marketing Automation" },
+    { value = "ecommerce", label = "E-commerce" },
+    { value = "affiliate", label = "Affiliate Marketing" },
+]
 
-[[cards.cards]]
-title = "🇪🇸 Spanish"
-description = "Spanish for Spain and Latin America."
-url = "languages/spanish"
+[[sidebar.filters]]
+name = "industries"
+label = "Industry"
+all_label = "All Industries"
+options = [
+    { value = "ecommerce", label = "E-commerce" },
+    { value = "saas", label = "SaaS" },
+    { value = "fintech", label = "Fintech" },
+    { value = "healthcare", label = "Healthcare" },
+]
 
-[[cards.cards]]
-title = "🇷🇺 Russian"
-description = "Russian content for CIS markets."
-url = "languages/russian"
+[[sidebar.filters]]
+name = "countries"
+label = "Country"
+all_label = "All Countries"
+options = [
+    { value = "germany", label = "Germany" },
+    { value = "austria", label = "Austria" },
+    { value = "france", label = "France" },
+    { value = "usa", label = "USA" },
+    { value = "uk", label = "UK" },
+]
 
-[[cards.cards]]
-title = "🇨🇳 Chinese"
-description = "Simplified and Traditional Chinese."
-url = "languages/chinese"
-
-[[cards.cards]]
-title = "🇯🇵 Japanese"
-description = "Japanese content and market adaptation."
-url = "languages/japanese"
+reset_label = "Reset Filters"

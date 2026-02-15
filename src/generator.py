@@ -39,6 +39,10 @@ class Generator:
         with open(icon_path, 'r', encoding='utf-8') as f:
             svg = f.read()
 
+        # Strip width/height from <svg> tag only (not from inner elements like <rect>)
+        svg = re.sub(r'(<svg[^>]*?)\s+width="[^"]*"', r'\1', svg, count=1)
+        svg = re.sub(r'(<svg[^>]*?)\s+height="[^"]*"', r'\1', svg, count=1)
+
         # Add size and class
         svg = re.sub(
             r'<svg([^>]*)>',
@@ -53,8 +57,10 @@ class Generator:
             import random
             uid = f"icon-grad-{random.randint(1000, 9999)}"
 
-            # Add gradient definition and apply it
-            gradient_def = f'''<defs><linearGradient id="{uid}" x1="0%" y1="0%" x2="100%" y2="100%">
+            # Add gradient definition — use userSpaceOnUse to avoid degenerate
+            # bounding boxes on vertical/horizontal lines (zero-width/height bbox
+            # makes objectBoundingBox gradients invisible)
+            gradient_def = f'''<defs><linearGradient id="{uid}" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs>'''

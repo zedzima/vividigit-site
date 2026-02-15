@@ -169,11 +169,24 @@ def build_navigation(pages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     Build navigation tree from parsed pages.
     Returns hierarchical structure for menu rendering.
     """
-    nav = []
     collections = {}
+    top_pages = {}  # url -> nav item
 
-    # Define collection order (customize as needed)
-    COLLECTION_ORDER = ["blog", "services", "team", "cases", "solutions", "industries", "categories", "countries", "languages"]
+    # Ordered nav: top-level pages + collections in exact order
+    # Collections not listed here are excluded from nav (e.g. blocks)
+    NAV_ORDER = [
+        "/",            # Home
+        "services",     # collection
+        "categories",   # collection
+        "solutions",    # collection
+        "cases",        # collection
+        "team",         # collection
+        "industries",   # collection
+        "countries",    # collection
+        "languages",    # collection
+        "blog",         # collection
+        "contact",      # collection
+    ]
 
     for page in pages:
         url = page.get("url", "/")
@@ -191,31 +204,26 @@ def build_navigation(pages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 collections[collection]["items"].append({"url": url, "menu": menu})
         else:
             # Top-level page
-            nav.append({"url": url, "menu": menu, "children": []})
+            top_pages[url] = {"url": url, "menu": menu, "children": []}
 
-    # Add collections to nav in specified order
-    # First add collections that are in COLLECTION_ORDER
-    for coll_name in COLLECTION_ORDER:
-        if coll_name in collections:
-            coll_data = collections[coll_name]
-            listing = coll_data["listing"]
-            if listing:
-                nav.append({
-                    "url": listing["url"],
-                    "menu": listing["menu"],
-                    "children": coll_data["items"]
-                })
-
-    # Then add any remaining collections not in COLLECTION_ORDER
-    for coll_name, coll_data in collections.items():
-        if coll_name not in COLLECTION_ORDER:
-            listing = coll_data["listing"]
-            if listing:
-                nav.append({
-                    "url": listing["url"],
-                    "menu": listing["menu"],
-                    "children": coll_data["items"]
-                })
+    # Build nav in exact NAV_ORDER
+    nav = []
+    for entry in NAV_ORDER:
+        if entry.startswith("/"):
+            # Top-level page by URL
+            if entry in top_pages:
+                nav.append(top_pages[entry])
+        else:
+            # Collection by name
+            if entry in collections:
+                coll_data = collections[entry]
+                listing = coll_data["listing"]
+                if listing:
+                    nav.append({
+                        "url": listing["url"],
+                        "menu": listing["menu"],
+                        "children": coll_data["items"]
+                    })
 
     return nav
 
@@ -381,11 +389,17 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
             }
         }
 
-        # Include rating and price if available
+        # Include rating, price, and delivery type if available
         if config.get("rating"):
             entry["rating"] = config["rating"]
         if config.get("price"):
             entry["from_price"] = config["price"]
+        if config.get("delivery"):
+            entry["delivery"] = config["delivery"]
+
+        # Count specialists linked to this service
+        rels = data.get("relationships", {})
+        entry["specialist_count"] = len(rels.get("specialists", []))
 
         services.append(entry)
 
@@ -442,22 +456,239 @@ def export_team_index(parsed_pages: List[Dict], output_dir: str):
             "title": data.get("meta", {}).get("title", ""),
             "description": data.get("meta", {}).get("description", ""),
             "role": sidebar.get("role", ""),
+            "avatar": config.get("avatar", ""),
             "rating": sidebar.get("rating"),
             "projects": sidebar.get("projects"),
             "hourly_rate": sidebar.get("hourly_rate"),
-            "relationships": {
-                "tasks": relationships.get("tasks", []),
-                "languages": relationships.get("languages", []),
-                "countries": relationships.get("countries", []),
-                "cases": relationships.get("cases", [])
-            }
+            "languages": relationships.get("languages", []),
+            "countries": relationships.get("countries", []),
+            "tasks": relationships.get("tasks", []),
+            "cases": relationships.get("cases", []),
+            "services": [],
+            "categories": [],
+            "industries": [],
         })
+
+    # Derive categories/industries/services for each specialist from service pages
+    for spec in specialists:
+        spec_categories = set()
+        spec_industries = set()
+        spec_services = set()
+        for page in parsed_pages:
+            pdata = page.get("data", {})
+            pconfig = pdata.get("config", {})
+            prels = pdata.get("relationships", {})
+            if pconfig.get("type") == "service" and pconfig.get("slug"):
+                if spec["slug"] in prels.get("specialists", []):
+                    spec_services.add(pconfig["slug"])
+                    ptags = pdata.get("tags", {})
+                    spec_categories.update(ptags.get("categories", []))
+                    spec_industries.update(ptags.get("industries", []))
+        spec["services"] = list(spec_services)
+        spec["categories"] = list(spec_categories)
+        spec["industries"] = list(spec_industries)
 
     json_path = os.path.join(json_dir, "team.json")
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump({"specialists": specialists}, f, indent=2, ensure_ascii=False)
 
     print(f"  Exported: {json_path} ({len(specialists)} specialists)")
+
+
+def export_categories_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str):
+    """
+    Export enriched categories index for catalog rendering.
+
+    Creates public/data/categories-index.json
+    """
+    json_dir = os.path.join(output_dir, "data")
+    os.makedirs(json_dir, exist_ok=True)
+
+    categories = []
+
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+
+        if config.get("type") != "category" and config.get("collection") != "categories":
+            continue
+        if page.get("is_listing"):
+            continue
+        if not config.get("slug"):
+            continue
+
+        slug = config["slug"]
+        service_count = len(tag_index.get("categories", {}).get(slug, []))
+
+        categories.append({
+            "slug": slug,
+            "url": config.get("url", ""),
+            "title": data.get("meta", {}).get("title", ""),
+            "description": data.get("meta", {}).get("description", ""),
+            "menu": config.get("menu", ""),
+            "door_opener_price": config.get("door_opener_price"),
+            "service_count": service_count,
+        })
+
+    json_path = os.path.join(json_dir, "categories-index.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"categories": categories}, f, indent=2, ensure_ascii=False)
+
+    print(f"  Exported: {json_path} ({len(categories)} categories)")
+
+
+def export_solutions_index(parsed_pages: List[Dict], output_dir: str):
+    """
+    Export enriched solutions index for catalog rendering.
+
+    Creates public/data/solutions-index.json
+    """
+    json_dir = os.path.join(output_dir, "data")
+    os.makedirs(json_dir, exist_ok=True)
+
+    solutions = []
+
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+
+        if config.get("type") != "solution" and config.get("collection") != "solutions":
+            continue
+        if page.get("is_listing"):
+            continue
+        if not config.get("slug"):
+            continue
+
+        links = data.get("links", {})
+
+        # Extract starting price from pricing block
+        starting_price = None
+        for block in data.get("blocks", []):
+            if block.get("type") == "pricing":
+                packages = block.get("data", {}).get("packages", [])
+                if packages:
+                    prices = [p.get("price", 0) for p in packages if p.get("price")]
+                    if prices:
+                        starting_price = min(prices)
+                break
+
+        solutions.append({
+            "slug": config["slug"],
+            "url": config.get("url", ""),
+            "title": data.get("meta", {}).get("title", ""),
+            "description": data.get("meta", {}).get("description", ""),
+            "service": links.get("service", ""),
+            "industry": links.get("industry", ""),
+            "starting_price": starting_price,
+        })
+
+    json_path = os.path.join(json_dir, "solutions-index.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"solutions": solutions}, f, indent=2, ensure_ascii=False)
+
+    print(f"  Exported: {json_path} ({len(solutions)} solutions)")
+
+
+def export_industries_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str):
+    """Export enriched industries index. Creates public/data/industries-index.json"""
+    json_dir = os.path.join(output_dir, "data")
+    os.makedirs(json_dir, exist_ok=True)
+
+    items = []
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+        if config.get("type") != "industry":
+            continue
+        if page.get("is_listing") or not config.get("slug"):
+            continue
+        slug = config["slug"]
+        service_count = len(tag_index.get("industries", {}).get(slug, []))
+        items.append({
+            "slug": slug,
+            "url": config.get("url", ""),
+            "title": data.get("meta", {}).get("title", ""),
+            "description": data.get("meta", {}).get("description", ""),
+            "menu": config.get("menu", ""),
+            "icon": config.get("icon", ""),
+            "service_count": service_count,
+        })
+
+    json_path = os.path.join(json_dir, "industries-index.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"industries": items}, f, indent=2, ensure_ascii=False)
+    print(f"  Exported: {json_path} ({len(items)} industries)")
+
+
+def export_countries_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str):
+    """Export enriched countries index. Creates public/data/countries-index.json"""
+    json_dir = os.path.join(output_dir, "data")
+    os.makedirs(json_dir, exist_ok=True)
+
+    items = []
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+        if config.get("type") != "country":
+            continue
+        if page.get("is_listing") or not config.get("slug"):
+            continue
+        slug = config["slug"]
+        service_count = len(tag_index.get("countries", {}).get(slug, []))
+        items.append({
+            "slug": slug,
+            "url": config.get("url", ""),
+            "title": data.get("meta", {}).get("title", ""),
+            "description": data.get("meta", {}).get("description", ""),
+            "menu": config.get("menu", ""),
+            "flag": config.get("flag", ""),
+            "service_count": service_count,
+        })
+
+    json_path = os.path.join(json_dir, "countries-index.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"countries": items}, f, indent=2, ensure_ascii=False)
+    print(f"  Exported: {json_path} ({len(items)} countries)")
+
+
+def export_languages_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str):
+    """Export enriched languages index. Creates public/data/languages-index.json"""
+    json_dir = os.path.join(output_dir, "data")
+    os.makedirs(json_dir, exist_ok=True)
+
+    items = []
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+        if config.get("type") != "language":
+            continue
+        if page.get("is_listing") or not config.get("slug"):
+            continue
+        slug = config["slug"]
+        service_count = len(tag_index.get("languages", {}).get(slug, []))
+        items.append({
+            "slug": slug,
+            "url": config.get("url", ""),
+            "title": data.get("meta", {}).get("title", ""),
+            "description": data.get("meta", {}).get("description", ""),
+            "menu": config.get("menu", ""),
+            "flag": config.get("flag", ""),
+            "code": (langCodeMap.get(slug) or slug[:2].upper()),
+            "service_count": service_count,
+        })
+
+    json_path = os.path.join(json_dir, "languages-index.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"languages": items}, f, indent=2, ensure_ascii=False)
+    print(f"  Exported: {json_path} ({len(items)} languages)")
+
+
+# Language code lookup for export
+langCodeMap = {
+    'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES',
+    'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT',
+    'portuguese': 'PT',
+}
 
 
 def export_cases_index(parsed_pages: List[Dict], output_dir: str):
@@ -470,6 +701,15 @@ def export_cases_index(parsed_pages: List[Dict], output_dir: str):
     os.makedirs(json_dir, exist_ok=True)
 
     cases = []
+
+    # Build service -> categories lookup for deriving case categories
+    service_categories = {}
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+        if config.get("type") == "service" and config.get("slug"):
+            tags = data.get("tags", {})
+            service_categories[config["slug"]] = tags.get("categories", [])
 
     for page in parsed_pages:
         data = page.get("data", {})
@@ -485,18 +725,38 @@ def export_cases_index(parsed_pages: List[Dict], output_dir: str):
 
         relationships = data.get("relationships", {})
 
+        # Extract results from hero stats or dedicated results field
+        results = []
+        hero_data = next(
+            (b["data"] for b in data.get("blocks", []) if b.get("type") == "hero"),
+            {}
+        )
+        if hero_data.get("stats"):
+            results = [
+                {"value": s.get("value", ""), "label": s.get("label", "")}
+                for s in hero_data["stats"]
+            ]
+
+        # Derive categories from services_used
+        services_used = relationships.get("services_used", [])
+        case_categories = set()
+        for svc_slug in services_used:
+            case_categories.update(service_categories.get(svc_slug, []))
+
         cases.append({
             "slug": config.get("slug", ""),
             "url": config.get("url", ""),
             "title": data.get("meta", {}).get("title", ""),
             "description": data.get("meta", {}).get("description", ""),
-            "relationships": {
-                "industry": relationships.get("industry", ""),
-                "country": relationships.get("country", ""),
-                "services_used": relationships.get("services_used", []),
-                "tasks_used": relationships.get("tasks_used", []),
-                "specialists": relationships.get("specialists", [])
-            }
+            "client": config.get("client", ""),
+            "image": config.get("image", ""),
+            "industry": relationships.get("industry", ""),
+            "country": relationships.get("country", ""),
+            "language": relationships.get("language", ""),
+            "services": services_used,
+            "categories": sorted(case_categories),
+            "specialists": relationships.get("specialists", []),
+            "results": results,
         })
 
     json_path = os.path.join(json_dir, "cases.json")
@@ -506,19 +766,228 @@ def export_cases_index(parsed_pages: List[Dict], output_dir: str):
     print(f"  Exported: {json_path} ({len(cases)} cases)")
 
 
+###############################################################################
+# Phase 2: Relationship Graph
+###############################################################################
+
+def build_relationship_graph(parsed_pages: List[Dict]) -> Dict[str, Dict]:
+    """
+    Build bidirectional relationship graph from all parsed pages.
+
+    Returns dict keyed by slug with node info and relationships.
+    """
+    graph = {}
+
+    # First pass: register all nodes
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+        slug = config.get("slug", "")
+        if not slug or page.get("is_listing"):
+            continue
+
+        graph[slug] = {
+            "type": config.get("type", config.get("collection", "")),
+            "url": config.get("url", ""),
+            "title": data.get("meta", {}).get("title", ""),
+            "description": data.get("meta", {}).get("description", ""),
+            "relationships": data.get("relationships", {}),
+        }
+
+    # Second pass: no reverse index needed — we resolve forward relationships
+    # directly against the graph at render time.
+    return graph
+
+
+def resolve_related_entities(parsed_pages: List[Dict], graph: Dict[str, Dict]):
+    """
+    Auto-populate related-entities blocks from relationship graph.
+
+    If a related-entities block has a `source` field (e.g., source = "specialists")
+    but no manual `items`, populate items from the page's relationships.
+    """
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+        slug = config.get("slug", "")
+
+        for block in data.get("blocks", []):
+            if block["type"] != "related-entities":
+                continue
+            if block["data"].get("items"):
+                continue  # Manual items take precedence
+            source = block["data"].get("source", "")
+            if not source:
+                # Ensure items key exists to avoid Jinja2 dict.items() conflict
+                block["data"].setdefault("items", [])
+                continue
+
+            if slug not in graph:
+                block["data"]["items"] = []
+                continue
+
+            page_rels = graph[slug].get("relationships", {})
+            related_slugs = page_rels.get(source, [])
+            if isinstance(related_slugs, str):
+                related_slugs = [related_slugs]
+
+            items = []
+            for rel_slug in related_slugs:
+                node = graph.get(rel_slug)
+                if node:
+                    items.append({
+                        "title": node["title"],
+                        "url": node["url"],
+                        "description": node["description"],
+                        "badge": node.get("type", ""),
+                    })
+
+            block["data"]["items"] = items
+
+
+def export_relationship_graph(graph: Dict[str, Dict], output_dir: str):
+    """Export relationship graph as JSON for client-side use."""
+    json_dir = os.path.join(output_dir, "data")
+    os.makedirs(json_dir, exist_ok=True)
+
+    nodes = {}
+    edges = []
+
+    for slug, node in graph.items():
+        nodes[slug] = {
+            "type": node["type"],
+            "title": node["title"],
+            "url": node["url"],
+        }
+        for rel_type, targets in node.get("relationships", {}).items():
+            if isinstance(targets, str):
+                targets = [targets]
+            for target in targets:
+                if isinstance(target, str):
+                    edges.append({"from": slug, "to": target, "type": rel_type})
+
+    json_path = os.path.join(json_dir, "graph.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump({"nodes": nodes, "edges": edges}, f, indent=2, ensure_ascii=False)
+
+    print(f"  Exported: {json_path} ({len(nodes)} nodes, {len(edges)} edges)")
+
+
+###############################################################################
+# Phase 3: Task Normalization
+###############################################################################
+
+TASKS_DIR = os.path.join(CONTENT_DIR, "_tasks")
+
+
+def load_tasks(tasks_dir: str, lang: str) -> Dict[str, Dict]:
+    """
+    Load task definitions from _tasks/ directory.
+
+    Returns dict keyed by task slug with task-picker-compatible data.
+    """
+    tasks = {}
+    if not os.path.exists(tasks_dir):
+        return tasks
+
+    for item in os.listdir(tasks_dir):
+        item_path = os.path.join(tasks_dir, item)
+        if not os.path.isdir(item_path):
+            continue
+
+        for f in os.listdir(item_path):
+            if f".{lang}." in f and (f.endswith('.toml') or f.endswith('.md')):
+                filepath = os.path.join(item_path, f)
+                data = load_file(filepath)
+                config = data.get("config", {})
+                meta = data.get("meta", {})
+                sidebar = data.get("sidebar", {})
+
+                slug = config.get("slug", item)
+
+                # Extract deliverables from features block if present
+                deliverables = []
+                for block in data.get("blocks", []):
+                    if block["type"] == "features":
+                        for feat in block["data"].get("features", []):
+                            deliverables.append(feat.get("title", ""))
+
+                # Build tiers from sidebar
+                tiers = []
+                for tier in sidebar.get("tiers", []):
+                    tiers.append({
+                        "name": tier.get("name", ""),
+                        "label": tier.get("label", ""),
+                        "price": tier.get("price", 0),
+                    })
+
+                tasks[slug] = {
+                    "slug": slug,
+                    "title": meta.get("title", "").split("—")[0].split("–")[0].strip(),
+                    "description": meta.get("description", ""),
+                    "delivery_type": config.get("delivery_type", "one-time"),
+                    "unit_type": sidebar.get("unit_type", ""),
+                    "door_opener": config.get("door_opener", False),
+                    "deliverables": deliverables,
+                    "tiers": tiers,
+                }
+                break
+
+    return tasks
+
+
+def resolve_task_pickers(parsed_pages: List[Dict], tasks: Dict[str, Dict]):
+    """
+    Auto-populate task-picker blocks from loaded tasks.
+
+    Supports:
+    - auto_tasks = ["site-audit", ...] → fill tasks from _tasks/
+    - Inline task definitions still override (backward compatible)
+    """
+    for page in parsed_pages:
+        data = page.get("data", {})
+
+        for block in data.get("blocks", []):
+            if block["type"] != "task-picker":
+                continue
+
+            block_data = block["data"]
+            auto_slugs = block_data.get("auto_tasks", [])
+
+            if auto_slugs and not block_data.get("tasks"):
+                # Auto-populate from _tasks/
+                block_data["tasks"] = [
+                    tasks[s] for s in auto_slugs if s in tasks
+                ]
+
+            # Enrich existing slug-only references
+            if block_data.get("tasks"):
+                enriched = []
+                for task in block_data["tasks"]:
+                    if isinstance(task, str):
+                        if task in tasks:
+                            enriched.append(tasks[task])
+                    elif isinstance(task, dict):
+                        task_slug = task.get("slug", "")
+                        if task_slug in tasks and not task.get("tiers"):
+                            # Merge: inline overrides _tasks defaults
+                            base = tasks[task_slug].copy()
+                            base.update({k: v for k, v in task.items() if v})
+                            enriched.append(base)
+                        else:
+                            enriched.append(task)
+                    else:
+                        enriched.append(task)
+                block_data["tasks"] = enriched
+
+
 def get_page_blocks(data: Dict[str, Any]) -> set:
     """Extract block names used in a page's data."""
-    # System sections that are NOT content blocks
-    # blocks = processed list of block objects (handled by generator)
-    # sidebar = layout configuration (handled by generator)
-    # tags = faceted catalog tags (handled by generator)
-    # links = solution links to parent pillars (handled by generator)
-    system_sections = {"config", "meta", "stats", "changes", "translations", "blocks", "sidebar", "tags", "links", "relationships"}
     blocks = set()
-    for key in data.keys():
-        if key not in system_sections:
-            # Normalize: services_grid → services-grid for template matching
-            blocks.add(key.replace('_', '-'))
+    for block in data.get("blocks", []):
+        block_type = block.get("type", "")
+        if block_type:
+            blocks.add(block_type.replace('_', '-'))
     return blocks
 
 
@@ -592,6 +1061,14 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
         site_config["site"]["base_url"] = "/"
 
     base_url = site_config.get("site", {}).get("base_url", "/")
+
+    # For non-default languages, build to public/{lang}/ subdirectory
+    output_dir = OUTPUT_DIR
+    if lang != DEFAULT_LANG:
+        output_dir = os.path.join(OUTPUT_DIR, lang)
+        os.makedirs(output_dir, exist_ok=True)
+        print(f"Output: {output_dir}")
+
     print(f"Base URL: {base_url}")
 
     # Validate block templates and demos
@@ -607,7 +1084,7 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
         print(f"  ⚠ {warning}")
 
     # Initialize generator
-    gen = Generator(TEMPLATE_DIR, OUTPUT_DIR, site_config)
+    gen = Generator(TEMPLATE_DIR, output_dir, site_config)
 
     # Find all content files for this language
     print(f"\nScanning {CONTENT_DIR}/ for .{lang}. files...")
@@ -670,6 +1147,21 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
         for err in block_errors:
             print(f"  ✗ {err}")
 
+    # Build relationship graph (Phase 2)
+    print("\nBuilding relationship graph...")
+    graph = build_relationship_graph(parsed_pages)
+    print(f"  {len(graph)} nodes")
+
+    # Resolve related-entities blocks from graph (Phase 2)
+    resolve_related_entities(parsed_pages, graph)
+
+    # Load tasks and resolve task-picker blocks (Phase 3)
+    print("\nLoading tasks...")
+    tasks = load_tasks(TASKS_DIR, lang)
+    if tasks:
+        print(f"  Loaded {len(tasks)} tasks from _tasks/")
+        resolve_task_pickers(parsed_pages, tasks)
+
     # Build navigation
     print("\nBuilding navigation...")
     navigation = build_navigation(parsed_pages)
@@ -710,7 +1202,7 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
     # Export collections to JSON
     print("\nExporting collections...")
     for coll_name, items in collections.items():
-        export_collection_json(coll_name, items, OUTPUT_DIR)
+        export_collection_json(coll_name, items, output_dir)
 
     # Build tag index for faceted navigation
     print("\nBuilding tag index...")
@@ -721,27 +1213,53 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
 
     # Export services index for client-side filtering
     print("\nExporting services index...")
-    export_services_index(parsed_pages, tag_index, OUTPUT_DIR)
+    export_services_index(parsed_pages, tag_index, output_dir)
 
     # Export team index
     print("\nExporting team index...")
-    export_team_index(parsed_pages, OUTPUT_DIR)
+    export_team_index(parsed_pages, output_dir)
 
     # Export cases index
     print("\nExporting cases index...")
-    export_cases_index(parsed_pages, OUTPUT_DIR)
+    export_cases_index(parsed_pages, output_dir)
 
-    # Copy assets
-    print("\nCopying assets...")
-    copy_assets(ASSETS_DIR, OUTPUT_DIR)
+    # Export categories index
+    print("\nExporting categories index...")
+    export_categories_index(parsed_pages, tag_index, output_dir)
+
+    # Export solutions index
+    print("\nExporting solutions index...")
+    export_solutions_index(parsed_pages, output_dir)
+
+    # Export industries index
+    print("\nExporting industries index...")
+    export_industries_index(parsed_pages, tag_index, output_dir)
+
+    # Export countries index
+    print("\nExporting countries index...")
+    export_countries_index(parsed_pages, tag_index, output_dir)
+
+    # Export languages index
+    print("\nExporting languages index...")
+    export_languages_index(parsed_pages, tag_index, output_dir)
+
+    # Export relationship graph (Phase 2)
+    print("\nExporting relationship graph...")
+    export_relationship_graph(graph, output_dir)
+
+    # Copy assets (only for default language — shared)
+    if lang == DEFAULT_LANG:
+        print("\nCopying assets...")
+        copy_assets(ASSETS_DIR, output_dir)
 
     # Generate sitemap.xml
     print("\nGenerating sitemap.xml...")
-    generate_sitemap(parsed_pages, site_config, OUTPUT_DIR)
+    generate_sitemap(parsed_pages, site_config, output_dir)
 
     # Generate robots.txt
-    print("Generating robots.txt...")
-    generate_robots(site_config, OUTPUT_DIR)
+    if lang == DEFAULT_LANG:
+        print("Generating robots.txt...")
+        generate_robots(site_config, output_dir)
 
     # Summary
     print("\n" + "=" * 50)
@@ -754,10 +1272,31 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
         print(f"Block errors: {total_errors} (missing templates)")
 
 
+def build_all_languages(local: bool = False):
+    """Build site for all available languages."""
+    langs = set()
+    for root, dirs, files in os.walk(CONTENT_DIR):
+        dirs[:] = [d for d in dirs if not d.startswith('.') and not d.startswith('_')]
+        for f in files:
+            parts = f.split('.')
+            if len(parts) >= 3:
+                lang = parts[-2]
+                if len(lang) == 2:
+                    langs.add(lang)
+
+    print(f"Detected languages: {sorted(langs)}")
+    for lang in sorted(langs):
+        main(lang, local=local)
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Build static site")
     parser.add_argument("lang", nargs="?", default=DEFAULT_LANG, help="Language code (default: en)")
     parser.add_argument("--local", action="store_true", help="Build for local development (base_url=/)")
+    parser.add_argument("--all", action="store_true", help="Build all detected languages")
     args = parser.parse_args()
-    main(args.lang, local=args.local)
+    if args.all:
+        build_all_languages(local=args.local)
+    else:
+        main(args.lang, local=args.local)

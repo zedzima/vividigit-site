@@ -90,16 +90,16 @@
     {# Icon mapping for navigation items #}
     {% set nav_icons = {
         '/': 'home',
-        '/blog': 'document',
         '/services': 'layers',
-        '/team': 'users',
+        '/categories': 'folder',
+        '/solutions': 'rocket',
         '/cases': 'award',
-        '/blocks': 'puzzle',
+        '/team': 'users',
         '/industries': 'target',
-        '/categories': 'content',
         '/countries': 'globe',
         '/languages': 'translate',
-        '/solutions': 'rocket'
+        '/blog': 'document',
+        '/contact': 'mail'
     } %}
 
     <div class="layout">
@@ -114,8 +114,8 @@
                        class="icon-bar-link {% if config.url == item.url or (item.children and config.url.startswith(item.url + '/')) %}active{% endif %}"
                        data-nav-index="{{ loop.index0 }}"
                        title="{{ item.menu }}">
-                        {{ icon(item_icon, 22, false) }}
-                        <span class="icon-bar-label">{% if item.menu|length > 6 %}{{ item.menu[:5] }}.{% else %}{{ item.menu }}{% endif %}</span>
+                        {{ icon(item_icon, 28, false) }}
+                        <span class="icon-bar-label">{% if item.menu|length > 9 %}{{ item.menu[:8] }}.{% else %}{{ item.menu }}{% endif %}</span>
                     </a>
                     {% endfor %}
                 </div>
@@ -123,11 +123,11 @@
                 <div class="icon-bar-bottom">
                     <!-- Theme Toggle -->
                     <button class="icon-bar-btn" id="themeToggleBtn" title="Theme">
-                        <span id="themeIcon">{{ icon('monitor', 22, false) }}</span>
+                        <span id="themeIcon">{{ icon('monitor', 28, false) }}</span>
                     </button>
                     <!-- Language Toggle -->
                     <button class="icon-bar-btn" id="langToggleBtn" title="Language">
-                        {{ icon('globe', 22, false) }}
+                        {{ icon('globe', 28, false) }}
                     </button>
                 </div>
             </div>
@@ -147,13 +147,19 @@
             </button>
         </div>
 
-        <!-- Language Dropdown (floating) -->
+        <!-- Language Dropdown (floating, dynamic from translations) -->
         <div class="floating-dropdown" id="langDropdownMenu">
-            <button class="dropdown-option active" data-lang="en">English</button>
+            {% set lang_labels = {'en': 'English', 'de': 'Deutsch', 'fr': 'Français', 'es': 'Español', 'ru': 'Русский', 'zh': '中文', 'ja': '日本語'} %}
+            {% set current_lang = config.lang | default('en') %}
+            <button class="dropdown-option active" data-lang="{{ current_lang }}">{{ lang_labels.get(current_lang, current_lang) }}</button>
+            {% for lang_code, lang_url in translations.items() %}
+            {% if lang_code != current_lang %}
+            <button class="dropdown-option" data-lang="{{ lang_code }}" onclick="window.location='{{ lang_url }}'">{{ lang_labels.get(lang_code, lang_code) }}</button>
+            {% endif %}
+            {% endfor %}
+            {% if not translations %}
             <button class="dropdown-option disabled" data-lang="de" disabled>Deutsch (soon)</button>
-            <button class="dropdown-option disabled" data-lang="fr" disabled>Français (soon)</button>
-            <button class="dropdown-option disabled" data-lang="es" disabled>Español (soon)</button>
-            <button class="dropdown-option disabled" data-lang="ru" disabled>Русский (soon)</button>
+            {% endif %}
         </div>
 
         <!-- Main Content -->
@@ -193,37 +199,34 @@
                     <div class="footer-column">
                         <h4>Company</h4>
                         <ul>
-                            <li><a href="about/">About Us</a></li>
-                            <li><a href="careers/">Careers</a></li>
-                            <li><a href="contact/">Contact</a></li>
+                            <li><a href="team/">Our Team</a></li>
+                            <li><a href="cases/">Case Studies</a></li>
                             <li><a href="blog/">Blog</a></li>
+                            <li><a href="blocks/">Block Library</a></li>
                         </ul>
                     </div>
                     <div class="footer-column">
                         <h4>Services</h4>
                         <ul>
-                            <li><a href="services/seo-audit/">SEO Audit</a></li>
+                            <li><a href="services/technical-seo/">Technical SEO</a></li>
                             <li><a href="services/ai-optimisation/">AI Optimization</a></li>
-                            <li><a href="services/content-strategy/">Content Strategy</a></li>
                             <li><a href="services/">All Services</a></li>
                         </ul>
                     </div>
                     <div class="footer-column">
-                        <h4>Resources</h4>
+                        <h4>Explore</h4>
                         <ul>
-                            <li><a href="docs/">Documentation</a></li>
-                            <li><a href="cases/">Case Studies</a></li>
-                            <li><a href="support/">Support</a></li>
-                            <li><a href="faq/">FAQ</a></li>
+                            <li><a href="categories/">Categories</a></li>
+                            <li><a href="industries/">Industries</a></li>
+                            <li><a href="countries/">Countries</a></li>
+                            <li><a href="languages/">Languages</a></li>
                         </ul>
                     </div>
                     <div class="footer-column">
-                        <h4>Legal</h4>
+                        <h4>Solutions</h4>
                         <ul>
-                            <li><a href="privacy/">Privacy Policy</a></li>
-                            <li><a href="terms/">Terms of Service</a></li>
-                            <li><a href="cookies/">Cookie Policy</a></li>
-                            <li><a href="gdpr/">GDPR</a></li>
+                            <li><a href="solutions/">All Solutions</a></li>
+                            <li><a href="solutions/seo-ecommerce/">SEO for E-commerce</a></li>
                         </ul>
                     </div>
                 </div>
@@ -267,82 +270,128 @@
                 <button class="btn btn-secondary btn-full btn-reset-filters">{{ sidebar.reset_label | default('Reset Filters') }}</button>
             </div>
 
-            {% elif sidebar.links %}
-            <!-- Navigation Links -->
+            {% if sidebar.cta_label %}
             <div class="widget">
-                <div class="widget-title">{{ sidebar.title | default('Navigation') }}</div>
-                {% for link in sidebar.links %}
-                <a href="{{ link.url }}" class="sidebar-link">{{ link.label }}</a>
-                {% endfor %}
+                <a href="{{ (sidebar.cta_url | default('services')).lstrip('/') }}" class="btn btn-primary btn-full">{{ sidebar.cta_label }}</a>
+                {% if sidebar.cta_text %}
+                <p class="widget-note">{{ sidebar.cta_text }}</p>
+                {% endif %}
             </div>
+            {% endif %}
 
             {% elif sidebar.type == 'specialist' %}
-            <!-- Specialist Profile Sidebar -->
-            <div class="widget">
-                <div class="widget-title">{{ sidebar.title | default('Specialist') }}</div>
-                {% if sidebar.role %}
-                <p class="widget-text">{{ sidebar.role }}</p>
+            <!-- Specialist Profile Card -->
+            <div class="widget widget-profile">
+                <div class="profile-name">{{ sidebar.title }}</div>
+                {% if sidebar.text %}
+                <div class="profile-role">{{ sidebar.text }}</div>
                 {% endif %}
             </div>
 
-            {% if sidebar.rating or sidebar.projects %}
+            {% if sidebar.stats %}
             <div class="widget widget-estimates">
                 <div class="estimates-grid">
-                    {% if sidebar.rating %}
+                    {% for stat in sidebar.stats %}
                     <div class="estimate-item">
-                        <div class="estimate-value">{{ sidebar.rating }}</div>
-                        <div class="estimate-label">Rating</div>
+                        <div class="estimate-value">{{ stat.value }}</div>
+                        <div class="estimate-label">{{ stat.label }}</div>
                     </div>
-                    {% endif %}
-                    {% if sidebar.projects %}
-                    <div class="estimate-item">
-                        <div class="estimate-value">{{ sidebar.projects }}</div>
-                        <div class="estimate-label">Projects</div>
-                    </div>
-                    {% endif %}
-                    {% if sidebar.hourly_rate %}
-                    <div class="estimate-item">
-                        <div class="estimate-value">${{ sidebar.hourly_rate | int }}</div>
-                        <div class="estimate-label">Hourly rate</div>
-                    </div>
-                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
             {% endif %}
 
             <div class="widget">
-                <a href="{{ (sidebar.button_url | default('#')).lstrip('/') }}" class="btn btn-primary btn-full">{{ sidebar.button_label | default('Book Consultation') }}</a>
+                <a href="{{ (sidebar.button_url | default('contact')).lstrip('/') }}" class="btn btn-primary btn-full btn-mb">{{ sidebar.button_label | default('Book Consultation') }}</a>
+                <button class="btn btn-secondary btn-full">Request Quote</button>
             </div>
 
-            {% elif config.type == 'case' %}
-            <!-- Case Study Sidebar -->
             <div class="widget">
-                <div class="widget-title">Related Services</div>
-                {% for svc in relationships.services_used | default([]) %}
-                <a href="services/{{ svc }}/" class="sidebar-link">{{ svc | replace('-', ' ') | title }}</a>
+                <div class="widget-title">Quick Contact</div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" rows="3" placeholder="Your message"></textarea>
+                </div>
+                <button class="btn btn-primary btn-full">Send</button>
+            </div>
+
+            {% elif sidebar.type == 'cta-contact' %}
+            <!-- Book Consultation + Quick Contact -->
+            <div class="widget">
+                <div class="widget-title">Book Consultation</div>
+                <p class="widget-text">{{ sidebar.text | default('Schedule a call to discuss your project.') }}</p>
+                <a href="{{ (sidebar.button_url | default('contact')).lstrip('/') }}" class="btn btn-primary btn-full btn-mb">{{ sidebar.button_label | default('Book Consultation') }}</a>
+                <button class="btn btn-secondary btn-full">Request Quote</button>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Quick Contact</div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" rows="3" placeholder="Your message"></textarea>
+                </div>
+                <button class="btn btn-primary btn-full">Send</button>
+            </div>
+
+            {% elif sidebar.type == 'full-form' %}
+            <!-- Full Contact Form -->
+            <div class="widget">
+                <div class="widget-title">{{ sidebar.title | default('Send Us a Message') }}</div>
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Your name" name="name">
+                </div>
+                <div class="form-group">
+                    <input type="tel" class="form-input" placeholder="Phone number" name="phone">
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Email address" name="email">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" rows="4" placeholder="Tell us about your project..." name="message"></textarea>
+                </div>
+                <div class="form-group">
+                    <select class="form-input" name="source">
+                        <option value="" disabled selected>How did you hear about us?</option>
+                        <option value="search">Search engine</option>
+                        <option value="social">Social media</option>
+                        <option value="referral">Referral</option>
+                        <option value="ad">Advertisement</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary btn-full">{{ sidebar.button_label | default('Send Message') }}</button>
+            </div>
+
+            {% elif sidebar.links %}
+            <!-- Navigation Links -->
+            <div class="widget">
+                <div class="widget-title">{{ sidebar.title | default('Navigation') }}</div>
+                {% for link in sidebar.links %}
+                <a href="{{ link.url }}" class="sidebar-link{% if config.url and link.url and config.url.strip('/') == link.url.strip('/') %} active{% endif %}">{{ link.label }}</a>
                 {% endfor %}
             </div>
-
+            {% if sidebar.cta_label %}
             <div class="widget">
-                <div class="widget-title">Specialist</div>
-                {% for spec in relationships.specialists | default([]) %}
-                <a href="team/{{ spec }}/" class="sidebar-link">{{ spec | replace('-', ' ') | title }}</a>
-                {% endfor %}
+                <a href="{{ (sidebar.cta_url | default('services')).lstrip('/') }}" class="btn btn-primary btn-full">{{ sidebar.cta_label }}</a>
+                {% if sidebar.cta_text %}
+                <p class="widget-note">{{ sidebar.cta_text }}</p>
+                {% endif %}
             </div>
-
-            <div class="widget">
-                <a href="cases/" class="btn btn-secondary btn-full">View All Cases</a>
-            </div>
+            {% endif %}
 
             {% elif sidebar.type == 'order-cart' %}
-            <!-- Order Cart (for service pages with task picker) -->
+            <!-- Order Cart -->
             <div class="widget">
                 <div class="widget-title">{{ sidebar.title | default('Your Order') }}</div>
             </div>
 
-            <!-- Cart Items (populated by JavaScript) -->
+            <!-- Cart Items (populated by JavaScript from task-picker or pricing) -->
             <div class="widget" id="cartItems">
-                <p class="cart-empty-msg">Select tasks below to build your order.</p>
+                <p class="cart-empty-msg">Select a package or tasks to build your order.</p>
             </div>
 
             <!-- Order Modifiers -->
@@ -413,30 +462,61 @@
             <div class="widget">
                 <div class="widget-title">Interested?</div>
                 <p class="widget-text">Contact us for pricing and details.</p>
-                <a href="contact/" class="btn btn-primary btn-full">Get Quote</a>
+                <a href="services/" class="btn btn-primary btn-full">Get Quote</a>
             </div>
+
+            {% elif config.toc %}
+            <!-- Table of Contents Sidebar (blog posts) -->
+            <div class="widget">
+                <div class="widget-title">In This Article</div>
+                <nav class="sidebar-toc">{{ config.toc | safe }}</nav>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Quick Contact</div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" rows="3" placeholder="Your message"></textarea>
+                </div>
+                <button class="btn btn-primary btn-full">Send</button>
+            </div>
+
+            <style>
+            .sidebar-toc .toc { list-style: none; padding: 0; margin: 0; }
+            .sidebar-toc .toc ul { list-style: none; padding: 0 0 0 0.75rem; margin: 0; }
+            .sidebar-toc .toc li { margin-bottom: 0.125rem; }
+            .sidebar-toc .toc a {
+                color: var(--text-muted);
+                text-decoration: none;
+                font-size: 0.8125rem;
+                line-height: 1.5;
+                display: block;
+                padding: 0.15rem 0;
+                transition: color 0.15s;
+            }
+            .sidebar-toc .toc a:hover { color: var(--accent); }
+            </style>
 
             {% elif config.collection == 'blog' %}
-            <!-- Blog Sidebar -->
+            <!-- Blog Listing Sidebar -->
             <div class="widget">
-                <div class="widget-title">Related Services</div>
-                <a href="services/ai-optimisation/" class="sidebar-link">AI Visibility Audit</a>
-                <a href="services/seo-audit/" class="sidebar-link">SEO Audit & Strategy</a>
-                <a href="services/content-strategy/" class="sidebar-link">Content Strategy</a>
+                <div class="widget-title">Book Consultation</div>
+                <p class="widget-text">Have a question about our services? Let's talk.</p>
+                <a href="contact/" class="btn btn-primary btn-full btn-mb">Book Consultation</a>
+                <button class="btn btn-secondary btn-full">Request Quote</button>
             </div>
 
             <div class="widget">
-                <div class="widget-title">Categories</div>
-                <a href="blog/?category=seo" class="sidebar-link">SEO</a>
-                <a href="blog/?category=ai" class="sidebar-link">AI & LLMs</a>
-                <a href="blog/?category=content" class="sidebar-link">Content</a>
-                <a href="blog/?category=analytics" class="sidebar-link">Analytics</a>
-            </div>
-
-            <div class="widget">
-                <div class="widget-title">Explore Services</div>
-                <p class="widget-text">Ready to improve your visibility?</p>
-                <a href="services/" class="btn btn-primary btn-full">Browse Services</a>
+                <div class="widget-title">Quick Contact</div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" rows="3" placeholder="Your message"></textarea>
+                </div>
+                <button class="btn btn-primary btn-full">Send</button>
             </div>
 
             {% else %}

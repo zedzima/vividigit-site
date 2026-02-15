@@ -1,49 +1,13 @@
-<!-- Catalog Block (Services Grid with client-side filtering) -->
-<section class="catalog-block">
-    {% if data.title %}
-    <div class="catalog-header">
-        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
-        <h1>{{ data.title }}</h1>
-        {% if data.subtitle %}
-        <p class="catalog-subtitle">{{ data.subtitle }}</p>
-        {% endif %}
-    </div>
-    {% endif %}
-
-    <div class="catalog-toolbar">
-        <div class="catalog-count">
-            <span id="resultsCount">0</span> services found
-        </div>
-        <div class="catalog-sort">
-            <select id="sortBy" class="form-input">
-                <option value="popular">Popular</option>
-                <option value="rating">Highest Rated</option>
-                <option value="name">A-Z</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="catalog-grid" id="catalogGrid">
-        <div class="catalog-loading">Loading services...</div>
-    </div>
-</section>
+<!-- Universal Catalog Block: Filterable entity grid -->
+{% set source = data.source | default('services') %}
+{% set count_label = data.count_label | default('services found') %}
 
 <style>
-.catalog-block {
-    padding: var(--space-lg) 0;
-}
-
-.catalog-header {
-    margin-bottom: var(--space-xl);
-}
-
-.catalog-header h1 {
-    margin-bottom: var(--space-sm);
-}
-
-.catalog-subtitle {
-    color: var(--text-muted);
-}
+/* === Layout === */
+.catalog-block { padding: var(--space-lg) 0; }
+.catalog-header { margin-bottom: var(--space-xl); }
+.catalog-header h2 { margin-bottom: var(--space-sm); }
+.catalog-subtitle { color: var(--text-muted); }
 
 .catalog-toolbar {
     display: flex;
@@ -53,526 +17,596 @@
     padding-bottom: var(--space-md);
     border-bottom: 1px solid var(--border);
 }
-
-.catalog-count {
-    font-size: var(--font-size-ui);
-    color: var(--text-muted);
-}
-
-.catalog-sort select {
-    min-width: 180px;
-}
+.catalog-count { font-size: var(--font-size-ui); color: var(--text-muted); }
+.catalog-sort select { min-width: 180px; }
 
 .catalog-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--space-lg);
 }
-
-.catalog-loading,
-.catalog-empty {
+.catalog-loading, .catalog-empty {
     grid-column: 1 / -1;
     text-align: center;
     padding: var(--space-2xl);
     color: var(--text-muted);
 }
 
-/* Service Card */
+/* === Service Card === */
 .service-card {
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
-    text-decoration: none;
+    display: flex; flex-direction: column;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: var(--space-lg);
+    text-decoration: none; transition: var(--transition);
+}
+.service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+.service-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-sm); margin-bottom: var(--space-md); }
+.service-categories { display: flex; flex-wrap: wrap; gap: 6px; }
+.service-category { display: inline-block; padding: 4px 10px; font-size: var(--font-size-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); border-radius: 4px; color: var(--accent); }
+.service-spec-count { display: flex; align-items: center; gap: 4px; font-size: var(--font-size-ui); color: var(--text-muted); font-weight: 500; flex-shrink: 0; }
+.service-card h3 { color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; margin-bottom: var(--space-sm); line-height: 1.3; }
+.service-card p { color: var(--text-secondary); font-size: var(--font-size-ui); line-height: 1.6; flex: 1; margin-bottom: var(--space-md); }
+.service-countries { display: flex; gap: 6px; margin-bottom: var(--space-md); overflow: hidden; }
+.service-country { padding: 2px 8px; font-size: var(--font-size-caption); background: var(--bg-tertiary); border-radius: 4px; color: var(--text-muted); }
+.service-languages { display: flex; gap: 4px; margin-bottom: var(--space-md); overflow: hidden; }
+.service-lang { padding: 2px 6px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 3px; color: var(--text-muted); }
+.service-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: var(--space-md); border-top: 1px solid var(--border); }
+.service-price { font-weight: 600; color: var(--text-primary); }
+.service-cta { color: var(--accent); font-weight: 500; font-size: var(--font-size-ui); }
+
+/* === Specialist Card === */
+.specialist-card {
+    display: flex; flex-direction: column;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: var(--space-lg);
+    text-decoration: none; transition: var(--transition);
+}
+.specialist-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+.specialist-card-top { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); }
+.specialist-avatar { width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #fff; overflow: hidden; }
+.specialist-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.specialist-avatar-initials { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--accent-gradient); }
+.specialist-info h3 { color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; margin-bottom: 2px; line-height: 1.3; }
+.specialist-role { font-size: var(--font-size-caption); color: var(--text-muted); }
+.specialist-stats { display: flex; gap: var(--space-md); margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 1px solid var(--border); }
+.specialist-stat { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.specialist-stat-value { font-size: var(--font-size-body); font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+.specialist-stat-value.rating { color: #f59e0b; }
+.specialist-stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-top: 2px; }
+.specialist-tags { display: flex; flex-direction: column; gap: 10px; margin-bottom: var(--space-md); flex: 1; }
+.specialist-tag-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.specialist-tag { padding: 2px 8px; font-size: var(--font-size-caption); border-radius: 4px; background: var(--bg-tertiary); color: var(--text-muted); }
+.specialist-tag.lang { font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; font-size: 10px; border: 1px solid var(--border); }
+.specialist-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: var(--space-sm); }
+.specialist-rate { font-weight: 600; font-size: var(--font-size-ui); color: var(--text-primary); }
+.specialist-cta { color: var(--accent); font-weight: 500; font-size: var(--font-size-ui); }
+
+/* === Case Card === */
+.case-card {
+    display: flex; flex-direction: column;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); text-decoration: none;
+    overflow: hidden; transition: var(--transition);
+}
+.case-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow-lg); }
+.case-image { aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg-tertiary); }
+.case-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+.case-card:hover .case-image img { transform: scale(1.05); }
+.case-image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(192,38,211,0.1) 100%); }
+.case-image-placeholder span { font-size: 4rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; opacity: 0.5; }
+.case-content { display: flex; flex-direction: column; padding: var(--space-md) var(--space-lg) var(--space-lg); }
+.case-meta { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md); }
+.case-industry { padding: 3px 8px; font-size: var(--font-size-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; color: var(--text-muted); }
+.case-client { font-size: var(--font-size-caption); color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.case-card h3 { color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; margin-bottom: var(--space-sm); line-height: 1.3; }
+.case-card p { color: var(--text-secondary); font-size: var(--font-size-ui); line-height: 1.6; flex: 1; margin-bottom: var(--space-md); }
+.case-results { display: flex; gap: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid var(--border); }
+.case-result { display: flex; flex-direction: column; }
+.result-value { font-size: var(--font-size-h3); font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; }
+.result-label { font-size: var(--font-size-caption); color: var(--text-muted); margin-top: 2px; }
+/* === Category Card === */
+.category-card {
+    display: flex; flex-direction: column;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: var(--space-lg);
+    text-decoration: none; transition: var(--transition);
+}
+.category-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+.category-card-header { display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md); }
+.category-card-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: var(--bg-tertiary); border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+.category-card-icon::after {
+    content: ''; display: block; width: 24px; height: 24px;
+    background-color: var(--accent);
+    -webkit-mask: var(--icon-url) no-repeat center / contain;
+    mask: var(--icon-url) no-repeat center / contain;
+}
+.category-card h3 { color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; margin-bottom: var(--space-sm); line-height: 1.3; }
+.category-card p { color: var(--text-secondary); font-size: var(--font-size-ui); line-height: 1.6; flex: 1; margin-bottom: var(--space-md); }
+.category-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: var(--space-md); border-top: 1px solid var(--border); }
+.category-price { font-weight: 600; color: var(--text-primary); }
+.category-cta { color: var(--accent); font-weight: 500; font-size: var(--font-size-ui); }
+
+/* === Solution Card === */
+.solution-card {
+    display: flex; flex-direction: column;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: var(--space-lg);
+    text-decoration: none; transition: var(--transition);
+}
+.solution-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+.solution-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--space-md); }
+.solution-tag { padding: 4px 10px; font-size: var(--font-size-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); border-radius: 4px; color: var(--accent); }
+.solution-tag.industry { background: var(--bg-tertiary); border-color: var(--border); color: var(--text-muted); }
+.solution-card h3 { color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; margin-bottom: var(--space-sm); line-height: 1.3; }
+.solution-card p { color: var(--text-secondary); font-size: var(--font-size-ui); line-height: 1.6; flex: 1; margin-bottom: var(--space-md); }
+.solution-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: var(--space-md); border-top: 1px solid var(--border); }
+.solution-price { font-weight: 600; color: var(--text-primary); }
+.solution-cta { color: var(--accent); font-weight: 500; font-size: var(--font-size-ui); }
+
+/* === Dimension Card (industry, country, language) === */
+.dimension-card {
+    display: flex; flex-direction: column;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: var(--space-lg);
+    text-decoration: none; transition: var(--transition);
+}
+.dimension-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+.dimension-card-header { display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md); }
+.dimension-card-badge {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: var(--bg-tertiary); border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 1.4rem;
+}
+.dimension-card-badge.code {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;
+    background: var(--accent-gradient); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; background-clip: text;
+}
+.dimension-card-badge.icon::after {
+    content: ''; display: block; width: 24px; height: 24px;
+    background-color: var(--accent);
+    -webkit-mask: var(--icon-url) no-repeat center / contain;
+    mask: var(--icon-url) no-repeat center / contain;
+}
+.dimension-card h3 { color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; margin-bottom: var(--space-sm); line-height: 1.3; }
+.dimension-card p { color: var(--text-secondary); font-size: var(--font-size-ui); line-height: 1.6; flex: 1; margin-bottom: var(--space-md); }
+.dimension-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: var(--space-md); border-top: 1px solid var(--border); }
+.dimension-count { font-size: var(--font-size-ui); color: var(--text-muted); }
+.dimension-cta { color: var(--accent); font-weight: 500; font-size: var(--font-size-ui); }
+
+/* === Blog Card === */
+.blog-card {
+    display: flex; flex-direction: column;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: var(--space-lg);
     transition: var(--transition);
 }
-
-.service-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--accent);
-}
-
-.service-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
-}
-
-.service-categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.service-category {
-    display: inline-block;
-    padding: 4px 10px;
-    font-size: var(--font-size-caption);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    background: rgba(99, 102, 241, 0.15);
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    border-radius: 4px;
-    color: var(--accent);
-}
-
-.service-rating {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: var(--font-size-ui);
-    color: #f59e0b;
-    font-weight: 500;
-    flex-shrink: 0;
-}
-
-.service-card h3 {
-    color: var(--text-primary);
-    font-size: var(--font-size-body);
-    font-weight: 600;
-    margin-bottom: var(--space-sm);
-    line-height: 1.3;
-}
-
-.service-card p {
-    color: var(--text-secondary);
-    font-size: var(--font-size-ui);
-    line-height: 1.6;
-    flex: 1;
-    margin-bottom: var(--space-md);
-}
-
-.service-industries {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: var(--space-md);
-}
-
-.service-industry {
-    padding: 2px 8px;
-    font-size: var(--font-size-caption);
-    background: var(--bg-tertiary);
-    border-radius: 4px;
-    color: var(--text-muted);
-}
-
-.service-languages {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: var(--space-md);
-}
-
-.service-lang {
-    padding: 2px 6px;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: var(--text-muted);
-}
-
-.service-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--border);
-}
-
-.service-price {
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.service-cta {
-    color: var(--accent);
-    font-weight: 500;
-    font-size: var(--font-size-ui);
-}
+.blog-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+.blog-card-category { font-size: var(--font-size-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-primary); margin-bottom: var(--space-sm); }
+.blog-card-title { font-size: var(--font-size-body); font-weight: 600; margin-bottom: var(--space-sm); line-height: 1.4; }
+.blog-card-title a { color: var(--text-primary); text-decoration: none; }
+.blog-card-title a:hover { color: var(--accent-primary); }
+.blog-card-excerpt { font-size: var(--font-size-ui); color: var(--text-secondary); line-height: 1.6; flex: 1; margin-bottom: var(--space-md); }
+.blog-card-meta { display: flex; gap: var(--space-md); font-size: var(--font-size-caption); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
 </style>
+
+<section class="catalog-block" data-source="{{ source }}">
+    {% if data.title %}
+    <div class="catalog-header">
+        <span class="tag tag-accent">{{ data.tag | default(block_type) }}</span>
+        <h2>{{ data.title }}</h2>
+        {% if data.subtitle %}<p class="catalog-subtitle">{{ data.subtitle }}</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <div class="catalog-toolbar">
+        <div class="catalog-count">
+            <span class="catalog-count-num">0</span> {{ count_label }}
+        </div>
+        <div class="catalog-sort">
+            <select class="catalog-sort-select form-input"></select>
+        </div>
+    </div>
+
+    <div class="catalog-grid">
+        <div class="catalog-loading">Loading...</div>
+    </div>
+</section>
 
 <script>
 (function() {
-    const grid = document.getElementById('catalogGrid');
-    const countEl = document.getElementById('resultsCount');
-    const sortEl = document.getElementById('sortBy');
+    var section = document.currentScript.previousElementSibling;
+    var source = section.dataset.source || 'services';
+    var grid = section.querySelector('.catalog-grid');
+    var countEl = section.querySelector('.catalog-count-num');
+    var sortEl = section.querySelector('.catalog-sort-select');
 
-    let allServices = [];
+    var allItems = [];
 
-    // Demo services data
-    const mockServices = [
-        {
-            slug: "seo-audit",
-            url: "/services/seo-audit",
-            title: "SEO Audit & Strategy",
-            description: "Comprehensive technical SEO audit with actionable recommendations.",
-            categories: ["SEO"],
-            industries: ["SaaS", "E-commerce"],
-            languages: ["EN", "DE"],
-            delivery: "one-time",
-            price: 1500,
-            rating: 4.9,
-            orders: 340
+    /* ===== Source configs ===== */
+    var SOURCES = {
+        services: {
+            url: 'data/services-index.json',
+            dataKey: 'services',
+            sortOptions: [['popular', 'Popular'], ['rating', 'Highest Rated'], ['name', 'A-Z']],
+            filters: ['categories', 'industries', 'languages', 'countries', 'delivery']
         },
-        {
-            slug: "content-strategy",
-            url: "/services/content-strategy",
-            title: "Content Strategy",
-            description: "Data-driven content plan aligned with your business goals.",
-            categories: ["Content"],
-            industries: ["SaaS", "Finance", "Healthcare"],
-            languages: ["EN", "DE", "FR"],
-            delivery: "one-time",
-            price: 2000,
-            rating: 4.8,
-            orders: 215
+        team: {
+            url: 'data/team.json',
+            dataKey: 'specialists',
+            sortOptions: [['rating', 'Highest Rated'], ['projects', 'Most Projects'], ['name', 'A-Z']],
+            filters: ['languages', 'countries']
         },
-        {
-            slug: "ai-optimisation",
-            url: "/services/ai-optimisation",
-            title: "AI Visibility Audit",
-            description: "Optimize your content for AI-powered search and LLM citations.",
-            categories: ["SEO", "AEO"],
-            industries: ["SaaS", "E-commerce", "Finance"],
-            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
-            delivery: "one-time",
-            price: 2500,
-            rating: 4.9,
-            orders: 89
+        cases: {
+            url: 'data/cases.json',
+            dataKey: 'cases',
+            sortOptions: [['default', 'Newest First'], ['name', 'A-Z']],
+            filters: ['industry', 'services', 'country']
         },
-        {
-            slug: "ppc-setup",
-            url: "/services/ppc-setup",
-            title: "PPC Campaign Setup",
-            description: "Launch optimized paid campaigns across Google Ads and social.",
-            categories: ["PPC"],
-            industries: ["E-commerce", "SaaS"],
-            languages: ["EN"],
-            delivery: "one-time",
-            price: 1800,
-            rating: 4.7,
-            orders: 428
+        blog: {
+            url: 'data/blog.json',
+            dataKey: null,
+            sortOptions: [['newest', 'Newest First'], ['oldest', 'Oldest First'], ['name', 'A-Z']],
+            filters: ['category']
         },
-        {
-            slug: "localization",
-            url: "/services/localization",
-            title: "Website Localization",
-            description: "Professional translation and cultural adaptation for global markets.",
-            categories: ["Content", "Localization"],
-            industries: ["SaaS", "E-commerce", "Travel"],
-            languages: ["EN", "DE", "FR", "ES", "RU", "ZH"],
-            delivery: "one-time",
-            price: 2500,
-            rating: 4.9,
-            orders: 189
+        categories: {
+            url: 'data/categories-index.json',
+            dataKey: 'categories',
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']],
+            filters: []
         },
-        {
-            slug: "analytics-setup",
-            url: "/services/analytics-setup",
-            title: "Analytics Setup",
-            description: "GA4, GTM, and custom dashboards for complete data visibility.",
-            categories: ["Analytics"],
-            industries: ["SaaS", "E-commerce", "Finance"],
-            languages: ["EN", "DE"],
-            delivery: "one-time",
-            price: 1200,
-            rating: 4.8,
-            orders: 267
+        solutions: {
+            url: 'data/solutions-index.json',
+            dataKey: 'solutions',
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['price', 'Lowest Price']],
+            filters: ['service', 'industry']
         },
-        {
-            slug: "seo-ongoing",
-            url: "/services/seo-ongoing",
-            title: "Ongoing SEO Management",
-            description: "Monthly SEO optimization, monitoring and reporting.",
-            categories: ["SEO"],
-            industries: ["SaaS", "E-commerce", "Finance"],
-            languages: ["EN", "DE"],
-            delivery: "ongoing",
-            price: 2000,
-            rating: 4.8,
-            orders: 156
+        industries: {
+            url: 'data/industries-index.json',
+            dataKey: 'industries',
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']],
+            filters: []
         },
-        {
-            slug: "content-ongoing",
-            url: "/services/content-ongoing",
-            title: "Content Retainer",
-            description: "Monthly content creation and publication management.",
-            categories: ["Content"],
-            industries: ["SaaS", "Finance", "Healthcare"],
-            languages: ["EN", "DE", "FR"],
-            delivery: "ongoing",
-            price: 3000,
-            rating: 4.7,
-            orders: 98
+        countries: {
+            url: 'data/countries-index.json',
+            dataKey: 'countries',
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']],
+            filters: []
+        },
+        languages: {
+            url: 'data/languages-index.json',
+            dataKey: 'languages',
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']],
+            filters: []
         }
-    ];
-
-    // Display mappings for slugs
-    var langCodeMap = {
-        'english': 'EN', 'german': 'DE', 'french': 'FR',
-        'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH',
-        'italian': 'IT', 'portuguese': 'PT', 'japanese': 'JA'
     };
 
-    var categoryLabelMap = {
-        'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO',
-        'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics',
-        'localization': 'Localization'
-    };
+    var cfg = SOURCES[source] || SOURCES.services;
 
-    function renderCard(service) {
-        const categories = (service.categories || [service.category]).filter(Boolean).map(c =>
-            '<span class="service-category">' + (categoryLabelMap[c] || c) + '</span>'
-        ).join('');
+    /* ===== Display maps ===== */
+    var langCodeMap = { 'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT' };
+    var categoryLabelMap = { 'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO', 'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics', 'social-media': 'Social Media', 'email': 'Email', 'cro': 'CRO', 'video': 'Video', 'pr': 'PR', 'automation': 'Automation', 'ecommerce': 'E-commerce', 'affiliate': 'Affiliate' };
+    var industryLabelMap = { 'ecommerce': 'E-commerce', 'saas': 'SaaS', 'fintech': 'Fintech', 'healthcare': 'Healthcare', 'education': 'Education', 'realestate': 'Real Estate', 'travel': 'Travel' };
+    var serviceLabelMap = { 'technical-seo': 'Technical SEO', 'ai-optimisation': 'AI Optimization', 'content-strategy': 'Content Strategy', 'ppc-management': 'PPC Management', 'analytics-setup': 'Analytics', 'localization': 'Localization' };
+    var countryLabelMap = { 'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain' };
+    var categoryIconMap = { 'seo': 'search', 'aeo': 'lightning', 'digital-marketing': 'globe', 'content': 'pen-tool', 'social-media': 'megaphone', 'ppc': 'target', 'email': 'mail', 'analytics': 'analytics', 'cro': 'chart', 'video': 'video', 'pr': 'newspaper', 'automation': 'code', 'ecommerce': 'layers', 'affiliate': 'users' };
+    var avatarColors = [['#7C3AED','#C026D3'],['#2563EB','#06B6D4'],['#059669','#10B981'],['#D97706','#F59E0B'],['#DC2626','#F87171'],['#7C3AED','#6366F1']];
 
-        const industries = (service.industries || []).slice(0, 3).map(i =>
-            '<span class="service-industry">' + i.charAt(0).toUpperCase() + i.slice(1) + '</span>'
-        ).join('');
+    function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+    function getInitials(name) { return (name || '').split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2); }
 
-        const languages = (service.languages || []).map(lang =>
-            '<span class="service-lang">' + (langCodeMap[lang] || lang.toUpperCase().slice(0,2)) + '</span>'
-        ).join('');
-
-        var serviceUrl = (service.url || '/services/' + service.slug).replace(/^\//, '');
-        return '\
-            <a href="' + serviceUrl + '" class="service-card">\
-                <div class="service-card-header">\
-                    <div class="service-categories">' + categories + '</div>\
-                    ' + (service.rating ? '<span class="service-rating">★ ' + service.rating + '</span>' : '') + '\
-                </div>\
-                <h3>' + service.title + '</h3>\
-                <p>' + (service.description || '') + '</p>\
-                ' + (industries ? '<div class="service-industries">' + industries + '</div>' : '') + '\
-                ' + (languages ? '<div class="service-languages">' + languages + '</div>' : '') + '\
-                <div class="service-card-footer">\
-                    <span class="service-price">From $' + (service.price || 0).toLocaleString() + '</span>\
-                    <span class="service-cta">View →</span>\
-                </div>\
-            </a>\
-        ';
+    /* ===== Card renderers ===== */
+    function truncatedTags(arr, max, renderFn) {
+        var shown = arr.slice(0, max);
+        var html = shown.map(renderFn).join('');
+        if (arr.length > max) html += renderFn('+' + (arr.length - max));
+        return html;
     }
 
-    function renderGrid(services) {
-        if (services.length === 0) {
-            grid.innerHTML = '<div class="catalog-empty">No services match your criteria</div>';
+    function renderServiceCard(s) {
+        var cats = (s.categories || []).map(function(c){ return '<span class="service-category">' + esc(categoryLabelMap[c] || c) + '</span>'; }).join('');
+        var countries = (s.countries || []).map(function(c){ return '<span class="service-country">' + esc(countryLabelMap[c] || c) + '</span>'; }).join('');
+        var langs = (s.languages || []).map(function(l){ return '<span class="service-lang">' + (langCodeMap[l] || l.toUpperCase().slice(0,2)) + '</span>'; }).join('');
+        var specCount = s.specialist_count || 0;
+        var url = (s.url || '/services/' + s.slug).replace(/^\//, '');
+        return '<a href="' + url + '" class="service-card">' +
+            '<div class="service-card-header"><div class="service-categories">' + cats + '</div>' +
+            (specCount ? '<span class="service-spec-count">' + specCount + ' spec.</span>' : '') + '</div>' +
+            '<h3>' + esc(s.title) + '</h3><p>' + esc(s.description) + '</p>' +
+            (countries ? '<div class="service-countries">' + countries + '</div>' : '') +
+            (langs ? '<div class="service-languages">' + langs + '</div>' : '') +
+            '<div class="service-card-footer"><span class="service-price">From $' + (s.price || s.from_price || 0) + '</span><span class="service-cta">View →</span></div></a>';
+    }
+
+    function renderSpecialistCard(s) {
+        var url = (s.url || '/team/' + s.slug).replace(/^\//, '');
+        var initials = getInitials(s.title || s.slug);
+        var avatarHtml = s.avatar
+            ? '<div class="specialist-avatar"><img src="' + esc(s.avatar) + '" alt="' + esc(s.title) + '"></div>'
+            : '<div class="specialist-avatar"><div class="specialist-avatar-initials">' + initials + '</div></div>';
+        var langTags = (s.languages || []).map(function(l){ return '<span class="specialist-tag lang">' + (langCodeMap[l] || l.toUpperCase().slice(0,2)) + '</span>'; }).join('');
+        var countryTags = (s.countries || []).map(function(c){ return '<span class="specialist-tag">' + esc(countryLabelMap[c] || c) + '</span>'; }).join('');
+        return '<a href="' + url + '" class="specialist-card">' +
+            '<div class="specialist-card-top">' + avatarHtml + '<div class="specialist-info"><h3>' + esc(s.title) + '</h3>' + (s.role ? '<div class="specialist-role">' + esc(s.role) + '</div>' : '') + '</div></div>' +
+            '<div class="specialist-stats">' +
+            (s.rating ? '<div class="specialist-stat"><span class="specialist-stat-value rating">★ ' + s.rating + '</span><span class="specialist-stat-label">Rating</span></div>' : '') +
+            (s.projects ? '<div class="specialist-stat"><span class="specialist-stat-value">' + s.projects + '</span><span class="specialist-stat-label">Projects</span></div>' : '') +
+            '</div>' +
+            '<div class="specialist-tags">' +
+            (langTags ? '<div class="specialist-tag-row">' + langTags + '</div>' : '') +
+            (countryTags ? '<div class="specialist-tag-row">' + countryTags + '</div>' : '') +
+            '</div>' +
+            '<div class="specialist-card-footer">' +
+            (s.hourly_rate ? '<span class="specialist-rate">$' + s.hourly_rate + '/h</span>' : '<span></span>') +
+            '<span class="specialist-cta">View Profile →</span></div></a>';
+    }
+
+    function renderCaseCard(s) {
+        var url = (s.url || '/cases/' + s.slug).replace(/^\//, '');
+        var letter = (s.client || s.title || 'C').charAt(0).toUpperCase();
+        var imageHtml = s.image
+            ? '<div class="case-image"><img src="' + esc(s.image) + '" alt="' + esc(s.title) + '" loading="lazy"></div>'
+            : '<div class="case-image"><div class="case-image-placeholder"><span>' + letter + '</span></div></div>';
+        var resultsHtml = '';
+        if (s.results && s.results.length > 0) {
+            resultsHtml = '<div class="case-results">' + s.results.slice(0,2).map(function(r){ return '<div class="case-result"><span class="result-value">' + esc(r.value) + '</span><span class="result-label">' + esc(r.label) + '</span></div>'; }).join('') + '</div>';
+        }
+        var metaHtml = '';
+        if (s.industry || s.client) {
+            metaHtml = '<div class="case-meta">' +
+                (s.industry ? '<span class="case-industry">' + esc(industryLabelMap[s.industry] || s.industry) + '</span>' : '') +
+                (s.client ? '<span class="case-client">' + esc(s.client) + '</span>' : '') + '</div>';
+        }
+        return '<a href="' + url + '" class="case-card">' + imageHtml +
+            '<div class="case-content">' + metaHtml +
+            '<h3>' + esc(s.title) + '</h3><p>' + esc(s.description) + '</p>' +
+            resultsHtml + '</div></a>';
+    }
+
+    function renderBlogCard(s) {
+        var url = (s.url || '/blog/' + s.slug).replace(/^\//, '');
+        if (url && url.slice(-1) !== '/') url += '/';
+        return '<article class="blog-card">' +
+            (s.category ? '<div class="blog-card-category">' + esc(s.category) + '</div>' : '') +
+            '<h3 class="blog-card-title"><a href="' + url + '">' + esc(s.title) + '</a></h3>' +
+            '<p class="blog-card-excerpt">' + esc(s.description) + '</p>' +
+            '<div class="blog-card-meta">' + (s.date ? '<span>' + esc(s.date) + '</span>' : '') + (s.author ? '<span>by ' + esc(s.author) + '</span>' : '') + '</div></article>';
+    }
+
+    function renderCategoryCard(s) {
+        var url = (s.url || '/categories/' + s.slug).replace(/^\//, '');
+        var iconName = categoryIconMap[s.slug] || 'settings';
+        var iconHtml = '<div class="category-card-icon" style="--icon-url: url(assets/icons/' + iconName + '.svg)"></div>';
+        var price = s.door_opener_price ? 'From $' + s.door_opener_price : '';
+        return '<a href="' + url + '" class="category-card">' +
+            '<div class="category-card-header">' +
+            '<h3>' + esc(s.menu || s.title) + '</h3>' +
+            iconHtml + '</div>' +
+            '<p>' + esc(s.description) + '</p>' +
+            '<div class="category-card-footer">' +
+            (price ? '<span class="category-price">' + price + '</span>' : '<span></span>') +
+            '<span class="category-cta">Explore →</span></div></a>';
+    }
+
+    function renderSolutionCard(s) {
+        var url = (s.url || '/solutions/' + s.slug).replace(/^\//, '');
+        var tags = '';
+        if (s.service) tags += '<span class="solution-tag">' + esc(serviceLabelMap[s.service] || s.service) + '</span>';
+        if (s.industry) tags += '<span class="solution-tag industry">' + esc(industryLabelMap[s.industry] || s.industry) + '</span>';
+        return '<a href="' + url + '" class="solution-card">' +
+            (tags ? '<div class="solution-card-tags">' + tags + '</div>' : '') +
+            '<h3>' + esc(s.title) + '</h3><p>' + esc(s.description) + '</p>' +
+            '<div class="solution-card-footer">' +
+            (s.starting_price ? '<span class="solution-price">From $' + s.starting_price + '</span>' : '<span></span>') +
+            '<span class="solution-cta">View Solution →</span></div></a>';
+    }
+
+    function renderDimensionCard(s, collection) {
+        var url = (s.url || '/' + collection + '/' + s.slug).replace(/^\//, '');
+        var badgeHtml = '';
+        if (s.icon) {
+            badgeHtml = '<div class="dimension-card-badge icon" style="--icon-url: url(assets/icons/' + s.icon + '.svg)"></div>';
+        } else if (s.flag) {
+            badgeHtml = '<div class="dimension-card-badge">' + s.flag + '</div>';
+        } else if (s.code) {
+            badgeHtml = '<div class="dimension-card-badge code">' + esc(s.code) + '</div>';
+        }
+        var countText = s.service_count ? s.service_count + ' services' : '';
+        return '<a href="' + url + '" class="dimension-card">' +
+            '<div class="dimension-card-header">' +
+            '<h3>' + esc(s.menu || s.title) + '</h3>' +
+            badgeHtml + '</div>' +
+            '<p>' + esc(s.description) + '</p>' +
+            '<div class="dimension-card-footer">' +
+            (countText ? '<span class="dimension-count">' + countText + '</span>' : '<span></span>') +
+            '<span class="dimension-cta">Explore →</span></div></a>';
+    }
+
+    var RENDERERS = {
+        services: renderServiceCard, team: renderSpecialistCard, cases: renderCaseCard, blog: renderBlogCard,
+        categories: renderCategoryCard, solutions: renderSolutionCard,
+        industries: function(s) { return renderDimensionCard(s, 'industries'); },
+        countries: function(s) { return renderDimensionCard(s, 'countries'); },
+        languages: function(s) { return renderDimensionCard(s, 'languages'); }
+    };
+
+    /* ===== Init sort dropdown ===== */
+    cfg.sortOptions.forEach(function(opt) {
+        var o = document.createElement('option');
+        o.value = opt[0]; o.textContent = opt[1];
+        sortEl.appendChild(o);
+    });
+
+    /* ===== Overflow trim for single-line tag rows ===== */
+    function trimOverflowTags() {
+        grid.querySelectorAll('.service-countries, .service-languages').forEach(function(row) {
+            var children = Array.from(row.children);
+            if (children.length <= 1 || row.scrollWidth <= row.clientWidth) return;
+            var tagClass = children[0].className;
+            var removed = 0;
+            while (children.length > 0 && row.scrollWidth > row.clientWidth) {
+                children.pop().remove();
+                removed++;
+            }
+            if (removed > 0) {
+                var more = document.createElement('span');
+                more.className = tagClass;
+                more.textContent = '+' + removed;
+                more.style.flexShrink = '0';
+                row.appendChild(more);
+                while (row.children.length > 1 && row.scrollWidth > row.clientWidth) {
+                    row.removeChild(row.children[row.children.length - 2]);
+                    removed++;
+                    more.textContent = '+' + removed;
+                }
+            }
+        });
+    }
+
+    /* ===== Shared logic ===== */
+    function renderGrid(items) {
+        var render = RENDERERS[source] || RENDERERS.services;
+        if (items.length === 0) {
+            grid.innerHTML = '<div class="catalog-empty">No items match your criteria</div>';
         } else {
-            grid.innerHTML = services.map(renderCard).join('');
+            grid.innerHTML = items.map(render).join('');
+            trimOverflowTags();
         }
-        countEl.textContent = services.length;
-    }
-
-    function sortServices(services, by) {
-        var sorted = services.slice();
-        switch (by) {
-            case 'rating':
-                sorted.sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); });
-                break;
-            case 'name':
-                sorted.sort(function(a, b) { return a.title.localeCompare(b.title); });
-                break;
-            case 'popular':
-            default:
-                sorted.sort(function(a, b) { return (b.orders || 0) - (a.orders || 0); });
-        }
-        return sorted;
+        countEl.textContent = items.length;
     }
 
     function getCheckedValues(filterName) {
         var dropdown = document.querySelector('[data-filter="' + filterName + '"]');
         if (!dropdown) return [];
-        var checked = dropdown.querySelectorAll('input[type="checkbox"]:checked');
-        return Array.from(checked).map(function(cb) { return cb.value; });
+        return Array.from(dropdown.querySelectorAll('input[type="checkbox"]:checked')).map(function(cb){ return cb.value; });
     }
 
     function updateDropdownText(dropdown) {
         var checked = dropdown.querySelectorAll('input[type="checkbox"]:checked');
         var textEl = dropdown.querySelector('.filter-selected-text');
-        var filterName = dropdown.dataset.filter;
-        var allLabel = {
-            'categories': 'All Categories',
-            'industries': 'All Industries',
-            'languages': 'All Languages',
-            'countries': 'All Countries',
-            'delivery': 'All Types'
-        };
-        if (checked.length === 0) {
-            textEl.textContent = allLabel[filterName] || 'All';
-        } else if (checked.length === 1) {
-            textEl.textContent = checked[0].nextElementSibling.textContent;
+        if (!textEl) return;
+        if (checked.length === 0) textEl.textContent = textEl.dataset.all || 'All';
+        else if (checked.length === 1) textEl.textContent = checked[0].nextElementSibling.textContent;
+        else textEl.textContent = checked.length + ' selected';
+    }
+
+    function matchFilter(item, filterName) {
+        var checked = getCheckedValues(filterName);
+        if (checked.length === 0) return true;
+        /* services source: tags are nested under item.tags or flat */
+        var vals;
+        if (source === 'services') {
+            var tags = item.tags || {};
+            vals = tags[filterName] || item[filterName] || [];
+        } else if (source === 'cases' && filterName === 'industry') {
+            return checked.indexOf(item.industry) !== -1;
+        } else if (source === 'cases' && filterName === 'country') {
+            return checked.indexOf(item.country) !== -1;
+        } else if (source === 'solutions' && (filterName === 'service' || filterName === 'industry')) {
+            return checked.indexOf(item[filterName] || '') !== -1;
+        } else if (source === 'blog' && filterName === 'category') {
+            return checked.some(function(c){ return (item.category || '').toLowerCase() === c.toLowerCase(); });
         } else {
-            textEl.textContent = checked.length + ' selected';
+            vals = item[filterName] || [];
         }
+        if (!Array.isArray(vals)) vals = [vals];
+        return checked.some(function(c){ return vals.indexOf(c) !== -1; });
     }
 
     function applyFilters() {
-        var filtered = allServices.slice();
-
-        // Categories filter (multi-select)
-        var categories = getCheckedValues('categories');
-        if (categories.length > 0) {
-            filtered = filtered.filter(function(s) {
-                var serviceCats = s.categories || [];
-                return categories.some(function(c) {
-                    return serviceCats.some(function(sc) { return sc === c; });
-                });
-            });
-        }
-
-        // Industries filter (multi-select)
-        var industries = getCheckedValues('industries');
-        if (industries.length > 0) {
-            filtered = filtered.filter(function(s) {
-                return industries.some(function(ind) {
-                    return (s.industries || []).some(function(si) { return si === ind; });
-                });
-            });
-        }
-
-        // Languages filter (multi-select)
-        var languages = getCheckedValues('languages');
-        if (languages.length > 0) {
-            filtered = filtered.filter(function(s) {
-                return languages.some(function(lang) {
-                    return (s.languages || []).some(function(sl) { return sl === lang; });
-                });
-            });
-        }
-
-        // Countries filter (multi-select)
-        var countries = getCheckedValues('countries');
-        if (countries.length > 0) {
-            filtered = filtered.filter(function(s) {
-                return countries.some(function(country) {
-                    return (s.countries || []).some(function(sc) { return sc === country; });
-                });
-            });
-        }
-
-        // Delivery filter (multi-select)
-        var delivery = getCheckedValues('delivery');
-        if (delivery.length > 0) {
-            filtered = filtered.filter(function(s) {
-                return delivery.some(function(d) { return s.delivery === d; });
-            });
-        }
-
-        return sortServices(filtered, sortEl ? sortEl.value : 'popular');
+        var filtered = allItems.filter(function(item) {
+            return cfg.filters.every(function(f){ return matchFilter(item, f); });
+        });
+        return sortItems(filtered, sortEl.value);
     }
 
+    function sortItems(items, by) {
+        var sorted = items.slice();
+        switch (by) {
+            case 'rating': sorted.sort(function(a,b){ return (b.rating||0)-(a.rating||0); }); break;
+            case 'projects': sorted.sort(function(a,b){ return (b.projects||0)-(a.projects||0); }); break;
+            case 'name': sorted.sort(function(a,b){ return (a.title||'').localeCompare(b.title||''); }); break;
+            case 'newest': sorted.sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); }); break;
+            case 'oldest': sorted.sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); }); break;
+            case 'popular': sorted.sort(function(a,b){ return (b.rating||0)-(a.rating||0); }); break;
+            case 'services': sorted.sort(function(a,b){ return (b.service_count||0)-(a.service_count||0); }); break;
+            case 'price': sorted.sort(function(a,b){ return (a.starting_price||9999)-(b.starting_price||9999); }); break;
+            default: break;
+        }
+        return sorted;
+    }
+
+    /* ===== Data normalization ===== */
+    function normalizeServices(data) {
+        return (data.services || []).filter(function(s){ return s.slug; }).map(function(s) {
+            return { slug: s.slug, url: s.url, title: s.title, description: s.description,
+                categories: (s.tags && s.tags.categories) || s.categories || [],
+                industries: (s.tags && s.tags.industries) || s.industries || [],
+                languages: (s.tags && s.tags.languages) || s.languages || [],
+                countries: (s.tags && s.tags.countries) || s.countries || [],
+                delivery: s.delivery || 'one-time',
+                specialist_count: s.specialist_count || 0,
+                rating: s.rating || 0, price: s.from_price || s.price || 0 };
+        });
+    }
+
+    /* ===== Init ===== */
     function init() {
-        // Try to load from services-index.json first (faceted catalog), fall back to services.json, then mock
-        fetch('data/services-index.json')
+        fetch(cfg.url)
             .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
             .then(function(data) {
-                // Map services-index format to catalog format
-                allServices = (data.services || []).filter(function(s) { return s.slug; }).map(function(s) {
-                    return {
-                        slug: s.slug,
-                        url: s.url,
-                        title: s.title,
-                        description: s.description,
-                        categories: s.tags?.categories || [],
-                        industries: s.tags?.industries || [],
-                        languages: s.tags?.languages || [],
-                        countries: s.tags?.countries || [],
-                        rating: 4.8,
-                        orders: 100
-                    };
-                });
-                // Merge with mock data for demo
-                mockServices.forEach(function(mock) {
-                    if (!allServices.find(function(s) { return s.slug === mock.slug; })) {
-                        allServices.push(mock);
-                    }
-                });
+                if (source === 'services') {
+                    allItems = normalizeServices(data);
+                } else {
+                    allItems = cfg.dataKey ? (data[cfg.dataKey] || []) : (Array.isArray(data) ? data : []);
+                }
                 renderGrid(applyFilters());
             })
             .catch(function() {
-                // Fall back to services.json
-                return fetch('data/services.json')
-                    .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
-                    .then(function(data) {
-                        allServices = mockServices.concat(data.filter(function(item) {
-                            return !mockServices.find(function(s) { return s.slug === item.slug; });
-                        }));
-                        renderGrid(applyFilters());
-                    })
-                    .catch(function() {
-                        allServices = mockServices;
-                        renderGrid(applyFilters());
-                    });
+                grid.innerHTML = '<div class="catalog-empty">Could not load data.</div>';
             });
 
-        // Sort change handler
-        if (sortEl) {
-            sortEl.addEventListener('change', function() {
-                renderGrid(applyFilters());
-            });
-        }
+        sortEl.addEventListener('change', function() { renderGrid(applyFilters()); });
 
-        // Filter dropdown toggle
+        /* Sidebar filter interactions */
         document.querySelectorAll('.filter-dropdown-toggle').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
-                var dropdown = btn.closest('.filter-dropdown');
-                var wasOpen = dropdown.classList.contains('open');
-                // Close all dropdowns
-                document.querySelectorAll('.filter-dropdown').forEach(function(d) {
-                    d.classList.remove('open');
-                });
-                // Toggle current
-                if (!wasOpen) dropdown.classList.add('open');
+                var dd = btn.closest('.filter-dropdown');
+                var wasOpen = dd.classList.contains('open');
+                document.querySelectorAll('.filter-dropdown').forEach(function(d){ d.classList.remove('open'); });
+                if (!wasOpen) dd.classList.add('open');
             });
         });
-
-        // Filter checkbox change
         document.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb) {
             cb.addEventListener('change', function() {
-                var dropdown = cb.closest('.filter-dropdown');
-                updateDropdownText(dropdown);
+                updateDropdownText(cb.closest('.filter-dropdown'));
                 renderGrid(applyFilters());
             });
         });
-
-        // Close dropdowns on outside click
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.filter-dropdown')) {
-                document.querySelectorAll('.filter-dropdown').forEach(function(d) {
-                    d.classList.remove('open');
-                });
+                document.querySelectorAll('.filter-dropdown').forEach(function(d){ d.classList.remove('open'); });
             }
         });
-
-        // Reset filters button
         var resetBtn = document.querySelector('.btn-reset-filters');
         if (resetBtn) {
             resetBtn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb) {
-                    cb.checked = false;
-                });
-                document.querySelectorAll('.filter-dropdown').forEach(function(dropdown) {
-                    updateDropdownText(dropdown);
-                });
+                document.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb){ cb.checked = false; });
+                document.querySelectorAll('.filter-dropdown').forEach(function(dd){ updateDropdownText(dd); });
                 renderGrid(applyFilters());
             });
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
 })();
 </script>

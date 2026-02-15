@@ -128,10 +128,14 @@ const cart = {
     }
 };
 
-// Listen for events from task-picker block
+// Listen for events from task-picker and pricing blocks
 document.addEventListener('taskToggled', function(e) {
     const d = e.detail;
-    if (d.selected) {
+    if (d.replaceAll) {
+        // Pricing block: replace all cart items with selected package
+        cart.items = {};
+        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom);
+    } else if (d.selected) {
         cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom);
     } else {
         cart.remove(d.slug);
@@ -174,6 +178,53 @@ document.querySelectorAll('.cart-counter').forEach(function(counter) {
         cart.render();
     });
 });
+
+// Pricing block → Order Cart integration
+// Runs in site.js (after DOM complete) because pricing inline scripts run before sidebar exists
+if (document.getElementById('cartItems')) {
+    document.querySelectorAll('.pricing-package .btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            var pkg = btn.closest('.pricing-package');
+            var nameEl = pkg.querySelector('.package-header h3');
+            var priceEl = pkg.querySelector('.price-current');
+            if (!nameEl || !priceEl) return;
+
+            e.preventDefault();
+            var name = nameEl.textContent.trim();
+            var slug = name.toLowerCase().replace(/\s+/g, '-');
+            var price = parseInt(priceEl.textContent.replace(/[^0-9]/g, '')) || 0;
+
+            document.querySelectorAll('.pricing-package').forEach(function(p) {
+                p.classList.remove('pricing-package-selected');
+            });
+            pkg.classList.add('pricing-package-selected');
+
+            cart.items = {};
+            cart.add(slug, name, 'Package', '', price, false);
+        });
+    });
+
+    document.querySelectorAll('.pricing-tier').forEach(function(tier) {
+        tier.style.cursor = 'pointer';
+        tier.addEventListener('click', function() {
+            var nameEl = tier.querySelector('.tier-name');
+            var priceEl = tier.querySelector('.tier-price');
+            if (!nameEl || !priceEl) return;
+
+            var name = nameEl.textContent.trim();
+            var slug = name.toLowerCase().replace(/\s+/g, '-');
+            var price = parseInt(priceEl.textContent.replace(/[^0-9]/g, '')) || 0;
+
+            document.querySelectorAll('.pricing-tier').forEach(function(t) {
+                t.classList.remove('active');
+            });
+            tier.classList.add('active');
+
+            cart.items = {};
+            cart.add(slug, name, 'Tier', '', price, false);
+        });
+    });
+}
 
 // ========================================
 // Theme System

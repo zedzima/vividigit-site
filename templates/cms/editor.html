@@ -18,6 +18,10 @@
         margin-bottom: 1rem;
     }
 
+    .block-section.system-section {
+        border-left: 3px solid var(--text-muted);
+    }
+
     .block-header {
         display: flex;
         justify-content: space-between;
@@ -36,12 +40,37 @@
         color: var(--accent);
     }
 
+    .system-section .block-name {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
     .block-content {
         padding: 1.5rem;
     }
 
     .block-content.collapsed {
         display: none;
+    }
+
+    .section-divider {
+        border-top: 2px solid var(--border);
+        margin: 1.5rem 0 1rem;
+        position: relative;
+    }
+    .section-divider-label {
+        position: absolute;
+        top: -0.65em;
+        left: 1rem;
+        background: var(--bg);
+        padding: 0 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--accent);
     }
 
     .field-row {
@@ -58,26 +87,58 @@
         padding-top: 0.75rem;
     }
 
-    .array-item {
-        background: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 1rem;
-        margin-bottom: 0.5rem;
+    /* Array items */
+    .array-editor { display: flex; flex-direction: column; gap: 0.25rem; }
+    .array-item { display: flex; gap: 0.5rem; align-items: center; }
+    .array-item input { flex: 1; }
+    .btn-remove-item {
+        background: none; border: none; color: var(--text-muted); cursor: pointer;
+        font-size: 1.2rem; padding: 0.25rem 0.5rem; border-radius: 4px;
     }
+    .btn-remove-item:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
+    .btn-add-item {
+        background: none; border: 1px dashed var(--border); color: var(--text-muted);
+        padding: 0.5rem; border-radius: 6px; cursor: pointer; margin-top: 0.25rem;
+    }
+    .btn-add-item:hover { border-color: var(--accent); color: var(--accent); }
 
-    .array-controls {
-        display: flex;
-        gap: 0.5rem;
-        margin-top: 0.5rem;
+    /* Object array items */
+    .array-item-obj { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.25rem; }
+    .array-item-obj summary {
+        padding: 0.75rem 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+        font-weight: 500; font-size: 0.875rem; color: var(--text);
     }
+    .array-item-obj[open] summary { border-bottom: 1px solid var(--border); }
+    .array-item-fields { padding: 0.75rem 1rem; }
+    .array-item-fields .field-row { grid-template-columns: 140px 1fr; }
+
+    /* Nested editor */
+    .nested-editor > .nested-fields {
+        border-left: 2px solid var(--border); padding-left: 1rem; margin-left: 0.5rem;
+    }
+    .nested-fields .field-row { grid-template-columns: 140px 1fr; }
+
+    /* Markdown editor */
+    .markdown-editor .md-tabs { display: flex; gap: 0.25rem; margin-bottom: 0.25rem; }
+    .md-tab {
+        background: none; border: 1px solid var(--border); color: var(--text-muted);
+        padding: 0.25rem 0.75rem; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.75rem;
+    }
+    .md-tab.active { background: var(--bg-input); color: var(--text); border-bottom-color: var(--bg-input); }
+    .md-preview {
+        background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+        padding: 1rem; min-height: 100px; font-size: 0.875rem; line-height: 1.6;
+    }
+    .md-preview h1,.md-preview h2,.md-preview h3 { margin: 0.5em 0; }
+    .md-preview p { margin: 0.5em 0; }
+    .md-preview code { background: var(--bg-card); padding: 0.15em 0.3em; border-radius: 3px; font-size: 0.85em; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="editor-header">
     <div>
-        <a href="{{ url_for('admin_index') }}" style="color: var(--text-muted); text-decoration: none;">← Back</a>
+        <a href="{{ url_for('admin_index') }}" style="color: var(--text-muted); text-decoration: none;">&larr; Back</a>
         <h2 style="margin-top: 0.5rem;">Editing: /{{ page_path }}</h2>
     </div>
     <div style="display: flex; gap: 1rem;">
@@ -86,30 +147,82 @@
     </div>
 </div>
 
-<!-- Meta Section -->
-<div class="block-section">
+<!-- Config Section -->
+{% if data.config %}
+<div class="block-section system-section" data-section="config">
+    <div class="block-header" onclick="toggleBlock(this)">
+        <span class="block-name">config</span>
+        <span style="color: var(--text-muted);">&blacktriangleright;</span>
+    </div>
+    <div class="block-content collapsed" id="section-config">
+        {{ render_section_fields('config', data.config) }}
+    </div>
+</div>
+{% endif %}
+
+<!-- Meta Section (all fields) -->
+{% if data.meta %}
+<div class="block-section system-section" data-section="meta">
     <div class="block-header" onclick="toggleBlock(this)">
         <span class="block-name">meta</span>
-        <span style="color: var(--text-muted);">▼</span>
+        <span style="color: var(--text-muted);">&blacktriangledown;</span>
     </div>
-    <div class="block-content" id="block-meta">
-        <div class="field-row">
-            <label class="field-label">title</label>
-            <input type="text" name="meta.title" value="{{ data.meta.title or '' }}">
-        </div>
-        <div class="field-row">
-            <label class="field-label">description</label>
-            <textarea name="meta.description" rows="2">{{ data.meta.description or '' }}</textarea>
-        </div>
+    <div class="block-content" id="section-meta">
+        {{ render_section_fields('meta', data.meta) }}
     </div>
+</div>
+{% endif %}
+
+<!-- Tags Section -->
+{% if data.tags %}
+<div class="block-section system-section" data-section="tags">
+    <div class="block-header" onclick="toggleBlock(this)">
+        <span class="block-name">tags</span>
+        <span style="color: var(--text-muted);">&blacktriangleright;</span>
+    </div>
+    <div class="block-content collapsed" id="section-tags">
+        {{ render_section_fields('tags', data.tags) }}
+    </div>
+</div>
+{% endif %}
+
+<!-- Relationships Section -->
+{% if data.relationships %}
+<div class="block-section system-section" data-section="relationships">
+    <div class="block-header" onclick="toggleBlock(this)">
+        <span class="block-name">relationships</span>
+        <span style="color: var(--text-muted);">&blacktriangleright;</span>
+    </div>
+    <div class="block-content collapsed" id="section-relationships">
+        {{ render_section_fields('relationships', data.relationships) }}
+    </div>
+</div>
+{% endif %}
+
+<!-- Sidebar Section -->
+{% if data.sidebar %}
+<div class="block-section system-section" data-section="sidebar">
+    <div class="block-header" onclick="toggleBlock(this)">
+        <span class="block-name">sidebar</span>
+        <span style="color: var(--text-muted);">&blacktriangleright;</span>
+    </div>
+    <div class="block-content collapsed" id="section-sidebar">
+        {{ render_section_fields('sidebar', data.sidebar) }}
+    </div>
+</div>
+{% endif %}
+
+<!-- Divider between system sections and content blocks -->
+<div class="section-divider">
+    <span class="section-divider-label">Content Blocks</span>
 </div>
 
 <!-- Content Blocks -->
 {% for block in data.blocks %}
-<div class="block-section" data-block-type="{{ block.type }}">
+<div class="block-section" data-block-type="{{ block.type }}" data-block-key="{{ block.original_key or block.type }}">
     <div class="block-header" onclick="toggleBlock(this)">
         <span class="block-name">{{ block.original_key or block.type }}</span>
-        <span style="color: var(--text-muted);">▼</span>
+        <span style="color: var(--text-muted);">&blacktriangledown;</span>
     </div>
     <div class="block-content" id="block-{{ loop.index }}">
         {{ render_block_fields(block.type, block.data, loop.index) }}
@@ -139,63 +252,118 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 const pageData = {{ data | tojson }};
 const pagePath = "{{ page_path }}";
 const allPages = {{ all_pages | tojson }};
+let blockCounter = pageData.blocks ? pageData.blocks.length : 0;
 
 function toggleBlock(header) {
     const content = header.nextElementSibling;
     content.classList.toggle('collapsed');
     header.querySelector('span:last-child').textContent =
-        content.classList.contains('collapsed') ? '▶' : '▼';
+        content.classList.contains('collapsed') ? '\u25B6' : '\u25BC';
+}
+
+// --- Form data collection (supports arrays, nested, types) ---
+
+function parseFormValue(input) {
+    if (input.dataset.type === 'bool' || input.type === 'checkbox') return input.checked;
+    if (input.dataset.type === 'number' || input.type === 'number') return parseFloat(input.value) || 0;
+    if (input.dataset.type === 'json') {
+        try { return JSON.parse(input.value); } catch(e) { return input.value; }
+    }
+    return input.value;
+}
+
+function setNested(obj, path, value) {
+    const parts = path.replace(/\]/g, '').split(/[.\[]/);
+    let cur = obj;
+    for (let i = 0; i < parts.length - 1; i++) {
+        const p = parts[i];
+        const next = parts[i + 1];
+        const isNextArray = /^\d+$/.test(next);
+        if (!(p in cur)) cur[p] = isNextArray ? [] : {};
+        cur = cur[p];
+    }
+    const last = parts[parts.length - 1];
+    cur[last] = value;
+}
+
+function collectSectionData(section, sectionName) {
+    const raw = {};
+    const prefix = sectionName + '.';
+    section.querySelectorAll('[name^="' + prefix + '"]').forEach(input => {
+        const key = input.name.substring(prefix.length);
+        setNested(raw, key, parseFormValue(input));
+    });
+    return raw;
+}
+
+function collectBlockData(section) {
+    const raw = {};
+    section.querySelectorAll('[name^="block."]').forEach(input => {
+        const key = input.name.replace('block.', '');
+        setNested(raw, key, parseFormValue(input));
+    });
+    return raw;
+}
+
+function deepMerge(base, overlay) {
+    const result = JSON.parse(JSON.stringify(base));
+    for (const [k, v] of Object.entries(overlay)) {
+        result[k] = v;
+    }
+    return result;
 }
 
 function collectFormData() {
-    const data = {
-        config: pageData.config || {},
-        meta: {},
-        blocks: []
-    };
+    const data = {};
 
-    // Collect meta
-    document.querySelectorAll('[name^="meta."]').forEach(input => {
-        const key = input.name.replace('meta.', '');
-        data.meta[key] = input.value;
-    });
+    // Collect system sections
+    const sections = ['config', 'meta', 'tags', 'relationships', 'sidebar'];
+    for (const name of sections) {
+        const el = document.querySelector('.block-section[data-section="' + name + '"]');
+        const orig = pageData[name] ? JSON.parse(JSON.stringify(pageData[name])) : {};
+        if (el) {
+            const collected = collectSectionData(el, name);
+            data[name] = deepMerge(orig, collected);
+        } else if (pageData[name] && Object.keys(pageData[name]).length > 0) {
+            data[name] = orig;
+        }
+    }
+
+    // Ensure config is always present
+    if (!data.config) data.config = pageData.config || {};
 
     // Collect blocks
+    let blockIdx = 0;
     document.querySelectorAll('.block-section[data-block-type]').forEach(section => {
         const blockType = section.dataset.blockType;
-        const blockData = {};
+        const blockKey = section.dataset.blockKey || blockType;
+        const collected = collectBlockData(section);
 
-        section.querySelectorAll('[name^="block."]').forEach(input => {
-            const key = input.name.replace('block.', '');
-            blockData[key] = input.value;
-        });
-
-        // For now, preserve original block data
-        const originalBlock = pageData.blocks.find(b => b.type === blockType);
-        if (originalBlock) {
-            data[originalBlock.original_key || blockType] = originalBlock.data;
-        }
+        const origBlock = pageData.blocks[blockIdx];
+        const origData = origBlock ? origBlock.data : {};
+        data[blockKey] = deepMerge(origData, collected);
+        blockIdx++;
     });
 
     return data;
 }
 
+// --- Save / Preview ---
+
 async function savePage() {
     const data = collectFormData();
-
     try {
         const response = await fetch('/admin/pages/save/' + pagePath, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-
         const result = await response.json();
-
         if (result.success) {
             showToast('Saved!', 'success');
         } else {
@@ -208,17 +376,100 @@ async function savePage() {
 
 async function previewPage() {
     await savePage();
-
-    // Build and open
     const response = await fetch('/admin/build', { method: 'POST' });
     const result = await response.json();
-
     if (result.success) {
         window.open('/' + pagePath, '_blank');
     } else {
         showToast('Build failed', 'error');
     }
 }
+
+// --- Array helpers ---
+
+function removeArrayItem(el) {
+    const editor = el.closest('.array-editor');
+    el.closest('.array-item, .array-item-obj').remove();
+    reindexArray(editor);
+}
+
+function reindexArray(editor) {
+    const field = editor.dataset.field;
+    const items = editor.querySelectorAll('.array-item, .array-item-obj');
+    items.forEach((item, i) => {
+        item.dataset.index = i;
+        item.querySelectorAll('[name]').forEach(input => {
+            input.name = input.name.replace(/\[\d+\]/, `[${i}]`);
+        });
+    });
+}
+
+function addStringItem(btn) {
+    const editor = btn.closest('.array-editor');
+    const field = editor.dataset.field;
+    const idx = editor.querySelectorAll('.array-item').length;
+    const div = document.createElement('div');
+    div.className = 'array-item';
+    div.dataset.index = idx;
+    div.innerHTML = `<input type="text" name="${field}[${idx}]" value="">
+        <button type="button" class="btn-remove-item" onclick="removeArrayItem(this)" title="Remove">&times;</button>`;
+    editor.insertBefore(div, btn);
+}
+
+function addObjectItem(btn) {
+    const editor = btn.closest('.array-editor');
+    const field = editor.dataset.field;
+    const idx = editor.querySelectorAll('.array-item-obj').length;
+    const first = editor.querySelector('.array-item-obj');
+    if (first) {
+        const clone = first.cloneNode(true);
+        clone.dataset.index = idx;
+        clone.querySelectorAll('[name]').forEach(input => {
+            input.name = input.name.replace(/\[\d+\]/, `[${idx}]`);
+            if (input.type === 'checkbox') input.checked = false;
+            else input.value = '';
+        });
+        clone.querySelector('summary').childNodes[0].textContent = `Item ${idx + 1} `;
+        clone.removeAttribute('open');
+        editor.insertBefore(clone, btn);
+    } else {
+        const div = document.createElement('details');
+        div.className = 'array-item-obj';
+        div.dataset.index = idx;
+        div.innerHTML = `<summary>Item ${idx + 1}
+            <button type="button" class="btn-remove-item" onclick="event.stopPropagation();removeArrayItem(this.closest('.array-item-obj'))" title="Remove">&times;</button>
+        </summary>
+        <div class="array-item-fields">
+            <div class="field-row"><label class="field-label">title</label><input type="text" name="${field}[${idx}].title" value=""></div>
+            <div class="field-row"><label class="field-label">text</label><textarea name="${field}[${idx}].text" rows="2"></textarea></div>
+        </div>`;
+        editor.insertBefore(div, btn);
+    }
+}
+
+// --- Markdown preview ---
+
+function mdTab(btn, mode) {
+    const row = btn.closest('.markdown-editor');
+    row.querySelectorAll('.md-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const textarea = row.querySelector('.md-textarea');
+    const preview = row.querySelector('.md-preview');
+    if (mode === 'preview') {
+        textarea.style.display = 'none';
+        preview.style.display = 'block';
+        if (typeof marked !== 'undefined') {
+            preview.innerHTML = marked.parse(textarea.value);
+        } else {
+            preview.textContent = textarea.value;
+        }
+    } else {
+        textarea.style.display = '';
+        preview.style.display = 'none';
+    }
+}
+
+// --- Add Block ---
 
 function showAddBlock() {
     document.getElementById('add-block-modal').style.display = 'block';
@@ -228,10 +479,32 @@ function hideAddBlock() {
     document.getElementById('add-block-modal').style.display = 'none';
 }
 
-function addBlock(blockName) {
-    // TODO: Load block schema from demo, add to page
+async function addBlock(blockName) {
     hideAddBlock();
-    showToast('Block adding not yet implemented', 'error');
+    try {
+        const response = await fetch('/admin/blocks/demo/' + blockName);
+        const demoData = await response.json();
+
+        blockCounter++;
+        pageData.blocks.push({
+            type: blockName,
+            original_key: blockName,
+            data: demoData
+        });
+
+        const data = collectFormData();
+        data[blockName] = demoData;
+
+        await fetch('/admin/pages/save/' + pagePath, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        location.reload();
+    } catch (err) {
+        showToast('Error adding block: ' + err.message, 'error');
+    }
 }
 </script>
 {% endblock %}

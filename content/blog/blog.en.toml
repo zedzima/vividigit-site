@@ -13,8 +13,62 @@ tag = "hero"
 h1 = "Insights & Articles"
 subtitle = "Expert perspectives on AI visibility, SEO, and digital marketing strategy."
 
-# Blog listing block (shows all articles)
-[bloglist]
+# Blog listing block (shows all articles with filtering)
+[catalog]
+source = "blog"
+count_label = "articles"
 title = "Latest Articles"
-show_featured = true
-show_categories = true
+
+[cta]
+tag = "cta"
+title = "Need Help With Your Marketing?"
+text = "Browse our service catalog and find the right solution for your business."
+button_label = "Browse Services"
+button_url = "services"
+
+[sidebar]
+title = "Filter Articles"
+cta_label = "Browse Services"
+cta_url = "services"
+
+[[sidebar.filters]]
+name = "category"
+label = "Category"
+all_label = "All Categories"
+options = [
+    { value = "seo", label = "SEO" },
+    { value = "ai", label = "AI" },
+    { value = "content", label = "Content" },
+    { value = "analytics", label = "Analytics" },
+    { value = "strategy", label = "Strategy" },
+]
+
+[[sidebar.filters]]
+name = "date"
+label = "Date"
+all_label = "All Dates"
+options = [
+    { value = "2026", label = "2026" },
+    { value = "2025", label = "2025" },
+]
+
+[[sidebar.filters]]
+name = "author"
+label = "Author"
+all_label = "All Authors"
+options = [
+    { value = "team", label = "VVDGT Team" },
+]
+
+[[sidebar.filters]]
+name = "tags"
+label = "Type"
+all_label = "All Types"
+options = [
+    { value = "news", label = "News" },
+    { value = "research", label = "Research" },
+    { value = "guide", label = "Guides" },
+    { value = "announcement", label = "Announcements" },
+]
+
+reset_label = "Reset Filters"

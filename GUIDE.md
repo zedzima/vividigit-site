@@ -348,12 +348,13 @@ title = "E-commerce Services"
 h1 = "E-commerce Marketing"
 # ... expert content
 
-[services-list]
-filter_type = "industries"
-filter_value = "ecommerce"
+[catalog-mini]
+source = "services"
+dimension = "industries"
+value = "ecommerce"
 ```
 
-The `[services-list]` block auto-populates with matching services.
+The `[catalog-mini]` block fetches services from `services-index.json` and filters by dimension/value.
 
 ### Creating Listing Pages
 

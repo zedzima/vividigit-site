@@ -2,7 +2,7 @@
 
 [config]
 lang = "en"
-url = "/industries"
+url = "industries"
 slug = "industries"
 collection = "industries"
 is_listing = true
@@ -19,48 +19,64 @@ h1 = "Services by Industry"
 subtitle = "Solutions tailored to your vertical"
 text = "Every industry has unique challenges. We've developed specialized approaches for each."
 
+[catalog]
+source = "industries"
+count_label = "industries"
+tag = "catalog"
+title = "All Industries"
+subtitle = "Solutions tailored to your vertical"
+
+# Sidebar
 [sidebar]
-title = "Quick Navigation"
+title = "Filter Industries"
+cta_label = "Browse Services"
+cta_url = "services"
 
-[[sidebar.links]]
-label = "E-commerce"
-url = "industries/ecommerce"
+[[sidebar.filters]]
+name = "categories"
+label = "Category"
+all_label = "All Categories"
+options = [
+    { value = "seo", label = "SEO" },
+    { value = "aeo", label = "AEO" },
+    { value = "digital-marketing", label = "Digital Marketing" },
+    { value = "content", label = "Content Marketing" },
+    { value = "social-media", label = "Social Media" },
+    { value = "ppc", label = "PPC" },
+    { value = "email", label = "Email Marketing" },
+    { value = "analytics", label = "Analytics & Data" },
+    { value = "cro", label = "CRO" },
+    { value = "video", label = "Video Marketing" },
+    { value = "pr", label = "Public Relations" },
+    { value = "automation", label = "Marketing Automation" },
+    { value = "ecommerce", label = "E-commerce" },
+    { value = "affiliate", label = "Affiliate Marketing" },
+]
 
-[[sidebar.links]]
-label = "SaaS"
-url = "industries/saas"
+[[sidebar.filters]]
+name = "languages"
+label = "Language"
+all_label = "All Languages"
+options = [
+    { value = "english", label = "English" },
+    { value = "german", label = "German" },
+    { value = "french", label = "French" },
+    { value = "spanish", label = "Spanish" },
+    { value = "russian", label = "Russian" },
+    { value = "chinese", label = "Chinese" },
+    { value = "japanese", label = "Japanese" },
+]
 
-[[sidebar.links]]
-label = "Fintech"
-url = "industries/fintech"
+[[sidebar.filters]]
+name = "countries"
+label = "Country"
+all_label = "All Countries"
+options = [
+    { value = "germany", label = "Germany" },
+    { value = "austria", label = "Austria" },
+    { value = "france", label = "France" },
+    { value = "usa", label = "USA" },
+    { value = "uk", label = "UK" },
+]
 
-[[sidebar.links]]
-label = "Healthcare"
-url = "industries/healthcare"
-
-[cards]
-columns = 2
-
-[[cards.cards]]
-title = "E-commerce"
-description = "Product SEO, category optimization, and conversion-focused strategies for online stores."
-url = "industries/ecommerce"
-icon = "ecommerce"
-
-[[cards.cards]]
-title = "SaaS"
-description = "Content marketing, product-led SEO, and developer audience targeting."
-url = "industries/saas"
-icon = "code"
-
-[[cards.cards]]
-title = "Fintech"
-description = "Trust-building content, compliance-aware marketing, and financial audience reach."
-url = "industries/fintech"
-icon = "fintech"
-
-[[cards.cards]]
-title = "Healthcare"
-description = "YMYL-compliant content, medical SEO, and patient acquisition strategies."
-url = "industries/healthcare"
-icon = "healthcare"
+reset_label = "Reset Filters"
