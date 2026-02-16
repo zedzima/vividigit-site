@@ -406,4 +406,4 @@ Total = Σ(task tier prices) + (langCount × language_fee) + (countryCount × co
 - Full deployment of 13 categories with all services and tasks
 
 ### Live Site
-https://zedzima.github.io/vividigit-site/
+https://vividigit.com/

@@ -32,6 +32,9 @@ jobs:
       - name: Build site
         run: python src/main.py
 
+      - name: Add CNAME
+        run: cp CNAME public/CNAME
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

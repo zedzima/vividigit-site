@@ -529,7 +529,7 @@ Production (GitHub Pages):
 ```
 python src/main.py
 ```
-Uses `base_url` from `site.toml` (e.g., `/vividigit-site/`).
+Uses `base_url` from `site.toml` (e.g., `/`).
 
 The web interface automatically uses local mode for preview.
 

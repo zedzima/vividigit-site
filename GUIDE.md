@@ -409,7 +409,7 @@ button_url = "/contact"
 
 The `<base href="{{ site.base_url }}">` tag in HTML head handles path prefixing:
 - **Local:** `base_url = "/"` → `services/` → `/services/`
-- **GitHub Pages:** `base_url = "/vividigit-site/"` → `services/` → `/vividigit-site/services/`
+- **Production:** `base_url = "/"` → `services/` → `/services/`
 
 Templates use `.lstrip('/')` to ensure URLs are relative.
 

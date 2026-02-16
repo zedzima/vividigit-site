@@ -9,23 +9,19 @@ This applies to all files: TOML, HTML, JS, CSS, Markdown, etc.
 
 ## Before Git Push
 
-**IMPORTANT:** Before committing/pushing, always check for and remove the symlink:
-
-```bash
-rm -f public/vividigit-site
-```
-
-This symlink (`public/vividigit-site -> .`) is created by the dev server for local testing but causes infinite loops during GitHub Pages deployment.
-
 ## Build Commands
 
 ```bash
 # Build site
 .venv/bin/python src/main.py
 
-# Run dev server (creates symlink for local /vividigit-site/ paths)
+# Run dev server
 .venv/bin/python -m http.server 8000 --directory public
 ```
+
+## Custom Domain
+
+Site is deployed to GitHub Pages with custom domain `vividigit.com`. The `CNAME` file in repo root is copied to `public/` during CI build.
 
 ## Project Structure
 
