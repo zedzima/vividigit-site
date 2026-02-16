@@ -47,7 +47,6 @@ overlay?.addEventListener('click', closeSidebars);
 // ========================================
 const cart = {
     items: {},
-    _pageUrl: '',
 
     load() {
         try {
@@ -55,7 +54,6 @@ const cart = {
             if (saved) {
                 const data = JSON.parse(saved);
                 this.items = data.items || {};
-                this._pageUrl = data.pageUrl || '';
             }
         } catch (e) { /* ignore parse errors */ }
     },
@@ -63,21 +61,21 @@ const cart = {
     save() {
         try {
             localStorage.setItem(SITE_CONFIG.cartStorageKey, JSON.stringify({
-                items: this.items,
-                pageUrl: this._pageUrl || window.location.pathname
+                items: this.items
             }));
         } catch (e) { /* ignore storage errors */ }
+        updateCartBadge();
     },
 
-    add(slug, title, tierName, tierLabel, price, custom) {
-        this.items[slug] = { title, tierName, tierLabel, price, custom };
-        this._pageUrl = window.location.pathname;
+    add(slug, title, tierName, tierLabel, price, custom, delivery) {
+        this.items[slug] = { title, tierName, tierLabel, price, custom, delivery: delivery || 'one-time' };
         this.save();
-        this.render();
+        this.renderSidebar();
     },
 
     remove(slug) {
         delete this.items[slug];
+        // Uncheck on current page if present
         const cb = document.querySelector('.task-select-cb[data-slug="' + slug + '"]');
         if (cb) {
             cb.checked = false;
@@ -85,7 +83,7 @@ const cart = {
             if (item) item.classList.remove('selected');
         }
         this.save();
-        this.render();
+        this.renderSidebar();
     },
 
     updateTier(slug, tierName, tierLabel, price, custom) {
@@ -95,15 +93,28 @@ const cart = {
             this.items[slug].price = price;
             this.items[slug].custom = custom;
             this.save();
-            this.render();
+            this.renderSidebar();
         }
     },
 
     clear() {
         this.items = {};
-        this._pageUrl = '';
         this.save();
-        this.render();
+        this.renderSidebar();
+        // Uncheck all on current page
+        document.querySelectorAll('.task-select-cb:checked').forEach(function(cb) {
+            cb.checked = false;
+            const item = cb.closest('.task-picker-item');
+            if (item) item.classList.remove('selected');
+        });
+    },
+
+    getModifiers() {
+        try {
+            const saved = localStorage.getItem(SITE_CONFIG.modifiersStorageKey);
+            if (saved) return JSON.parse(saved);
+        } catch (e) { /* ignore */ }
+        return { langCount: 0, countryCount: 0, langFee: 200, countryFee: 100 };
     },
 
     getTotal() {
@@ -114,14 +125,10 @@ const cart = {
             if (item.custom) hasCustom = true;
             subtotal += item.price;
         }
-        const langCount = parseInt(document.getElementById('langCount')?.textContent) || 0;
-        const countryCount = parseInt(document.getElementById('countryCount')?.textContent) || 0;
-        const langFeeEl = document.querySelector('.cart-counter[data-type="lang"]');
-        const countryFeeEl = document.querySelector('.cart-counter[data-type="country"]');
-        const langFee = parseInt(langFeeEl?.dataset.fee) || 200;
-        const countryFee = parseInt(countryFeeEl?.dataset.fee) || 100;
-        const modifierTotal = (langCount * langFee) + (countryCount * countryFee);
-        return { subtotal, modifierTotal, total: subtotal + modifierTotal, hasCustom, langCount, countryCount };
+        const mods = this.getModifiers();
+        const modifierTotal = (mods.langCount * mods.langFee) + (mods.countryCount * mods.countryFee);
+        return { subtotal, modifierTotal, total: subtotal + modifierTotal, hasCustom,
+                 langCount: mods.langCount, countryCount: mods.countryCount };
     },
 
     getSummaryText() {
@@ -139,30 +146,45 @@ const cart = {
         return lines.join('\n');
     },
 
-    render() {
+    // Get slugs available on the current page (from task-picker checkboxes)
+    _getPageSlugs() {
+        const slugs = new Set();
+        document.querySelectorAll('.task-select-cb').forEach(function(cb) {
+            if (cb.dataset.slug) slugs.add(cb.dataset.slug);
+        });
+        return slugs;
+    },
+
+    // Render sidebar cart — only current page's items
+    renderSidebar() {
         const container = document.getElementById('cartItems');
         const modifiers = document.getElementById('cartModifiers');
-        const totals = document.getElementById('cartTotals');
+        const totalsEl = document.getElementById('cartTotals');
         if (!container) return;
 
-        const keys = Object.keys(this.items);
+        const pageSlugs = this._getPageSlugs();
+        const pageItems = {};
+        for (const slug of Object.keys(this.items)) {
+            if (pageSlugs.has(slug)) pageItems[slug] = this.items[slug];
+        }
+        const keys = Object.keys(pageItems);
 
         if (keys.length === 0) {
             container.innerHTML = '<p class="cart-empty-msg">Select a package or tasks to build your order.</p>';
             if (modifiers) modifiers.style.display = 'none';
-            if (totals) totals.style.display = 'none';
+            if (totalsEl) totalsEl.style.display = 'none';
             return;
         }
 
         if (modifiers) modifiers.style.display = '';
-        if (totals) totals.style.display = '';
+        if (totalsEl) totalsEl.style.display = '';
 
         let html = '';
         let subtotal = 0;
         let hasCustom = false;
 
         for (const slug of keys) {
-            const item = this.items[slug];
+            const item = pageItems[slug];
             if (item.custom) hasCustom = true;
             subtotal += item.price;
             html += '<div class="cart-line-item">' +
@@ -183,7 +205,7 @@ const cart = {
             btn.addEventListener('click', function() { cart.remove(btn.dataset.slug); });
         });
 
-        // Calculate modifiers
+        // Read modifier values from sidebar counters
         const langCount = parseInt(document.getElementById('langCount')?.textContent) || 0;
         const countryCount = parseInt(document.getElementById('countryCount')?.textContent) || 0;
         const langFeeEl = document.querySelector('.cart-counter[data-type="lang"]');
@@ -192,7 +214,7 @@ const cart = {
         const countryFee = parseInt(countryFeeEl?.dataset.fee) || 100;
         const modifierTotal = (langCount * langFee) + (countryCount * countryFee);
 
-        // Update displays
+        // Update sidebar totals
         const subtotalEl = document.getElementById('cartSubtotal');
         const feesEl = document.getElementById('cartFees');
         const totalEl = document.getElementById('cartTotal');
@@ -210,7 +232,11 @@ cart.load();
 document.addEventListener('taskToggled', function(e) {
     const d = e.detail;
     if (d.replaceAll) {
-        cart.items = {};
+        // Clear only current page items, keep others
+        const pageSlugs = cart._getPageSlugs();
+        for (const slug of Object.keys(cart.items)) {
+            if (pageSlugs.has(slug)) delete cart.items[slug];
+        }
         cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom);
     } else if (d.selected) {
         cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom);
@@ -224,7 +250,7 @@ document.addEventListener('tierChanged', function(e) {
     cart.updateTier(d.taskSlug, d.tierName, d.tierLabel, d.price, d.custom);
 });
 
-// Initialize cart display on pages with order-cart sidebar
+// Initialize sidebar cart on pages with order-cart sidebar
 if (document.getElementById('cartItems')) {
     // Restore modifiers from localStorage
     try {
@@ -238,11 +264,16 @@ if (document.getElementById('cartItems')) {
         }
     } catch (e) { /* ignore */ }
 
-    // Render saved cart
-    cart.render();
+    // Render sidebar with current page items only (no checkbox syncing from other pages)
+    cart.renderSidebar();
 
-    // Also init from pre-checked tasks (door openers) if cart was empty
-    if (Object.keys(cart.items).length === 0) {
+    // Init from pre-checked tasks (door openers) only if NO current-page items in cart
+    const pageSlugs = cart._getPageSlugs();
+    let hasPageItems = false;
+    for (const slug of Object.keys(cart.items)) {
+        if (pageSlugs.has(slug)) { hasPageItems = true; break; }
+    }
+    if (!hasPageItems) {
         document.querySelectorAll('.task-select-cb:checked').forEach(function(cb) {
             const item = cb.closest('.task-picker-item');
             const activeTier = item?.querySelector('.tier-btn.active');
@@ -255,24 +286,8 @@ if (document.getElementById('cartItems')) {
                 activeTier ? activeTier.dataset.custom === 'true' : false
             );
         });
-    } else {
-        // Sync checkboxes with saved cart state
-        document.querySelectorAll('.task-select-cb').forEach(function(cb) {
-            const slug = cb.dataset.slug;
-            if (cart.items[slug]) {
-                cb.checked = true;
-                const item = cb.closest('.task-picker-item');
-                if (item) item.classList.add('selected', 'expanded');
-                const savedTier = cart.items[slug].tierName;
-                const tierBtns = item?.querySelectorAll('.tier-btn');
-                if (tierBtns) {
-                    tierBtns.forEach(function(btn) {
-                        btn.classList.toggle('active', btn.dataset.tierName === savedTier);
-                    });
-                }
-            }
-        });
     }
+    // DO NOT sync checkboxes from saved cart — only show what user selects on this page
 }
 
 // Counter +/- buttons for order modifiers
@@ -283,7 +298,7 @@ document.querySelectorAll('.cart-counter').forEach(function(counter) {
         val = Math.max(0, val - 1);
         valEl.textContent = val;
         saveModifiers();
-        cart.render();
+        cart.renderSidebar();
     });
     counter.querySelector('.counter-plus')?.addEventListener('click', function() {
         const valEl = counter.querySelector('.counter-value');
@@ -291,15 +306,19 @@ document.querySelectorAll('.cart-counter').forEach(function(counter) {
         val++;
         valEl.textContent = val;
         saveModifiers();
-        cart.render();
+        cart.renderSidebar();
     });
 });
 
 function saveModifiers() {
+    const langFeeEl = document.querySelector('.cart-counter[data-type="lang"]');
+    const countryFeeEl = document.querySelector('.cart-counter[data-type="country"]');
     try {
         localStorage.setItem(SITE_CONFIG.modifiersStorageKey, JSON.stringify({
             langCount: parseInt(document.getElementById('langCount')?.textContent) || 0,
-            countryCount: parseInt(document.getElementById('countryCount')?.textContent) || 0
+            countryCount: parseInt(document.getElementById('countryCount')?.textContent) || 0,
+            langFee: parseInt(langFeeEl?.dataset.fee) || 200,
+            countryFee: parseInt(countryFeeEl?.dataset.fee) || 100
         }));
     } catch (e) { /* ignore */ }
 }
@@ -323,7 +342,11 @@ if (document.getElementById('cartItems')) {
             });
             pkg.classList.add('pricing-package-selected');
 
-            cart.items = {};
+            // Clear current page items, add package
+            var pageSlugs = cart._getPageSlugs();
+            for (var s of Object.keys(cart.items)) {
+                if (pageSlugs.has(s)) delete cart.items[s];
+            }
             cart.add(slug, name, 'Package', '', price, false);
         });
     });
@@ -344,28 +367,50 @@ if (document.getElementById('cartItems')) {
             });
             tier.classList.add('active');
 
-            cart.items = {};
+            var pageSlugs = cart._getPageSlugs();
+            for (var s of Object.keys(cart.items)) {
+                if (pageSlugs.has(s)) delete cart.items[s];
+            }
             cart.add(slug, name, 'Tier', '', price, false);
         });
     });
 }
 
 // ========================================
-// Checkout: Cart CTA → Contact with Order
+// Sidebar Tab Switcher (Order / Contact)
+// ========================================
+document.querySelectorAll('.sidebar-tabs').forEach(function(tabs) {
+    tabs.querySelectorAll('.sidebar-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            const target = tab.dataset.tab;
+            // Update active tab
+            tabs.querySelectorAll('.sidebar-tab').forEach(function(t) {
+                t.classList.toggle('active', t.dataset.tab === target);
+            });
+            // Show/hide tab content
+            const sidebar = tabs.closest('.sidebar-content');
+            if (sidebar) {
+                sidebar.querySelectorAll('.sidebar-tab-content').forEach(function(panel) {
+                    panel.style.display = panel.dataset.tabContent === target ? '' : 'none';
+                });
+            }
+        });
+    });
+});
+
+// ========================================
+// Cart CTA → Navigate to cart page
 // ========================================
 const cartCta = document.getElementById('cartCta');
 if (cartCta) {
     cartCta.addEventListener('click', function(e) {
-        e.preventDefault();
-
+        // Only prevent default if cart is empty (show alert)
         const keys = Object.keys(cart.items);
         if (keys.length === 0) {
+            e.preventDefault();
             alert('Please select services to build your order.');
-            return;
         }
-
-        // Redirect to contact — cart data travels via localStorage
-        window.location.href = 'contact/';
+        // Otherwise let the <a href="cart/"> work naturally
     });
 }
 
@@ -468,7 +513,7 @@ document.querySelectorAll('.sidebar-content .widget').forEach(function(widget) {
 });
 
 // ========================================
-// Cart Badge (icon-bar cart button)
+// Cart Badge (header cart icon)
 // ========================================
 function updateCartBadge() {
     const badge = document.getElementById('cartBadge');
@@ -477,32 +522,132 @@ function updateCartBadge() {
     badge.textContent = count;
     badge.style.display = count > 0 ? '' : 'none';
 }
-
-// Update badge on load and after every cart mutation
 updateCartBadge();
-const _origCartSave = cart.save.bind(cart);
-cart.save = function() {
-    _origCartSave();
-    updateCartBadge();
-};
 
-// Cart icon click → open action sidebar or navigate to contact
-const cartNavBtn = document.getElementById('cartNavBtn');
-if (cartNavBtn) {
-    cartNavBtn.addEventListener('click', function() {
-        if (document.getElementById('cartItems')) {
-            // On service pages with order-cart sidebar — open the sidebar
-            sidebarAction?.classList.add('open');
-            overlay?.classList.add('active');
-            sidebarNav?.classList.remove('open');
-        } else {
-            // On other pages — go to contact
-            window.location.href = document.querySelector('base')?.href
-                ? document.querySelector('base').href + 'contact/'
-                : '/contact/';
+// ========================================
+// Cart Page: Full table rendering
+// ========================================
+(function() {
+    const cartPage = document.getElementById('cartPage');
+    if (!cartPage) return;
+
+    function renderCartPage() {
+        const keys = Object.keys(cart.items);
+
+        if (keys.length === 0) {
+            cartPage.innerHTML = '<div class="cart-page-empty">' +
+                '<p>Your cart is empty</p>' +
+                '<a href="services/" class="btn btn-primary">Browse Services</a>' +
+            '</div>';
+            return;
         }
-    });
-}
+
+        let html = '<table class="cart-table"><thead><tr>' +
+            '<th>Service</th><th>Tier</th><th>Delivery</th><th>Price</th><th></th>' +
+            '</tr></thead><tbody>';
+
+        let subtotal = 0;
+        let hasCustom = false;
+
+        for (const slug of keys) {
+            const item = cart.items[slug];
+            if (item.custom) hasCustom = true;
+            subtotal += item.price;
+            const deliveryLabel = item.delivery === 'monthly' ? 'Monthly' : 'One-time';
+
+            html += '<tr>' +
+                '<td><span class="cart-item-name">' + item.title + '</span></td>' +
+                '<td><span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + '</span></td>' +
+                '<td><span class="cart-item-delivery">' + deliveryLabel + '</span></td>' +
+                '<td><span class="cart-item-price">' + (item.price > 0 ? '$' + item.price.toLocaleString() : 'Custom') + '</span></td>' +
+                '<td><button class="cart-item-remove-btn" data-slug="' + slug + '" title="Remove">&times;</button></td>' +
+            '</tr>';
+        }
+        html += '</tbody></table>';
+
+        // Modifiers
+        const mods = cart.getModifiers();
+        html += '<div class="cart-modifiers-section">' +
+            '<div class="cart-modifier-control">' +
+                '<span class="cart-modifier-label">Additional Languages</span>' +
+                '<div class="cart-modifier-counter">' +
+                    '<button class="cart-modifier-btn" data-action="minus" data-type="lang">−</button>' +
+                    '<span class="cart-modifier-value" id="cartPageLang">' + mods.langCount + '</span>' +
+                    '<button class="cart-modifier-btn" data-action="plus" data-type="lang">+</button>' +
+                '</div>' +
+                '<span class="cart-modifier-label" style="color:var(--text-muted)">× $' + mods.langFee + '</span>' +
+            '</div>' +
+            '<div class="cart-modifier-control">' +
+                '<span class="cart-modifier-label">Additional Countries</span>' +
+                '<div class="cart-modifier-counter">' +
+                    '<button class="cart-modifier-btn" data-action="minus" data-type="country">−</button>' +
+                    '<span class="cart-modifier-value" id="cartPageCountry">' + mods.countryCount + '</span>' +
+                    '<button class="cart-modifier-btn" data-action="plus" data-type="country">+</button>' +
+                '</div>' +
+                '<span class="cart-modifier-label" style="color:var(--text-muted)">× $' + mods.countryFee + '</span>' +
+            '</div>' +
+        '</div>';
+
+        // Totals
+        const totals = cart.getTotal();
+        html += '<div class="cart-totals">' +
+            '<div>' +
+                '<div class="cart-total-amount">' + (hasCustom ? 'From ' : '') + '$' + totals.total.toLocaleString() + '</div>' +
+                '<div class="cart-total-label">Estimated Total</div>' +
+            '</div>' +
+        '</div>';
+
+        // Actions
+        html += '<div class="cart-actions">' +
+            '<a href="contact/" class="btn btn-primary">Request Quote</a>' +
+            '<button class="btn btn-secondary" id="cartPageClear">Clear Cart</button>' +
+        '</div>';
+
+        cartPage.innerHTML = html;
+
+        // Bind remove buttons
+        cartPage.querySelectorAll('.cart-item-remove-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                cart.remove(btn.dataset.slug);
+                renderCartPage();
+            });
+        });
+
+        // Bind clear button
+        document.getElementById('cartPageClear')?.addEventListener('click', function() {
+            cart.clear();
+            renderCartPage();
+        });
+
+        // Bind modifier +/- buttons
+        cartPage.querySelectorAll('.cart-modifier-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const type = btn.dataset.type;
+                const action = btn.dataset.action;
+                const valEl = type === 'lang'
+                    ? document.getElementById('cartPageLang')
+                    : document.getElementById('cartPageCountry');
+                let val = parseInt(valEl.textContent) || 0;
+                if (action === 'plus') val++;
+                else val = Math.max(0, val - 1);
+                valEl.textContent = val;
+
+                // Save to localStorage
+                const mods = cart.getModifiers();
+                if (type === 'lang') mods.langCount = val;
+                else mods.countryCount = val;
+                try {
+                    localStorage.setItem(SITE_CONFIG.modifiersStorageKey, JSON.stringify(mods));
+                } catch (e) { /* ignore */ }
+
+                // Re-render to update totals
+                renderCartPage();
+            });
+        });
+    }
+
+    renderCartPage();
+})();
 
 // ========================================
 // Contact Page: Show Cart Summary

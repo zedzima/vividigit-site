@@ -405,25 +405,60 @@ a:hover { color: var(--accent-hover); }
     height: 28px;
 }
 
-/* Cart Nav Button */
-.cart-nav-btn {
+/* Header Cart Button */
+.btn-cart {
     position: relative;
+    text-decoration: none;
+    color: inherit;
+}
+.btn-cart svg {
+    width: 20px;
+    height: 20px;
 }
 .cart-badge {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 5px;
-    font-size: 0.6875rem;
+    top: 4px;
+    right: 4px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    font-size: 0.625rem;
     font-weight: 700;
-    line-height: 18px;
+    line-height: 16px;
     text-align: center;
     color: #fff;
     background: var(--accent);
-    border-radius: 9px;
+    border-radius: 8px;
     pointer-events: none;
+}
+
+/* Sidebar Tab Switcher */
+.sidebar-tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0 !important;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-md);
+}
+.sidebar-tab {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+.sidebar-tab:hover {
+    color: var(--text-primary);
+}
+.sidebar-tab.active {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 /* Cart Summary (contact page) */
