@@ -11,8 +11,8 @@ const SITE_CONFIG = {
     notifyEmail: 'mail@vividigit.com',
     cartStorageKey: 'vividigit_cart',
     modifiersStorageKey: 'vividigit_modifiers',
-    langFee: 200,
-    countryFee: 100
+    langPct: 0.6,      // each extra language adds 60% of item price
+    countryPct: 0.4    // each extra country adds 40% of item price
 };
 
 // ========================================
@@ -119,9 +119,9 @@ const cart = {
     },
 
     getItemTotal(item) {
-        return item.price +
-            ((item.langCount || 0) * SITE_CONFIG.langFee) +
-            ((item.countryCount || 0) * SITE_CONFIG.countryFee);
+        const langExtra = Math.round(item.price * SITE_CONFIG.langPct) * (item.langCount || 0);
+        const countryExtra = Math.round(item.price * SITE_CONFIG.countryPct) * (item.countryCount || 0);
+        return item.price + langExtra + countryExtra;
     },
 
     getTotal() {
@@ -145,8 +145,8 @@ const cart = {
             const delivery = item.delivery === 'monthly' ? 'Monthly' : 'One-time';
             const itemTotal = this.getItemTotal(item);
             let line = '- ' + item.title + ' (' + item.tierName + ') — ' + delivery;
-            if (lc > 0) line += ', +' + lc + ' lang';
-            if (cc > 0) line += ', +' + cc + ' countries';
+            if (lc > 0) line += ', +' + lc + ' lang (×' + Math.round(SITE_CONFIG.langPct * 100) + '%)';
+            if (cc > 0) line += ', +' + cc + ' countries (×' + Math.round(SITE_CONFIG.countryPct * 100) + '%)';
             line += ' — ' + (item.price > 0 ? '$' + itemTotal.toLocaleString() : 'Custom');
             return line;
         });
@@ -167,8 +167,10 @@ const cart = {
             const itemTotal = this.getItemTotal(item);
             lines.push(num + '. ' + item.title + ' (' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ')');
             lines.push('   Delivery: ' + delivery);
-            if (lc > 0) lines.push('   Languages: +' + lc + ' × $' + SITE_CONFIG.langFee + ' = $' + (lc * SITE_CONFIG.langFee));
-            if (cc > 0) lines.push('   Countries: +' + cc + ' × $' + SITE_CONFIG.countryFee + ' = $' + (cc * SITE_CONFIG.countryFee));
+            const perLang = Math.round(item.price * SITE_CONFIG.langPct);
+            const perCountry = Math.round(item.price * SITE_CONFIG.countryPct);
+            if (lc > 0) lines.push('   Languages: +' + lc + ' × $' + perLang + ' (60%) = $' + (lc * perLang));
+            if (cc > 0) lines.push('   Countries: +' + cc + ' × $' + perCountry + ' (40%) = $' + (cc * perCountry));
             lines.push('   Subtotal: ' + (item.price > 0 ? '$' + itemTotal.toLocaleString() : 'Custom quote'));
             lines.push('');
             num++;
@@ -604,8 +606,9 @@ updateCartBadge();
             const cc = item.countryCount || 0;
             const itemTotal = cart.getItemTotal(item);
             grandTotal += itemTotal;
-            const deliveryLabel = item.delivery === 'monthly' ? 'Monthly' : 'One-time';
-            const deliveryClass = item.delivery === 'monthly' ? ' monthly' : '';
+            const isMonthly = item.delivery === 'monthly';
+            const perLang = Math.round(item.price * SITE_CONFIG.langPct);
+            const perCountry = Math.round(item.price * SITE_CONFIG.countryPct);
 
             html += '<tr>' +
                 '<td>' +
@@ -613,7 +616,10 @@ updateCartBadge();
                     '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + '</span>' +
                 '</td>' +
                 '<td>' +
-                    '<button class="cart-delivery-toggle' + deliveryClass + '" data-slug="' + slug + '">' + deliveryLabel + '</button>' +
+                    '<div class="cart-delivery-tabs">' +
+                        '<button class="cart-delivery-opt' + (!isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="one-time">One-time</button>' +
+                        '<button class="cart-delivery-opt' + (isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>' +
+                    '</div>' +
                 '</td>' +
                 '<td>' +
                     '<div class="cart-inline-counter">' +
@@ -621,7 +627,7 @@ updateCartBadge();
                         '<span class="cart-inline-val">' + lc + '</span>' +
                         '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="langCount" data-action="plus">+</button>' +
                     '</div>' +
-                    (lc > 0 ? '<span class="cart-inline-fee">× $' + SITE_CONFIG.langFee + '</span>' : '') +
+                    (lc > 0 ? '<span class="cart-inline-fee">+$' + (perLang * lc).toLocaleString() + '</span>' : '') +
                 '</td>' +
                 '<td>' +
                     '<div class="cart-inline-counter">' +
@@ -629,7 +635,7 @@ updateCartBadge();
                         '<span class="cart-inline-val">' + cc + '</span>' +
                         '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="countryCount" data-action="plus">+</button>' +
                     '</div>' +
-                    (cc > 0 ? '<span class="cart-inline-fee">× $' + SITE_CONFIG.countryFee + '</span>' : '') +
+                    (cc > 0 ? '<span class="cart-inline-fee">+$' + (perCountry * cc).toLocaleString() + '</span>' : '') +
                 '</td>' +
                 '<td class="text-right"><span class="cart-item-price">' + (item.price > 0 ? '$' + itemTotal.toLocaleString() : 'Custom') + '</span></td>' +
                 '<td><button class="cart-item-remove-btn" data-slug="' + slug + '">&times;</button></td>' +
@@ -680,13 +686,14 @@ updateCartBadge();
             });
         });
 
-        // Delivery toggle
-        cartPage.querySelectorAll('.cart-delivery-toggle').forEach(function(btn) {
+        // Delivery tabs
+        cartPage.querySelectorAll('.cart-delivery-opt').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 const slug = btn.dataset.slug;
+                const val = btn.dataset.val;
                 const item = cart.items[slug];
-                if (!item) return;
-                item.delivery = item.delivery === 'monthly' ? 'one-time' : 'monthly';
+                if (!item || item.delivery === val) return;
+                item.delivery = val;
                 cart.save();
                 renderCartPage();
             });

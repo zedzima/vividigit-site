@@ -83,25 +83,33 @@
 }
 .cart-item-remove-btn:hover { color: var(--danger, #e54); }
 
-/* Delivery toggle button */
-.cart-delivery-toggle {
-    font-size: var(--font-size-caption);
-    padding: 3px 10px;
-    border-radius: var(--radius-full);
+/* Delivery segmented tabs */
+.cart-delivery-tabs {
+    display: inline-flex;
     border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+.cart-delivery-opt {
+    padding: 3px 10px;
+    border: none;
     background: transparent;
-    color: var(--text-secondary);
+    color: var(--text-muted);
+    font-size: var(--font-size-caption);
+    font-weight: 500;
     cursor: pointer;
     transition: var(--transition);
     white-space: nowrap;
 }
-.cart-delivery-toggle:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
+.cart-delivery-opt:first-child {
+    border-right: 1px solid var(--border-color);
 }
-.cart-delivery-toggle.monthly {
+.cart-delivery-opt:hover {
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+}
+.cart-delivery-opt.active {
     background: var(--accent-primary);
-    border-color: var(--accent-primary);
     color: white;
 }
 
