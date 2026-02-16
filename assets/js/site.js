@@ -106,7 +106,10 @@ const cart = {
         }
     },
 
+    _backup: null,
+
     clear() {
+        this._backup = JSON.parse(JSON.stringify(this.items));
         this.items = {};
         this.save();
         this.renderSidebar();
@@ -116,6 +119,15 @@ const cart = {
             const item = cb.closest('.task-picker-item');
             if (item) item.classList.remove('selected');
         });
+    },
+
+    restore() {
+        if (!this._backup) return false;
+        this.items = this._backup;
+        this._backup = null;
+        this.save();
+        this.renderSidebar();
+        return true;
     },
 
     getItemTotal(item) {
@@ -579,10 +591,18 @@ updateCartBadge();
         const keys = Object.keys(cart.items);
 
         if (keys.length === 0) {
-            cartPage.innerHTML = '<div class="cart-page-empty">' +
+            let emptyHtml = '<div class="cart-page-empty">' +
                 '<p>Your cart is empty</p>' +
-                '<a href="services/" class="btn btn-primary">Browse Services</a>' +
+                '<div class="cart-actions" style="justify-content:center;">' +
+                    '<a href="services/" class="btn btn-primary">Browse Services</a>' +
+                    (cart._backup ? '<button class="btn btn-secondary" id="cartRestore">Restore Cart</button>' : '') +
+                '</div>' +
             '</div>';
+            cartPage.innerHTML = emptyHtml;
+            document.getElementById('cartRestore')?.addEventListener('click', function() {
+                cart.restore();
+                renderCartPage();
+            });
             return;
         }
 
@@ -830,11 +850,39 @@ updateCartBadge();
         textarea.value = 'I would like to request a quote for:\n\n' + cart.getSummaryText();
     }
 
-    // Clear cart button
-    summaryDiv.querySelector('.btn-clear-cart').addEventListener('click', function() {
-        cart.clear();
-        summaryDiv.remove();
-        textarea.value = '';
+    // Clear / Restore cart button
+    const clearBtn = summaryDiv.querySelector('.btn-clear-cart');
+    clearBtn.addEventListener('click', function() {
+        if (clearBtn.dataset.state === 'restore') {
+            // Restore
+            cart.restore();
+            clearBtn.dataset.state = '';
+            clearBtn.textContent = 'Clear Cart';
+            // Re-build summary
+            let newHtml = '<div class="widget-title">Your Order (' + Object.keys(cart.items).length + ' items)</div>';
+            newHtml += '<div class="cart-summary-items">';
+            for (const s of Object.keys(cart.items)) {
+                const it = cart.items[s];
+                const t = cart.getItemTotal(it);
+                newHtml += '<div class="cart-summary-line"><span>' + it.title + ' <small>(' + it.tierName + ')</small></span><span>' + (it.price > 0 ? '$' + t.toLocaleString() : 'Custom') + '</span></div>';
+            }
+            newHtml += '</div>';
+            const tot = cart.getTotal();
+            newHtml += '<div class="cart-summary-total"><span>Estimated Total</span><span>' + (tot.hasCustom ? 'From ' : '') + '$' + tot.total.toLocaleString() + '</span></div>';
+            newHtml += '<button class="btn btn-secondary btn-full btn-clear-cart" style="margin-top:0.5rem;font-size:0.75rem;">Clear Cart</button>';
+            summaryDiv.innerHTML = newHtml;
+            textarea.value = 'I would like to request a quote for:\n\n' + cart.getSummaryText();
+            // Re-bind
+            summaryDiv.querySelector('.btn-clear-cart').addEventListener('click', clearBtn.onclick);
+        } else {
+            // Clear
+            cart.clear();
+            summaryDiv.querySelector('.cart-summary-items').innerHTML = '<p style="color:var(--text-muted);font-size:0.8125rem;">Cart cleared</p>';
+            summaryDiv.querySelector('.cart-summary-total').style.display = 'none';
+            clearBtn.textContent = 'Restore Cart';
+            clearBtn.dataset.state = 'restore';
+            textarea.value = '';
+        }
     });
 })();
 
