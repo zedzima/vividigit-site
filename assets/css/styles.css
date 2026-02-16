@@ -432,37 +432,33 @@ a:hover { color: var(--accent-hover); }
     pointer-events: none;
 }
 
-/* Sidebar Tab Switcher */
+/* Sidebar Tab Switcher — same style as coverage-tabs */
 .sidebar-tabs {
     display: flex;
-    gap: 0;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
     padding: 0 !important;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    overflow: hidden;
+    margin-top: var(--space-md);
 }
 .sidebar-tab {
-    flex: 1;
-    padding: 0.5rem 0.75rem;
-    border: none;
-    border-right: 1px solid var(--border-color);
+    padding: var(--space-sm) var(--space-lg);
     background: transparent;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: var(--font-size-ui);
+    font-weight: 500;
     cursor: pointer;
     transition: var(--transition);
 }
-.sidebar-tab:last-child { border-right: none; }
 .sidebar-tab:hover {
-    color: var(--text-primary);
-    background: var(--bg-card);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
 }
 .sidebar-tab.active {
-    background: var(--bg-card);
-    color: var(--accent);
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
 }
 
 /* Cart Summary (contact page) */
