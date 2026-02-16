@@ -7,9 +7,8 @@
 // Configuration
 // ========================================
 const SITE_CONFIG = {
-    web3formsKey: 'YOUR_WEB3FORMS_ACCESS_KEY', // Replace with key from https://web3forms.com
+    web3formsKey: '419be280-f452-493c-9745-bd1daba07eb8',
     notifyEmail: 'mail@vividigit.com',
-    checkoutWorkerUrl: 'https://vividigit-checkout.workers.dev', // Cloudflare Worker URL
     cartStorageKey: 'vividigit_cart',
     modifiersStorageKey: 'vividigit_modifiers'
 };
@@ -352,7 +351,7 @@ if (document.getElementById('cartItems')) {
 }
 
 // ========================================
-// Checkout: Cart CTA → Revolut Payment
+// Checkout: Cart CTA → Contact with Order
 // ========================================
 const cartCta = document.getElementById('cartCta');
 if (cartCta) {
@@ -365,50 +364,8 @@ if (cartCta) {
             return;
         }
 
-        const totals = cart.getTotal();
-
-        // If total is 0 or has custom pricing, redirect to contact with cart summary
-        if (totals.total === 0 || totals.hasCustom) {
-            const summary = encodeURIComponent(cart.getSummaryText());
-            window.location.href = 'contact/?order=' + summary;
-            return;
-        }
-
-        // Show loading state
-        cartCta.textContent = 'Processing...';
-        cartCta.style.pointerEvents = 'none';
-
-        // Send to Cloudflare Worker → Revolut
-        fetch(SITE_CONFIG.checkoutWorkerUrl + '/create-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                items: cart.items,
-                modifiers: {
-                    languages: totals.langCount,
-                    countries: totals.countryCount
-                },
-                total: totals.total,
-                currency: 'USD',
-                pageUrl: window.location.href
-            })
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-            if (data.checkout_url) {
-                window.location.href = data.checkout_url;
-            } else if (data.error) {
-                alert('Payment error: ' + data.error);
-                cartCta.textContent = 'Request Quote';
-                cartCta.style.pointerEvents = '';
-            }
-        })
-        .catch(function(err) {
-            // Fallback: redirect to contact with cart summary
-            console.error('Checkout error:', err);
-            const summary = encodeURIComponent(cart.getSummaryText());
-            window.location.href = 'contact/?order=' + summary;
-        });
+        // Redirect to contact — cart data travels via localStorage
+        window.location.href = 'contact/';
     });
 }
 
@@ -455,11 +412,10 @@ document.querySelectorAll('.sidebar-content .widget').forEach(function(widget) {
             ? 'Quick Contact from ' + page
             : 'Contact Form from ' + page;
 
-        // Check for cart data in URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const orderData = urlParams.get('order');
-        if (orderData) {
-            formData.order = decodeURIComponent(orderData);
+        // Attach cart data from localStorage if present
+        const cartSummary = cart.getSummaryText();
+        if (cartSummary && cartSummary !== 'Empty cart') {
+            formData.order = cartSummary;
         }
 
         const originalText = submitBtn.textContent;
@@ -510,6 +466,103 @@ document.querySelectorAll('.sidebar-content .widget').forEach(function(widget) {
         });
     });
 });
+
+// ========================================
+// Cart Badge (icon-bar cart button)
+// ========================================
+function updateCartBadge() {
+    const badge = document.getElementById('cartBadge');
+    if (!badge) return;
+    const count = Object.keys(cart.items).length;
+    badge.textContent = count;
+    badge.style.display = count > 0 ? '' : 'none';
+}
+
+// Update badge on load and after every cart mutation
+updateCartBadge();
+const _origCartSave = cart.save.bind(cart);
+cart.save = function() {
+    _origCartSave();
+    updateCartBadge();
+};
+
+// Cart icon click → open action sidebar or navigate to contact
+const cartNavBtn = document.getElementById('cartNavBtn');
+if (cartNavBtn) {
+    cartNavBtn.addEventListener('click', function() {
+        if (document.getElementById('cartItems')) {
+            // On service pages with order-cart sidebar — open the sidebar
+            sidebarAction?.classList.add('open');
+            overlay?.classList.add('active');
+            sidebarNav?.classList.remove('open');
+        } else {
+            // On other pages — go to contact
+            window.location.href = document.querySelector('base')?.href
+                ? document.querySelector('base').href + 'contact/'
+                : '/contact/';
+        }
+    });
+}
+
+// ========================================
+// Contact Page: Show Cart Summary
+// ========================================
+(function() {
+    // Detect contact page (has full-form sidebar)
+    const fullFormWidget = document.querySelector('.sidebar-content .widget .form-input[name="message"]');
+    if (!fullFormWidget) return;
+
+    const itemCount = Object.keys(cart.items).length;
+    if (itemCount === 0) return;
+
+    // Build cart summary card and insert before the form widget
+    const widget = fullFormWidget.closest('.widget');
+    const summaryDiv = document.createElement('div');
+    summaryDiv.className = 'widget';
+
+    let html = '<div class="widget-title">Your Order (' + itemCount + ' items)</div>';
+    html += '<div class="cart-summary-items">';
+    for (const slug of Object.keys(cart.items)) {
+        const item = cart.items[slug];
+        const price = item.price > 0 ? '$' + item.price.toLocaleString() : 'Custom';
+        html += '<div class="cart-summary-line">' +
+            '<span>' + item.title + ' <small>(' + item.tierName + ')</small></span>' +
+            '<span>' + price + '</span>' +
+            '</div>';
+    }
+
+    const totals = cart.getTotal();
+    if (totals.langCount > 0) {
+        html += '<div class="cart-summary-line"><span>+ ' + totals.langCount + ' languages</span><span></span></div>';
+    }
+    if (totals.countryCount > 0) {
+        html += '<div class="cart-summary-line"><span>+ ' + totals.countryCount + ' countries</span><span></span></div>';
+    }
+    html += '</div>';
+
+    html += '<div class="cart-summary-total">' +
+        '<span>Estimated Total</span>' +
+        '<span>' + (totals.hasCustom ? 'From ' : '') + '$' + totals.total.toLocaleString() + '</span>' +
+        '</div>';
+
+    html += '<button class="btn btn-secondary btn-full btn-clear-cart" style="margin-top:0.5rem;font-size:0.75rem;">Clear Cart</button>';
+
+    summaryDiv.innerHTML = html;
+    widget.parentNode.insertBefore(summaryDiv, widget);
+
+    // Pre-fill message textarea with order summary
+    const textarea = fullFormWidget;
+    if (!textarea.value) {
+        textarea.value = 'I would like to request a quote for:\n\n' + cart.getSummaryText();
+    }
+
+    // Clear cart button
+    summaryDiv.querySelector('.btn-clear-cart').addEventListener('click', function() {
+        cart.clear();
+        summaryDiv.remove();
+        textarea.value = '';
+    });
+})();
 
 // ========================================
 // Theme System
