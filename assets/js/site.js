@@ -68,7 +68,7 @@ const cart = {
     },
 
     add(slug, title, tierName, tierLabel, price, custom, delivery) {
-        this.items[slug] = { title, tierName, tierLabel, price, custom, delivery: delivery || 'one-time' };
+        this.items[slug] = { title, tierName, tierLabel, price, custom, delivery: delivery || 'one-time', page: window.location.pathname };
         this.save();
         this.renderSidebar();
     },
@@ -155,17 +155,17 @@ const cart = {
         return slugs;
     },
 
-    // Render sidebar cart — only current page's items
+    // Render sidebar cart — only items added on this page
     renderSidebar() {
         const container = document.getElementById('cartItems');
         const modifiers = document.getElementById('cartModifiers');
         const totalsEl = document.getElementById('cartTotals');
         if (!container) return;
 
-        const pageSlugs = this._getPageSlugs();
+        const currentPage = window.location.pathname;
         const pageItems = {};
         for (const slug of Object.keys(this.items)) {
-            if (pageSlugs.has(slug)) pageItems[slug] = this.items[slug];
+            if (this.items[slug].page === currentPage) pageItems[slug] = this.items[slug];
         }
         const keys = Object.keys(pageItems);
 
@@ -233,9 +233,9 @@ document.addEventListener('taskToggled', function(e) {
     const d = e.detail;
     if (d.replaceAll) {
         // Clear only current page items, keep others
-        const pageSlugs = cart._getPageSlugs();
+        const currentPage = window.location.pathname;
         for (const slug of Object.keys(cart.items)) {
-            if (pageSlugs.has(slug)) delete cart.items[slug];
+            if (cart.items[slug].page === currentPage) delete cart.items[slug];
         }
         cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom);
     } else if (d.selected) {
@@ -268,10 +268,10 @@ if (document.getElementById('cartItems')) {
     cart.renderSidebar();
 
     // Init from pre-checked tasks (door openers) only if NO current-page items in cart
-    const pageSlugs = cart._getPageSlugs();
+    const currentPage = window.location.pathname;
     let hasPageItems = false;
     for (const slug of Object.keys(cart.items)) {
-        if (pageSlugs.has(slug)) { hasPageItems = true; break; }
+        if (cart.items[slug].page === currentPage) { hasPageItems = true; break; }
     }
     if (!hasPageItems) {
         document.querySelectorAll('.task-select-cb:checked').forEach(function(cb) {
@@ -343,9 +343,9 @@ if (document.getElementById('cartItems')) {
             pkg.classList.add('pricing-package-selected');
 
             // Clear current page items, add package
-            var pageSlugs = cart._getPageSlugs();
+            var curPage = window.location.pathname;
             for (var s of Object.keys(cart.items)) {
-                if (pageSlugs.has(s)) delete cart.items[s];
+                if (cart.items[s].page === curPage) delete cart.items[s];
             }
             cart.add(slug, name, 'Package', '', price, false);
         });
@@ -367,9 +367,9 @@ if (document.getElementById('cartItems')) {
             });
             tier.classList.add('active');
 
-            var pageSlugs = cart._getPageSlugs();
+            var curPage = window.location.pathname;
             for (var s of Object.keys(cart.items)) {
-                if (pageSlugs.has(s)) delete cart.items[s];
+                if (cart.items[s].page === curPage) delete cart.items[s];
             }
             cart.add(slug, name, 'Tier', '', price, false);
         });

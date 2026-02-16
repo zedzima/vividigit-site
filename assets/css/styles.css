@@ -435,30 +435,34 @@ a:hover { color: var(--accent-hover); }
 /* Sidebar Tab Switcher */
 .sidebar-tabs {
     display: flex;
-    gap: 0.25rem;
+    gap: 0;
     padding: 0 !important;
-    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
+    overflow: hidden;
 }
 .sidebar-tab {
     flex: 1;
-    padding: 0.5rem;
+    padding: 0.5rem 0.75rem;
     border: none;
+    border-right: 1px solid var(--border-color);
     background: transparent;
     color: var(--text-muted);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     cursor: pointer;
-    border-radius: var(--radius-md);
     transition: var(--transition);
 }
+.sidebar-tab:last-child { border-right: none; }
 .sidebar-tab:hover {
     color: var(--text-primary);
+    background: var(--bg-card);
 }
 .sidebar-tab.active {
     background: var(--bg-card);
-    color: var(--text-primary);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    color: var(--accent);
 }
 
 /* Cart Summary (contact page) */
