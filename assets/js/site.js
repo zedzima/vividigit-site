@@ -390,13 +390,15 @@ if (document.getElementById('cartItems')) {
     document.querySelectorAll('.pricing-package .btn').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             var pkg = btn.closest('.pricing-package');
+            var grid = pkg.closest('.pricing-packages-grid');
             var nameEl = pkg.querySelector('.package-header h3');
             var priceEl = pkg.querySelector('.price-current');
             if (!nameEl || !priceEl) return;
 
             e.preventDefault();
-            var name = nameEl.textContent.trim();
-            var slug = name.toLowerCase().replace(/\s+/g, '-');
+            var pkgName = nameEl.textContent.trim();
+            var serviceName = (grid && grid.dataset.service) ? grid.dataset.service : '';
+            var slug = (serviceName ? serviceName.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' : '') + pkgName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
             var price = parseInt(priceEl.textContent.replace(/[^0-9]/g, '')) || 0;
 
             document.querySelectorAll('.pricing-package').forEach(function(p) {
@@ -409,7 +411,7 @@ if (document.getElementById('cartItems')) {
             for (var s of Object.keys(cart.items)) {
                 if (cart.items[s].page === curPage) delete cart.items[s];
             }
-            cart.add(slug, name, 'Package', '', price, false);
+            cart.add(slug, serviceName || pkgName, pkgName, '', price, false);
         });
     });
 
@@ -420,8 +422,11 @@ if (document.getElementById('cartItems')) {
             var priceEl = tier.querySelector('.tier-price');
             if (!nameEl || !priceEl) return;
 
-            var name = nameEl.textContent.trim();
-            var slug = name.toLowerCase().replace(/\s+/g, '-');
+            var tierName = nameEl.textContent.trim();
+            var section = tier.closest('.pricing-block');
+            var headerEl = section ? section.querySelector('.pricing-header h2') : null;
+            var serviceName = headerEl ? headerEl.textContent.trim() : '';
+            var slug = (serviceName ? serviceName.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' : '') + tierName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
             var price = parseInt(priceEl.textContent.replace(/[^0-9]/g, '')) || 0;
 
             document.querySelectorAll('.pricing-tier').forEach(function(t) {
@@ -433,7 +438,7 @@ if (document.getElementById('cartItems')) {
             for (var s of Object.keys(cart.items)) {
                 if (cart.items[s].page === curPage) delete cart.items[s];
             }
-            cart.add(slug, name, 'Tier', '', price, false);
+            cart.add(slug, serviceName || tierName, tierName, '', price, false);
         });
     });
 }
@@ -599,6 +604,7 @@ updateCartBadge();
         const savedComment = document.getElementById('cartComment')?.value || '';
         const savedName = document.getElementById('cartName')?.value || '';
         const savedEmail = document.getElementById('cartEmail')?.value || '';
+        const savedSource = document.getElementById('cartSource')?.value || '';
 
         const keys = Object.keys(cart.items);
 
@@ -644,10 +650,11 @@ updateCartBadge();
             const perLang = Math.round(item.price * SITE_CONFIG.langPct);
             const perCountry = Math.round(item.price * SITE_CONFIG.countryPct);
 
+            var basePriceStr = item.price > 0 ? '$' + item.price.toLocaleString() : 'Custom';
             html += '<tr>' +
                 '<td>' +
                     '<span class="cart-item-name">' + item.title + '</span>' +
-                    '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + '</span>' +
+                    '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + basePriceStr + '</span>' +
                 '</td>' +
                 '<td>' +
                     '<div class="cart-delivery-tabs">' +
@@ -697,6 +704,16 @@ updateCartBadge();
                 '<input type="text" class="cart-field-input" id="cartName" placeholder="Your name" />' +
                 '<input type="email" class="cart-field-input" id="cartEmail" placeholder="Your email *" />' +
             '</div>' +
+            '<div style="margin-bottom:1rem;">' +
+                '<select class="cart-field-input" id="cartSource">' +
+                    '<option value="" disabled selected>How did you hear about us?</option>' +
+                    '<option value="search">Search engine</option>' +
+                    '<option value="social">Social media</option>' +
+                    '<option value="referral">Referral</option>' +
+                    '<option value="ad">Advertisement</option>' +
+                    '<option value="other">Other</option>' +
+                '</select>' +
+            '</div>' +
             '<div class="cart-actions">' +
                 '<button class="btn btn-primary" id="cartSendRequest">Request Quote</button>' +
                 '<button class="btn btn-secondary" id="cartPageClear">Clear Cart</button>' +
@@ -709,6 +726,7 @@ updateCartBadge();
         if (savedComment) document.getElementById('cartComment').value = savedComment;
         if (savedName) document.getElementById('cartName').value = savedName;
         if (savedEmail) document.getElementById('cartEmail').value = savedEmail;
+        if (savedSource) document.getElementById('cartSource').value = savedSource;
 
         // --- Bind events ---
 
@@ -761,6 +779,7 @@ updateCartBadge();
             const email = document.getElementById('cartEmail')?.value.trim();
             const name = document.getElementById('cartName')?.value.trim() || 'Website Visitor';
             const comment = document.getElementById('cartComment')?.value.trim();
+            const source = document.getElementById('cartSource')?.value || '';
 
             if (!email || !email.includes('@')) {
                 alert('Please enter a valid email address.');
@@ -784,6 +803,7 @@ updateCartBadge();
                     from_name: name,
                     email: email,
                     message: orderBody,
+                    source: source,
                     page_url: window.location.href,
                     botcheck: ''
                 })

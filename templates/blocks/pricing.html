@@ -95,7 +95,7 @@
     </div>
     {% endif %}
 
-    <div class="pricing-packages-grid" data-discount="{{ data.yearly_discount | default(20) }}">
+    <div class="pricing-packages-grid" data-service="{{ data.title | default('') }}" data-discount="{{ data.yearly_discount | default(20) }}">
         {% for pkg in data.packages %}
         <div class="pricing-package {% if pkg.highlighted %}pricing-package-highlighted{% endif %}">
             {% if pkg.badge %}
@@ -103,6 +103,9 @@
             {% endif %}
 
             <div class="package-header">
+                {% if data.title %}
+                <span class="package-service-label">{{ data.title }}</span>
+                {% endif %}
                 <h3>{{ pkg.name }}</h3>
                 {% if pkg.description %}
                 <p>{{ pkg.description }}</p>
@@ -128,7 +131,7 @@
             {% endif %}
 
             <a href="{{ (pkg.button_url | default('#')).lstrip('/') }}" class="btn {% if pkg.highlighted %}btn-primary{% else %}btn-secondary{% endif %} btn-full">
-                {{ pkg.button_label | default('Choose Plan') }}
+                {{ pkg.button_label | default('Choose') }}
             </a>
 
             {% if pkg.note %}
@@ -434,6 +437,16 @@
 
     .package-header {
         margin-bottom: var(--space-lg);
+    }
+
+    .package-service-label {
+        display: block;
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        margin-bottom: var(--space-xs);
     }
 
     .package-header h3 {
