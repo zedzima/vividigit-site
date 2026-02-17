@@ -16,6 +16,14 @@ const SITE_CONFIG = {
 };
 
 // ========================================
+// Analytics: dataLayer helper (GTM)
+// ========================================
+window.dataLayer = window.dataLayer || [];
+function pushDL(event, params) {
+    window.dataLayer.push(Object.assign({ event: event }, params || {}));
+}
+
+// ========================================
 // Sidebar Toggles
 // ========================================
 const btnMenu = document.getElementById('btnMenu');
@@ -80,9 +88,11 @@ const cart = {
         };
         this.save();
         this.renderSidebar();
+        pushDL('add_to_cart', { item_name: title, item_tier: tierName, item_price: price, item_slug: slug });
     },
 
     remove(slug) {
+        const removed = this.items[slug];
         delete this.items[slug];
         // Uncheck on current page if present
         const cb = document.querySelector('.task-select-cb[data-slug="' + slug + '"]');
@@ -93,6 +103,7 @@ const cart = {
         }
         this.save();
         this.renderSidebar();
+        if (removed) pushDL('remove_from_cart', { item_name: removed.title, item_slug: slug });
     },
 
     updateTier(slug, tierName, tierLabel, price, custom) {
@@ -537,6 +548,7 @@ document.querySelectorAll('.sidebar-content .widget').forEach(function(widget) {
         .then(function(res) { return res.json(); })
         .then(function(data) {
             if (data.success) {
+                pushDL('contact', { form_type: isQuickContact ? 'quick_contact' : 'full_form', page: page });
                 inputs.forEach(function(input) {
                     if (input.tagName === 'SELECT') {
                         input.selectedIndex = 0;
@@ -605,6 +617,8 @@ updateCartBadge();
             });
             return;
         }
+
+        pushDL('view_cart', { cart_items: keys.length, cart_total: cart.getTotal().total });
 
         // Table
         let html = '<div class="cart-table-wrap"><table class="cart-table"><thead><tr>' +
@@ -759,6 +773,8 @@ updateCartBadge();
             btn.textContent = 'Sending...';
             btn.disabled = true;
 
+            pushDL('begin_checkout', { cart_items: keys.length, cart_total: cart.getTotal().total, email: email });
+
             fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -775,6 +791,7 @@ updateCartBadge();
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.success) {
+                    pushDL('generate_lead', { cart_items: keys.length, cart_total: grandTotal, email: email });
                     cartPage.innerHTML = '<div class="cart-page-success">' +
                         '<h3>Request Sent!</h3>' +
                         '<p>We\'ll review your order and get back to you within 24 hours.</p>' +
