@@ -1,292 +1,339 @@
 # Event Map — Vividigit Analytics
 
-## Architecture Overview
+> 10 custom events. 2 key (conversions), 8 engagement.
+
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                      WEBSITE                            │
-│                                                         │
-│   site.js                    GTM Custom HTML Tag        │
-│   ───────                    ────────────────────       │
-│   2 key events               4 non-key events           │
-│   (AJAX callbacks)           (click/DOM detection)      │
-│        │                            │                   │
-│        └──────── dataLayer ─────────┘                   │
-│                      │                                  │
-└──────────────────────┼──────────────────────────────────┘
-                       ▼
-              ┌─────────────────┐
-              │   Google Tag    │
-              │    Manager      │
-              │                 │
-              │  6 CE triggers  │
-              │  6 GA4 tags     │
-              └────────┬────────┘
-                       ▼
-              ┌─────────────────┐
-              │   Google        │
-              │   Analytics 4   │
-              │                 │
-              │  G-TZQKK1XJGS  │
-              └─────────────────┘
+┌─────────────────────────────────────────────────────┐
+│                    WEBSITE                           │
+│                                                     │
+│  site.js              GTM Custom HTML    catalog.js  │
+│  ────────             ───────────────    ──────────  │
+│  2 key events         7 engagement       1 filter    │
+│  (AJAX callbacks)     events             event       │
+│       │                    │                │        │
+│       └───────── dataLayer ─────────────────┘        │
+└────────────────────────┼────────────────────────────-┘
+                         ▼
+                ┌────────────────┐
+                │  GTM container │
+                │  10 CE triggers│
+                │  10 GA4 tags   │
+                └───────┬────────┘
+                        ▼
+                ┌────────────────┐
+                │  Google        │
+                │  Analytics 4   │
+                │  G-TZQKK1XJGS │
+                └────────────────┘
 ```
 
 ---
 
-## Key Events (site.js → dataLayer)
+## All 10 Events
 
-These fire from AJAX success callbacks — GTM cannot detect them natively.
+### ★ Key Events (site.js → dataLayer)
 
-### `contact`
+These fire from AJAX success callbacks — only way to detect them.
+
+---
+
+#### 1. `contact`
 
 > Contact form submitted successfully
 
-```
-Source:     site.js (line 585)
-Trigger:    Web3Forms API returns { success: true }
-Where:      Any page with a contact form widget
-```
+| Detail        | Value                            |
+|---------------|----------------------------------|
+| Source        | site.js (AJAX callback)          |
+| Where         | Any page with contact form       |
+| Button        | "Book Consultation" / "Send"     |
 
-| Parameter   | Value                          | Example                   |
-|-------------|--------------------------------|---------------------------|
-| form_type   | `quick_contact` or `full_form` | `full_form`               |
-| page        | Document title or pathname     | `Contact Us — Vividigit`  |
+**Parameters:**
 
-```
-Form fields sent to Web3Forms:
-├── name           "John Smith"
-├── email          "john@example.com"
-├── phone          "+1 555 123 4567"
-├── message        "I need help with SEO..."
-├── source         "search" | "social" | "referral" | "ad" | "other"
-├── traffic_source "google (organic)" | "utm_source / utm_medium (campaign)" | "direct"
-├── page_url       "https://vividigit.com/contact/"
-└── subject        "Contact Form from Contact Us — Vividigit"
-```
-
-**Trigger locations:**
-
-| Page                  | Form type       | Button label       |
-|-----------------------|-----------------|--------------------|
-| /contact/             | full_form       | Book Consultation  |
-| Any page (sidebar)    | quick_contact   | Book Consultation  |
+| Parameter   | Example                      |
+|-------------|------------------------------|
+| form_type   | `quick_contact` or `full_form` |
+| page        | `Contact Us — Vividigit`     |
 
 ---
 
-### `generate_lead`
+#### 2. `generate_lead`
 
 > Cart order request submitted successfully
 
-```
-Source:     site.js (line 847)
-Trigger:    Web3Forms API returns { success: true }
-Where:      /cart/ page only
-```
+| Detail        | Value                            |
+|---------------|----------------------------------|
+| Source        | site.js (AJAX callback)          |
+| Where         | /cart/ page                      |
+| Button        | "Request Quote"                  |
 
-| Parameter   | Value                     | Example  |
-|-------------|---------------------------|----------|
-| cart_items  | Number of items in cart    | `3`      |
-| cart_total  | Grand total in USD         | `2400`   |
-| email       | Submitter's email          | `john@example.com` |
+**Parameters:**
 
+| Parameter   | Example          |
+|-------------|------------------|
+| cart_items  | `3`              |
+| cart_total  | `2400`           |
+| email       | `john@example.com` |
+
+---
+
+### Engagement Events (GTM Custom HTML → dataLayer)
+
+Detected by `cHTML - Event Listeners` tag via click/scroll delegation.
+
+---
+
+#### 3. `add_to_cart`
+
+> Item added to cart
+
+| Detail        | Value                                          |
+|---------------|------------------------------------------------|
+| Source        | GTM click delegation                           |
+| Parameters    | none                                           |
+
+| User action                        | CSS selector               | Pages              |
+|------------------------------------|----------------------------|---------------------|
+| Click pricing package button       | `.pricing-package .btn`    | Service pages       |
+| Click pricing tier                 | `.pricing-tier`            | Service pages       |
+| Check task picker checkbox         | `.task-select-cb` (checked)| Service pages       |
+
+---
+
+#### 4. `remove_from_cart`
+
+> Item removed from cart
+
+| Detail        | Value                                          |
+|---------------|------------------------------------------------|
+| Source        | GTM click delegation                           |
+| Parameters    | none                                           |
+
+| User action                        | CSS selector               | Pages              |
+|------------------------------------|----------------------------|---------------------|
+| Click × in sidebar                 | `.cart-item-remove`        | Service pages       |
+| Click × on cart page               | `.cart-item-remove-btn`    | /cart/              |
+| Uncheck task picker checkbox       | `.task-select-cb` (unchecked)| Service pages     |
+
+---
+
+#### 5. `view_cart`
+
+> User opened the cart page
+
+| Detail        | Value                                          |
+|---------------|------------------------------------------------|
+| Source        | GTM DOM check on page load                     |
+| Trigger       | `#cartPage` element exists                     |
+| Where         | /cart/                                         |
+| Parameters    | none                                           |
+| Fires         | Once per page load                             |
+
+---
+
+#### 6. `begin_checkout`
+
+> User clicked the checkout button
+
+| Detail        | Value                                          |
+|---------------|------------------------------------------------|
+| Source        | GTM click delegation                           |
+| Trigger       | Click on `#cartSendRequest`                    |
+| Where         | /cart/                                         |
+| Parameters    | none                                           |
+
+---
+
+#### 7. `cta_click`
+
+> User clicked a CTA button (navigation link)
+
+| Detail        | Value                                          |
+|---------------|------------------------------------------------|
+| Source        | GTM click delegation                           |
+| Selector      | `a.btn` (link buttons only)                    |
+| Where         | Any page                                       |
+
+**Parameters:**
+
+| Parameter     | Example                      |
+|---------------|------------------------------|
+| event_label   | `Book Consultation`          |
+| event_section | `sidebar`, `hero`, `pricing` |
+
+**Examples of tracked buttons:**
+
+| Button text             | Typical section  | Pages                   |
+|-------------------------|------------------|-------------------------|
+| Book Consultation       | sidebar          | Service, industry, etc. |
+| Explore Services        | hero             | Home, landing pages     |
+| View All Services       | catalog-mini     | Category pages          |
+| Contact Us              | cta              | Various                 |
+| Learn More              | section          | Various                 |
+
+> Note: `a.btn` is a catch-all — pricing package buttons and cart buttons are matched first by their specific selectors and won't fire `cta_click`.
+
+---
+
+#### 8. `content_engage`
+
+> User interacted with content block (process step, FAQ)
+
+| Detail        | Value                                          |
+|---------------|------------------------------------------------|
+| Source        | GTM click delegation                           |
+| Where         | Pages with Process or FAQ blocks               |
+
+**Parameters:**
+
+| Parameter     | Example                          |
+|---------------|----------------------------------|
+| event_label   | `Discovery` / `What is SEO?`    |
+| event_section | `process` or `faq`              |
+
+| User action                        | CSS selector        |
+|------------------------------------|---------------------|
+| Click process step tab             | `.process-btn`      |
+| Open FAQ question (expand only)    | `.faq-question` (details not yet open) |
+
+---
+
+#### 9. `filter_apply`
+
+> User applied catalog filters
+
+| Detail        | Value                                          |
+|---------------|------------------------------------------------|
+| Source        | catalog.html script (dataLayer push)           |
+| Trigger       | Click "Apply Filters" button                   |
+| Where         | Listing pages (services, team, cases, etc.)    |
+| Parameters    | none                                           |
+
+**UX flow:**
 ```
-Form fields sent to Web3Forms:
-├── name           "John Smith"
-├── email          "john@example.com"
-├── phone          "+1 555 123 4567"
-├── message        [full order summary with items, tiers, prices, modifiers]
-├── source         "search" | "social" | "referral" | "ad" | "other"
-├── traffic_source "google (organic)" | "direct" | "utm..."
-├── page_url       "https://vividigit.com/cart/"
-└── subject        "Order Request — 3 items — Vividigit"
+Select filters → button appears "Apply Filters" (primary)
+                          ↓ click
+              Grid updates → button becomes "Reset Filters" (secondary)
+                          ↓ click
+              All filters cleared → button hides
 ```
 
 ---
 
-## Non-Key Events (GTM Custom HTML → dataLayer)
+#### 10. `scroll_milestone`
 
-These fire from a single Custom HTML tag (`cHTML - Cart Event Listeners`) that lives entirely in GTM. It uses click/change event delegation on `document`.
+> User scrolled past 70% of page depth
 
-### `add_to_cart`
-
-> User adds a service/task to the cart
-
-```
-Source:     GTM tag "cHTML - Cart Event Listeners"
-Mechanism:  Click delegation + change listener
-Where:      Service pages with pricing or task-picker blocks
-Parameters: none
-```
-
-| Trigger element               | CSS selector              | User action                       | Page example         |
-|-------------------------------|---------------------------|-----------------------------------|----------------------|
-| Pricing package button        | `.pricing-package .btn`   | Click "Add to Cart" on a package  | /services/seo/       |
-| Pricing tier block            | `.pricing-tier`           | Click on a pricing tier           | /services/seo/       |
-| Task picker checkbox          | `.task-select-cb` (checked) | Check a task checkbox           | /services/seo/       |
+| Detail        | Value                                          |
+|---------------|------------------------------------------------|
+| Source        | GTM scroll listener                            |
+| Threshold     | 70% of page height                            |
+| Where         | Any page                                       |
+| Parameters    | none                                           |
+| Fires         | Once per page load                             |
 
 ---
 
-### `remove_from_cart`
-
-> User removes a service/task from the cart
-
-```
-Source:     GTM tag "cHTML - Cart Event Listeners"
-Mechanism:  Click delegation + change listener
-Where:      Service pages (sidebar), cart page
-Parameters: none
-```
-
-| Trigger element               | CSS selector              | User action                       | Page example         |
-|-------------------------------|---------------------------|-----------------------------------|----------------------|
-| Sidebar remove button (×)     | `.cart-item-remove`       | Click × next to item in sidebar   | /services/seo/       |
-| Cart page remove button (×)   | `.cart-item-remove-btn`   | Click × next to item in cart      | /cart/               |
-| Task picker checkbox          | `.task-select-cb` (unchecked) | Uncheck a task checkbox       | /services/seo/       |
-
----
-
-### `view_cart`
-
-> User views the cart page
-
-```
-Source:     GTM tag "cHTML - Cart Event Listeners"
-Mechanism:  DOM Ready check for #cartPage element
-Where:      /cart/ page only
-Parameters: none
-Fires:      Once per page load
-```
-
----
-
-### `begin_checkout`
-
-> User clicks the checkout/submit button (before form submission)
-
-```
-Source:     GTM tag "cHTML - Cart Event Listeners"
-Mechanism:  Click delegation
-Where:      /cart/ page only
-Parameters: none
-```
-
-| Trigger element               | CSS selector         | User action                    |
-|-------------------------------|----------------------|--------------------------------|
-| Request Quote button          | `#cartSendRequest`   | Click "Request Quote" on cart  |
-
----
-
-## GA4 Automatic Events (built-in, no configuration)
-
-These are collected by GA4 automatically, no tags/triggers needed.
-
-| Event             | Description                             |
-|-------------------|-----------------------------------------|
-| `page_view`       | Every page load/navigation              |
-| `session_start`   | New session begins                      |
-| `first_visit`     | First-ever visit from this browser      |
-| `user_engagement` | 10+ seconds of active engagement        |
-| `scroll`          | User scrolls past 90% of page depth    |
-| `click`           | Outbound link clicks (external domains) |
-
----
-
-## Event Flow by User Journey
+## User Journey Flow
 
 ```
 Landing Page
 │
-├─► page_view (auto)
-├─► session_start / first_visit (auto)
+├─► page_view (GA4 auto)
+├─► session_start (GA4 auto)
 │
-├─► Browse /services/seo/
-│   ├─► page_view (auto)
-│   ├─► scroll (auto, 90%)
-│   │
-│   ├─► Select task in task-picker
-│   │   └─► add_to_cart ← GTM click listener
-│   │
-│   ├─► Deselect task
-│   │   └─► remove_from_cart ← GTM change listener
-│   │
-│   ├─► Click pricing tier
-│   │   └─► add_to_cart ← GTM click listener
-│   │
-│   ├─► Click pricing package "Add to Cart"
-│   │   └─► add_to_cart ← GTM click listener
-│   │
-│   └─► Remove item from sidebar (×)
-│       └─► remove_from_cart ← GTM click listener
+├─► Scrolls 70%+ of page
+│   └─► scroll_milestone
 │
-├─► Go to /cart/
-│   ├─► page_view (auto)
-│   ├─► view_cart ← GTM DOM check
-│   │
-│   ├─► Remove item (×)
-│   │   └─► remove_from_cart ← GTM click listener
-│   │
-│   ├─► Click "Request Quote"
-│   │   ├─► begin_checkout ← GTM click listener
-│   │   │
-│   │   └─► [AJAX to Web3Forms]
-│   │       ├─► Success:
-│   │       │   └─► generate_lead ← site.js dataLayer  ★ KEY EVENT
-│   │       └─► Failure: error shown, no event
-│   │
-│   └─► Clear Cart: no event tracked
+├─► Clicks "Explore Services" button
+│   └─► cta_click  [label: "Explore Services", section: "hero"]
 │
-├─► Go to /contact/
-│   ├─► page_view (auto)
+├─► Service page /services/seo/
 │   │
-│   └─► Submit contact form
-│       └─► [AJAX to Web3Forms]
-│           ├─► Success:
-│           │   └─► contact ← site.js dataLayer  ★ KEY EVENT
-│           └─► Failure: error shown, no event
+│   ├─► Clicks Process step "Discovery"
+│   │   └─► content_engage  [label: "Discovery", section: "process"]
+│   │
+│   ├─► Opens FAQ "What is technical SEO?"
+│   │   └─► content_engage  [label: "What is technical SEO?", section: "faq"]
+│   │
+│   ├─► Checks task in task-picker
+│   │   └─► add_to_cart
+│   │
+│   ├─► Clicks pricing tier "Professional"
+│   │   └─► add_to_cart
+│   │
+│   └─► Clicks "Book Consultation" in sidebar
+│       └─► cta_click  [label: "Book Consultation", section: "sidebar"]
 │
-└─► Sidebar contact form (any page)
-    └─► Submit
-        └─► [AJAX to Web3Forms]
-            ├─► Success:
-            │   └─► contact ← site.js dataLayer  ★ KEY EVENT
-            └─► Failure: error shown, no event
+├─► Listing page /services/
+│   │
+│   ├─► Selects filters (Category: SEO, Language: EN)
+│   ├─► Clicks "Apply Filters"
+│   │   └─► filter_apply
+│   └─► Clicks "Reset Filters" → grid shows all
+│
+├─► Cart page /cart/
+│   ├─► view_cart
+│   ├─► Removes item (×)
+│   │   └─► remove_from_cart
+│   ├─► Clicks "Request Quote"
+│   │   ├─► begin_checkout
+│   │   └─► [AJAX] → success:
+│   │       └─► ★ generate_lead  [items: 3, total: 2400]
+│   └─► Clicks "Continue Shopping"
+│       └─► cta_click  [label: "Continue Shopping", section: "page"]
+│
+└─► Contact form (any page)
+    └─► [AJAX] → success:
+        └─► ★ contact  [type: "full_form", page: "Contact Us"]
 ```
 
 ---
 
-## GTM Container Summary
+## GTM Container Components
 
-| Component                        | ID  | Type          | Fires on              |
-|----------------------------------|-----|---------------|-----------------------|
-| **Tags**                         |     |               |                       |
-| GA4 (config)                     | 3   | googtag       | Initialization        |
-| cHTML - Cart Event Listeners     | 16  | html          | All Pages             |
-| GA4 Event - add_to_cart          | 10  | gaawe         | CE trigger #4         |
-| GA4 Event - remove_from_cart     | 11  | gaawe         | CE trigger #5         |
-| GA4 Event - view_cart            | 12  | gaawe         | CE trigger #6         |
-| GA4 Event - begin_checkout       | 13  | gaawe         | CE trigger #7         |
-| GA4 Event - generate_lead        | 14  | gaawe         | CE trigger #8         |
-| GA4 Event - contact              | 15  | gaawe         | CE trigger #9         |
-| **Triggers**                     |     |               |                       |
-| CE - add_to_cart                 | 4   | CUSTOM_EVENT  | `add_to_cart`         |
-| CE - remove_from_cart            | 5   | CUSTOM_EVENT  | `remove_from_cart`    |
-| CE - view_cart                   | 6   | CUSTOM_EVENT  | `view_cart`           |
-| CE - begin_checkout              | 7   | CUSTOM_EVENT  | `begin_checkout`      |
-| CE - generate_lead               | 8   | CUSTOM_EVENT  | `generate_lead`       |
-| CE - contact                     | 9   | CUSTOM_EVENT  | `contact`             |
-| **Variables (Data Layer)**       |     |               |                       |
-| dlv - cart_items                 | 5   | v             | generate_lead tag     |
-| dlv - cart_total                 | 6   | v             | generate_lead tag     |
-| dlv - form_type                  | 7   | v             | contact tag           |
-| dlv - page                       | 8   | v             | contact tag           |
+| #  | Component                      | Type         | ID  | Fires on / Uses          |
+|----|--------------------------------|--------------|-----|--------------------------|
+|    | **Tags**                       |              |     |                          |
+| 1  | GA4 (config)                   | googtag      | 3   | Initialization           |
+| 2  | cHTML - Event Listeners        | html         | 16  | All Pages                |
+| 3  | GA4 Event - add_to_cart        | gaawe        | 10  | trigger #4               |
+| 4  | GA4 Event - remove_from_cart   | gaawe        | 11  | trigger #5               |
+| 5  | GA4 Event - view_cart          | gaawe        | 12  | trigger #6               |
+| 6  | GA4 Event - begin_checkout     | gaawe        | 13  | trigger #7               |
+| 7  | GA4 Event - generate_lead      | gaawe        | 14  | trigger #8               |
+| 8  | GA4 Event - contact            | gaawe        | 15  | trigger #9               |
+| 9  | GA4 Event - cta_click          | gaawe        | 17  | trigger #10              |
+| 10 | GA4 Event - content_engage     | gaawe        | 18  | trigger #11              |
+| 11 | GA4 Event - filter_apply       | gaawe        | 19  | trigger #12              |
+| 12 | GA4 Event - scroll_milestone   | gaawe        | 20  | trigger #13              |
+|    | **Triggers**                   |              |     |                          |
+| 1  | CE - add_to_cart               | CUSTOM_EVENT | 4   |                          |
+| 2  | CE - remove_from_cart          | CUSTOM_EVENT | 5   |                          |
+| 3  | CE - view_cart                 | CUSTOM_EVENT | 6   |                          |
+| 4  | CE - begin_checkout            | CUSTOM_EVENT | 7   |                          |
+| 5  | CE - generate_lead             | CUSTOM_EVENT | 8   |                          |
+| 6  | CE - contact                   | CUSTOM_EVENT | 9   |                          |
+| 7  | CE - cta_click                 | CUSTOM_EVENT | 10  |                          |
+| 8  | CE - content_engage            | CUSTOM_EVENT | 11  |                          |
+| 9  | CE - filter_apply              | CUSTOM_EVENT | 12  |                          |
+| 10 | CE - scroll_milestone          | CUSTOM_EVENT | 13  |                          |
+|    | **Variables (Data Layer)**     |              |     |                          |
+| 1  | dlv - cart_items               | v            | 5   | generate_lead            |
+| 2  | dlv - cart_total               | v            | 6   | generate_lead            |
+| 3  | dlv - form_type                | v            | 7   | contact                  |
+| 4  | dlv - page                     | v            | 8   | contact                  |
+| 5  | dlv - event_label              | v            | 9   | cta_click, content_engage|
+| 6  | dlv - event_section            | v            | 10  | cta_click, content_engage|
 
 ---
 
-## Key Events for GA4 Admin
+## GA4 Admin Checklist
 
-Mark as **Key Events** in GA4 → Admin → Events (after first trigger):
+After first trigger of each event:
 
-| Event           | Why it's key                                |
-|-----------------|---------------------------------------------|
-| `contact`       | Lead captured via contact form              |
-| `generate_lead` | Order request with specific items + pricing |
+- [ ] Mark `contact` as **Key Event** in GA4 Admin → Events
+- [ ] Mark `generate_lead` as **Key Event** in GA4 Admin → Events
+- [ ] Register `event_label` as custom dimension (Event scope)
+- [ ] Register `event_section` as custom dimension (Event scope)
