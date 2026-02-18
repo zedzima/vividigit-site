@@ -23,6 +23,49 @@ function pushDL(event, params) {
 }
 
 // ========================================
+// Traffic Source Detection (referrer, UTM, direct)
+// ========================================
+var _trafficSource = (function() {
+    var params = new URLSearchParams(window.location.search);
+    var utmSource = params.get('utm_source');
+    var utmMedium = params.get('utm_medium');
+    var utmCampaign = params.get('utm_campaign');
+    var utmTerm = params.get('utm_term');
+    var utmContent = params.get('utm_content');
+
+    if (utmSource) {
+        var parts = [utmSource];
+        if (utmMedium) parts.push(utmMedium);
+        if (utmCampaign) parts.push('(' + utmCampaign + ')');
+        if (utmTerm) parts.push('[' + utmTerm + ']');
+        if (utmContent) parts.push('{' + utmContent + '}');
+        return parts.join(' / ');
+    }
+
+    var ref = document.referrer;
+    if (!ref) return 'direct';
+
+    try {
+        var refHost = new URL(ref).hostname;
+        if (refHost === window.location.hostname) return 'direct';
+        if (/google\./i.test(refHost)) return 'google (organic)';
+        if (/bing\./i.test(refHost)) return 'bing (organic)';
+        if (/yahoo\./i.test(refHost)) return 'yahoo (organic)';
+        if (/duckduckgo/i.test(refHost)) return 'duckduckgo (organic)';
+        if (/yandex/i.test(refHost)) return 'yandex (organic)';
+        if (/facebook|fb\./i.test(refHost)) return 'facebook (social)';
+        if (/twitter|x\.com/i.test(refHost)) return 'twitter (social)';
+        if (/linkedin/i.test(refHost)) return 'linkedin (social)';
+        if (/instagram/i.test(refHost)) return 'instagram (social)';
+        if (/youtube/i.test(refHost)) return 'youtube (social)';
+        if (/reddit/i.test(refHost)) return 'reddit (social)';
+        return refHost + ' (referral)';
+    } catch (e) {
+        return ref;
+    }
+})();
+
+// ========================================
 // Sidebar Toggles
 // ========================================
 const btnMenu = document.getElementById('btnMenu');
@@ -528,10 +571,13 @@ document.querySelectorAll('.sidebar-content .widget').forEach(function(widget) {
                 access_key: SITE_CONFIG.web3formsKey,
                 subject: subject,
                 from_name: formData.name || 'Website Visitor',
+                replyto: formData.email,
+                name: formData.name || '',
                 email: formData.email,
                 message: formData.message || '(no message)',
                 phone: formData.phone || '',
                 source: formData.source || '',
+                traffic_source: _trafficSource,
                 page_url: window.location.href,
                 botcheck: ''
             })
@@ -791,10 +837,13 @@ updateCartBadge();
                     access_key: SITE_CONFIG.web3formsKey,
                     subject: 'Order Request — ' + keys.length + ' items — Vividigit',
                     from_name: name,
+                    replyto: email,
+                    name: name,
                     email: email,
                     phone: phone,
                     message: orderBody,
                     source: source,
+                    traffic_source: _trafficSource,
                     page_url: window.location.href,
                     botcheck: ''
                 })
