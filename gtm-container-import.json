@@ -1,6 +1,6 @@
 {
   "exportFormatVersion": 2,
-  "exportTime": "2026-02-18 12:00:00",
+  "exportTime": "2026-02-18 14:00:00",
   "containerVersion": {
     "path": "accounts/6297176056/containers/221176598/versions/0",
     "accountId": "6297176056",
@@ -123,6 +123,74 @@
       {
         "accountId": "6297176056",
         "containerId": "221176598",
+        "triggerId": "4",
+        "name": "CE - add_to_cart",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "add_to_cart"}
+            ]
+          }
+        ],
+        "fingerprint": "1771360000101"
+      },
+      {
+        "accountId": "6297176056",
+        "containerId": "221176598",
+        "triggerId": "5",
+        "name": "CE - remove_from_cart",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "remove_from_cart"}
+            ]
+          }
+        ],
+        "fingerprint": "1771360000102"
+      },
+      {
+        "accountId": "6297176056",
+        "containerId": "221176598",
+        "triggerId": "6",
+        "name": "CE - view_cart",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "view_cart"}
+            ]
+          }
+        ],
+        "fingerprint": "1771360000103"
+      },
+      {
+        "accountId": "6297176056",
+        "containerId": "221176598",
+        "triggerId": "7",
+        "name": "CE - begin_checkout",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "begin_checkout"}
+            ]
+          }
+        ],
+        "fingerprint": "1771360000104"
+      },
+      {
+        "accountId": "6297176056",
+        "containerId": "221176598",
         "triggerId": "8",
         "name": "CE - generate_lead",
         "type": "CUSTOM_EVENT",
@@ -167,6 +235,94 @@
         ],
         "fingerprint": "1771355604925",
         "firingTriggerId": ["2147479573"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {"type": "MAP"},
+        "consentSettings": {"consentStatus": "NOT_SET"}
+      },
+      {
+        "accountId": "6297176056",
+        "containerId": "221176598",
+        "tagId": "16",
+        "name": "cHTML - Cart Event Listeners",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "html",
+            "value": "<script>\n(function(){\n    window.dataLayer=window.dataLayer||[];\n\n    /* view_cart — detect cart page */\n    function checkCartPage(){\n        if(document.getElementById('cartPage')){\n            dataLayer.push({event:'view_cart'});\n        }\n    }\n    if(document.readyState==='loading'){\n        document.addEventListener('DOMContentLoaded',checkCartPage);\n    }else{\n        checkCartPage();\n    }\n\n    /* Click delegation */\n    document.addEventListener('click',function(e){\n        /* Add to cart — pricing package button */\n        if(e.target.closest('.pricing-package .btn')){\n            dataLayer.push({event:'add_to_cart'});\n            return;\n        }\n        /* Add to cart — pricing tier */\n        if(e.target.closest('.pricing-tier')){\n            dataLayer.push({event:'add_to_cart'});\n            return;\n        }\n        /* Remove from cart — sidebar + cart page */\n        if(e.target.closest('.cart-item-remove')||e.target.closest('.cart-item-remove-btn')){\n            dataLayer.push({event:'remove_from_cart'});\n            return;\n        }\n        /* Begin checkout */\n        if(e.target.closest('#cartSendRequest')){\n            dataLayer.push({event:'begin_checkout'});\n            return;\n        }\n    });\n\n    /* Task picker checkbox — add or remove based on state */\n    document.addEventListener('change',function(e){\n        if(e.target.classList.contains('task-select-cb')){\n            dataLayer.push({event:e.target.checked?'add_to_cart':'remove_from_cart'});\n        }\n    });\n})();\n</script>"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1771360000210",
+        "firingTriggerId": ["2147479553"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {"type": "MAP"},
+        "consentSettings": {"consentStatus": "NOT_SET"}
+      },
+      {
+        "accountId": "6297176056",
+        "containerId": "221176598",
+        "tagId": "10",
+        "name": "GA4 Event - add_to_cart",
+        "type": "gaawe",
+        "parameter": [
+          {"type": "TAG_REFERENCE", "key": "measurementId", "value": "GA4"},
+          {"type": "TEMPLATE", "key": "eventName", "value": "add_to_cart"}
+        ],
+        "fingerprint": "1771360000201",
+        "firingTriggerId": ["4"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {"type": "MAP"},
+        "consentSettings": {"consentStatus": "NOT_SET"}
+      },
+      {
+        "accountId": "6297176056",
+        "containerId": "221176598",
+        "tagId": "11",
+        "name": "GA4 Event - remove_from_cart",
+        "type": "gaawe",
+        "parameter": [
+          {"type": "TAG_REFERENCE", "key": "measurementId", "value": "GA4"},
+          {"type": "TEMPLATE", "key": "eventName", "value": "remove_from_cart"}
+        ],
+        "fingerprint": "1771360000202",
+        "firingTriggerId": ["5"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {"type": "MAP"},
+        "consentSettings": {"consentStatus": "NOT_SET"}
+      },
+      {
+        "accountId": "6297176056",
+        "containerId": "221176598",
+        "tagId": "12",
+        "name": "GA4 Event - view_cart",
+        "type": "gaawe",
+        "parameter": [
+          {"type": "TAG_REFERENCE", "key": "measurementId", "value": "GA4"},
+          {"type": "TEMPLATE", "key": "eventName", "value": "view_cart"}
+        ],
+        "fingerprint": "1771360000203",
+        "firingTriggerId": ["6"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {"type": "MAP"},
+        "consentSettings": {"consentStatus": "NOT_SET"}
+      },
+      {
+        "accountId": "6297176056",
+        "containerId": "221176598",
+        "tagId": "13",
+        "name": "GA4 Event - begin_checkout",
+        "type": "gaawe",
+        "parameter": [
+          {"type": "TAG_REFERENCE", "key": "measurementId", "value": "GA4"},
+          {"type": "TEMPLATE", "key": "eventName", "value": "begin_checkout"}
+        ],
+        "fingerprint": "1771360000204",
+        "firingTriggerId": ["7"],
         "tagFiringOption": "ONCE_PER_EVENT",
         "monitoringMetadata": {"type": "MAP"},
         "consentSettings": {"consentStatus": "NOT_SET"}
