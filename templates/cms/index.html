@@ -3,9 +3,9 @@
 {% block title %}Pages{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div class="cms-flex-between cms-mb-lg">
     <h2>Pages</h2>
-    <div style="display: flex; gap: 1rem;">
+    <div class="cms-flex cms-gap-lg">
         <button class="btn btn-secondary" onclick="buildSite()">Rebuild Site</button>
         <a href="{{ url_for('new_page') }}" class="btn btn-primary">+ New Page</a>
     </div>
@@ -13,12 +13,12 @@
 
 <div class="pages-list">
     {% for page in pages %}
-    <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="card cms-flex-between">
         <div>
-            <strong style="color: var(--text);">{{ page.title }}</strong>
-            <div style="color: var(--text-muted); font-size: 0.875rem;">{{ page.url }}</div>
+            <strong class="cms-text-primary">{{ page.title }}</strong>
+            <div class="cms-text-muted cms-text-sm">{{ page.url }}</div>
         </div>
-        <div style="display: flex; gap: 0.5rem;">
+        <div class="cms-flex cms-gap-sm">
             <a href="/admin/pages/edit/{{ page.url[1:] or 'home' }}" class="btn btn-secondary">Edit</a>
             <a href="{{ page.url }}" target="_blank" class="btn btn-secondary">View</a>
         </div>
@@ -27,7 +27,7 @@
 </div>
 
 {% if not pages %}
-<div class="card" style="text-align: center; color: var(--text-muted);">
+<div class="card cms-text-center cms-text-muted">
     No pages found. Create your first page!
 </div>
 {% endif %}

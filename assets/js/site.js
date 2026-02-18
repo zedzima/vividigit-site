@@ -272,13 +272,13 @@ const cart = {
 
         if (keys.length === 0) {
             container.innerHTML = '<p class="cart-empty-msg">Select a package or tasks to build your order.</p>';
-            if (modifiers) modifiers.style.display = 'none';
-            if (totalsEl) totalsEl.style.display = 'none';
+            if (modifiers) modifiers.classList.add('hidden');
+            if (totalsEl) totalsEl.classList.add('hidden');
             return;
         }
 
-        if (modifiers) modifiers.style.display = '';
-        if (totalsEl) totalsEl.style.display = '';
+        if (modifiers) modifiers.classList.remove('hidden');
+        if (totalsEl) totalsEl.classList.remove('hidden');
 
         let html = '';
         let subtotal = 0;
@@ -491,7 +491,7 @@ document.querySelectorAll('.sidebar-tabs').forEach(function(tabs) {
             const sidebar = tabs.closest('.sidebar-content');
             if (sidebar) {
                 sidebar.querySelectorAll('.sidebar-tab-content').forEach(function(panel) {
-                    panel.style.display = panel.dataset.tabContent === target ? '' : 'none';
+                    panel.classList.toggle('hidden', panel.dataset.tabContent !== target);
                 });
             }
         });
@@ -617,7 +617,7 @@ function updateCartBadge() {
     if (!badge) return;
     const count = Object.keys(cart.items).length;
     badge.textContent = count;
-    badge.style.display = count > 0 ? '' : 'none';
+    badge.classList.toggle('hidden', count === 0);
 }
 updateCartBadge();
 

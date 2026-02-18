@@ -3,16 +3,16 @@
 {% block title %}New Page{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 2rem;">
-    <a href="{{ url_for('admin_index') }}" style="color: var(--text-muted); text-decoration: none;">← Back</a>
-    <h2 style="margin-top: 0.5rem;">Create New Page</h2>
+<div class="cms-mb-lg">
+    <a href="{{ url_for('admin_index') }}" class="cms-text-muted cms-no-underline">&larr; Back</a>
+    <h2 class="cms-mt-xs">Create New Page</h2>
 </div>
 
 <div class="card">
     <div class="form-group">
         <label>URL Path</label>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="color: var(--text-muted);">/</span>
+        <div class="cms-flex-center cms-gap-sm">
+            <span class="cms-text-muted">/</span>
             <input type="text" id="page-url" placeholder="services/new-service">
         </div>
     </div>
@@ -23,21 +23,21 @@
     </div>
 </div>
 
-<div style="margin: 2rem 0 1rem;">
+<div class="cms-section-gap">
     <h3>Select Blocks</h3>
-    <p style="color: var(--text-muted); font-size: 0.875rem;">Choose which blocks to include</p>
+    <p class="cms-text-muted cms-text-sm">Choose which blocks to include</p>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem;">
+<div class="cms-grid-blocks">
     {% for block in blocks %}
-    <label class="card" style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; margin: 0; padding: 1rem;">
-        <input type="checkbox" name="blocks" value="{{ block.name }}" style="width: auto;">
+    <label class="card cms-block-label">
+        <input type="checkbox" name="blocks" value="{{ block.name }}">
         <span>{{ block.name }}</span>
     </label>
     {% endfor %}
 </div>
 
-<div style="margin-top: 2rem;">
+<div class="cms-mt-lg">
     <button class="btn btn-primary" onclick="createPage()">Create Page</button>
 </div>
 {% endblock %}

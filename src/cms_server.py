@@ -302,7 +302,7 @@ def _render_field(key: str, value, prefix: str = "block") -> str:
         checked = 'checked' if value else ''
         return f'''<div class="field-row">
             <label class="field-label">{_escape(key)}</label>
-            <input type="checkbox" name="{field_name}" data-type="bool" {checked} style="width: auto;">
+            <input type="checkbox" name="{field_name}" data-type="bool" {checked} class="cms-checkbox">
         </div>'''
 
     if isinstance(value, (int, float)):
@@ -314,13 +314,13 @@ def _render_field(key: str, value, prefix: str = "block") -> str:
     if isinstance(value, str):
         if key in markdown_keys:
             return f'''<div class="field-row markdown-editor">
-                <label class="field-label">{_escape(key)} <span style="color:var(--text-muted);font-size:0.75rem">markdown</span></label>
+                <label class="field-label">{_escape(key)} <span class="cms-field-hint">markdown</span></label>
                 <div class="md-tabs">
                     <button type="button" class="md-tab active" onclick="mdTab(this,'edit')">Edit</button>
                     <button type="button" class="md-tab" onclick="mdTab(this,'preview')">Preview</button>
                 </div>
                 <textarea name="{field_name}" rows="8" class="md-textarea">{_escape(value)}</textarea>
-                <div class="md-preview" style="display:none;"></div>
+                <div class="md-preview cms-hidden"></div>
             </div>'''
         if len(value) > 100 or '\n' in value:
             return f'''<div class="field-row">
@@ -342,7 +342,7 @@ def _render_field(key: str, value, prefix: str = "block") -> str:
                     <button type="button" class="btn-remove-item" onclick="removeArrayItem(this)" title="Remove">&times;</button>
                 </div>''')
             return f'''<div class="field-row">
-                <label class="field-label">{_escape(key)} <span style="color:var(--text-muted);font-size:0.75rem">[{len(value)} items]</span></label>
+                <label class="field-label">{_escape(key)} <span class="cms-field-hint">[{len(value)} items]</span></label>
                 <div class="array-editor" data-field="{field_name}" data-item-type="string">
                     {''.join(items_html)}
                     <button type="button" class="btn-add-item" onclick="addStringItem(this)">+ Add item</button>
@@ -362,7 +362,7 @@ def _render_field(key: str, value, prefix: str = "block") -> str:
                     <div class="array-item-fields">{''.join(fields_html)}</div>
                 </details>''')
             return f'''<div class="field-row">
-                <label class="field-label">{_escape(key)} <span style="color:var(--text-muted);font-size:0.75rem">[{len(value)} items]</span></label>
+                <label class="field-label">{_escape(key)} <span class="cms-field-hint">[{len(value)} items]</span></label>
                 <div class="array-editor" data-field="{field_name}" data-item-type="object">
                     {''.join(items_html)}
                     <button type="button" class="btn-add-item" onclick="addObjectItem(this)">+ Add item</button>
@@ -372,7 +372,7 @@ def _render_field(key: str, value, prefix: str = "block") -> str:
         # Mixed array — show as JSON
         import json
         return f'''<div class="field-row">
-            <label class="field-label">{_escape(key)} <span style="color:var(--text-muted);font-size:0.75rem">mixed array</span></label>
+            <label class="field-label">{_escape(key)} <span class="cms-field-hint">mixed array</span></label>
             <textarea name="{field_name}" data-type="json" rows="4">{_escape(json.dumps(value, indent=2, ensure_ascii=False))}</textarea>
         </div>'''
 

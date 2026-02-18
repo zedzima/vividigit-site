@@ -398,13 +398,13 @@
             if (!filterBtn) return;
             var anyChecked = !!document.querySelector('.filter-dropdown input[type="checkbox"]:checked');
             if (!anyChecked) {
-                filterBtn.style.display = 'none';
+                filterBtn.classList.add('hidden');
             } else if (filterState === 'pending') {
-                filterBtn.style.display = '';
+                filterBtn.classList.remove('hidden');
                 filterBtn.textContent = 'Apply Filters';
                 filterBtn.className = 'btn btn-primary btn-full btn-apply-filters';
             } else {
-                filterBtn.style.display = '';
+                filterBtn.classList.remove('hidden');
                 filterBtn.textContent = 'Reset Filters';
                 filterBtn.className = 'btn btn-secondary btn-full btn-apply-filters';
             }

@@ -3,19 +3,19 @@
 {% block title %}Blocks Library{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 2rem;">
+<div class="cms-mb-lg">
     <h2>Blocks Library</h2>
-    <p style="color: var(--text-muted);">Available blocks for building pages</p>
+    <p class="cms-text-muted">Available blocks for building pages</p>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+<div class="cms-grid-cards">
     {% for block in blocks %}
     <div class="card">
-        <h3 style="color: var(--accent); margin-bottom: 0.5rem;">{{ block.name }}</h3>
-        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+        <h3 class="cms-text-accent cms-mb-sm">{{ block.name }}</h3>
+        <p class="cms-text-muted cms-text-sm cms-mb-md">
             {{ block.description or 'No description' }}
         </p>
-        <a href="/blocks/{{ block.name }}/" target="_blank" class="btn btn-secondary" style="width: 100%; justify-content: center;">
+        <a href="/blocks/{{ block.name }}/" target="_blank" class="btn btn-secondary cms-w-full cms-justify-center">
             View Demo
         </a>
     </div>

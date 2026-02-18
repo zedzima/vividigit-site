@@ -3,33 +3,30 @@
 {% block title %}Media Library{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div class="cms-flex-between cms-mb-lg">
     <h2>Media Library</h2>
     <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
         Upload File
     </button>
-    <input type="file" id="file-input" style="display: none;" onchange="uploadFile(this)">
+    <input type="file" id="file-input" class="cms-hidden" onchange="uploadFile(this)">
 </div>
 
 {% for folder, files in folders.items() %}
-<div class="card" style="margin-bottom: 1rem;">
-    <h3 style="margin-bottom: 1rem; color: var(--text-muted);">
+<div class="card cms-mb-md">
+    <h3 class="cms-mb-md cms-text-muted">
         {{ folder if folder != 'root' else 'Root' }}
     </h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+    <div class="cms-grid-thumbs">
         {% for file in files %}
-        <div style="text-align: center;">
+        <div class="cms-text-center">
             {% if file.name.endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp')) %}
-            <img src="{{ file.url }}" alt="{{ file.name }}"
-                 style="max-width: 100%; max-height: 100px; border-radius: 4px; background: var(--bg);">
+            <img src="{{ file.url }}" alt="{{ file.name }}" class="cms-media-thumb">
             {% else %}
-            <div style="height: 100px; display: flex; align-items: center; justify-content: center;
-                        background: var(--bg); border-radius: 4px; color: var(--text-muted);">
+            <div class="cms-media-placeholder">
                 [file]
             </div>
             {% endif %}
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;
-                        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <div class="cms-media-name">
                 {{ file.name }}
             </div>
         </div>
@@ -39,7 +36,7 @@
 {% endfor %}
 
 {% if not folders %}
-<div class="card" style="text-align: center; color: var(--text-muted);">
+<div class="card cms-text-center cms-text-muted">
     No media files. Upload some!
 </div>
 {% endif %}

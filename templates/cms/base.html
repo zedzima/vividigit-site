@@ -152,6 +152,74 @@
 
         .toast.success { background: var(--success); }
         .toast.error { background: var(--error); }
+
+        /* CMS Utility Classes */
+        .cms-hidden { display: none; }
+        .cms-text-muted { color: var(--text-muted); }
+        .cms-text-accent { color: var(--accent); }
+        .cms-text-primary { color: var(--text); }
+        .cms-text-center { text-align: center; }
+        .cms-text-sm { font-size: 0.875rem; }
+        .cms-text-xs { font-size: 0.75rem; }
+        .cms-no-underline { text-decoration: none; }
+        .cms-w-full { width: 100%; }
+        .cms-mb-sm { margin-bottom: 0.5rem; }
+        .cms-mb-md { margin-bottom: 1rem; }
+        .cms-mb-lg { margin-bottom: 2rem; }
+        .cms-mt-xs { margin-top: 0.5rem; }
+        .cms-mt-md { margin-top: 1rem; }
+        .cms-mt-lg { margin-top: 2rem; }
+        .cms-section-gap { margin: 2rem 0 1rem; }
+        .cms-flex { display: flex; }
+        .cms-flex-center { display: flex; align-items: center; }
+        .cms-flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .cms-gap-sm { gap: 0.5rem; }
+        .cms-gap-md { gap: 0.75rem; }
+        .cms-gap-lg { gap: 1rem; }
+        .cms-grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .cms-grid-blocks { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; }
+        .cms-grid-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+        .cms-justify-center { justify-content: center; }
+        .cms-justify-start { justify-content: flex-start; }
+        .cms-cursor-pointer { cursor: pointer; }
+        .cms-no-margin { margin: 0; }
+
+        /* CMS Media Components */
+        .cms-media-thumb {
+            max-width: 100%; max-height: 100px; border-radius: 4px; background: var(--bg);
+        }
+        .cms-media-placeholder {
+            height: 100px; display: flex; align-items: center; justify-content: center;
+            background: var(--bg); border-radius: 4px; color: var(--text-muted);
+        }
+        .cms-media-name {
+            font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        /* CMS Modal */
+        .cms-modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); z-index: 100;
+        }
+        .cms-modal-content {
+            background: var(--bg-card); max-width: 600px;
+            margin: 10vh auto; border-radius: 12px; padding: 2rem;
+        }
+        .cms-modal-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;
+        }
+
+        /* CMS Block card label (new_page checkboxes) */
+        .cms-block-label {
+            display: flex; align-items: center; gap: 0.75rem;
+            cursor: pointer; margin: 0; padding: 1rem;
+        }
+        .cms-block-label input { width: auto; }
+
+        /* CMS Form elements */
+        .cms-checkbox { width: auto; }
+        .cms-field-hint { color: var(--text-muted); font-size: 0.75rem; }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
