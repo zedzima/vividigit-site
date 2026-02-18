@@ -524,12 +524,6 @@ document.querySelectorAll('.sidebar-content .widget').forEach(function(widget) {
             ? 'Quick Contact from ' + page
             : 'Contact Form from ' + page;
 
-        // Attach cart data from localStorage if present
-        const cartSummary = cart.getSummaryText();
-        if (cartSummary && cartSummary !== 'Empty cart') {
-            formData.order = cartSummary;
-        }
-
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
@@ -545,7 +539,6 @@ document.querySelectorAll('.sidebar-content .widget').forEach(function(widget) {
                 message: formData.message || '(no message)',
                 phone: formData.phone || '',
                 source: formData.source || '',
-                order: formData.order || '',
                 page_url: window.location.href,
                 botcheck: ''
             })
@@ -603,6 +596,7 @@ updateCartBadge();
         // Preserve form state across re-renders
         const savedComment = document.getElementById('cartComment')?.value || '';
         const savedName = document.getElementById('cartName')?.value || '';
+        const savedPhone = document.getElementById('cartPhone')?.value || '';
         const savedEmail = document.getElementById('cartEmail')?.value || '';
         const savedSource = document.getElementById('cartSource')?.value || '';
 
@@ -702,6 +696,7 @@ updateCartBadge();
         html += '<div class="cart-request-section">' +
             '<div class="cart-request-fields">' +
                 '<input type="text" class="cart-field-input" id="cartName" placeholder="Your name" />' +
+                '<input type="tel" class="cart-field-input" id="cartPhone" placeholder="Phone number" />' +
                 '<input type="email" class="cart-field-input" id="cartEmail" placeholder="Your email *" />' +
             '</div>' +
             '<div style="margin-bottom:1rem;">' +
@@ -725,6 +720,7 @@ updateCartBadge();
         // Restore form state
         if (savedComment) document.getElementById('cartComment').value = savedComment;
         if (savedName) document.getElementById('cartName').value = savedName;
+        if (savedPhone) document.getElementById('cartPhone').value = savedPhone;
         if (savedEmail) document.getElementById('cartEmail').value = savedEmail;
         if (savedSource) document.getElementById('cartSource').value = savedSource;
 
@@ -778,6 +774,7 @@ updateCartBadge();
         document.getElementById('cartSendRequest')?.addEventListener('click', function() {
             const email = document.getElementById('cartEmail')?.value.trim();
             const name = document.getElementById('cartName')?.value.trim() || 'Website Visitor';
+            const phone = document.getElementById('cartPhone')?.value.trim() || '';
             const comment = document.getElementById('cartComment')?.value.trim();
             const source = document.getElementById('cartSource')?.value || '';
 
@@ -802,6 +799,7 @@ updateCartBadge();
                     subject: 'Order Request — ' + keys.length + ' items — Vividigit',
                     from_name: name,
                     email: email,
+                    phone: phone,
                     message: orderBody,
                     source: source,
                     page_url: window.location.href,
@@ -839,88 +837,6 @@ updateCartBadge();
     }
 
     renderCartPage();
-})();
-
-// ========================================
-// Contact Page: Show Cart Summary
-// ========================================
-(function() {
-    // Detect contact page (has full-form sidebar)
-    const fullFormWidget = document.querySelector('.sidebar-content .widget .form-input[name="message"]');
-    if (!fullFormWidget) return;
-
-    const itemCount = Object.keys(cart.items).length;
-    if (itemCount === 0) return;
-
-    // Build cart summary card and insert before the form widget
-    const widget = fullFormWidget.closest('.widget');
-    const summaryDiv = document.createElement('div');
-    summaryDiv.className = 'widget';
-
-    let html = '<div class="widget-title">Your Order (' + itemCount + ' items)</div>';
-    html += '<div class="cart-summary-items">';
-    for (const slug of Object.keys(cart.items)) {
-        const item = cart.items[slug];
-        const itemTotal = cart.getItemTotal(item);
-        const priceStr = item.price > 0 ? '$' + itemTotal.toLocaleString() : 'Custom';
-        html += '<div class="cart-summary-line">' +
-            '<span>' + item.title + ' <small>(' + item.tierName + ')</small></span>' +
-            '<span>' + priceStr + '</span>' +
-            '</div>';
-    }
-    html += '</div>';
-
-    const totals = cart.getTotal();
-    html += '<div class="cart-summary-total">' +
-        '<span>Estimated Total</span>' +
-        '<span>' + (totals.hasCustom ? 'From ' : '') + '$' + totals.total.toLocaleString() + '</span>' +
-        '</div>';
-
-    html += '<button class="btn btn-secondary btn-full btn-clear-cart" style="margin-top:0.5rem;font-size:0.75rem;">Clear Cart</button>';
-
-    summaryDiv.innerHTML = html;
-    widget.parentNode.insertBefore(summaryDiv, widget);
-
-    // Pre-fill message textarea with order summary
-    const textarea = fullFormWidget;
-    if (!textarea.value) {
-        textarea.value = 'I would like to request a quote for:\n\n' + cart.getSummaryText();
-    }
-
-    // Clear / Restore cart button
-    const clearBtn = summaryDiv.querySelector('.btn-clear-cart');
-    clearBtn.addEventListener('click', function() {
-        if (clearBtn.dataset.state === 'restore') {
-            // Restore
-            cart.restore();
-            clearBtn.dataset.state = '';
-            clearBtn.textContent = 'Clear Cart';
-            // Re-build summary
-            let newHtml = '<div class="widget-title">Your Order (' + Object.keys(cart.items).length + ' items)</div>';
-            newHtml += '<div class="cart-summary-items">';
-            for (const s of Object.keys(cart.items)) {
-                const it = cart.items[s];
-                const t = cart.getItemTotal(it);
-                newHtml += '<div class="cart-summary-line"><span>' + it.title + ' <small>(' + it.tierName + ')</small></span><span>' + (it.price > 0 ? '$' + t.toLocaleString() : 'Custom') + '</span></div>';
-            }
-            newHtml += '</div>';
-            const tot = cart.getTotal();
-            newHtml += '<div class="cart-summary-total"><span>Estimated Total</span><span>' + (tot.hasCustom ? 'From ' : '') + '$' + tot.total.toLocaleString() + '</span></div>';
-            newHtml += '<button class="btn btn-secondary btn-full btn-clear-cart" style="margin-top:0.5rem;font-size:0.75rem;">Clear Cart</button>';
-            summaryDiv.innerHTML = newHtml;
-            textarea.value = 'I would like to request a quote for:\n\n' + cart.getSummaryText();
-            // Re-bind
-            summaryDiv.querySelector('.btn-clear-cart').addEventListener('click', clearBtn.onclick);
-        } else {
-            // Clear
-            cart.clear();
-            summaryDiv.querySelector('.cart-summary-items').innerHTML = '<p style="color:var(--text-muted);font-size:0.8125rem;">Cart cleared</p>';
-            summaryDiv.querySelector('.cart-summary-total').style.display = 'none';
-            clearBtn.textContent = 'Restore Cart';
-            clearBtn.dataset.state = 'restore';
-            textarea.value = '';
-        }
-    });
 })();
 
 // ========================================
