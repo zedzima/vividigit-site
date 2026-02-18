@@ -130,11 +130,9 @@ const cart = {
         };
         this.save();
         this.renderSidebar();
-        pushDL('add_to_cart', { item_name: title, item_tier: tierName, item_price: price, item_slug: slug });
     },
 
     remove(slug) {
-        const removed = this.items[slug];
         delete this.items[slug];
         // Uncheck on current page if present
         const cb = document.querySelector('.task-select-cb[data-slug="' + slug + '"]');
@@ -145,7 +143,6 @@ const cart = {
         }
         this.save();
         this.renderSidebar();
-        if (removed) pushDL('remove_from_cart', { item_name: removed.title, item_slug: slug });
     },
 
     updateTier(slug, tierName, tierLabel, price, custom) {
@@ -657,8 +654,6 @@ updateCartBadge();
             return;
         }
 
-        pushDL('view_cart', { cart_items: keys.length, cart_total: cart.getTotal().total });
-
         // Table
         let html = '<div class="cart-table-wrap"><table class="cart-table"><thead><tr>' +
             '<th>Service</th>' +
@@ -827,8 +822,6 @@ updateCartBadge();
             const originalText = btn.textContent;
             btn.textContent = 'Sending...';
             btn.disabled = true;
-
-            pushDL('begin_checkout', { cart_items: keys.length, cart_total: cart.getTotal().total, email: email });
 
             fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
