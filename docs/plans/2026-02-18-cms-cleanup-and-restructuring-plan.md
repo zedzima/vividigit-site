@@ -1,5 +1,7 @@
 # CMS Cleanup & Restructuring Implementation Plan
 
+> **Status:** Implemented (2026-02-18)
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** Clean up technical debt (docs, styles, artifacts) then restructure into reusable Core / Theme / Content modules within one repository.

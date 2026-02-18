@@ -64,7 +64,7 @@ CMS/
 
 ## Block Naming
 
-Block section name in TOML determines template: `[hero]` uses `templates/blocks/hero.html`
+Block section name in TOML determines template: `[hero]` uses `themes/vividigit/templates/blocks/hero.html`
 
 ## URL Rules (CRITICAL)
 

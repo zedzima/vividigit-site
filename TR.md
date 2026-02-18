@@ -398,9 +398,9 @@ Last updated: 2026-02-18
 - Category pages with door opener tasks
 
 ### Recently Completed
-- Task-picker block (`templates/blocks/task-picker.html`) with interactive task selection
+- Task-picker block (`themes/vividigit/templates/blocks/task-picker.html`) with interactive task selection
 - Order-cart sidebar with live pricing, modifiers, and event-driven updates
-- Cart JavaScript module (`assets/js/site.js`) with CustomEvent API
+- Cart JavaScript module (`themes/vividigit/assets/js/site.js`) with CustomEvent API
 - Migration of technical-seo and ai-optimisation to task-picker + order-cart model
 
 ### Not Started

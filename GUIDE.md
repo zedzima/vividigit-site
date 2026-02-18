@@ -6,7 +6,7 @@
 
 ```bash
 cd "/Users/dima/Work AI/CMS"
-.venv/bin/python src/cms_server.py
+.venv/bin/python core/src/cms_server.py --site vividigit
 ```
 
 Open in browser:
@@ -17,10 +17,10 @@ Open in browser:
 
 ```bash
 # Build for local preview (base_url="/")
-python src/main.py --local
+python core/src/main.py --site vividigit --local
 
-# Build for production/GitHub Pages (uses base_url from site.toml)
-python src/main.py
+# Build for production/GitHub Pages (uses base_url from site.yml)
+python core/src/main.py --site vividigit
 ```
 
 ---
@@ -49,21 +49,24 @@ Use local build when:
 
 ```bash
 # Start CMS with live preview
-.venv/bin/python src/cms_server.py
+.venv/bin/python core/src/cms_server.py --site vividigit
 
 # Or just build once
-.venv/bin/python src/main.py
+.venv/bin/python core/src/main.py --site vividigit
 ```
 
 ### What Gets Committed
 
 ```
-✓ content/      — TOML content files
-✓ templates/    — Jinja2 templates
-✓ src/          — Python build scripts
-✓ assets/       — Images, CSS, JS
-✗ public/       — Generated output (gitignored)
-✗ .venv/        — Python environment (gitignored)
+✓ core/src/                    — Python build scripts
+✓ core/templates/cms/          — CMS admin templates
+✓ themes/vividigit/templates/  — Jinja2 page layouts & blocks
+✓ themes/vividigit/assets/     — CSS, JS, images, icons
+✓ sites/vividigit/content/     — TOML content files
+✓ sites/vividigit/site.yml     — Site configuration
+✓ tests/                       — Test suite
+✗ public/                      — Generated output (gitignored)
+✗ .venv/                       — Python environment (gitignored)
 ```
 
 ---
@@ -115,9 +118,9 @@ You can edit TOML files directly instead of using the web interface.
 
 ### File Location
 
-Pages are stored in `content/`:
+Pages are stored in `sites/vividigit/content/`:
 ```
-content/
+sites/vividigit/content/
 ├── home.en.toml              → /
 ├── services/
 │   ├── services.en.toml      → /services
@@ -155,7 +158,7 @@ items = [
 
 ### Block Reference
 
-See block demos in `content/blocks/` for all available fields. Each block's demo file shows every supported parameter.
+See block demos in `sites/vividigit/content/blocks/` for all available fields. Each block's demo file shows every supported parameter.
 
 ---
 
@@ -276,7 +279,7 @@ extra_countries = true
 - Users can check/uncheck tasks, expand details, and switch tiers
 - The cart sidebar updates live — no page reload needed
 - Tier with `price = 0` shows "Custom" instead of a dollar amount
-- Reference data for tasks is archived in `content/_tasks/` for consistency
+- Reference data for tasks is archived in `sites/vividigit/content/_tasks/` for consistency
 
 ### Creating Specialist Pages
 
@@ -334,7 +337,7 @@ label = "Traffic recovery"
 Pillar pages aggregate services by dimension:
 
 ```toml
-# content/industries/ecommerce/ecommerce.en.toml
+# sites/vividigit/content/industries/ecommerce/ecommerce.en.toml
 [config]
 lang = "en"
 url = "/industries/ecommerce"
@@ -361,7 +364,7 @@ The `[catalog-mini]` block fetches services from `services-index.json` and filte
 Listing pages show all items in a collection with navigation cards:
 
 ```toml
-# content/industries/industries.en.toml
+# sites/vividigit/content/industries/industries.en.toml
 [config]
 lang = "en"
 url = "/industries"
@@ -420,9 +423,10 @@ Templates use `.lstrip('/')` to ensure URLs are relative.
 ### GitHub Pages (Automatic)
 
 Push to `main` branch — that's it. GitHub Actions will:
-1. Install Python dependencies
-2. Run `python src/main.py` with production `base_url`
-3. Deploy generated `public/` to GitHub Pages
+1. Install Python dependencies from `core/requirements.txt`
+2. Run `python core/src/main.py --site vividigit` with production `base_url`
+3. Copy `sites/vividigit/CNAME` to `public/` for custom domain
+4. Deploy generated `public/` to GitHub Pages
 
 **Note:** Local `public/` folder is gitignored. Each deployment builds fresh from source.
 
@@ -432,7 +436,7 @@ For other hosting (Netlify, Vercel, any static host):
 
 ```bash
 # Build for production
-python src/main.py
+python core/src/main.py --site vividigit
 
 # Upload public/ contents to your host
 ```
@@ -442,19 +446,31 @@ python src/main.py
 ## Project Structure
 
 ```
-├── content/           # Content files (TOML)
-│   ├── _global/       # Global config (site.toml)
-│   ├── blocks/        # Block demos (schema reference)
-│   └── ...            # Page content
-├── templates/
-│   ├── blocks/        # Block templates (HTML)
-│   ├── layouts/       # Page layouts
-│   └── cms/           # CMS admin templates
-├── assets/            # Media files
-├── public/            # Generated site output
-└── src/
-    ├── main.py        # Build script
-    ├── generator.py   # HTML generator
-    ├── parser.py      # TOML parser
-    └── cms_server.py  # Web interface
+CMS/
+├── core/
+│   ├── src/                   # Python build scripts
+│   │   ├── main.py            # Build script
+│   │   ├── generator.py       # HTML generator
+│   │   ├── parser.py          # TOML parser
+│   │   ├── cms_server.py      # Web interface
+│   │   └── toml_writer.py     # TOML serializer
+│   ├── templates/cms/         # CMS admin templates
+│   └── requirements.txt       # Python dependencies
+├── themes/vividigit/
+│   ├── templates/
+│   │   ├── blocks/            # Block templates (HTML)
+│   │   └── layouts/           # Page layouts
+│   ├── assets/                # CSS, JS, images, icons, logos
+│   └── theme.yml              # Theme metadata
+├── sites/vividigit/
+│   ├── content/               # Content files (TOML)
+│   │   ├── _global/           # Global config (site.toml)
+│   │   ├── blocks/            # Block demos (schema reference)
+│   │   └── ...                # Page content
+│   ├── site.yml               # Site configuration
+│   ├── CNAME                  # GitHub Pages custom domain
+│   └── workers/checkout/      # Cloudflare Workers
+├── public/                    # Generated site output
+├── tests/                     # Test suite
+└── docs/                      # Design docs and plans
 ```

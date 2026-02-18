@@ -27,13 +27,13 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r core/requirements.txt
 
       - name: Build site
-        run: python src/main.py
+        run: python core/src/main.py --site vividigit
 
       - name: Add CNAME
-        run: cp CNAME public/CNAME
+        run: cp sites/vividigit/CNAME public/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

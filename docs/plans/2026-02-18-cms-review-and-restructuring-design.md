@@ -1,7 +1,7 @@
 # CMS Review & Restructuring Design
 
 **Date:** 2026-02-18
-**Status:** Approved
+**Status:** Implemented (2026-02-18)
 **Approach:** Two phases — cleanup first, then modular restructuring
 
 ---

@@ -18,20 +18,22 @@ Content authors and AI agents never modify layout, styling, or rendering logic.
 
 ---
 
-## A page is defined by a directory inside the `content/` folder.
+## A page is defined by a directory inside the site's `content/` folder.
 
 The directory path directly maps to the page URL.
 Nested directories represent nested URLs.
 There are no index files.
 Each page explicitly owns its content via language-specific TOML files.
 
+Content lives at `sites/<site>/content/` (e.g., `sites/vividigit/content/`).
+
 Example mapping:
-- `content/services/` → `/services`
-- `content/services/seo/` → `/services/seo`
+- `sites/vividigit/content/services/` → `/services`
+- `sites/vividigit/content/services/seo/` → `/services/seo`
 
 ---
 
-## The `content/` directory defines the complete site structure and navigation hierarchy.
+## The site's `content/` directory defines the complete site structure and navigation hierarchy.
 
 Folder names define URL segments and menu hierarchy.
 This structure is shared across all languages and never duplicated per language.
@@ -40,7 +42,7 @@ Each page directory contains one or more language-specific content files.
 
 Example structure:
 
-content/
+sites/vividigit/content/
     services/
         services.en.toml
         services.de.toml
@@ -189,29 +191,37 @@ Assets include:
 - page-specific scripts,
 - other static resources.
 
-Assets are stored in the `assets/` directory.
+Assets are stored in the theme's `assets/` directory.
 
 ---
 
-## The `assets/` directory mirrors the structure of `content/`.
+## The theme's `assets/` directory contains shared resources.
+
+Assets are stored at `themes/<theme>/assets/` (e.g., `themes/vividigit/assets/`).
 
 Example:
 
-assets/
-    services/
-        hero.jpg
-        services.js
-        seo/
-            diagram.png
+themes/vividigit/assets/
+    images/
+        services/
+            hero.jpg
+        site/
+            og-image.png
+    css/
+        styles.css
+    js/
+        site.js
+    icons/
+        sprite.svg
 
 Rules:
-- Assets for a page live in the folder matching the page path.
+- Assets are organized by type (images, css, js, icons, logos).
 - Assets are shared across all languages.
-- Templates resolve asset paths based on page directory.
+- Templates resolve asset paths based on the theme configuration.
 
 ---
 
-## Navigation and menus are derived from the directory structure under `content/`.
+## Navigation and menus are derived from the directory structure under the site's `content/`.
 
 Rules:
 - Folder hierarchy defines navigation hierarchy.
@@ -224,18 +234,18 @@ Content files do not define menu structure or layout.
 
 ## Collections group similar content items under a shared parent.
 
-A collection is a directory inside `content/` that contains multiple child pages of the same type.
+A collection is a directory inside the site's `content/` that contains multiple child pages of the same type.
 
-Collections:
-- `content/services/` — service offerings (with embedded task-picker blocks)
-- `content/team/` — specialist profiles
-- `content/cases/` — case studies
-- `content/blog/` — blog articles
-- `content/categories/` — category pillar pages
-- `content/industries/` — industry pillar pages
-- `content/countries/` — country pillar pages
-- `content/languages/` — language aggregator pages
-- `content/solutions/` — problem-focused landing pages
+Collections (paths relative to `sites/vividigit/content/`):
+- `services/` — service offerings (with embedded task-picker blocks)
+- `team/` — specialist profiles
+- `cases/` — case studies
+- `blog/` — blog articles
+- `categories/` — category pillar pages
+- `industries/` — industry pillar pages
+- `countries/` — country pillar pages
+- `languages/` — language aggregator pages
+- `solutions/` — problem-focused landing pages
 
 > **Note:** Tasks exist as data but are not a routable collection. They are embedded in service pages via the `task-picker` block. Task data files are stored in `content/_tasks/` as an archive.
 
@@ -248,7 +258,7 @@ Rules:
 Example structure:
 
 ```
-content/
+sites/vividigit/content/
     services/
         services.en.toml              # listing page
         technical-seo/
@@ -358,7 +368,7 @@ extra_countries = true    # Show country modifier counter
 This is a content block (not a system section). It displays tasks with checkboxes,
 expandable details, deliverables, and tier selectors.
 
-Template: `templates/blocks/task-picker.html`
+Template: `themes/vividigit/templates/blocks/task-picker.html`
 
 ```toml
 [task-picker]
@@ -403,7 +413,7 @@ If structure differs between language files, the build must fail.
 ## The build process for a given language is deterministic.
 
 Build steps:
-1. Scan the `content/` directory tree.
+1. Scan the site's `content/` directory tree.
 2. Select only files matching the active language suffix.
 3. Validate block templates and demos (warn if templates lack demos).
 4. Resolve page URLs from directory structure.
@@ -413,7 +423,7 @@ Build steps:
    - match blocks to templates,
    - render blocks,
    - inject blocks into layout.
-6. Resolve assets from the mirrored `assets/` directory.
+6. Resolve assets from the theme's `assets/` directory.
 7. Output the built site for the active language.
 
 No runtime decisions are made based on content structure.
@@ -443,14 +453,14 @@ Rules:
 Rules:
 1. Pages must not contain any data that is not defined in a corresponding block template.
 2. Block demo TOML files must include ALL parameters that the template supports.
-3. Global styles must be defined only in the global CSS file (`public/css/styles.css`).
+3. Global styles must be defined only in the theme CSS file (`themes/vividigit/assets/css/styles.css`).
 
 Block templates are the source of truth for:
 - which fields are allowed,
 - which fields are required,
 - which fields are optional.
 
-Demo content files in `content/blocks/` serve as complete examples.
+Demo content files in `sites/<site>/content/blocks/` serve as complete examples.
 Every parameter a block template can render must be present in its demo file.
 This ensures:
 - templates are fully documented by example,
@@ -467,7 +477,7 @@ Any style that could apply to multiple blocks must be in the global CSS.
 Validation runs automatically during build.
 
 Warnings are issued when:
-- A block template in `templates/blocks/` has no demo content in `content/blocks/`.
+- A block template in the theme's `templates/blocks/` has no demo content in the site's `content/blocks/`.
 
 Errors are issued when:
 - A content file uses a block that has no corresponding template.
@@ -507,7 +517,7 @@ Both methods produce identical results.
 
 To start the web interface:
 ```
-python src/cms_server.py
+python core/src/cms_server.py --site vividigit
 ```
 
 The interface is available at `http://127.0.0.1:5001/admin`.
@@ -521,13 +531,13 @@ The build system supports two modes:
 
 Local development:
 ```
-python src/main.py --local
+python core/src/main.py --site vividigit --local
 ```
 Sets `base_url="/"` for local preview.
 
 Production (GitHub Pages):
 ```
-python src/main.py
+python core/src/main.py --site vividigit
 ```
 Uses `base_url` from `site.toml` (e.g., `/`).
 
