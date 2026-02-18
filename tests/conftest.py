@@ -4,12 +4,14 @@ import os
 import sys
 import pytest
 
-# Add src to path
+# Add core/src to path (sources moved from src/ to core/src/)
 CMS_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, os.path.join(CMS_ROOT, "src"))
+sys.path.insert(0, os.path.join(CMS_ROOT, "core", "src"))
 
-CONTENT_DIR = os.path.join(CMS_ROOT, "content")
-TEMPLATE_DIR = os.path.join(CMS_ROOT, "templates")
+# Site-specific paths (content and templates moved under sites/ and themes/)
+SITE_NAME = "vividigit"
+CONTENT_DIR = os.path.join(CMS_ROOT, "sites", SITE_NAME, "content")
+TEMPLATE_DIR = os.path.join(CMS_ROOT, "themes", SITE_NAME, "templates")
 OUTPUT_DIR = os.path.join(CMS_ROOT, "public")
 
 

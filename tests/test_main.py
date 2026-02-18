@@ -13,6 +13,7 @@ from main import (
     resolve_related_entities,
     load_tasks,
     resolve_task_pickers,
+    configure_paths,
 )
 
 
@@ -100,7 +101,8 @@ def test_validate_page_blocks_missing():
 
 def test_available_blocks_exist(cms_root):
     """Block templates directory has templates."""
-    os.chdir(cms_root)
+    # configure_paths sets global BLOCKS_DIR needed by get_available_blocks()
+    configure_paths("vividigit")
     blocks = get_available_blocks()
     assert len(blocks) > 0
     assert "hero" in blocks
@@ -237,8 +239,7 @@ def test_resolve_related_entities_manual_items_preserved():
 
 def test_load_tasks(cms_root):
     """Task loader finds tasks in _tasks/ directory."""
-    os.chdir(cms_root)
-    tasks_dir = os.path.join(cms_root, "content", "_tasks")
+    tasks_dir = os.path.join(cms_root, "sites", "vividigit", "content", "_tasks")
     tasks = load_tasks(tasks_dir, "en")
     assert len(tasks) >= 2
     assert "site-audit" in tasks
