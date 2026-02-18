@@ -510,8 +510,8 @@ To start the web interface:
 python src/cms_server.py
 ```
 
-The interface is available at `http://127.0.0.1:5000/`.
-Site preview is available at `http://127.0.0.1:5000/public/`.
+The interface is available at `http://127.0.0.1:5001/admin`.
+Site preview is available at `http://127.0.0.1:5001/`.
 
 ---
 
