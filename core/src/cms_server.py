@@ -1,32 +1,55 @@
 """
 CMS Server - Local web interface for content management.
-Run: python src/cms_server.py
-Open: http://localhost:5000
+Run: python core/src/cms_server.py [--site vividigit]
+Open: http://localhost:5001
 """
 
 import os
 import sys
+import yaml
 from pathlib import Path
 from flask import Flask, render_template, request, redirect, url_for, jsonify, send_from_directory
 
-# Add src to path for imports
+# Add core/src to path for sibling imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from parser import load_file
 from toml_writer import save_toml
 
-# Directories
-BASE_DIR = Path(__file__).parent.parent
-CONTENT_DIR = BASE_DIR / "content"
-TEMPLATES_DIR = BASE_DIR / "templates"
-BLOCKS_DIR = TEMPLATES_DIR / "blocks"
-BLOCKS_CONTENT_DIR = CONTENT_DIR / "blocks"
-ASSETS_DIR = BASE_DIR / "assets"
+# Project root: CMS/ (two levels up from core/src/)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
+# Default site name (can be overridden via --site argument)
+SITE_NAME = os.environ.get("CMS_SITE", "vividigit")
+
+
+def _configure_cms_paths(site_name: str):
+    """Configure CMS paths from site.yml."""
+    global SITE_NAME, CONTENT_DIR, TEMPLATES_DIR, BLOCKS_DIR, BLOCKS_CONTENT_DIR, ASSETS_DIR
+
+    SITE_NAME = site_name
+    site_yml_path = PROJECT_ROOT / "sites" / site_name / "site.yml"
+    with open(site_yml_path) as f:
+        site_yml = yaml.safe_load(f)
+
+    theme_name = site_yml["site"]["theme"]
+
+    CONTENT_DIR = PROJECT_ROOT / "sites" / site_name / "content"
+    TEMPLATES_DIR = PROJECT_ROOT / "themes" / theme_name / "templates"
+    BLOCKS_DIR = TEMPLATES_DIR / "blocks"
+    BLOCKS_CONTENT_DIR = CONTENT_DIR / "blocks"
+    ASSETS_DIR = PROJECT_ROOT / "themes" / theme_name / "assets"
+
+
+# Initialize paths with default site
+_configure_cms_paths(SITE_NAME)
+
+# Determine static folder: prefer core/static/cms, fallback to None
+_static_cms = PROJECT_ROOT / "core" / "static" / "cms"
 app = Flask(
     __name__,
-    template_folder=str(BASE_DIR / "templates" / "cms"),
-    static_folder=str(BASE_DIR / "static" / "cms")
+    template_folder=str(PROJECT_ROOT / "core" / "templates" / "cms"),
+    static_folder=str(_static_cms) if _static_cms.exists() else None
 )
 
 # Configuration
@@ -42,7 +65,7 @@ def serve_assets(filename):
 @app.route('/<path:filename>')
 def serve_site(filename):
     """Serve site from public/ at root (like production)."""
-    public_dir = BASE_DIR / "public"
+    public_dir = PROJECT_ROOT / "public"
 
     # Handle directory requests - serve index.html
     file_path = public_dir / filename
@@ -55,7 +78,7 @@ def serve_site(filename):
 @app.route('/')
 def serve_site_root():
     """Serve site root."""
-    return send_from_directory(str(BASE_DIR / "public"), 'index.html')
+    return send_from_directory(str(PROJECT_ROOT / "public"), 'index.html')
 
 
 def get_all_pages() -> list:
@@ -214,8 +237,9 @@ def build_site():
     """Run site generator with --local flag."""
     import subprocess
     result = subprocess.run(
-        [sys.executable, "src/main.py", "--local"],
-        cwd=str(BASE_DIR),
+        [sys.executable, str(PROJECT_ROOT / "core" / "src" / "main.py"),
+         "--local", "--site", SITE_NAME],
+        cwd=str(PROJECT_ROOT),
         capture_output=True,
         text=True
     )
@@ -496,9 +520,20 @@ def create_page():
 
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="CMS Server")
+    parser.add_argument("--site", default="vividigit", help="Site name (directory in sites/)")
+    parser.add_argument("--port", type=int, default=5001, help="Port to listen on")
+    args = parser.parse_args()
+
+    # Re-configure paths if a different site was specified
+    if args.site != SITE_NAME:
+        _configure_cms_paths(args.site)
+
     print("CMS Server starting...")
+    print(f"Site: {SITE_NAME}")
     print(f"Content: {CONTENT_DIR}")
     print(f"Templates: {TEMPLATES_DIR}")
-    print("Site:  http://127.0.0.1:5001/")
-    print("Admin: http://127.0.0.1:5001/admin")
-    app.run(debug=True, port=5001)
+    print(f"Site:  http://127.0.0.1:{args.port}/")
+    print(f"Admin: http://127.0.0.1:{args.port}/admin")
+    app.run(debug=True, port=args.port)

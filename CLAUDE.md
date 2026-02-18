@@ -12,33 +12,55 @@ This applies to all files: TOML, HTML, JS, CSS, Markdown, etc.
 ## Build Commands
 
 ```bash
-# Build site
-.venv/bin/python src/main.py
+# Build site (default site: vividigit)
+.venv/bin/python core/src/main.py --site vividigit
+
+# Build for local development
+.venv/bin/python core/src/main.py --site vividigit --local
+
+# Build all languages
+.venv/bin/python core/src/main.py --site vividigit --all
 
 # Run dev server
 .venv/bin/python -m http.server 8000 --directory public
+
+# Run CMS admin server
+.venv/bin/python core/src/cms_server.py --site vividigit
 ```
 
 ## Custom Domain
 
-Site is deployed to GitHub Pages with custom domain `vividigit.com`. The `CNAME` file in repo root is copied to `public/` during CI build.
+Site is deployed to GitHub Pages with custom domain `vividigit.com`. The `CNAME` file from `sites/vividigit/CNAME` is copied to `public/` during CI build.
 
 ## Project Structure
 
-- `content/` — TOML content files
-  - `content/services/` — Service pages (with embedded task-picker blocks)
-  - `content/_tasks/` — Task data archive (not a routable collection)
-  - `content/team/` — Specialist profiles
-  - `content/cases/` — Case studies
-  - `content/categories/` — Category pillars
-  - `content/industries/` — Industry pillars
-  - `content/countries/` — Country pillars
-  - `content/languages/` — Language aggregators
-  - `content/solutions/` — Problem-focused landing pages
-  - `content/blog/` — Blog articles
-- `templates/blocks/` — Jinja2 block templates
-- `assets/icons/` — SVG icons (use `{{ icon('name', size) }}` in templates)
-- `public/` — Generated output (deployed to GitHub Pages)
+```
+CMS/
+├── core/src/          — Python source (main.py, generator.py, parser.py, cms_server.py)
+├── core/templates/cms/ — Admin panel templates (Flask)
+├── themes/vividigit/
+│   ├── templates/layouts/ — Jinja2 page layouts
+│   ├── templates/blocks/  — Jinja2 block templates
+│   ├── assets/css|js|icons|images|logos/ — Theme assets
+│   └── theme.yml          — Theme metadata
+├── sites/vividigit/
+│   ├── content/           — TOML/MD content files
+│   ├── site.yml           — Site config (theme, navigation, facets, exports)
+│   └── CNAME              — GitHub Pages custom domain
+└── public/                — Build output (deployed to GitHub Pages)
+```
+
+### Content directories (inside `sites/vividigit/content/`):
+- `services/` — Service pages (with embedded task-picker blocks)
+- `_tasks/` — Task data archive (not a routable collection)
+- `team/` — Specialist profiles
+- `cases/` — Case studies
+- `categories/` — Category pillars
+- `industries/` — Industry pillars
+- `countries/` — Country pillars
+- `languages/` — Language aggregators
+- `solutions/` — Problem-focused landing pages
+- `blog/` — Blog articles
 
 ## Block Naming
 

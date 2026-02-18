@@ -14,21 +14,50 @@ import sys
 import json
 import shutil
 import tomllib
+import yaml
 from pathlib import Path
 from typing import Dict, Any, List, Optional
+
+# Ensure core/src is on the path for sibling imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from parser import load_file
 from generator import Generator
 
-CONTENT_DIR = "content"
-TEMPLATE_DIR = "templates"
-OUTPUT_DIR = "public"
-ASSETS_DIR = "assets"
-GLOBAL_DIR = os.path.join(CONTENT_DIR, "_global")
-BLOCKS_DIR = os.path.join(TEMPLATE_DIR, "blocks")
-BLOCKS_CONTENT_DIR = os.path.join(CONTENT_DIR, "blocks")
-
-# Default language for build
+# Project root: CMS/ (two levels up from core/src/)
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "public")
 DEFAULT_LANG = "en"
+
+# Site-specific paths (set by configure_paths)
+CONTENT_DIR = None
+TEMPLATE_DIR = None
+ASSETS_DIR = None
+GLOBAL_DIR = None
+BLOCKS_DIR = None
+BLOCKS_CONTENT_DIR = None
+TASKS_DIR = None
+
+
+def configure_paths(site_name: str) -> dict:
+    """Configure all paths based on site name and its theme."""
+    global CONTENT_DIR, TEMPLATE_DIR, ASSETS_DIR, GLOBAL_DIR, BLOCKS_DIR, BLOCKS_CONTENT_DIR, TASKS_DIR
+
+    # Load site.yml to get theme name
+    site_yml_path = os.path.join(PROJECT_ROOT, "sites", site_name, "site.yml")
+    with open(site_yml_path) as f:
+        site_yml = yaml.safe_load(f)
+
+    theme_name = site_yml["site"]["theme"]
+
+    CONTENT_DIR = os.path.join(PROJECT_ROOT, "sites", site_name, "content")
+    TEMPLATE_DIR = os.path.join(PROJECT_ROOT, "themes", theme_name, "templates")
+    ASSETS_DIR = os.path.join(PROJECT_ROOT, "themes", theme_name, "assets")
+    GLOBAL_DIR = os.path.join(CONTENT_DIR, "_global")
+    BLOCKS_DIR = os.path.join(TEMPLATE_DIR, "blocks")
+    BLOCKS_CONTENT_DIR = os.path.join(CONTENT_DIR, "blocks")
+    TASKS_DIR = os.path.join(CONTENT_DIR, "_tasks")
+
+    return site_yml
 
 
 def get_available_blocks() -> set:
@@ -164,29 +193,22 @@ def find_content_files(content_dir: str, lang: str) -> List[Dict[str, Any]]:
     return files
 
 
-def build_navigation(pages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def build_navigation(pages: List[Dict[str, Any]], nav_order: List[str] = None) -> List[Dict[str, Any]]:
     """
     Build navigation tree from parsed pages.
     Returns hierarchical structure for menu rendering.
+
+    Args:
+        pages: List of parsed page dicts
+        nav_order: Ordered list of top-level URLs and collection names from site.yml
     """
     collections = {}
     top_pages = {}  # url -> nav item
 
-    # Ordered nav: top-level pages + collections in exact order
-    # Collections not listed here are excluded from nav (e.g. blocks)
-    NAV_ORDER = [
-        "/",            # Home
-        "services",     # collection
-        "categories",   # collection
-        "solutions",    # collection
-        "cases",        # collection
-        "team",         # collection
-        "industries",   # collection
-        "countries",    # collection
-        "languages",    # collection
-        "blog",         # collection
-        "contact",      # collection
-    ]
+    # Use provided nav_order or sensible default
+    if nav_order is None:
+        nav_order = ["/", "services", "categories", "solutions", "cases",
+                     "team", "industries", "countries", "languages", "blog", "contact"]
 
     for page in pages:
         url = page.get("url", "/")
@@ -206,9 +228,9 @@ def build_navigation(pages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             # Top-level page
             top_pages[url] = {"url": url, "menu": menu, "children": []}
 
-    # Build nav in exact NAV_ORDER
+    # Build nav in exact order
     nav = []
-    for entry in NAV_ORDER:
+    for entry in nav_order:
         if entry.startswith("/"):
             # Top-level page by URL
             if entry in top_pages:
@@ -302,9 +324,13 @@ def export_collection_json(collection_name: str, items: List[Dict], output_dir: 
     print(f"  Exported: {json_path} ({len(export_items)} items)")
 
 
-def build_tag_index(parsed_pages: List[Dict]) -> Dict[str, Dict[str, List[str]]]:
+def build_tag_index(parsed_pages: List[Dict], dimensions: List[str] = None) -> Dict[str, Dict[str, List[str]]]:
     """
     Build reverse index of tags to services.
+
+    Args:
+        parsed_pages: List of parsed page dicts
+        dimensions: List of facet dimension names from site.yml
 
     Returns:
     {
@@ -313,16 +339,13 @@ def build_tag_index(parsed_pages: List[Dict]) -> Dict[str, Dict[str, List[str]]]
             ...
         },
         "industries": {...},
-        "countries": {...},
-        "languages": {...}
+        ...
     }
     """
-    tag_index = {
-        "categories": {},
-        "industries": {},
-        "countries": {},
-        "languages": {}
-    }
+    if dimensions is None:
+        dimensions = ["categories", "industries", "countries", "languages"]
+
+    tag_index = {dim: {} for dim in dimensions}
 
     for page in parsed_pages:
         data = page.get("data", {})
@@ -340,7 +363,7 @@ def build_tag_index(parsed_pages: List[Dict]) -> Dict[str, Dict[str, List[str]]]
 
         tags = data.get("tags", {})
 
-        for dimension in ["categories", "industries", "countries", "languages"]:
+        for dimension in dimensions:
             for tag_slug in tags.get(dimension, []):
                 if tag_slug not in tag_index[dimension]:
                     tag_index[dimension][tag_slug] = []
@@ -651,8 +674,16 @@ def export_countries_index(parsed_pages: List[Dict], tag_index: Dict, output_dir
     print(f"  Exported: {json_path} ({len(items)} countries)")
 
 
-def export_languages_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str):
+def export_languages_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str,
+                           lang_code_map: Dict[str, str] = None):
     """Export enriched languages index. Creates public/data/languages-index.json"""
+    if lang_code_map is None:
+        lang_code_map = {
+            'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES',
+            'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT',
+            'portuguese': 'PT',
+        }
+
     json_dir = os.path.join(output_dir, "data")
     os.makedirs(json_dir, exist_ok=True)
 
@@ -673,7 +704,7 @@ def export_languages_index(parsed_pages: List[Dict], tag_index: Dict, output_dir
             "description": data.get("meta", {}).get("description", ""),
             "menu": config.get("menu", ""),
             "flag": config.get("flag", ""),
-            "code": (langCodeMap.get(slug) or slug[:2].upper()),
+            "code": (lang_code_map.get(slug) or slug[:2].upper()),
             "service_count": service_count,
         })
 
@@ -681,14 +712,6 @@ def export_languages_index(parsed_pages: List[Dict], tag_index: Dict, output_dir
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump({"languages": items}, f, indent=2, ensure_ascii=False)
     print(f"  Exported: {json_path} ({len(items)} languages)")
-
-
-# Language code lookup for export
-langCodeMap = {
-    'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES',
-    'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT',
-    'portuguese': 'PT',
-}
 
 
 def export_cases_index(parsed_pages: List[Dict], output_dir: str):
@@ -877,9 +900,6 @@ def export_relationship_graph(graph: Dict[str, Dict], output_dir: str):
 # Phase 3: Task Normalization
 ###############################################################################
 
-TASKS_DIR = os.path.join(CONTENT_DIR, "_tasks")
-
-
 def load_tasks(tasks_dir: str, lang: str) -> Dict[str, Dict]:
     """
     Load task definitions from _tasks/ directory.
@@ -1044,15 +1064,26 @@ Sitemap: {base_url.rstrip('/')}/sitemap.xml
     print(f"  Created: {robots_path}")
 
 
-def main(lang: str = DEFAULT_LANG, local: bool = False):
+def main(lang: str = DEFAULT_LANG, local: bool = False, site_name: str = "vividigit"):
     """Build site for specified language."""
-    print(f"Building site for language: {lang}")
+    print(f"Building site for language: {lang} (site: {site_name})")
     if local:
         print("Mode: LOCAL (base_url=/)")
     print("=" * 50)
 
-    # Load site configuration
+    # Configure paths from site.yml
+    site_yml = configure_paths(site_name)
+
+    # Load site configuration from _global/site.toml
     site_config = load_site_config()
+
+    # Merge site.yml values into site_config so templates have access
+    if "site" not in site_config:
+        site_config["site"] = {}
+    # site.yml provides theme, navigation, facets — keep site.toml for domain, base_url etc.
+    for key in ("theme", "language"):
+        if key in site_yml.get("site", {}):
+            site_config["site"].setdefault(key, site_yml["site"][key])
 
     # Override base_url for local development
     if local:
@@ -1083,8 +1114,12 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
     for warning in block_warnings:
         print(f"  ⚠ {warning}")
 
-    # Initialize generator
-    gen = Generator(TEMPLATE_DIR, output_dir, site_config)
+    # Initialize generator with theme templates (and core CMS templates as fallback)
+    core_templates_dir = os.path.join(PROJECT_ROOT, "core", "templates")
+    template_dirs = [TEMPLATE_DIR]
+    if os.path.isdir(core_templates_dir):
+        template_dirs.append(core_templates_dir)
+    gen = Generator(template_dirs, output_dir, site_config)
 
     # Find all content files for this language
     print(f"\nScanning {CONTENT_DIR}/ for .{lang}. files...")
@@ -1164,7 +1199,8 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
 
     # Build navigation
     print("\nBuilding navigation...")
-    navigation = build_navigation(parsed_pages)
+    nav_order = site_yml.get("navigation", {}).get("order")
+    navigation = build_navigation(parsed_pages, nav_order)
 
     # Build sitemap for templates
     sitemap = []
@@ -1206,7 +1242,8 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
 
     # Build tag index for faceted navigation
     print("\nBuilding tag index...")
-    tag_index = build_tag_index(parsed_pages)
+    dimensions = site_yml.get("facets", {}).get("dimensions")
+    tag_index = build_tag_index(parsed_pages, dimensions)
     for dimension, tags in tag_index.items():
         if tags:
             print(f"  {dimension}: {len(tags)} tags")
@@ -1241,7 +1278,8 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
 
     # Export languages index
     print("\nExporting languages index...")
-    export_languages_index(parsed_pages, tag_index, output_dir)
+    lang_code_map = site_yml.get("exports", {}).get("language_code_map")
+    export_languages_index(parsed_pages, tag_index, output_dir, lang_code_map)
 
     # Export relationship graph (Phase 2)
     print("\nExporting relationship graph...")
@@ -1272,8 +1310,11 @@ def main(lang: str = DEFAULT_LANG, local: bool = False):
         print(f"Block errors: {total_errors} (missing templates)")
 
 
-def build_all_languages(local: bool = False):
+def build_all_languages(local: bool = False, site_name: str = "vividigit"):
     """Build site for all available languages."""
+    # Configure paths first so CONTENT_DIR is set
+    configure_paths(site_name)
+
     langs = set()
     for root, dirs, files in os.walk(CONTENT_DIR):
         dirs[:] = [d for d in dirs if not d.startswith('.') and not d.startswith('_')]
@@ -1286,7 +1327,7 @@ def build_all_languages(local: bool = False):
 
     print(f"Detected languages: {sorted(langs)}")
     for lang in sorted(langs):
-        main(lang, local=local)
+        main(lang, local=local, site_name=site_name)
 
 
 if __name__ == "__main__":
@@ -1295,8 +1336,9 @@ if __name__ == "__main__":
     parser.add_argument("lang", nargs="?", default=DEFAULT_LANG, help="Language code (default: en)")
     parser.add_argument("--local", action="store_true", help="Build for local development (base_url=/)")
     parser.add_argument("--all", action="store_true", help="Build all detected languages")
+    parser.add_argument("--site", default="vividigit", help="Site name (directory in sites/)")
     args = parser.parse_args()
     if args.all:
-        build_all_languages(local=args.local)
+        build_all_languages(local=args.local, site_name=args.site)
     else:
-        main(args.lang, local=args.local)
+        main(args.lang, local=args.local, site_name=args.site)

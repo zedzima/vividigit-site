@@ -8,21 +8,31 @@ Navigation is auto-generated from directory structure.
 import os
 import sys
 import re
-from jinja2 import Environment, FileSystemLoader, select_autoescape, TemplateNotFound
+from jinja2 import Environment, FileSystemLoader, ChoiceLoader, select_autoescape, TemplateNotFound
 from markupsafe import Markup
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 
 
 class Generator:
-    def __init__(self, template_dir: str, output_dir: str, site_config: Dict[str, Any] = None, strict: bool = False):
+    def __init__(self, template_dirs: Union[str, List[str]], output_dir: str,
+                 site_config: Dict[str, Any] = None, strict: bool = False):
+        """
+        Args:
+            template_dirs: Single directory or list of directories to search for templates.
+                           First directory takes priority (theme templates before core).
+        """
+        if isinstance(template_dirs, str):
+            template_dirs = [template_dirs]
+
         self.env = Environment(
-            loader=FileSystemLoader(template_dir),
+            loader=ChoiceLoader([FileSystemLoader(d) for d in template_dirs]),
             autoescape=select_autoescape(['html', 'xml'])
         )
         self.output_dir = output_dir
         self.site_config = site_config or {}
         self.strict = strict
-        self.icons_dir = os.path.join(os.path.dirname(template_dir), "assets", "icons")
+        # Icons dir is in the first (theme) template dir's parent assets
+        self.icons_dir = os.path.join(os.path.dirname(template_dirs[0]), "assets", "icons")
 
         # Register global icon function
         self.env.globals['icon'] = self._icon_func
