@@ -10,7 +10,6 @@ const SITE_CONFIG = {
     web3formsKey: '419be280-f452-493c-9745-bd1daba07eb8',
     notifyEmail: 'mail@vividigit.com',
     cartStorageKey: 'vividigit_cart',
-    modifiersStorageKey: 'vividigit_modifiers',
     langPct: 0.6,      // each extra language adds 60% of item price
     countryPct: 0.4    // each extra country adds 40% of item price
 };
@@ -270,11 +269,20 @@ const cart = {
         // Read modifier values from sidebar counters
         const langCount = parseInt(document.getElementById('langCount')?.textContent) || 0;
         const countryCount = parseInt(document.getElementById('countryCount')?.textContent) || 0;
-        const langFeeEl = document.querySelector('.cart-counter[data-type="lang"]');
-        const countryFeeEl = document.querySelector('.cart-counter[data-type="country"]');
-        const langFee = parseInt(langFeeEl?.dataset.fee) || 200;
-        const countryFee = parseInt(countryFeeEl?.dataset.fee) || 100;
-        const modifierTotal = (langCount * langFee) + (countryCount * countryFee);
+
+        // Sync modifier counts to all page items (unified with cart page percentage model)
+        for (const slug of keys) {
+            pageItems[slug].langCount = langCount;
+            pageItems[slug].countryCount = countryCount;
+        }
+        cart.save();
+
+        // Calculate totals using percentage-based getItemTotal (same as cart page)
+        let grandTotal = 0;
+        for (const slug of keys) {
+            grandTotal += cart.getItemTotal(pageItems[slug]);
+        }
+        const modifierTotal = grandTotal - subtotal;
 
         // Update sidebar totals
         const subtotalEl = document.getElementById('cartSubtotal');
@@ -283,7 +291,7 @@ const cart = {
 
         if (subtotalEl) subtotalEl.textContent = (hasCustom ? 'From $' : '$') + subtotal.toLocaleString();
         if (feesEl) feesEl.textContent = modifierTotal > 0 ? '+$' + modifierTotal.toLocaleString() : '$0';
-        if (totalEl) totalEl.textContent = (hasCustom ? 'From $' : '$') + (subtotal + modifierTotal).toLocaleString();
+        if (totalEl) totalEl.textContent = (hasCustom ? 'From $' : '$') + grandTotal.toLocaleString();
     }
 };
 
@@ -314,17 +322,17 @@ document.addEventListener('tierChanged', function(e) {
 
 // Initialize sidebar cart on pages with order-cart sidebar
 if (document.getElementById('cartItems')) {
-    // Restore modifiers from localStorage
-    try {
-        const savedMods = localStorage.getItem(SITE_CONFIG.modifiersStorageKey);
-        if (savedMods) {
-            const mods = JSON.parse(savedMods);
-            const langEl = document.getElementById('langCount');
-            const countryEl = document.getElementById('countryCount');
-            if (langEl && mods.langCount) langEl.textContent = mods.langCount;
-            if (countryEl && mods.countryCount) countryEl.textContent = mods.countryCount;
+    // Restore modifier counter values from saved cart items
+    var curPageInit = window.location.pathname;
+    for (var s of Object.keys(cart.items)) {
+        if (cart.items[s].page === curPageInit) {
+            var langEl = document.getElementById('langCount');
+            var countryEl = document.getElementById('countryCount');
+            if (langEl && cart.items[s].langCount) langEl.textContent = cart.items[s].langCount;
+            if (countryEl && cart.items[s].countryCount) countryEl.textContent = cart.items[s].countryCount;
+            break;
         }
-    } catch (e) { /* ignore */ }
+    }
 
     // Render sidebar with current page items only (no checkbox syncing from other pages)
     cart.renderSidebar();
@@ -352,14 +360,13 @@ if (document.getElementById('cartItems')) {
     // DO NOT sync checkboxes from saved cart — only show what user selects on this page
 }
 
-// Counter +/- buttons for order modifiers
+// Counter +/- buttons for order modifiers (values synced to items in renderSidebar)
 document.querySelectorAll('.cart-counter').forEach(function(counter) {
     counter.querySelector('.counter-minus')?.addEventListener('click', function() {
         const valEl = counter.querySelector('.counter-value');
         let val = parseInt(valEl.textContent) || 0;
         val = Math.max(0, val - 1);
         valEl.textContent = val;
-        saveModifiers();
         cart.renderSidebar();
     });
     counter.querySelector('.counter-plus')?.addEventListener('click', function() {
@@ -367,23 +374,9 @@ document.querySelectorAll('.cart-counter').forEach(function(counter) {
         let val = parseInt(valEl.textContent) || 0;
         val++;
         valEl.textContent = val;
-        saveModifiers();
         cart.renderSidebar();
     });
 });
-
-function saveModifiers() {
-    const langFeeEl = document.querySelector('.cart-counter[data-type="lang"]');
-    const countryFeeEl = document.querySelector('.cart-counter[data-type="country"]');
-    try {
-        localStorage.setItem(SITE_CONFIG.modifiersStorageKey, JSON.stringify({
-            langCount: parseInt(document.getElementById('langCount')?.textContent) || 0,
-            countryCount: parseInt(document.getElementById('countryCount')?.textContent) || 0,
-            langFee: parseInt(langFeeEl?.dataset.fee) || 200,
-            countryFee: parseInt(countryFeeEl?.dataset.fee) || 100
-        }));
-    } catch (e) { /* ignore */ }
-}
 
 // Pricing block → Order Cart integration
 if (document.getElementById('cartItems')) {
@@ -692,14 +685,14 @@ updateCartBadge();
             '<textarea class="cart-field-input" id="cartComment" placeholder="Add notes or special requests..." rows="3"></textarea>' +
         '</div>';
 
-        // Request form
+        // Request form (2 fields per row)
         html += '<div class="cart-request-section">' +
             '<div class="cart-request-fields">' +
                 '<input type="text" class="cart-field-input" id="cartName" placeholder="Your name" />' +
-                '<input type="tel" class="cart-field-input" id="cartPhone" placeholder="Phone number" />' +
                 '<input type="email" class="cart-field-input" id="cartEmail" placeholder="Your email *" />' +
             '</div>' +
-            '<div style="margin-bottom:1rem;">' +
+            '<div class="cart-request-fields">' +
+                '<input type="tel" class="cart-field-input" id="cartPhone" placeholder="Phone number" />' +
                 '<select class="cart-field-input" id="cartSource">' +
                     '<option value="" disabled selected>How did you hear about us?</option>' +
                     '<option value="search">Search engine</option>' +
