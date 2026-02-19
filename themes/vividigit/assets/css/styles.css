@@ -6412,3 +6412,21 @@ a.cards-link:hover {
                 transition: color 0.15s;
             }
             .sidebar-toc .toc a:hover { color: var(--accent); }
+
+/* === Block: related-entities === */
+.related-entities { display: flex; flex-direction: column; gap: var(--space-2xl); }
+.related-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); }
+.related-section-header h2 { font-size: var(--font-size-h3); color: var(--text-primary); margin: 0; }
+.related-show-all {
+    background: none; border: 1px solid var(--border); color: var(--accent);
+    padding: var(--space-xs) var(--space-md); border-radius: var(--radius-md);
+    cursor: pointer; font-size: var(--font-size-ui); transition: var(--transition);
+}
+.related-show-all:hover { border-color: var(--accent); background: var(--bg-tertiary); }
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+.related-grid-collapsed > :nth-child(n+5) { display: none; }
+.related-grid-expanded > :nth-child(n+5) { display: flex; }
