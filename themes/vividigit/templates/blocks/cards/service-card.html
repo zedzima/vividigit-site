@@ -1,16 +1,40 @@
 {# Service card — matches catalog.html renderServiceCard() #}
 {% set cats = item.tags.categories | default([]) %}
+{% set countries = item.tags.countries | default([]) %}
+{% set langs = item.tags.languages | default([]) %}
+{% set rels = item.relationships | default({}) %}
+{% set spec_count = rels.specialists | default([]) | length %}
 {% set url = item.url | default('/services/' ~ item.slug) %}
+{% set category_label_map = {'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO', 'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics', 'social-media': 'Social Media', 'email': 'Email', 'cro': 'CRO', 'video': 'Video', 'pr': 'PR', 'automation': 'Automation', 'ecommerce': 'E-commerce', 'affiliate': 'Affiliate'} %}
+{% set country_label_map = {'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain'} %}
+{% set lang_code_map = {'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT'} %}
 <a href="{{ url }}" class="service-card">
     <div class="service-card-header">
         <div class="service-categories">
             {% for cat in cats[:3] %}
-            <span class="service-category">{{ cat | replace('-', ' ') | title }}</span>
+            <span class="service-category">{{ category_label_map.get(cat, cat|replace('-', ' ')|title) }}</span>
             {% endfor %}
         </div>
+        {% if spec_count %}
+        <span class="service-spec-count">{{ spec_count }} spec.</span>
+        {% endif %}
     </div>
     <h3>{{ item.menu or item.title }}</h3>
     <p>{{ item.description }}</p>
+    {% if countries %}
+    <div class="service-countries">
+        {% for c in countries %}
+        <span class="service-country">{{ country_label_map.get(c, c|title) }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if langs %}
+    <div class="service-languages">
+        {% for l in langs %}
+        <span class="service-lang">{{ lang_code_map.get(l, l[:2]|upper) }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="service-card-footer">
         {% if item.config.from_price or item.config.price %}
         <span class="service-price">From ${{ item.config.from_price or item.config.price }}</span>

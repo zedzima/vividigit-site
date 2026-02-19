@@ -847,9 +847,10 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
             continue
         # Collection can be in config or at page level (parser sets both)
         collection = config.get("collection", "") or page.get("collection", "")
-        page_lookup[slug] = {
+        entity_type = config.get("type", collection)
+        entry = {
             "slug": slug,
-            "type": config.get("type", collection),
+            "type": entity_type,
             "collection": collection,
             "url": config.get("url", ""),
             "title": data.get("meta", {}).get("title", ""),
@@ -860,6 +861,35 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
             "tags": data.get("tags", {}),
             "config": config,
         }
+
+        # Extract case-specific fields for card rendering
+        if entity_type == "case":
+            results = []
+            for block in data.get("blocks", []):
+                if block.get("type") == "hero":
+                    stats = block.get("data", {}).get("stats", [])
+                    results = [
+                        {"value": s.get("value", ""), "label": s.get("label", "")}
+                        for s in stats
+                    ]
+                    break
+            entry["results"] = results
+
+        # Extract solution-specific fields for card rendering
+        elif entity_type == "solution":
+            entry["links"] = data.get("links", {})
+            starting_price = None
+            for block in data.get("blocks", []):
+                if block.get("type") == "pricing":
+                    packages = block.get("data", {}).get("packages", [])
+                    if packages:
+                        prices = [p.get("price", 0) for p in packages if p.get("price")]
+                        if prices:
+                            starting_price = min(prices)
+                    break
+            entry["starting_price"] = starting_price
+
+        page_lookup[slug] = entry
 
     # Initialize result: slug -> {entity_type: [entity_data]}
     result = {slug: {} for slug in page_lookup}
@@ -893,7 +923,7 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
         p = page_lookup.get(slug)
         if not p:
             return None
-        return {
+        card = {
             "slug": p["slug"],
             "type": p["type"],
             "collection": p["collection"],
@@ -904,7 +934,16 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
             "sidebar": p["sidebar"],
             "config": p["config"],
             "tags": p["tags"],
+            "relationships": p["relationships"],
         }
+        # Include type-specific computed fields
+        if "results" in p:
+            card["results"] = p["results"]
+        if "links" in p:
+            card["links"] = p["links"]
+        if "starting_price" in p:
+            card["starting_price"] = p["starting_price"]
+        return card
 
     # Pass 1: Forward relationships
     for slug, page in page_lookup.items():
@@ -961,6 +1000,39 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
                             target_card["collection"], target_card["collection"]
                         )
                         add_relation(slug, target_group, target_card)
+
+    # Pass 4: Links-based relationships (solutions use [links] instead of [relationships])
+    for slug, page in page_lookup.items():
+        links = page.get("links", {})
+        if not links:
+            continue
+        source_card = entity_card(slug)
+        if not source_card:
+            continue
+        source_collection = page.get("collection", "")
+        source_group = collection_type_map.get(source_collection, source_collection)
+        for link_key, target_slug in links.items():
+            if not target_slug or target_slug not in page_lookup:
+                continue
+            target_card = entity_card(target_slug)
+            if not target_card:
+                continue
+            target_collection = target_card["collection"]
+            group_key = collection_type_map.get(target_collection, target_collection)
+            add_relation(slug, group_key, target_card)
+            add_relation(target_slug, source_group, source_card)
+
+    # Pass 5: Enrich dimension/category cards with service_count
+    for slug, relations in result.items():
+        for entity_type, cards in relations.items():
+            for card in cards:
+                card_type = card.get("type", "")
+                if card_type in ("industry", "country", "language", "category"):
+                    card_slug = card["slug"]
+                    if card_slug in result:
+                        card["service_count"] = len(
+                            result[card_slug].get("services", [])
+                        )
 
     return result
 

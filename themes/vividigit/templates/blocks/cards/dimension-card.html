@@ -13,7 +13,11 @@
     </div>
     <p>{{ item.description }}</p>
     <div class="dimension-card-footer">
+        {% if item.service_count %}
+        <span class="dimension-count">{{ item.service_count }} services</span>
+        {% else %}
         <span></span>
+        {% endif %}
         <span class="dimension-cta">Explore →</span>
     </div>
 </a>

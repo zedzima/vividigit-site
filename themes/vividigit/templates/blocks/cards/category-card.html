@@ -1,9 +1,11 @@
 {# Category card — matches catalog.html renderCategoryCard() #}
 {% set url = item.url | default('/categories/' ~ item.slug) %}
+{% set category_icon_map = {'seo': 'search', 'aeo': 'lightning', 'digital-marketing': 'globe', 'content': 'pen-tool', 'social-media': 'megaphone', 'ppc': 'target', 'email': 'mail', 'analytics': 'analytics', 'cro': 'chart', 'video': 'video', 'pr': 'newspaper', 'automation': 'code', 'ecommerce': 'layers', 'affiliate': 'users'} %}
+{% set icon_name = category_icon_map.get(item.slug, 'settings') %}
 <a href="{{ url }}" class="category-card">
     <div class="category-card-header">
         <h3>{{ item.menu or item.title }}</h3>
-        <div class="category-card-icon" style="--icon-url: url(/assets/icons/{{ item.config.icon | default('settings') }}.svg)"></div>
+        <div class="category-card-icon" style="--icon-url: url(/assets/icons/{{ icon_name }}.svg)"></div>
     </div>
     <p>{{ item.description }}</p>
     <div class="category-card-footer">

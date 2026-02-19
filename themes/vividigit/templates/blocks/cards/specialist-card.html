@@ -1,7 +1,10 @@
 {# Specialist card — matches catalog.html renderSpecialistCard() #}
 {% set url = item.url | default('/team/' ~ item.slug) %}
 {% set sidebar = item.sidebar | default({}) %}
+{% set rels = item.relationships | default({}) %}
 {% set initials = (item.menu or item.title or 'SP')[:2] | upper %}
+{% set lang_code_map = {'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT'} %}
+{% set country_label_map = {'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain'} %}
 <a href="{{ url }}" class="specialist-card">
     <div class="specialist-card-top">
         <div class="specialist-avatar">
@@ -30,12 +33,32 @@
         </div>
         {% endif %}
     </div>
+    {% set langs = rels.languages | default([]) %}
+    {% set countries = rels.countries | default([]) %}
+    {% if langs or countries %}
+    <div class="specialist-tags">
+        {% if langs %}
+        <div class="specialist-tag-row">
+            {% for l in langs %}
+            <span class="specialist-tag lang">{{ lang_code_map.get(l, l[:2]|upper) }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if countries %}
+        <div class="specialist-tag-row">
+            {% for c in countries %}
+            <span class="specialist-tag">{{ country_label_map.get(c, c|title) }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
     <div class="specialist-card-footer">
         {% if sidebar.hourly_rate %}
         <span class="specialist-rate">${{ sidebar.hourly_rate }}/h</span>
         {% else %}
         <span></span>
         {% endif %}
-        <span class="specialist-cto">View Profile →</span>
+        <span class="specialist-cta">View Profile →</span>
     </div>
 </a>

@@ -1,11 +1,20 @@
 {# Solution card — matches catalog.html renderSolutionCard() #}
 {% set url = item.url | default('/solutions/' ~ item.slug) %}
+{% set links = item.links | default({}) %}
+{% set service_label_map = {'technical-seo': 'Technical SEO', 'ai-optimisation': 'AI Optimization', 'content-strategy': 'Content Strategy', 'ppc-management': 'PPC Management', 'analytics-setup': 'Analytics', 'localization': 'Localization'} %}
+{% set industry_label_map = {'ecommerce': 'E-commerce', 'saas': 'SaaS', 'fintech': 'Fintech', 'healthcare': 'Healthcare', 'education': 'Education', 'realestate': 'Real Estate', 'travel': 'Travel'} %}
 <a href="{{ url }}" class="solution-card">
+    {% if links.service or links.industry %}
+    <div class="solution-card-tags">
+        {% if links.service %}<span class="solution-tag">{{ service_label_map.get(links.service, links.service|replace('-', ' ')|title) }}</span>{% endif %}
+        {% if links.industry %}<span class="solution-tag industry">{{ industry_label_map.get(links.industry, links.industry|replace('-', ' ')|title) }}</span>{% endif %}
+    </div>
+    {% endif %}
     <h3>{{ item.menu or item.title }}</h3>
     <p>{{ item.description }}</p>
     <div class="solution-card-footer">
-        {% if item.config.starting_price %}
-        <span class="solution-price">From ${{ item.config.starting_price }}</span>
+        {% if item.starting_price %}
+        <span class="solution-price">From ${{ item.starting_price }}</span>
         {% else %}
         <span></span>
         {% endif %}

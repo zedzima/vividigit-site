@@ -1,22 +1,36 @@
 {# Case study card — matches catalog.html renderCaseCard() #}
 {% set url = item.url | default('/cases/' ~ item.slug) %}
-{% set sidebar = item.sidebar | default({}) %}
+{% set rels = item.relationships | default({}) %}
+{% set industry_label_map = {'ecommerce': 'E-commerce', 'saas': 'SaaS', 'fintech': 'Fintech', 'healthcare': 'Healthcare', 'education': 'Education', 'realestate': 'Real Estate', 'travel': 'Travel'} %}
 <a href="{{ url }}" class="case-card">
     <div class="case-image">
         {% if item.config.image %}
         <img src="{{ item.config.image }}" alt="{{ item.title }}" loading="lazy">
         {% else %}
-        <div class="case-image-placeholder"><span>{{ (item.menu or item.title or 'C')[:1] | upper }}</span></div>
+        <div class="case-image-placeholder"><span>{{ (item.config.client or item.menu or item.title or 'C')[:1] | upper }}</span></div>
         {% endif %}
     </div>
     <div class="case-content">
-        {% if sidebar.industry or sidebar.client %}
+        {% set industry = rels.industry | default('') %}
+        {% set client = item.config.client | default('') %}
+        {% if industry or client %}
         <div class="case-meta">
-            {% if sidebar.industry %}<span class="case-industry">{{ sidebar.industry | replace('-', ' ') | title }}</span>{% endif %}
-            {% if sidebar.client %}<span class="case-client">{{ sidebar.client }}</span>{% endif %}
+            {% if industry %}<span class="case-industry">{{ industry_label_map.get(industry, industry|replace('-', ' ')|title) }}</span>{% endif %}
+            {% if client %}<span class="case-client">{{ client }}</span>{% endif %}
         </div>
         {% endif %}
         <h3>{{ item.menu or item.title }}</h3>
         <p>{{ item.description }}</p>
+        {% set results = item.results | default([]) %}
+        {% if results %}
+        <div class="case-results">
+            {% for r in results[:2] %}
+            <div class="case-result">
+                <span class="result-value">{{ r.value }}</span>
+                <span class="result-label">{{ r.label }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </a>
