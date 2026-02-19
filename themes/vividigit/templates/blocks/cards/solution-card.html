@@ -1,0 +1,14 @@
+{# Solution card — matches catalog.html renderSolutionCard() #}
+{% set url = item.url | default('/solutions/' ~ item.slug) %}
+<a href="{{ url }}" class="solution-card">
+    <h3>{{ item.menu or item.title }}</h3>
+    <p>{{ item.description }}</p>
+    <div class="solution-card-footer">
+        {% if item.config.starting_price %}
+        <span class="solution-price">From ${{ item.config.starting_price }}</span>
+        {% else %}
+        <span></span>
+        {% endif %}
+        <span class="solution-cta">View Solution →</span>
+    </div>
+</a>

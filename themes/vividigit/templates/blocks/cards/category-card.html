@@ -1,0 +1,17 @@
+{# Category card — matches catalog.html renderCategoryCard() #}
+{% set url = item.url | default('/categories/' ~ item.slug) %}
+<a href="{{ url }}" class="category-card">
+    <div class="category-card-header">
+        <h3>{{ item.menu or item.title }}</h3>
+        <div class="category-card-icon" style="--icon-url: url(/assets/icons/{{ item.config.icon | default('settings') }}.svg)"></div>
+    </div>
+    <p>{{ item.description }}</p>
+    <div class="category-card-footer">
+        {% if item.config.door_opener_price %}
+        <span class="category-price">From ${{ item.config.door_opener_price }}</span>
+        {% else %}
+        <span></span>
+        {% endif %}
+        <span class="category-cta">Explore →</span>
+    </div>
+</a>

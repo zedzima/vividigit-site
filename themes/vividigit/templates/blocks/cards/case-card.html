@@ -1,0 +1,22 @@
+{# Case study card — matches catalog.html renderCaseCard() #}
+{% set url = item.url | default('/cases/' ~ item.slug) %}
+{% set sidebar = item.sidebar | default({}) %}
+<a href="{{ url }}" class="case-card">
+    <div class="case-image">
+        {% if item.config.image %}
+        <img src="{{ item.config.image }}" alt="{{ item.title }}" loading="lazy">
+        {% else %}
+        <div class="case-image-placeholder"><span>{{ (item.menu or item.title or 'C')[:1] | upper }}</span></div>
+        {% endif %}
+    </div>
+    <div class="case-content">
+        {% if sidebar.industry or sidebar.client %}
+        <div class="case-meta">
+            {% if sidebar.industry %}<span class="case-industry">{{ sidebar.industry | replace('-', ' ') | title }}</span>{% endif %}
+            {% if sidebar.client %}<span class="case-client">{{ sidebar.client }}</span>{% endif %}
+        </div>
+        {% endif %}
+        <h3>{{ item.menu or item.title }}</h3>
+        <p>{{ item.description }}</p>
+    </div>
+</a>

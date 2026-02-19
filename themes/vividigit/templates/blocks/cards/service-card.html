@@ -1,0 +1,22 @@
+{# Service card — matches catalog.html renderServiceCard() #}
+{% set cats = item.tags.categories | default([]) %}
+{% set url = item.url | default('/services/' ~ item.slug) %}
+<a href="{{ url }}" class="service-card">
+    <div class="service-card-header">
+        <div class="service-categories">
+            {% for cat in cats[:3] %}
+            <span class="service-category">{{ cat | replace('-', ' ') | title }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <h3>{{ item.menu or item.title }}</h3>
+    <p>{{ item.description }}</p>
+    <div class="service-card-footer">
+        {% if item.config.from_price or item.config.price %}
+        <span class="service-price">From ${{ item.config.from_price or item.config.price }}</span>
+        {% else %}
+        <span></span>
+        {% endif %}
+        <span class="service-cta">View →</span>
+    </div>
+</a>

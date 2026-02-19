@@ -1,0 +1,19 @@
+{# Dimension card (industry, country, language) — matches renderDimensionCard() #}
+{% set url = item.url | default('/' ~ item.collection ~ '/' ~ item.slug) %}
+<a href="{{ url }}" class="dimension-card">
+    <div class="dimension-card-header">
+        <h3>{{ item.menu or item.title }}</h3>
+        {% if item.config.icon %}
+        <div class="dimension-card-badge icon" style="--icon-url: url(/assets/icons/{{ item.config.icon }}.svg)"></div>
+        {% elif item.config.flag %}
+        <div class="dimension-card-badge">{{ item.config.flag }}</div>
+        {% elif item.config.code %}
+        <div class="dimension-card-badge code">{{ item.config.code }}</div>
+        {% endif %}
+    </div>
+    <p>{{ item.description }}</p>
+    <div class="dimension-card-footer">
+        <span></span>
+        <span class="dimension-cta">Explore →</span>
+    </div>
+</a>

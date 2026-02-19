@@ -1,0 +1,41 @@
+{# Specialist card — matches catalog.html renderSpecialistCard() #}
+{% set url = item.url | default('/team/' ~ item.slug) %}
+{% set sidebar = item.sidebar | default({}) %}
+{% set initials = (item.menu or item.title or 'SP')[:2] | upper %}
+<a href="{{ url }}" class="specialist-card">
+    <div class="specialist-card-top">
+        <div class="specialist-avatar">
+            {% if item.config.avatar %}
+            <img src="{{ item.config.avatar }}" alt="{{ item.menu or item.title }}">
+            {% else %}
+            <div class="specialist-avatar-initials">{{ initials }}</div>
+            {% endif %}
+        </div>
+        <div class="specialist-info">
+            <h3>{{ item.menu or item.title }}</h3>
+            {% if sidebar.role %}<div class="specialist-role">{{ sidebar.role }}</div>{% endif %}
+        </div>
+    </div>
+    <div class="specialist-stats">
+        {% if sidebar.rating %}
+        <div class="specialist-stat">
+            <span class="specialist-stat-value rating">★ {{ sidebar.rating }}</span>
+            <span class="specialist-stat-label">Rating</span>
+        </div>
+        {% endif %}
+        {% if sidebar.projects %}
+        <div class="specialist-stat">
+            <span class="specialist-stat-value">{{ sidebar.projects }}</span>
+            <span class="specialist-stat-label">Projects</span>
+        </div>
+        {% endif %}
+    </div>
+    <div class="specialist-card-footer">
+        {% if sidebar.hourly_rate %}
+        <span class="specialist-rate">${{ sidebar.hourly_rate }}/h</span>
+        {% else %}
+        <span></span>
+        {% endif %}
+        <span class="specialist-cto">View Profile →</span>
+    </div>
+</a>
