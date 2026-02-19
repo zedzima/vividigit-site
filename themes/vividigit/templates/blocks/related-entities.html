@@ -1,0 +1,35 @@
+{# Related Entities Block — auto-generated from relationship graph #}
+{% if data.sections %}
+<div class="related-entities">
+    {% for section in data.sections %}
+    <section class="related-section" data-type="{{ section.type }}">
+        <div class="related-section-header">
+            <h2>{{ section.title }}</h2>
+            {% if section.items | length > 4 %}
+            <button class="related-show-all" data-expanded="false">
+                Show all ({{ section.items | length }})
+            </button>
+            {% endif %}
+        </div>
+        <div class="related-grid{% if section.items | length > 4 %} related-grid-collapsed{% endif %}">
+            {% for item in section.items %}
+            {% set card_type = item.type | default('') %}
+            {% if card_type == 'service' %}
+                {% include 'blocks/cards/service-card.html' %}
+            {% elif card_type == 'specialist' %}
+                {% include 'blocks/cards/specialist-card.html' %}
+            {% elif card_type == 'case' %}
+                {% include 'blocks/cards/case-card.html' %}
+            {% elif card_type == 'solution' %}
+                {% include 'blocks/cards/solution-card.html' %}
+            {% elif card_type == 'category' %}
+                {% include 'blocks/cards/category-card.html' %}
+            {% else %}
+                {% include 'blocks/cards/dimension-card.html' %}
+            {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+</div>
+{% endif %}
