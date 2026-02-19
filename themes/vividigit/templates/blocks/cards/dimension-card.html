@@ -1,5 +1,6 @@
 {# Dimension card (industry, country, language) — matches renderDimensionCard() #}
 {% set url = item.url | default('/' ~ item.collection ~ '/' ~ item.slug) %}
+{% set lang_code_map = {'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT'} %}
 <a href="{{ url }}" class="dimension-card">
     <div class="dimension-card-header">
         <h3>{{ item.menu or item.title }}</h3>
@@ -9,6 +10,8 @@
         <div class="dimension-card-badge">{{ item.config.flag }}</div>
         {% elif item.config.code %}
         <div class="dimension-card-badge code">{{ item.config.code }}</div>
+        {% elif item.type == 'language' %}
+        <div class="dimension-card-badge code">{{ lang_code_map.get(item.slug, item.slug[:2]|upper) }}</div>
         {% endif %}
     </div>
     <p>{{ item.description }}</p>
