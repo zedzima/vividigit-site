@@ -1037,16 +1037,21 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
     return result
 
 
-# Section display order per entity type
+# All possible section types. Each entity page can show any of these;
+# empty sections are automatically omitted by inject_related_blocks().
+ALL_SECTIONS = ["services", "specialists", "cases", "solutions", "categories",
+                "industries", "countries", "languages"]
+
+# Section display order per entity type (all sections, minus self-type)
 RELATED_SECTION_ORDER = {
-    "service": ["specialists", "cases", "categories", "industries", "countries", "languages"],
-    "specialist": ["services", "cases", "languages", "countries"],
-    "case": ["services", "specialists", "industries", "countries", "languages"],
-    "solution": ["services", "industries"],
-    "category": ["services", "specialists", "cases"],
-    "industry": ["services", "specialists", "cases", "solutions"],
-    "country": ["services", "specialists", "cases"],
-    "language": ["services", "specialists", "cases"],
+    "service":    [s for s in ALL_SECTIONS if s != "services"],
+    "specialist": [s for s in ALL_SECTIONS if s != "specialists"],
+    "case":       [s for s in ALL_SECTIONS if s != "cases"],
+    "solution":   [s for s in ALL_SECTIONS if s != "solutions"],
+    "category":   [s for s in ALL_SECTIONS if s != "categories"],
+    "industry":   [s for s in ALL_SECTIONS if s != "industries"],
+    "country":    [s for s in ALL_SECTIONS if s != "countries"],
+    "language":   [s for s in ALL_SECTIONS if s != "languages"],
 }
 
 SECTION_TITLES = {
