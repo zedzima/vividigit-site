@@ -11,6 +11,7 @@ from main import (
     build_tag_index,
     build_relationship_graph,
     build_bidirectional_map,
+    inject_related_blocks,
     resolve_related_entities,
     load_tasks,
     resolve_task_pickers,
@@ -387,3 +388,50 @@ def test_bidirectional_map_empty_relations_omitted():
     ]
     result = build_bidirectional_map(pages)
     assert result["ivan"] == {}
+
+
+# --- Phase 2b: inject_related_blocks tests ---
+
+def test_inject_related_blocks_adds_sections():
+    """Related blocks are injected with correct sections."""
+    pages = [
+        {"url": "/team/ivan", "collection": "team", "is_listing": False,
+         "data": {"config": {"slug": "ivan", "type": "specialist"},
+                  "blocks": [
+                      {"type": "hero", "data": {}, "original_key": "hero"},
+                      {"type": "cta", "data": {}, "original_key": "cta"},
+                  ]}},
+    ]
+    bi_map = {
+        "ivan": {
+            "services": [{"slug": "seo", "title": "SEO", "url": "/services/seo"}],
+            "cases": [{"slug": "case-1", "title": "Case 1", "url": "/cases/case-1"}],
+        }
+    }
+    inject_related_blocks(pages, bi_map)
+    block_types = [b["type"] for b in pages[0]["data"]["blocks"]]
+    assert "related-entities" in block_types
+    # Injected before CTA (last block)
+    assert block_types[-1] == "cta"
+    assert block_types[-2] == "related-entities"
+
+
+def test_inject_related_blocks_skips_listing():
+    """Listing pages don't get related blocks."""
+    pages = [
+        {"url": "/services", "collection": "services", "is_listing": True,
+         "data": {"config": {"slug": "services"}, "blocks": []}},
+    ]
+    inject_related_blocks(pages, {})
+    assert len(pages[0]["data"]["blocks"]) == 0
+
+
+def test_inject_related_blocks_skips_no_relations():
+    """Pages with no relations get no block."""
+    pages = [
+        {"url": "/team/ivan", "collection": "team", "is_listing": False,
+         "data": {"config": {"slug": "ivan", "type": "specialist"},
+                  "blocks": [{"type": "hero", "data": {}, "original_key": "hero"}]}},
+    ]
+    inject_related_blocks(pages, {})
+    assert len(pages[0]["data"]["blocks"]) == 1

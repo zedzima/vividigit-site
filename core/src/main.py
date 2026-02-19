@@ -965,6 +965,79 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
     return result
 
 
+# Section display order per entity type
+RELATED_SECTION_ORDER = {
+    "service": ["specialists", "cases", "categories", "industries", "countries", "languages"],
+    "specialist": ["services", "cases", "languages", "countries"],
+    "case": ["services", "specialists", "industries", "countries", "languages"],
+    "solution": ["services", "industries"],
+    "category": ["services", "specialists", "cases"],
+    "industry": ["services", "specialists", "cases", "solutions"],
+    "country": ["services", "specialists", "cases"],
+    "language": ["services", "specialists", "cases"],
+}
+
+SECTION_TITLES = {
+    "services": "Services",
+    "specialists": "Specialists",
+    "cases": "Case Studies",
+    "solutions": "Solutions",
+    "categories": "Categories",
+    "industries": "Industries",
+    "countries": "Countries",
+    "languages": "Languages",
+}
+
+
+def inject_related_blocks(parsed_pages: List[Dict], bi_map: Dict[str, Dict[str, List[Dict]]]):
+    """
+    Auto-inject related-entities blocks into pages based on bidirectional map.
+    Inserts a single related-entities block before the last block (typically CTA).
+    """
+    for page in parsed_pages:
+        if page.get("is_listing"):
+            continue
+
+        data = page.get("data", {})
+        config = data.get("config", {})
+        slug = config.get("slug", "")
+        entity_type = config.get("type", "")
+
+        if slug not in bi_map:
+            continue
+
+        relations = bi_map[slug]
+        section_order = RELATED_SECTION_ORDER.get(entity_type, [])
+
+        sections = []
+        for section_type in section_order:
+            items = relations.get(section_type, [])
+            if items:
+                sections.append({
+                    "type": section_type,
+                    "title": SECTION_TITLES.get(section_type, section_type.title()),
+                    "items": items,
+                })
+
+        if not sections:
+            continue
+
+        block = {
+            "type": "related-entities",
+            "original_key": "related-entities",
+            "data": {
+                "entity_type": entity_type,
+                "sections": sections,
+            },
+        }
+
+        blocks = data.get("blocks", [])
+        if blocks:
+            blocks.insert(len(blocks) - 1, block)
+        else:
+            blocks.append(block)
+
+
 def resolve_related_entities(parsed_pages: List[Dict], graph: Dict[str, Dict]):
     """
     Auto-populate related-entities blocks from relationship graph.
