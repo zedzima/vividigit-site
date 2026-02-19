@@ -968,3 +968,22 @@ document.addEventListener('click', (e) => {
         langDropdownMenu.classList.remove('open');
     }
 });
+
+/* === Related Entities: Show All toggle === */
+document.querySelectorAll('.related-show-all').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var grid = btn.closest('.related-section').querySelector('.related-grid');
+        var expanded = btn.dataset.expanded === 'true';
+        if (expanded) {
+            grid.classList.remove('related-grid-expanded');
+            grid.classList.add('related-grid-collapsed');
+            btn.textContent = 'Show all (' + grid.children.length + ')';
+            btn.dataset.expanded = 'false';
+        } else {
+            grid.classList.remove('related-grid-collapsed');
+            grid.classList.add('related-grid-expanded');
+            btn.textContent = 'Show less';
+            btn.dataset.expanded = 'true';
+        }
+    });
+});
