@@ -137,7 +137,7 @@
     function renderCategoryCard(s) {
         var url = (s.url || '/categories/' + s.slug).replace(/^\//, '');
         var iconName = categoryIconMap[s.slug] || 'settings';
-        var iconHtml = '<div class="category-card-icon" style="--icon-url: url(assets/icons/' + iconName + '.svg)"></div>';
+        var iconHtml = '<div class="category-card-icon" style="--icon-url: url(/assets/icons/' + iconName + '.svg)"></div>';
         var price = s.door_opener_price ? 'From $' + s.door_opener_price : '';
         return '<a href="' + url + '" class="category-card">' +
             '<div class="category-card-header">' +
@@ -166,7 +166,7 @@
         var url = (s.url || '/' + collection + '/' + s.slug).replace(/^\//, '');
         var badgeHtml = '';
         if (s.icon) {
-            badgeHtml = '<div class="dimension-card-badge icon" style="--icon-url: url(assets/icons/' + s.icon + '.svg)"></div>';
+            badgeHtml = '<div class="dimension-card-badge icon" style="--icon-url: url(/assets/icons/' + s.icon + '.svg)"></div>';
         } else if (s.flag) {
             badgeHtml = '<div class="dimension-card-badge">' + s.flag + '</div>';
         } else if (s.code) {
