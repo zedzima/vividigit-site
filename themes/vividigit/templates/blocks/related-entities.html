@@ -2,17 +2,18 @@
 {% if data.sections %}
 <div class="related-entities">
     {% for section in data.sections %}
+    {% set section_items = section['items'] %}
     <section class="related-section" data-type="{{ section.type }}">
         <div class="related-section-header">
             <h2>{{ section.title }}</h2>
-            {% if section.items | length > 4 %}
+            {% if section_items | length > 4 %}
             <button class="related-show-all" data-expanded="false">
-                Show all ({{ section.items | length }})
+                Show all ({{ section_items | length }})
             </button>
             {% endif %}
         </div>
-        <div class="related-grid{% if section.items | length > 4 %} related-grid-collapsed{% endif %}">
-            {% for item in section.items %}
+        <div class="related-grid{% if section_items | length > 4 %} related-grid-collapsed{% endif %}">
+            {% for item in section_items %}
             {% set card_type = item.type | default('') %}
             {% if card_type == 'service' %}
                 {% include 'blocks/cards/service-card.html' %}
