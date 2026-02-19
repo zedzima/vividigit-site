@@ -10,6 +10,7 @@ from main import (
     get_available_blocks,
     build_tag_index,
     build_relationship_graph,
+    build_bidirectional_map,
     resolve_related_entities,
     load_tasks,
     resolve_task_pickers,
@@ -302,3 +303,87 @@ def test_resolve_task_pickers_inline_preserved():
     result = pages[0]["data"]["blocks"][0]["data"]["tasks"]
     assert result[0]["title"] == "Custom Audit"
     assert result[0]["tiers"][0]["price"] == 999
+
+
+# --- Phase 2b: Bidirectional map tests ---
+
+def test_bidirectional_map_forward_relationships():
+    """Forward relationships are included in the map."""
+    pages = [
+        {"url": "/team/ivan", "collection": "team", "is_listing": False,
+         "data": {"config": {"slug": "ivan", "type": "specialist", "url": "/team/ivan"},
+                  "meta": {"title": "Ivan", "description": "Specialist"},
+                  "sidebar": {"role": "SEO", "rating": 4.9, "projects": 47, "hourly_rate": 75},
+                  "relationships": {"cases": ["case-1"], "languages": ["english"]}}},
+        {"url": "/cases/case-1", "collection": "cases", "is_listing": False,
+         "data": {"config": {"slug": "case-1", "type": "case", "url": "/cases/case-1"},
+                  "meta": {"title": "Case 1", "description": "A case study"},
+                  "sidebar": {}, "relationships": {"specialists": ["ivan"]}}},
+        {"url": "/languages/english", "collection": "languages", "is_listing": False,
+         "data": {"config": {"slug": "english", "type": "language", "url": "/languages/english"},
+                  "meta": {"title": "English", "description": "English language"},
+                  "sidebar": {}, "relationships": {}}},
+    ]
+    result = build_bidirectional_map(pages)
+    # Ivan has forward link to case-1
+    assert any(e["slug"] == "case-1" for e in result["ivan"]["cases"])
+
+
+def test_bidirectional_map_reverse_relationships():
+    """Reverse relationships are computed from other pages."""
+    pages = [
+        {"url": "/services/seo", "collection": "services", "is_listing": False,
+         "data": {"config": {"slug": "seo", "type": "service", "url": "/services/seo"},
+                  "meta": {"title": "SEO", "description": "SEO service"},
+                  "sidebar": {}, "relationships": {"specialists": ["ivan"]},
+                  "tags": {"categories": ["seo-cat"]}}},
+        {"url": "/team/ivan", "collection": "team", "is_listing": False,
+         "data": {"config": {"slug": "ivan", "type": "specialist", "url": "/team/ivan"},
+                  "meta": {"title": "Ivan", "description": "Specialist"},
+                  "sidebar": {}, "relationships": {}}},
+    ]
+    result = build_bidirectional_map(pages)
+    # Ivan gets reverse link to SEO service
+    assert any(e["slug"] == "seo" for e in result["ivan"]["services"])
+
+
+def test_bidirectional_map_via_tags():
+    """Tag-based relationships (service tagged with category) create reverse links."""
+    pages = [
+        {"url": "/services/seo", "collection": "services", "is_listing": False,
+         "data": {"config": {"slug": "seo", "type": "service", "url": "/services/seo"},
+                  "meta": {"title": "SEO", "description": "SEO service"},
+                  "sidebar": {}, "relationships": {},
+                  "tags": {"categories": ["seo-cat"]}}},
+        {"url": "/categories/seo-cat", "collection": "categories", "is_listing": False,
+         "data": {"config": {"slug": "seo-cat", "type": "category", "url": "/categories/seo-cat"},
+                  "meta": {"title": "SEO Category", "description": "SEO"},
+                  "sidebar": {}, "relationships": {}}},
+    ]
+    result = build_bidirectional_map(pages)
+    # Category gets reverse link from service tag
+    assert any(e["slug"] == "seo" for e in result["seo-cat"]["services"])
+
+
+def test_bidirectional_map_skips_listing_pages():
+    """Listing pages are excluded from the map."""
+    pages = [
+        {"url": "/services", "collection": "services", "is_listing": True,
+         "data": {"config": {"slug": "services", "type": "service", "url": "/services"},
+                  "meta": {"title": "Services", "description": "All services"},
+                  "sidebar": {}, "relationships": {}}},
+    ]
+    result = build_bidirectional_map(pages)
+    assert "services" not in result
+
+
+def test_bidirectional_map_empty_relations_omitted():
+    """Entity types with no relations are not keys in the map entry."""
+    pages = [
+        {"url": "/team/ivan", "collection": "team", "is_listing": False,
+         "data": {"config": {"slug": "ivan", "type": "specialist", "url": "/team/ivan"},
+                  "meta": {"title": "Ivan", "description": "Specialist"},
+                  "sidebar": {}, "relationships": {}}},
+    ]
+    result = build_bidirectional_map(pages)
+    assert result["ivan"] == {}

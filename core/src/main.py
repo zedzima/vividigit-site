@@ -822,6 +822,149 @@ def build_relationship_graph(parsed_pages: List[Dict]) -> Dict[str, Dict]:
     return graph
 
 
+def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, List[Dict]]]:
+    """
+    Build bidirectional relationship map for all entity pages.
+
+    For each entity slug, returns a dict of entity_type -> list of related entity data.
+    Computes forward relationships, reverse relationships, and tag-based relationships.
+
+    Returns:
+        {
+            "ivan-petrov": {
+                "services": [{"slug": "technical-seo", "title": ..., "url": ..., ...}],
+                "cases": [{"slug": "ecommerce-migration-2025", ...}],
+            }
+        }
+    """
+    # Build lookup: slug -> full page data (for entity cards)
+    page_lookup = {}
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+        slug = config.get("slug", "")
+        if not slug or page.get("is_listing"):
+            continue
+        # Collection can be in config or at page level (parser sets both)
+        collection = config.get("collection", "") or page.get("collection", "")
+        page_lookup[slug] = {
+            "slug": slug,
+            "type": config.get("type", collection),
+            "collection": collection,
+            "url": config.get("url", ""),
+            "title": data.get("meta", {}).get("title", ""),
+            "description": data.get("meta", {}).get("description", ""),
+            "menu": config.get("menu", ""),
+            "sidebar": data.get("sidebar", {}),
+            "relationships": data.get("relationships", {}),
+            "tags": data.get("tags", {}),
+            "config": config,
+        }
+
+    # Initialize result: slug -> {entity_type: [entity_data]}
+    result = {slug: {} for slug in page_lookup}
+
+    # Collection-to-entity-type mapping for reverse lookups
+    collection_type_map = {
+        "services": "services", "team": "specialists", "cases": "cases",
+        "solutions": "solutions", "categories": "categories",
+        "industries": "industries", "countries": "countries", "languages": "languages",
+    }
+
+    # Relationship key -> target collection mapping
+    rel_target_collection = {
+        "specialists": "team", "cases": "cases", "languages": "languages",
+        "countries": "countries", "services_used": "services", "tasks_used": None,
+        "door_opener_task": None, "available_tasks": None, "tasks": None,
+    }
+
+    def add_relation(source_slug, target_type, target_data):
+        """Add a relation, avoiding duplicates."""
+        if source_slug not in result:
+            return
+        if target_type not in result[source_slug]:
+            result[source_slug][target_type] = []
+        # Avoid duplicates by slug
+        if not any(e["slug"] == target_data["slug"] for e in result[source_slug][target_type]):
+            result[source_slug][target_type].append(target_data)
+
+    def entity_card(slug):
+        """Extract card-level data for an entity."""
+        p = page_lookup.get(slug)
+        if not p:
+            return None
+        return {
+            "slug": p["slug"],
+            "type": p["type"],
+            "collection": p["collection"],
+            "url": p["url"],
+            "title": p["title"],
+            "description": p["description"],
+            "menu": p["menu"],
+            "sidebar": p["sidebar"],
+            "config": p["config"],
+            "tags": p["tags"],
+        }
+
+    # Pass 1: Forward relationships
+    for slug, page in page_lookup.items():
+        rels = page.get("relationships", {})
+        for rel_key, targets in rels.items():
+            if isinstance(targets, str):
+                targets = [targets]
+
+            for target_slug in targets:
+                target_card = entity_card(target_slug)
+                if not target_card:
+                    continue
+                # Determine target grouping type
+                target_collection = target_card["collection"]
+                group_key = collection_type_map.get(target_collection, target_collection)
+                add_relation(slug, group_key, target_card)
+
+    # Pass 2: Reverse relationships
+    for slug, page in page_lookup.items():
+        source_collection = page.get("collection", "")
+        source_group = collection_type_map.get(source_collection, source_collection)
+        source_card = entity_card(slug)
+        if not source_card:
+            continue
+
+        rels = page.get("relationships", {})
+        for rel_key, targets in rels.items():
+            if isinstance(targets, str):
+                targets = [targets]
+            for target_slug in targets:
+                if target_slug in page_lookup:
+                    add_relation(target_slug, source_group, source_card)
+
+    # Pass 3: Tag-based relationships (service tagged with category -> category gets service)
+    for slug, page in page_lookup.items():
+        tags = page.get("tags", {})
+        source_collection = page.get("collection", "")
+        source_group = collection_type_map.get(source_collection, source_collection)
+        source_card = entity_card(slug)
+        if not source_card:
+            continue
+
+        for tag_dimension, tag_values in tags.items():
+            if isinstance(tag_values, str):
+                tag_values = [tag_values]
+            for tag_slug in tag_values:
+                if tag_slug in page_lookup:
+                    # Dimension entity gets reverse link to this page
+                    add_relation(tag_slug, source_group, source_card)
+                    # This page gets link to the dimension entity
+                    target_card = entity_card(tag_slug)
+                    if target_card:
+                        target_group = collection_type_map.get(
+                            target_card["collection"], target_card["collection"]
+                        )
+                        add_relation(slug, target_group, target_card)
+
+    return result
+
+
 def resolve_related_entities(parsed_pages: List[Dict], graph: Dict[str, Dict]):
     """
     Auto-populate related-entities blocks from relationship graph.
