@@ -1406,6 +1406,13 @@ def main(lang: str = DEFAULT_LANG, local: bool = False, site_name: str = "vividi
     # Resolve related-entities blocks from graph (Phase 2)
     resolve_related_entities(parsed_pages, graph)
 
+    # Build bidirectional relationship map and inject related blocks (Phase 2b)
+    print("\nBuilding bidirectional relationship map...")
+    bi_map = build_bidirectional_map(parsed_pages)
+    print(f"  {len(bi_map)} entities with relationships")
+    inject_related_blocks(parsed_pages, bi_map)
+    print("  Related-entity blocks injected")
+
     # Load tasks and resolve task-picker blocks (Phase 3)
     print("\nLoading tasks...")
     tasks = load_tasks(TASKS_DIR, lang)
