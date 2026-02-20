@@ -4,6 +4,7 @@ slug: how-ai-chooses-sources
 url: /blog/how-ai-chooses-sources
 date: 2025-01-06
 author: V\V\D\G\T Team
+type: research
 category: AI Visibility
 tags:
   - AI

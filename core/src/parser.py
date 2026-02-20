@@ -83,7 +83,7 @@ def process_markdown_content(frontmatter: Dict[str, Any], body: str) -> Dict[str
     # If no nested config, treat top-level as config
     if not config_data:
         flat_fields = ["title", "slug", "url", "date", "author", "tags",
-                       "category", "lang", "featured", "draft", "menu"]
+                       "category", "type", "lang", "featured", "draft", "menu"]
         for field in flat_fields:
             if field in frontmatter:
                 config_data[field] = frontmatter[field]

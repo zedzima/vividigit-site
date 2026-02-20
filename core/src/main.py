@@ -316,6 +316,7 @@ def export_collection_json(collection_name: str, items: List[Dict], output_dir: 
             "featured": config.get("featured", False),
             "date": str(config.get("date", "")) if config.get("date") else "",
             "author": config.get("author", ""),
+            "type": config.get("type", ""),
         })
 
     with open(json_path, "w", encoding="utf-8") as f:
