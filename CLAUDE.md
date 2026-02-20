@@ -159,6 +159,24 @@ cases = ["ecommerce-migration-2025"]
 
 Pillar pages use `collection` and listing pages use `is_listing = true`. See GUIDE.md for details.
 
+### Auto-Generated Filters
+
+Entity listings (services, team, cases, solutions) get faceted filters **auto-generated from the entity graph** at build time. Filters are rendered inside the `catalog` block (not sidebar) for mobile visibility. Each entity gets up to 7 filter dimensions matching connected entity types.
+
+Dimension listings (categories, industries, countries, languages) have sort-only, no filters.
+
+Blog uses static `[[catalog.filters]]` in TOML (category, type, date with `match = "startsWith"`, author).
+
+**All listing sidebars** show the default CTA + contact form (no `[sidebar]` in TOML).
+
+### JSON Exports
+
+Entity JSON indexes include:
+- `facets` — per-item dict of connected entity slugs by type (from `bi_map`)
+- `labels` — top-level dict mapping slugs to display names (from `page_lookup`)
+
+These are used by catalog.html JS for unified `matchFilter()` and dynamic label rendering.
+
 ## Reference Documents
 
 - `docs/plans/2026-01-27-web-strategy-framework.md` — Content graph architecture

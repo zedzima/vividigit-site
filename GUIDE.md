@@ -389,9 +389,49 @@ url = "industries/ecommerce"
 
 Build generates JSON indexes for client-side filtering and cross-entity navigation:
 
-- `public/data/services-index.json` — services with tags for catalog filtering
-- `public/data/team.json` — specialists with tasks, languages, countries
-- `public/data/cases.json` — case studies with results, services used
+- `public/data/services-index.json` — services with facets and labels
+- `public/data/team.json` — specialists with facets and labels
+- `public/data/cases.json` — case studies with facets and labels
+- `public/data/solutions-index.json` — solutions with facets and labels
+- `public/data/categories-index.json` — categories with service counts
+- `public/data/industries-index.json` — industries with service counts
+- `public/data/countries-index.json` — countries with service counts
+- `public/data/languages-index.json` — languages with service counts
+- `public/data/blog.json` — blog posts with category, type, tags, date, author
+- `public/data/graph.json` — full entity graph (nodes + edges) for visualization
+
+Entity indexes include `facets` (per-item connected slugs) and `labels` (slug-to-name map) for client-side filtering.
+
+### Auto-Generated Catalog Filters
+
+Entity listing pages (services, team, cases, solutions) get faceted filters auto-generated from the entity graph at build time. Filters are rendered inside the catalog block (not sidebar) for mobile visibility.
+
+Dimension listings (categories, industries, countries, languages) have sort-only, no filters.
+
+Blog listing uses static filters defined in `[[catalog.filters]]` in TOML:
+```toml
+[[catalog.filters]]
+name = "category"
+label = "Category"
+all_label = "All Categories"
+options = [
+    { value = "AI Visibility", label = "AI Visibility" },
+    { value = "SEO", label = "SEO" },
+]
+
+[[catalog.filters]]
+name = "date"
+label = "Date"
+all_label = "All Dates"
+match = "startsWith"
+options = [
+    { value = "2026", label = "2026" },
+]
+```
+
+The `match = "startsWith"` attribute enables prefix matching (e.g., year "2025" matches date "2025-01-06").
+
+All listing sidebars show the default CTA + contact form (no `[sidebar]` in TOML).
 
 ---
 

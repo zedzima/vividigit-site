@@ -291,9 +291,48 @@ The index contains:
 - relationships (references to other entities),
 - other filterable metadata.
 
+Entity indexes (services, team, cases, solutions) also include:
+- `facets` — per-item dict of connected entity slugs by type (from the bidirectional map),
+- `labels` — top-level dict mapping slugs to display names for all referenced entities.
+
+```json
+{
+  "services": [
+    {
+      "slug": "technical-seo",
+      "facets": {
+        "specialists": ["ivan-petrov"],
+        "categories": ["seo"],
+        "industries": ["ecommerce", "saas"],
+        ...
+      }
+    }
+  ],
+  "labels": {
+    "specialists": {"ivan-petrov": "Ivan Petrov"},
+    "categories": {"seo": "SEO"},
+    ...
+  }
+}
+```
+
 This index is used for client-side filtering, search, and cross-entity navigation.
 
 JSON files are output to `public/data/<collection>.json`.
+
+---
+
+## Catalog filters are auto-generated from the entity graph.
+
+Entity listing pages (services, team, cases, solutions) receive faceted filters at build time.
+Filters are injected into the `catalog` block's `data.filters` and rendered inside the catalog section (not the sidebar).
+
+Each filter dimension corresponds to a connected entity type from the bidirectional map.
+Filter options and labels are derived from `page_lookup`.
+
+Dimension listings (categories, industries, countries, languages) have sort-only, no filters.
+
+Blog uses static filters defined in `[[catalog.filters]]` in TOML with `match = "startsWith"` support for date year filtering.
 
 ---
 
@@ -341,8 +380,10 @@ The sidebar section controls what appears in the right action panel.
 Its structure varies by page type:
 
 - **Service pages**: order cart (`type = "order-cart"`) showing selected tasks, tiers, order modifiers, and live total
-- **Catalog pages**: filter controls
+- **Listing pages**: default CTA + contact form (filters are in the catalog block, not sidebar)
 - **Other pages**: CTA panels, links, or custom widgets
+
+> **Note:** Listing pages (services, team, cases, solutions, categories, industries, countries, languages, blog) do not define `[sidebar]` in TOML. They fall through to the default sidebar (CTA + contact form, same as homepage). Filters for entity listings are auto-generated from the entity graph and rendered inside the `catalog` block.
 
 ### Order Cart Sidebar (`type = "order-cart"`)
 

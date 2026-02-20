@@ -31,7 +31,7 @@
   - **Light/Dark theme toggle** (persisted)
 
 ### Marketplace behaviors (MVP-ready)
-- Service catalog supports filtering by categories, industries, countries, languages.
+- Service catalog supports faceted filtering auto-generated from the entity graph (all 7 connected entity types).
 - Service detail page: tasks are displayed inline via task-picker block; users select tasks, choose volume tiers, see live pricing in order-cart sidebar.
 - Prepare UI for "cart-like" behavior (add selected tasks), even if checkout is not implemented yet.
 
@@ -40,7 +40,7 @@
 ## 2) Information Architecture & Routing
 
 - `/` — Home (selling)
-- `/services` — Services catalog (cards in main area; filter in right sidebar)
+- `/services` — Services catalog (cards in main area; faceted filters in catalog block)
 - `/services/[slug]` — Service detail (task-picker block in main content + order-cart in right sidebar)
 - `/team` — All specialists
 - `/team/[slug]` — Specialist profile (tasks, cases, languages)
@@ -79,8 +79,9 @@
 
 ### 3.2 Right Sidebar (Context Action Panel)
 
-**Catalog page (`/services`)**
-- Right sidebar is **Filters panel** (category, industry, country, language, delivery mode, price range).
+**Entity listing pages (`/services`, `/team`, `/cases`, `/solutions`)**
+- Faceted filters are rendered in the **catalog block** (not sidebar) for mobile visibility.
+- Right sidebar is **default CTA + contact form** (same as homepage).
 
 **Service page (`/services/[slug]`)**
 - Right sidebar is **Order Cart** (`type = "order-cart"`) — shows selected tasks summary, tier choices, order-level language/country modifiers, live total, "Add to Cart" / "Request Quote" buttons. Tasks are selected via the task-picker block in the main content area.
@@ -124,8 +125,8 @@
 ## 5) Services Catalog Page (`/services`)
 
 ### 5.1 Core Requirement
-- **Main content area:** service cards grid/list
-- **Right sidebar:** filters panel (always filters on this page)
+- **Main content area:** service cards grid/list with faceted filter dropdowns above cards
+- **Right sidebar:** default CTA + contact form
 - **Left sidebar:** navigation + language switcher
 
 ### 5.2 Catalog Data Strategy (MVP)
@@ -134,22 +135,27 @@
 - Services are tagged by 4 dimensions: categories, industries, countries, languages
 - SEO scaling through faceted pillar-cluster model
 
-### 5.3 Filters (Right Sidebar)
-Filters apply instantly to the cards list.
+### 5.3 Filters (Catalog Block)
+Filters are rendered inside the catalog block (above cards) for mobile visibility.
+Filters are **auto-generated from the entity graph** — no hardcoding in TOML.
 
-**Minimum filters**
-- Category: SEO / AEO / Content / Social Media / PPC / Email / Analytics / CRO / Video / PR / Automation / E-commerce / Affiliate (13 categories)
-- Delivery mode: One-time / Ongoing
-- Industry: multi-select
-- Country: multi-select
-- Language: multi-select
-- Price range: slider or min/max inputs (based on door opener price)
-- Sort: Popular / Rating / Price low->high / New
+**Entity listing filters** (services, team, cases, solutions):
+- Up to 7 filter dimensions matching all connected entity types
+- Filter options and labels derived from `bi_map` and `page_lookup`
+- Applied via "Apply Filters" button, reset via "Reset Filters"
+
+**Dimension listings** (categories, industries, countries, languages):
+- No filters — sort dropdown only
+
+**Blog listing** — static filters defined in `[[catalog.filters]]` in TOML:
+- Category, Type (article/research/news/etc.), Date (year), Author
+
+**Sort options** per source type (e.g., Popular, Rating, A-Z, Newest)
 
 **UX**
-- Show selected filters as chips
-- "Reset all" button
-- Collapsible filter sections
+- Multi-select checkbox dropdowns
+- "Apply Filters" / "Reset Filters" button
+- GTM events: `filter_apply` (with source, filters, result_count), `sort_change` (with source, sort_by)
 
 ### 5.4 Service Cards (Main Content)
 Each card shows:
@@ -343,7 +349,7 @@ Total = Σ(task tier prices) + (langCount × language_fee) + (countryCount × co
 ---
 
 ## 9) Acceptance Criteria
-1. `/services` shows service cards in main area and filters in right sidebar.
+1. `/services` shows service cards in main area with faceted filters in catalog block.
 2. Filters update visible cards without page reload (client-side).
 3. `/services/[slug]` shows full service page with task-picker block in main content and order-cart in right sidebar.
 4. Task-picker block shows available tasks with tier selectors; order-cart sidebar shows live price calculation.
@@ -360,13 +366,13 @@ Total = Σ(task tier prices) + (langCount × language_fee) + (countryCount × co
 
 ## 10) Implementation Status
 
-Last updated: 2026-02-18
+Last updated: 2026-02-20
 
 ### Completed
 
 **CMS Infrastructure:**
 - File-based CMS with TOML content format
-- 27 block templates (hero, features, pricing, faq, testimonials, etc.)
+- 30 block templates (hero, features, pricing, faq, testimonials, catalog, catalog-mini, task-picker, related-entities, etc.)
 - Jinja2 template rendering
 - Auto-generated sitemap.xml and robots.txt
 - SEO: Open Graph, Twitter Cards, canonical URLs
@@ -380,28 +386,39 @@ Last updated: 2026-02-18
 - Build and preview functionality
 - Local development mode (`--local` flag)
 
+**Content Graph:**
+- Full 28-edge bidirectional entity graph (8 primary entities)
+- Auto-generated `related-entities` blocks with contextual headings
+- Auto-generated faceted filters from entity graph (in catalog block, not sidebar)
+- JSON exports with `facets` and `labels` for client-side filtering
+- Graph export (`graph.json`) for visualization
+
 **Faceted Architecture:**
-- Tag-based filtering (categories, industries, countries, languages)
+- Tag-based and relationship-based entity connections
 - Pillar pages (categories, industries, countries, languages)
 - Solution landing pages
-- services-index.json generation for client-side filtering
+- 9 JSON index files for client-side filtering and cross-entity navigation
 
 **Pages:**
 - Home page (`/`)
 - Blocks library (`/blocks/*`) — demos for all block types
-- AI Optimisation service page (`/services/ai-optimisation`)
-- Blog section with article support
+- 2 service pages: technical-seo, ai-optimisation (with task-picker + order-cart)
+- 1 specialist profile: ivan-petrov
+- 1 case study: ecommerce-migration-2025
+- 1 solution: seo-ecommerce
+- 14 category pages, 4 industry pages, 5 country pages, 7 language pages
+- Blog section with article support and 4-filter catalog (category, type, date, author)
 
-### In Progress
-- Specialist profiles (`/team/[slug]`)
-- Case study pages (`/cases/[slug]`)
-- Category pages with door opener tasks
-
-### Recently Completed
-- Task-picker block (`themes/vividigit/templates/blocks/task-picker.html`) with interactive task selection
+**Task-picker & Order Cart:**
+- Task-picker block with interactive task selection
 - Order-cart sidebar with live pricing, modifiers, and event-driven updates
-- Cart JavaScript module (`themes/vividigit/assets/js/site.js`) with CustomEvent API
-- Migration of technical-seo and ai-optimisation to task-picker + order-cart model
+- Cart JavaScript module with CustomEvent API
+
+**GTM Analytics Events:**
+- `filter_apply` — catalog_source, filters, result_count
+- `sort_change` — catalog_source, sort_by
+- `contact` — form_type, page
+- `generate_lead` — cart_items, cart_total, email
 
 ### Not Started
 - Intersection page generation (e.g., `/industries/ecommerce/seo/`)
