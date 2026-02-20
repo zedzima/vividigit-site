@@ -1065,6 +1065,83 @@ SECTION_TITLES = {
     "languages": "Languages",
 }
 
+# Contextual subtitles: {parent_entity_type: {section_type: template}}
+# {name} is replaced with the parent page's menu/title
+SECTION_SUBTITLES = {
+    "service": {
+        "specialists": "Experts delivering {name}",
+        "cases": "{name} success stories",
+        "solutions": "Tailored {name} solutions",
+        "categories": "Categories related to {name}",
+        "industries": "Industries benefiting from {name}",
+        "countries": "{name} available in these countries",
+        "languages": "{name} available in these languages",
+    },
+    "specialist": {
+        "services": "Services by {name}",
+        "cases": "Results achieved by {name}",
+        "solutions": "Solutions by {name}",
+        "categories": "{name}'s areas of expertise",
+        "industries": "Industries {name} serves",
+        "countries": "Countries {name} works in",
+        "languages": "Languages {name} speaks",
+    },
+    "case": {
+        "services": "Services used in this project",
+        "specialists": "Specialists behind this project",
+        "solutions": "Related solutions",
+        "categories": "Disciplines applied in this project",
+        "industries": "Industry context for this case",
+        "countries": "Geographic scope of this project",
+        "languages": "Languages involved in this project",
+    },
+    "solution": {
+        "services": "Core services behind {name}",
+        "specialists": "Experts delivering {name}",
+        "cases": "Success stories with {name}",
+        "categories": "Categories within {name}",
+        "industries": "Industries targeted by {name}",
+        "countries": "{name} available in these countries",
+        "languages": "{name} available in these languages",
+    },
+    "category": {
+        "services": "{name} services we offer",
+        "specialists": "Our {name} specialists",
+        "cases": "{name} case studies",
+        "solutions": "Pre-built {name} solutions",
+        "industries": "Industries we serve with {name}",
+        "countries": "Countries where we offer {name}",
+        "languages": "Languages for {name} delivery",
+    },
+    "industry": {
+        "services": "Services tailored for {name}",
+        "specialists": "Specialists with {name} expertise",
+        "cases": "{name} success stories",
+        "solutions": "Solutions built for {name}",
+        "categories": "Disciplines we apply in {name}",
+        "countries": "Countries we serve in {name}",
+        "languages": "Languages supported for {name}",
+    },
+    "country": {
+        "services": "Services available in {name}",
+        "specialists": "Specialists operating in {name}",
+        "cases": "Case studies from {name}",
+        "solutions": "Solutions available in {name}",
+        "categories": "Service categories in {name}",
+        "industries": "Industries we serve in {name}",
+        "languages": "Languages we support in {name}",
+    },
+    "language": {
+        "services": "Services available in {name}",
+        "specialists": "{name}-speaking specialists",
+        "cases": "Case studies in {name}",
+        "solutions": "Solutions available in {name}",
+        "categories": "Service categories in {name}",
+        "industries": "Industries we serve in {name}",
+        "countries": "Countries for {name} services",
+    },
+}
+
 
 def inject_related_blocks(parsed_pages: List[Dict], bi_map: Dict[str, Dict[str, List[Dict]]]):
     """
@@ -1086,13 +1163,20 @@ def inject_related_blocks(parsed_pages: List[Dict], bi_map: Dict[str, Dict[str, 
         relations = bi_map[slug]
         section_order = RELATED_SECTION_ORDER.get(entity_type, [])
 
+        page_name = config.get("menu", "") or data.get("meta", {}).get("title", "")
+        subtitle_templates = SECTION_SUBTITLES.get(entity_type, {})
+
         sections = []
         for section_type in section_order:
             items = relations.get(section_type, [])
             if items:
+                subtitle = subtitle_templates.get(section_type, "")
+                if subtitle and page_name:
+                    subtitle = subtitle.replace("{name}", page_name)
                 sections.append({
                     "type": section_type,
                     "title": SECTION_TITLES.get(section_type, section_type.title()),
+                    "subtitle": subtitle,
                     "items": items,
                 })
 
