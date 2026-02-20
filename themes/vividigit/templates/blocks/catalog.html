@@ -11,6 +11,27 @@
     </div>
     {% endif %}
 
+    {% if data.filters %}
+    <div class="catalog-filters">
+        {% for filter in data.filters %}
+        <div class="filter-dropdown" data-filter="{{ filter.name }}">
+            <button class="filter-dropdown-toggle" type="button">
+                <span class="filter-selected-text" data-all="{{ filter.all_label }}">{{ filter.all_label }}</span>
+                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div class="filter-dropdown-menu">
+                {% for option in filter.options %}
+                <label class="filter-option"><input type="checkbox" value="{{ option.value }}"><span class="filter-option-label">{{ option.label }}</span></label>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        <button class="btn btn-primary btn-sm btn-apply-filters hidden">Apply Filters</button>
+    </div>
+    {% endif %}
+
     <div class="catalog-toolbar">
         <div class="catalog-count">
             <span class="catalog-count-num">0</span> {{ count_label }}
@@ -34,91 +55,80 @@
     var sortEl = section.querySelector('.catalog-sort-select');
 
     var allItems = [];
+    var LABELS = {};
 
     /* ===== Source configs ===== */
     var SOURCES = {
         services: {
             url: 'data/services-index.json',
             dataKey: 'services',
-            sortOptions: [['popular', 'Popular'], ['rating', 'Highest Rated'], ['name', 'A-Z']],
-            filters: ['categories', 'industries', 'languages', 'countries', 'delivery']
+            sortOptions: [['popular', 'Popular'], ['rating', 'Highest Rated'], ['name', 'A-Z']]
         },
         team: {
             url: 'data/team.json',
             dataKey: 'specialists',
-            sortOptions: [['rating', 'Highest Rated'], ['projects', 'Most Projects'], ['name', 'A-Z']],
-            filters: ['languages', 'countries']
+            sortOptions: [['rating', 'Highest Rated'], ['projects', 'Most Projects'], ['name', 'A-Z']]
         },
         cases: {
             url: 'data/cases.json',
             dataKey: 'cases',
-            sortOptions: [['default', 'Newest First'], ['name', 'A-Z']],
-            filters: ['industry', 'services', 'country']
+            sortOptions: [['default', 'Newest First'], ['name', 'A-Z']]
         },
         blog: {
             url: 'data/blog.json',
             dataKey: null,
-            sortOptions: [['newest', 'Newest First'], ['oldest', 'Oldest First'], ['name', 'A-Z']],
-            filters: ['category']
+            sortOptions: [['newest', 'Newest First'], ['oldest', 'Oldest First'], ['name', 'A-Z']]
         },
         categories: {
             url: 'data/categories-index.json',
             dataKey: 'categories',
-            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']],
-            filters: []
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']]
         },
         solutions: {
             url: 'data/solutions-index.json',
             dataKey: 'solutions',
-            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['price', 'Lowest Price']],
-            filters: ['service', 'industry']
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['price', 'Lowest Price']]
         },
         industries: {
             url: 'data/industries-index.json',
             dataKey: 'industries',
-            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']],
-            filters: []
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']]
         },
         countries: {
             url: 'data/countries-index.json',
             dataKey: 'countries',
-            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']],
-            filters: []
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']]
         },
         languages: {
             url: 'data/languages-index.json',
             dataKey: 'languages',
-            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']],
-            filters: []
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['services', 'Most Services']]
         }
     };
 
     var cfg = SOURCES[source] || SOURCES.services;
 
-    /* ===== Display maps ===== */
+    /* Auto-detect filters from DOM */
+    var filterEls = section.querySelectorAll('[data-filter]');
+    var activeFilters = Array.from(filterEls).map(function(el) { return el.dataset.filter; });
+
+    /* ===== Display maps (visual-only, not data) ===== */
     var langCodeMap = { 'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT' };
-    var categoryLabelMap = { 'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO', 'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics', 'social-media': 'Social Media', 'email': 'Email', 'cro': 'CRO', 'video': 'Video', 'pr': 'PR', 'automation': 'Automation', 'marketplace-management': 'Marketplace', 'affiliate': 'Affiliate' };
-    var industryLabelMap = { 'ecommerce': 'E-commerce', 'saas': 'SaaS', 'fintech': 'Fintech', 'healthcare': 'Healthcare', 'education': 'Education', 'realestate': 'Real Estate', 'travel': 'Travel' };
-    var serviceLabelMap = { 'technical-seo': 'Technical SEO', 'ai-optimisation': 'AI Optimization', 'content-strategy': 'Content Strategy', 'ppc-management': 'PPC Management', 'analytics-setup': 'Analytics', 'localization': 'Localization' };
-    var countryLabelMap = { 'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain' };
     var categoryIconMap = { 'seo': 'search', 'aeo': 'lightning', 'digital-marketing': 'globe', 'content': 'pen-tool', 'social-media': 'megaphone', 'ppc': 'target', 'email': 'mail', 'analytics': 'analytics', 'cro': 'chart', 'video': 'video', 'pr': 'newspaper', 'automation': 'code', 'marketplace-management': 'layers', 'affiliate': 'users' };
-    var avatarColors = [['#7C3AED','#C026D3'],['#2563EB','#06B6D4'],['#059669','#10B981'],['#D97706','#F59E0B'],['#DC2626','#F87171'],['#7C3AED','#6366F1']];
+
+    function label(dimension, slug) {
+        return (LABELS[dimension] || {})[slug] || slug;
+    }
 
     function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
     function getInitials(name) { return (name || '').split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2); }
 
     /* ===== Card renderers ===== */
-    function truncatedTags(arr, max, renderFn) {
-        var shown = arr.slice(0, max);
-        var html = shown.map(renderFn).join('');
-        if (arr.length > max) html += renderFn('+' + (arr.length - max));
-        return html;
-    }
-
     function renderServiceCard(s) {
-        var cats = (s.categories || []).map(function(c){ return '<span class="service-category">' + esc(categoryLabelMap[c] || c) + '</span>'; }).join('');
-        var countries = (s.countries || []).map(function(c){ return '<span class="service-country">' + esc(countryLabelMap[c] || c) + '</span>'; }).join('');
-        var langs = (s.languages || []).map(function(l){ return '<span class="service-lang">' + (langCodeMap[l] || l.toUpperCase().slice(0,2)) + '</span>'; }).join('');
+        var f = s.facets || {};
+        var cats = (f.categories || []).map(function(c){ return '<span class="service-category">' + esc(label('categories', c)) + '</span>'; }).join('');
+        var countries = (f.countries || []).map(function(c){ return '<span class="service-country">' + esc(label('countries', c)) + '</span>'; }).join('');
+        var langs = (f.languages || []).map(function(l){ return '<span class="service-lang">' + (langCodeMap[l] || l.toUpperCase().slice(0,2)) + '</span>'; }).join('');
         var specCount = s.specialist_count || 0;
         var url = (s.url || '/services/' + s.slug).replace(/^\//, '');
         return '<a href="' + url + '" class="service-card">' +
@@ -137,7 +147,7 @@
             ? '<div class="specialist-avatar"><img src="' + esc(s.avatar) + '" alt="' + esc(s.title) + '"></div>'
             : '<div class="specialist-avatar"><div class="specialist-avatar-initials">' + initials + '</div></div>';
         var langTags = (s.languages || []).map(function(l){ return '<span class="specialist-tag lang">' + (langCodeMap[l] || l.toUpperCase().slice(0,2)) + '</span>'; }).join('');
-        var countryTags = (s.countries || []).map(function(c){ return '<span class="specialist-tag">' + esc(countryLabelMap[c] || c) + '</span>'; }).join('');
+        var countryTags = (s.countries || []).map(function(c){ return '<span class="specialist-tag">' + esc(label('countries', c)) + '</span>'; }).join('');
         return '<a href="' + url + '" class="specialist-card">' +
             '<div class="specialist-card-top">' + avatarHtml + '<div class="specialist-info"><h3>' + esc(s.title) + '</h3>' + (s.role ? '<div class="specialist-role">' + esc(s.role) + '</div>' : '') + '</div></div>' +
             '<div class="specialist-stats">' +
@@ -166,7 +176,7 @@
         var metaHtml = '';
         if (s.industry || s.client) {
             metaHtml = '<div class="case-meta">' +
-                (s.industry ? '<span class="case-industry">' + esc(industryLabelMap[s.industry] || s.industry) + '</span>' : '') +
+                (s.industry ? '<span class="case-industry">' + esc(label('industries', s.industry)) + '</span>' : '') +
                 (s.client ? '<span class="case-client">' + esc(s.client) + '</span>' : '') + '</div>';
         }
         return '<a href="' + url + '" class="case-card">' + imageHtml +
@@ -203,8 +213,8 @@
     function renderSolutionCard(s) {
         var url = (s.url || '/solutions/' + s.slug).replace(/^\//, '');
         var tags = '';
-        if (s.service) tags += '<span class="solution-tag">' + esc(serviceLabelMap[s.service] || s.service) + '</span>';
-        if (s.industry) tags += '<span class="solution-tag industry">' + esc(industryLabelMap[s.industry] || s.industry) + '</span>';
+        if (s.service) tags += '<span class="solution-tag">' + esc(label('services', s.service)) + '</span>';
+        if (s.industry) tags += '<span class="solution-tag industry">' + esc(label('industries', s.industry)) + '</span>';
         return '<a href="' + url + '" class="solution-card">' +
             (tags ? '<div class="solution-card-tags">' + tags + '</div>' : '') +
             '<h3>' + esc(s.title) + '</h3><p>' + esc(s.description) + '</p>' +
@@ -288,7 +298,7 @@
     }
 
     function getCheckedValues(filterName) {
-        var dropdown = document.querySelector('[data-filter="' + filterName + '"]');
+        var dropdown = section.querySelector('[data-filter="' + filterName + '"]');
         if (!dropdown) return [];
         return Array.from(dropdown.querySelectorAll('input[type="checkbox"]:checked')).map(function(cb){ return cb.value; });
     }
@@ -305,29 +315,15 @@
     function matchFilter(item, filterName) {
         var checked = getCheckedValues(filterName);
         if (checked.length === 0) return true;
-        /* services source: tags are nested under item.tags or flat */
-        var vals;
-        if (source === 'services') {
-            var tags = item.tags || {};
-            vals = tags[filterName] || item[filterName] || [];
-        } else if (source === 'cases' && filterName === 'industry') {
-            return checked.indexOf(item.industry) !== -1;
-        } else if (source === 'cases' && filterName === 'country') {
-            return checked.indexOf(item.country) !== -1;
-        } else if (source === 'solutions' && (filterName === 'service' || filterName === 'industry')) {
-            return checked.indexOf(item[filterName] || '') !== -1;
-        } else if (source === 'blog' && filterName === 'category') {
-            return checked.some(function(c){ return (item.category || '').toLowerCase() === c.toLowerCase(); });
-        } else {
-            vals = item[filterName] || [];
-        }
+        var facets = item.facets || {};
+        var vals = facets[filterName] || item[filterName] || [];
         if (!Array.isArray(vals)) vals = [vals];
         return checked.some(function(c){ return vals.indexOf(c) !== -1; });
     }
 
     function applyFilters() {
         var filtered = allItems.filter(function(item) {
-            return cfg.filters.every(function(f){ return matchFilter(item, f); });
+            return activeFilters.every(function(f){ return matchFilter(item, f); });
         });
         return sortItems(filtered, sortEl.value);
     }
@@ -348,30 +344,13 @@
         return sorted;
     }
 
-    /* ===== Data normalization ===== */
-    function normalizeServices(data) {
-        return (data.services || []).filter(function(s){ return s.slug; }).map(function(s) {
-            return { slug: s.slug, url: s.url, title: s.title, description: s.description,
-                categories: (s.tags && s.tags.categories) || s.categories || [],
-                industries: (s.tags && s.tags.industries) || s.industries || [],
-                languages: (s.tags && s.tags.languages) || s.languages || [],
-                countries: (s.tags && s.tags.countries) || s.countries || [],
-                delivery: s.delivery || 'one-time',
-                specialist_count: s.specialist_count || 0,
-                rating: s.rating || 0, price: s.from_price || s.price || 0 };
-        });
-    }
-
     /* ===== Init ===== */
     function init() {
         fetch(cfg.url)
             .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
             .then(function(data) {
-                if (source === 'services') {
-                    allItems = normalizeServices(data);
-                } else {
-                    allItems = cfg.dataKey ? (data[cfg.dataKey] || []) : (Array.isArray(data) ? data : []);
-                }
+                LABELS = data.labels || {};
+                allItems = cfg.dataKey ? (data[cfg.dataKey] || []) : (Array.isArray(data) ? data : []);
                 renderGrid(applyFilters());
             })
             .catch(function() {
@@ -380,40 +359,40 @@
 
         sortEl.addEventListener('change', function() { renderGrid(applyFilters()); });
 
-        /* Sidebar filter interactions */
-        document.querySelectorAll('.filter-dropdown-toggle').forEach(function(btn) {
+        /* Filter interactions (scoped to catalog section) */
+        section.querySelectorAll('.filter-dropdown-toggle').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 var dd = btn.closest('.filter-dropdown');
                 var wasOpen = dd.classList.contains('open');
-                document.querySelectorAll('.filter-dropdown').forEach(function(d){ d.classList.remove('open'); });
+                section.querySelectorAll('.filter-dropdown').forEach(function(d){ d.classList.remove('open'); });
                 if (!wasOpen) dd.classList.add('open');
             });
         });
-        /* Filter state: 'none' | 'pending' | 'applied' */
+
         var filterState = 'none';
-        var filterBtn = document.querySelector('.btn-apply-filters');
+        var filterBtn = section.querySelector('.btn-apply-filters');
 
         function updateFilterBtn() {
             if (!filterBtn) return;
-            var anyChecked = !!document.querySelector('.filter-dropdown input[type="checkbox"]:checked');
+            var anyChecked = !!section.querySelector('.filter-dropdown input[type="checkbox"]:checked');
             if (!anyChecked) {
                 filterBtn.classList.add('hidden');
             } else if (filterState === 'pending') {
                 filterBtn.classList.remove('hidden');
                 filterBtn.textContent = 'Apply Filters';
-                filterBtn.className = 'btn btn-primary btn-full btn-apply-filters';
+                filterBtn.className = 'btn btn-primary btn-sm btn-apply-filters';
             } else {
                 filterBtn.classList.remove('hidden');
                 filterBtn.textContent = 'Reset Filters';
-                filterBtn.className = 'btn btn-secondary btn-full btn-apply-filters';
+                filterBtn.className = 'btn btn-secondary btn-sm btn-apply-filters';
             }
         }
 
-        document.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb) {
+        section.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb) {
             cb.addEventListener('change', function() {
                 updateDropdownText(cb.closest('.filter-dropdown'));
-                var anyChecked = !!document.querySelector('.filter-dropdown input[type="checkbox"]:checked');
+                var anyChecked = !!section.querySelector('.filter-dropdown input[type="checkbox"]:checked');
                 if (anyChecked) {
                     filterState = 'pending';
                 } else {
@@ -423,11 +402,13 @@
                 updateFilterBtn();
             });
         });
+
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.filter-dropdown')) {
-                document.querySelectorAll('.filter-dropdown').forEach(function(d){ d.classList.remove('open'); });
+                section.querySelectorAll('.filter-dropdown').forEach(function(d){ d.classList.remove('open'); });
             }
         });
+
         if (filterBtn) {
             filterBtn.addEventListener('click', function() {
                 if (filterState === 'pending') {
@@ -436,8 +417,8 @@
                     window.dataLayer = window.dataLayer || [];
                     window.dataLayer.push({event: 'filter_apply'});
                 } else if (filterState === 'applied') {
-                    document.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb){ cb.checked = false; });
-                    document.querySelectorAll('.filter-dropdown').forEach(function(dd){ updateDropdownText(dd); });
+                    section.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb){ cb.checked = false; });
+                    section.querySelectorAll('.filter-dropdown').forEach(function(dd){ updateDropdownText(dd); });
                     renderGrid(applyFilters());
                     filterState = 'none';
                 }

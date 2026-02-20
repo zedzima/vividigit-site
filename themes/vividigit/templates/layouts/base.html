@@ -533,8 +533,8 @@
             </div>
             </div><!-- /CONTACT TAB -->
 
-            {% elif config.collection == 'services' %}
-            <!-- Fallback for services without sidebar config -->
+            {% elif config.collection == 'services' and not config.is_listing %}
+            <!-- Fallback for service detail pages without sidebar config -->
             <div class="widget">
                 <div class="widget-title">Interested?</div>
                 <p class="widget-text">Contact us for pricing and details.</p>

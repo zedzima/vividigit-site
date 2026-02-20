@@ -325,7 +325,7 @@ def test_bidirectional_map_forward_relationships():
                   "meta": {"title": "English", "description": "English language"},
                   "sidebar": {}, "relationships": {}}},
     ]
-    result = build_bidirectional_map(pages)
+    result, _ = build_bidirectional_map(pages)
     # Ivan has forward link to case-1
     assert any(e["slug"] == "case-1" for e in result["ivan"]["cases"])
 
@@ -343,7 +343,7 @@ def test_bidirectional_map_reverse_relationships():
                   "meta": {"title": "Ivan", "description": "Specialist"},
                   "sidebar": {}, "relationships": {}}},
     ]
-    result = build_bidirectional_map(pages)
+    result, _ = build_bidirectional_map(pages)
     # Ivan gets reverse link to SEO service
     assert any(e["slug"] == "seo" for e in result["ivan"]["services"])
 
@@ -361,7 +361,7 @@ def test_bidirectional_map_via_tags():
                   "meta": {"title": "SEO Category", "description": "SEO"},
                   "sidebar": {}, "relationships": {}}},
     ]
-    result = build_bidirectional_map(pages)
+    result, _ = build_bidirectional_map(pages)
     # Category gets reverse link from service tag
     assert any(e["slug"] == "seo" for e in result["seo-cat"]["services"])
 
@@ -374,7 +374,7 @@ def test_bidirectional_map_skips_listing_pages():
                   "meta": {"title": "Services", "description": "All services"},
                   "sidebar": {}, "relationships": {}}},
     ]
-    result = build_bidirectional_map(pages)
+    result, _ = build_bidirectional_map(pages)
     assert "services" not in result
 
 
@@ -386,7 +386,7 @@ def test_bidirectional_map_empty_relations_omitted():
                   "meta": {"title": "Ivan", "description": "Specialist"},
                   "sidebar": {}, "relationships": {}}},
     ]
-    result = build_bidirectional_map(pages)
+    result, _ = build_bidirectional_map(pages)
     assert result["ivan"] == {}
 
 

@@ -373,9 +373,10 @@ def build_tag_index(parsed_pages: List[Dict], dimensions: List[str] = None) -> D
     return tag_index
 
 
-def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str):
+def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str,
+                          bi_map: Dict = None, page_lookup: Dict = None):
     """
-    Export services index with tags for client-side filtering.
+    Export services index with facets for client-side filtering.
 
     Creates public/data/services-index.json
     """
@@ -389,27 +390,19 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
         config = data.get("config", {})
         meta = data.get("meta", {})
 
-        # Only include services
+        # Only include services (not listing pages)
         if config.get("type") != "service" and config.get("collection") != "services":
             continue
-
-        # Skip pages without a slug (catalog pages themselves)
-        if not config.get("slug"):
+        if page.get("is_listing") or not config.get("slug"):
             continue
 
-        tags = data.get("tags", {})
+        slug = config.get("slug", "")
 
         entry = {
-            "slug": config.get("slug", ""),
+            "slug": slug,
             "url": config.get("url", ""),
             "title": meta.get("title", ""),
             "description": meta.get("description", ""),
-            "tags": {
-                "categories": tags.get("categories", []),
-                "industries": tags.get("industries", []),
-                "countries": tags.get("countries", []),
-                "languages": tags.get("languages", [])
-            }
         }
 
         # Include rating, price, and delivery type if available
@@ -424,19 +417,20 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
         rels = data.get("relationships", {})
         entry["specialist_count"] = len(rels.get("specialists", []))
 
+        # Build facets from graph
+        if bi_map:
+            entry["facets"] = build_facets_for_item(slug, bi_map, "services")
+
         services.append(entry)
 
-    # Build filters list with counts
-    filters = {}
-    for dimension, tag_dict in tag_index.items():
-        filters[dimension] = [
-            {"slug": slug, "count": len(services_list)}
-            for slug, services_list in sorted(tag_dict.items())
-        ]
+    # Build labels from facets
+    labels = {}
+    if page_lookup:
+        labels = build_labels_from_facets(services, page_lookup)
 
     index_data = {
         "services": services,
-        "filters": filters
+        "labels": labels,
     }
 
     json_path = os.path.join(json_dir, "services-index.json")
@@ -447,7 +441,8 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
 
 
 
-def export_team_index(parsed_pages: List[Dict], output_dir: str):
+def export_team_index(parsed_pages: List[Dict], output_dir: str,
+                      bi_map: Dict = None, page_lookup: Dict = None):
     """
     Export team/specialists index.
 
@@ -470,11 +465,12 @@ def export_team_index(parsed_pages: List[Dict], output_dir: str):
         if not config.get("slug"):
             continue
 
+        slug = config.get("slug", "")
         relationships = data.get("relationships", {})
         sidebar = data.get("sidebar", {})
 
-        specialists.append({
-            "slug": config.get("slug", ""),
+        entry = {
+            "slug": slug,
             "url": config.get("url", ""),
             "title": data.get("meta", {}).get("title", ""),
             "description": data.get("meta", {}).get("description", ""),
@@ -487,33 +483,22 @@ def export_team_index(parsed_pages: List[Dict], output_dir: str):
             "countries": relationships.get("countries", []),
             "tasks": relationships.get("tasks", []),
             "cases": relationships.get("cases", []),
-            "services": [],
-            "categories": [],
-            "industries": [],
-        })
+        }
 
-    # Derive categories/industries/services for each specialist from service pages
-    for spec in specialists:
-        spec_categories = set()
-        spec_industries = set()
-        spec_services = set()
-        for page in parsed_pages:
-            pdata = page.get("data", {})
-            pconfig = pdata.get("config", {})
-            prels = pdata.get("relationships", {})
-            if pconfig.get("type") == "service" and pconfig.get("slug"):
-                if spec["slug"] in prels.get("specialists", []):
-                    spec_services.add(pconfig["slug"])
-                    ptags = pdata.get("tags", {})
-                    spec_categories.update(ptags.get("categories", []))
-                    spec_industries.update(ptags.get("industries", []))
-        spec["services"] = list(spec_services)
-        spec["categories"] = list(spec_categories)
-        spec["industries"] = list(spec_industries)
+        # Build facets from graph
+        if bi_map:
+            entry["facets"] = build_facets_for_item(slug, bi_map, "specialists")
+
+        specialists.append(entry)
+
+    # Build labels from facets
+    labels = {}
+    if page_lookup:
+        labels = build_labels_from_facets(specialists, page_lookup)
 
     json_path = os.path.join(json_dir, "team.json")
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump({"specialists": specialists}, f, indent=2, ensure_ascii=False)
+        json.dump({"specialists": specialists, "labels": labels}, f, indent=2, ensure_ascii=False)
 
     print(f"  Exported: {json_path} ({len(specialists)} specialists)")
 
@@ -560,7 +545,8 @@ def export_categories_index(parsed_pages: List[Dict], tag_index: Dict, output_di
     print(f"  Exported: {json_path} ({len(categories)} categories)")
 
 
-def export_solutions_index(parsed_pages: List[Dict], output_dir: str):
+def export_solutions_index(parsed_pages: List[Dict], output_dir: str,
+                           bi_map: Dict = None, page_lookup: Dict = None):
     """
     Export enriched solutions index for catalog rendering.
 
@@ -582,6 +568,7 @@ def export_solutions_index(parsed_pages: List[Dict], output_dir: str):
         if not config.get("slug"):
             continue
 
+        slug = config["slug"]
         links = data.get("links", {})
 
         # Extract starting price from pricing block
@@ -595,19 +582,30 @@ def export_solutions_index(parsed_pages: List[Dict], output_dir: str):
                         starting_price = min(prices)
                 break
 
-        solutions.append({
-            "slug": config["slug"],
+        entry = {
+            "slug": slug,
             "url": config.get("url", ""),
             "title": data.get("meta", {}).get("title", ""),
             "description": data.get("meta", {}).get("description", ""),
             "service": links.get("service", ""),
             "industry": links.get("industry", ""),
             "starting_price": starting_price,
-        })
+        }
+
+        # Build facets from graph
+        if bi_map:
+            entry["facets"] = build_facets_for_item(slug, bi_map, "solutions")
+
+        solutions.append(entry)
+
+    # Build labels from facets
+    labels = {}
+    if page_lookup:
+        labels = build_labels_from_facets(solutions, page_lookup)
 
     json_path = os.path.join(json_dir, "solutions-index.json")
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump({"solutions": solutions}, f, indent=2, ensure_ascii=False)
+        json.dump({"solutions": solutions, "labels": labels}, f, indent=2, ensure_ascii=False)
 
     print(f"  Exported: {json_path} ({len(solutions)} solutions)")
 
@@ -714,7 +712,8 @@ def export_languages_index(parsed_pages: List[Dict], tag_index: Dict, output_dir
     print(f"  Exported: {json_path} ({len(items)} languages)")
 
 
-def export_cases_index(parsed_pages: List[Dict], output_dir: str):
+def export_cases_index(parsed_pages: List[Dict], output_dir: str,
+                       bi_map: Dict = None, page_lookup: Dict = None):
     """
     Export cases index.
 
@@ -724,15 +723,6 @@ def export_cases_index(parsed_pages: List[Dict], output_dir: str):
     os.makedirs(json_dir, exist_ok=True)
 
     cases = []
-
-    # Build service -> categories lookup for deriving case categories
-    service_categories = {}
-    for page in parsed_pages:
-        data = page.get("data", {})
-        config = data.get("config", {})
-        if config.get("type") == "service" and config.get("slug"):
-            tags = data.get("tags", {})
-            service_categories[config["slug"]] = tags.get("categories", [])
 
     for page in parsed_pages:
         data = page.get("data", {})
@@ -746,6 +736,7 @@ def export_cases_index(parsed_pages: List[Dict], output_dir: str):
         if not config.get("slug"):
             continue
 
+        slug = config.get("slug", "")
         relationships = data.get("relationships", {})
 
         # Extract results from hero stats or dedicated results field
@@ -760,14 +751,8 @@ def export_cases_index(parsed_pages: List[Dict], output_dir: str):
                 for s in hero_data["stats"]
             ]
 
-        # Derive categories from services_used
-        services_used = relationships.get("services_used", [])
-        case_categories = set()
-        for svc_slug in services_used:
-            case_categories.update(service_categories.get(svc_slug, []))
-
-        cases.append({
-            "slug": config.get("slug", ""),
+        entry = {
+            "slug": slug,
             "url": config.get("url", ""),
             "title": data.get("meta", {}).get("title", ""),
             "description": data.get("meta", {}).get("description", ""),
@@ -776,15 +761,23 @@ def export_cases_index(parsed_pages: List[Dict], output_dir: str):
             "industry": relationships.get("industry", ""),
             "country": relationships.get("country", ""),
             "language": relationships.get("language", ""),
-            "services": services_used,
-            "categories": sorted(case_categories),
-            "specialists": relationships.get("specialists", []),
             "results": results,
-        })
+        }
+
+        # Build facets from graph
+        if bi_map:
+            entry["facets"] = build_facets_for_item(slug, bi_map, "cases")
+
+        cases.append(entry)
+
+    # Build labels from facets
+    labels = {}
+    if page_lookup:
+        labels = build_labels_from_facets(cases, page_lookup)
 
     json_path = os.path.join(json_dir, "cases.json")
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump({"cases": cases}, f, indent=2, ensure_ascii=False)
+        json.dump({"cases": cases, "labels": labels}, f, indent=2, ensure_ascii=False)
 
     print(f"  Exported: {json_path} ({len(cases)} cases)")
 
@@ -1034,7 +1027,7 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
                             result[card_slug].get("services", [])
                         )
 
-    return result
+    return result, page_lookup
 
 
 # All possible section types. Each entity page can show any of these;
@@ -1141,6 +1134,157 @@ SECTION_SUBTITLES = {
         "countries": "Countries for {name} services",
     },
 }
+
+
+###############################################################################
+# Filter auto-generation from entity graph
+###############################################################################
+
+FILTER_META = {
+    "services":    {"label": "Service",    "all_label": "All Services"},
+    "specialists": {"label": "Specialist", "all_label": "All Specialists"},
+    "cases":       {"label": "Case Study", "all_label": "All Cases"},
+    "solutions":   {"label": "Solution",   "all_label": "All Solutions"},
+    "categories":  {"label": "Category",   "all_label": "All Categories"},
+    "industries":  {"label": "Industry",   "all_label": "All Industries"},
+    "countries":   {"label": "Country",    "all_label": "All Countries"},
+    "languages":   {"label": "Language",   "all_label": "All Languages"},
+}
+
+
+def build_listing_filters(
+    entity_type: str,
+    parsed_pages: List[Dict],
+    bi_map: Dict[str, Dict[str, List[Dict]]],
+    page_lookup: Dict[str, Dict],
+) -> List[Dict]:
+    """
+    Auto-generate filter configs for an entity listing page from the graph.
+
+    Scans all items of entity_type, collects connected entities per dimension,
+    and builds filter option lists with labels and counts.
+    """
+    target_types = RELATED_SECTION_ORDER.get(entity_type, [])
+    if not target_types:
+        return []
+
+    # Collect all slugs of this entity type
+    item_slugs = []
+    for page in parsed_pages:
+        data = page.get("data", {})
+        config = data.get("config", {})
+        if config.get("type") != entity_type:
+            continue
+        if page.get("is_listing") or not config.get("slug"):
+            continue
+        item_slugs.append(config["slug"])
+
+    filters = []
+    for dimension in target_types:
+        # Count how many items have each connected slug in this dimension
+        slug_counts = {}
+        for item_slug in item_slugs:
+            relations = bi_map.get(item_slug, {})
+            for related in relations.get(dimension, []):
+                rel_slug = related.get("slug", "")
+                if rel_slug:
+                    slug_counts[rel_slug] = slug_counts.get(rel_slug, 0) + 1
+
+        if not slug_counts:
+            continue
+
+        # Build options with labels from page_lookup
+        options = []
+        for slug, count in slug_counts.items():
+            entry = page_lookup.get(slug)
+            label = (entry.get("menu") or entry.get("title") or slug) if entry else slug
+            options.append({"value": slug, "label": label})
+
+        # Sort alphabetically by label
+        options.sort(key=lambda o: o["label"].lower())
+
+        meta = FILTER_META.get(dimension, {})
+        filters.append({
+            "name": dimension,
+            "label": meta.get("label", dimension.title()),
+            "all_label": meta.get("all_label", "All"),
+            "options": options,
+        })
+
+    return filters
+
+
+def inject_catalog_filters(
+    parsed_pages: List[Dict],
+    bi_map: Dict[str, Dict[str, List[Dict]]],
+    page_lookup: Dict[str, Dict],
+):
+    """
+    Inject auto-generated filter configs into catalog blocks on entity listing pages.
+    """
+    ENTITY_LISTINGS = {
+        "services": "service",
+        "team": "specialist",
+        "cases": "case",
+        "solutions": "solution",
+    }
+
+    for page in parsed_pages:
+        if not page.get("is_listing"):
+            continue
+        data = page.get("data", {})
+        config = data.get("config", {})
+        collection = config.get("collection", "")
+
+        entity_type = ENTITY_LISTINGS.get(collection)
+        if not entity_type:
+            continue
+
+        filters = build_listing_filters(entity_type, parsed_pages, bi_map, page_lookup)
+        if not filters:
+            continue
+
+        # Find the catalog block and inject filters
+        for block in data.get("blocks", []):
+            if block.get("type") == "catalog":
+                block.setdefault("data", {})["filters"] = filters
+                break
+
+
+def build_facets_for_item(slug: str, bi_map: Dict, exclude_self_type: str = None) -> Dict[str, List[str]]:
+    """
+    Build facets dict for a single item from bi_map.
+    Returns {dimension: [slugs]} for all connected entity types.
+    """
+    relations = bi_map.get(slug, {})
+    facets = {}
+    for dimension in ALL_SECTIONS:
+        if dimension == exclude_self_type:
+            continue
+        items = relations.get(dimension, [])
+        if items:
+            facets[dimension] = [r["slug"] for r in items if r.get("slug")]
+    return facets
+
+
+def build_labels_from_facets(items: List[Dict], page_lookup: Dict) -> Dict[str, Dict[str, str]]:
+    """
+    Build labels dict from all facets referenced by items.
+    Returns {dimension: {slug: label}} for all entity slugs in facets.
+    """
+    labels = {}
+    for item in items:
+        for dimension, slugs in item.get("facets", {}).items():
+            if dimension not in labels:
+                labels[dimension] = {}
+            for slug in slugs:
+                if slug not in labels[dimension]:
+                    entry = page_lookup.get(slug)
+                    if entry:
+                        labels[dimension][slug] = entry.get("menu") or entry.get("title") or slug
+                    else:
+                        labels[dimension][slug] = slug
+    return labels
 
 
 def inject_related_blocks(parsed_pages: List[Dict], bi_map: Dict[str, Dict[str, List[Dict]]]):
@@ -1570,10 +1714,12 @@ def main(lang: str = DEFAULT_LANG, local: bool = False, site_name: str = "vividi
 
     # Build bidirectional relationship map and inject related blocks (Phase 2b)
     print("\nBuilding bidirectional relationship map...")
-    bi_map = build_bidirectional_map(parsed_pages)
+    bi_map, page_lookup = build_bidirectional_map(parsed_pages)
     print(f"  {len(bi_map)} entities with relationships")
     inject_related_blocks(parsed_pages, bi_map)
     print("  Related-entity blocks injected")
+    inject_catalog_filters(parsed_pages, bi_map, page_lookup)
+    print("  Catalog filters injected")
 
     # Load tasks and resolve task-picker blocks (Phase 3)
     print("\nLoading tasks...")
@@ -1635,15 +1781,15 @@ def main(lang: str = DEFAULT_LANG, local: bool = False, site_name: str = "vividi
 
     # Export services index for client-side filtering
     print("\nExporting services index...")
-    export_services_index(parsed_pages, tag_index, output_dir)
+    export_services_index(parsed_pages, tag_index, output_dir, bi_map, page_lookup)
 
     # Export team index
     print("\nExporting team index...")
-    export_team_index(parsed_pages, output_dir)
+    export_team_index(parsed_pages, output_dir, bi_map, page_lookup)
 
     # Export cases index
     print("\nExporting cases index...")
-    export_cases_index(parsed_pages, output_dir)
+    export_cases_index(parsed_pages, output_dir, bi_map, page_lookup)
 
     # Export categories index
     print("\nExporting categories index...")
@@ -1651,7 +1797,7 @@ def main(lang: str = DEFAULT_LANG, local: bool = False, site_name: str = "vividi
 
     # Export solutions index
     print("\nExporting solutions index...")
-    export_solutions_index(parsed_pages, output_dir)
+    export_solutions_index(parsed_pages, output_dir, bi_map, page_lookup)
 
     # Export industries index
     print("\nExporting industries index...")
