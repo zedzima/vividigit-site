@@ -14,7 +14,7 @@
     {% if data.filters %}
     <div class="catalog-filters">
         {% for filter in data.filters %}
-        <div class="filter-dropdown" data-filter="{{ filter.name }}">
+        <div class="filter-dropdown" data-filter="{{ filter.name }}"{% if filter.match %} data-match="{{ filter.match }}"{% endif %}>
             <button class="filter-dropdown-toggle" type="button">
                 <span class="filter-selected-text" data-all="{{ filter.all_label }}">{{ filter.all_label }}</span>
                 <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -318,6 +318,11 @@
         var facets = item.facets || {};
         var vals = facets[filterName] || item[filterName] || [];
         if (!Array.isArray(vals)) vals = [vals];
+        var dropdown = section.querySelector('[data-filter="' + filterName + '"]');
+        var matchMode = dropdown ? dropdown.dataset.match : '';
+        if (matchMode === 'startsWith') {
+            return checked.some(function(c){ return vals.some(function(v){ return String(v).indexOf(c) === 0; }); });
+        }
         return checked.some(function(c){ return vals.indexOf(c) !== -1; });
     }
 
@@ -357,7 +362,11 @@
                 grid.innerHTML = '<div class="catalog-empty">Could not load data.</div>';
             });
 
-        sortEl.addEventListener('change', function() { renderGrid(applyFilters()); });
+        sortEl.addEventListener('change', function() {
+            renderGrid(applyFilters());
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({event: 'sort_change', catalog_source: source, sort_by: sortEl.value});
+        });
 
         /* Filter interactions (scoped to catalog section) */
         section.querySelectorAll('.filter-dropdown-toggle').forEach(function(btn) {
@@ -414,8 +423,13 @@
                 if (filterState === 'pending') {
                     renderGrid(applyFilters());
                     filterState = 'applied';
+                    var appliedFilters = {};
+                    activeFilters.forEach(function(f) {
+                        var vals = getCheckedValues(f);
+                        if (vals.length) appliedFilters[f] = vals;
+                    });
                     window.dataLayer = window.dataLayer || [];
-                    window.dataLayer.push({event: 'filter_apply'});
+                    window.dataLayer.push({event: 'filter_apply', catalog_source: source, filters: appliedFilters, result_count: allItems.filter(function(item) { return activeFilters.every(function(f){ return matchFilter(item, f); }); }).length});
                 } else if (filterState === 'applied') {
                     section.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb){ cb.checked = false; });
                     section.querySelectorAll('.filter-dropdown').forEach(function(dd){ updateDropdownText(dd); });
