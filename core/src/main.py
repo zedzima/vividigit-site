@@ -1170,13 +1170,14 @@ def inject_related_blocks(parsed_pages: List[Dict], bi_map: Dict[str, Dict[str, 
         for section_type in section_order:
             items = relations.get(section_type, [])
             if items:
-                subtitle = subtitle_templates.get(section_type, "")
-                if subtitle and page_name:
-                    subtitle = subtitle.replace("{name}", page_name)
+                title_template = subtitle_templates.get(section_type, "")
+                if title_template and page_name:
+                    title = title_template.replace("{name}", page_name)
+                else:
+                    title = SECTION_TITLES.get(section_type, section_type.title())
                 sections.append({
                     "type": section_type,
-                    "title": SECTION_TITLES.get(section_type, section_type.title()),
-                    "subtitle": subtitle,
+                    "title": title,
                     "items": items,
                 })
 
