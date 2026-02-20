@@ -1,19 +1,31 @@
-# Catalog Mini Block Demo (Services source with dimension filtering)
+# Catalog Mini Block Demo
+# Universal entity showcase block. Fetches and displays entities of any type.
+#
+# Config options:
+#   source    = entity type: services, team, cases, blog, categories,
+#               solutions, industries, countries, languages
+#   dimension = optional filter dimension (e.g., "categories", "services", "industries")
+#   value     = filter value (slug matching the dimension)
+#   limit     = max items to display (default: all)
+#   title     = section heading
+#   subtitle  = optional description
+#   tag       = label above title
+
 [config]
 lang = "en"
 url = "/blocks/catalog-mini"
-menu = "Mini: Services"
+menu = "Catalog Mini"
 collection = "blocks"
 
 [meta]
-title = "Catalog Mini (Services) — Blocks Library"
-description = "Simplified catalog block with dimension filtering and optional item limit."
+title = "Catalog Mini — Blocks Library"
+description = "Universal entity showcase block. Shows any entity type with optional dimension filtering."
 
 [catalog-mini]
 source = "services"
 tag = "catalog-mini"
 title = "SEO Services"
-subtitle = "Filtered by category dimension, no toolbar or sidebar interaction"
+subtitle = "Filtered by category dimension, limited to 6 items"
 dimension = "categories"
 value = "seo"
 limit = 6

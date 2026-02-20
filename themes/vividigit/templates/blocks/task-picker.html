@@ -11,6 +11,15 @@
     </div>
     {% endif %}
 
+    {% if data.yearly_discount %}
+    <div class="pricing-toggle task-picker-billing-toggle" data-discount="{{ data.yearly_discount }}">
+        <button class="pricing-toggle-btn active" data-period="monthly" type="button">Monthly</button>
+        <button class="pricing-toggle-btn" data-period="yearly" type="button">
+            Yearly <span class="pricing-toggle-badge">-{{ data.yearly_discount }}%</span>
+        </button>
+    </div>
+    {% endif %}
+
     {% if data.tasks %}
     <div class="task-picker-items">
         {% for task in data.tasks %}
@@ -70,6 +79,7 @@
                             {% for tier in task.tiers %}
                             <button class="tier-btn {% if loop.first %}active{% endif %}"
                                     data-price="{{ tier.price }}"
+                                    data-monthly-price="{{ tier.price }}"
                                     data-tier-name="{{ tier.name }}"
                                     data-tier-label="{{ tier.label }}"
                                     {% if tier.price == 0 %}data-custom="true"{% endif %}
@@ -99,8 +109,63 @@
 
 <script>
 (function() {
+    var section = document.currentScript.previousElementSibling;
+    var billingToggle = section.querySelector('.task-picker-billing-toggle');
+    var currentPeriod = 'monthly';
+    var discount = billingToggle ? parseInt(billingToggle.dataset.discount) || 0 : 0;
+
+    function getEffectivePrice(btn) {
+        var monthly = parseInt(btn.dataset.monthlyPrice) || 0;
+        if (monthly === 0) return 0;
+        if (currentPeriod === 'yearly' && discount > 0) {
+            return Math.round(monthly * (100 - discount) / 100);
+        }
+        return monthly;
+    }
+
+    function updateAllPrices() {
+        section.querySelectorAll('.tier-btn').forEach(function(btn) {
+            var price = getEffectivePrice(btn);
+            btn.dataset.price = price;
+            var priceEl = btn.querySelector('.tier-btn-price');
+            if (!priceEl || btn.dataset.custom === 'true') return;
+            priceEl.textContent = '$' + price;
+        });
+        /* Re-dispatch tierChanged for all checked tasks so cart updates */
+        section.querySelectorAll('.task-select-cb:checked').forEach(function(cb) {
+            var item = cb.closest('.task-picker-item');
+            var activeTier = item.querySelector('.tier-btn.active');
+            if (activeTier) {
+                document.dispatchEvent(new CustomEvent('tierChanged', {
+                    detail: {
+                        taskSlug: item.querySelector('.tier-selector').dataset.taskSlug,
+                        tierName: activeTier.dataset.tierName,
+                        tierLabel: activeTier.dataset.tierLabel,
+                        price: parseInt(activeTier.dataset.price) || 0,
+                        custom: activeTier.dataset.custom === 'true'
+                    }
+                }));
+            }
+        });
+    }
+
+    /* Billing period toggle */
+    if (billingToggle) {
+        billingToggle.querySelectorAll('.pricing-toggle-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                billingToggle.querySelectorAll('.pricing-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                currentPeriod = btn.dataset.period;
+                updateAllPrices();
+                document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
+                    detail: { period: currentPeriod, discount: discount }
+                }));
+            });
+        });
+    }
+
     // Expand/collapse on toggle button or header click
-    document.querySelectorAll('.task-picker-head').forEach(function(header) {
+    section.querySelectorAll('.task-picker-head').forEach(function(header) {
         header.addEventListener('click', function(e) {
             if (e.target.closest('.task-picker-check')) return;
             header.closest('.task-picker-item').classList.toggle('expanded');
@@ -108,12 +173,12 @@
     });
 
     // Auto-expand door openers on load
-    document.querySelectorAll('.task-picker-opener').forEach(function(item) {
+    section.querySelectorAll('.task-picker-opener').forEach(function(item) {
         item.classList.add('expanded', 'selected');
     });
 
     // Tier selection within a task
-    document.querySelectorAll('.tier-selector').forEach(function(selector) {
+    section.querySelectorAll('.tier-selector').forEach(function(selector) {
         selector.querySelectorAll('.tier-btn').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -133,7 +198,7 @@
     });
 
     // Checkbox changes
-    document.querySelectorAll('.task-select-cb').forEach(function(cb) {
+    section.querySelectorAll('.task-select-cb').forEach(function(cb) {
         cb.addEventListener('change', function() {
             var item = cb.closest('.task-picker-item');
             item.classList.toggle('selected', cb.checked);
@@ -152,7 +217,6 @@
                 }
             }));
         });
-
     });
 })();
 </script>

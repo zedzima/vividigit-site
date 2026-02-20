@@ -205,8 +205,9 @@ const cart = {
             const lc = item.langCount || 0;
             const cc = item.countryCount || 0;
             const delivery = item.delivery === 'monthly' ? 'Monthly' : 'One-time';
+            const billing = item.billingPeriod === 'yearly' ? ' (billed yearly, -' + (item.billingDiscount || 0) + '%)' : '';
             const itemTotal = this.getItemTotal(item);
-            let line = '- ' + item.title + ' (' + item.tierName + ') — ' + delivery;
+            let line = '- ' + item.title + ' (' + item.tierName + ') — ' + delivery + billing;
             if (lc > 0) line += ', +' + lc + ' lang (×' + Math.round(SITE_CONFIG.langPct * 100) + '%)';
             if (cc > 0) line += ', +' + cc + ' countries (×' + Math.round(SITE_CONFIG.countryPct * 100) + '%)';
             line += ' — ' + (item.price > 0 ? '$' + itemTotal.toLocaleString() : 'Custom');
@@ -229,6 +230,7 @@ const cart = {
             const itemTotal = this.getItemTotal(item);
             lines.push(num + '. ' + item.title + ' (' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ')');
             lines.push('   Delivery: ' + delivery);
+            if (item.billingPeriod === 'yearly') lines.push('   Billing: Yearly (-' + (item.billingDiscount || 0) + '%)');
             const perLang = Math.round(item.price * SITE_CONFIG.langPct);
             const perCountry = Math.round(item.price * SITE_CONFIG.countryPct);
             if (lc > 0) lines.push('   Languages: +' + lc + ' × $' + perLang + ' (60%) = $' + (lc * perLang));
@@ -288,13 +290,14 @@ const cart = {
             const item = pageItems[slug];
             if (item.custom) hasCustom = true;
             subtotal += item.price;
+            var periodSuffix = item.billingPeriod === 'yearly' ? '/mo <span class="cart-billing-note">billed yearly</span>' : '';
             html += '<div class="cart-line-item">' +
                 '<div class="cart-item-info">' +
                     '<span class="cart-item-title">' + item.title + '</span>' +
                     '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + '</span>' +
                 '</div>' +
                 '<div class="cart-item-actions">' +
-                    '<span class="cart-item-price">' + (item.price > 0 ? '$' + item.price.toLocaleString() : 'Custom') + '</span>' +
+                    '<span class="cart-item-price">' + (item.price > 0 ? '$' + item.price.toLocaleString() + periodSuffix : 'Custom') + '</span>' +
                     '<button class="cart-item-remove" data-slug="' + slug + '" title="Remove">&times;</button>' +
                 '</div>' +
             '</div>';
@@ -338,6 +341,10 @@ const cart = {
 // Load saved cart from localStorage
 cart.load();
 
+// Billing period state (set by task-picker billing toggle)
+var _billingPeriod = 'monthly';
+var _billingDiscount = 0;
+
 // Listen for events from task-picker and pricing blocks
 document.addEventListener('taskToggled', function(e) {
     const d = e.detail;
@@ -353,11 +360,38 @@ document.addEventListener('taskToggled', function(e) {
     } else {
         cart.remove(d.slug);
     }
+    // Tag item with current billing period
+    if (d.selected !== false && cart.items[d.slug]) {
+        cart.items[d.slug].billingPeriod = _billingPeriod;
+        cart.items[d.slug].billingDiscount = _billingDiscount;
+        cart.save();
+    }
 });
 
 document.addEventListener('tierChanged', function(e) {
     const d = e.detail;
     cart.updateTier(d.taskSlug, d.tierName, d.tierLabel, d.price, d.custom);
+    // Keep billing period in sync
+    if (cart.items[d.taskSlug]) {
+        cart.items[d.taskSlug].billingPeriod = _billingPeriod;
+        cart.items[d.taskSlug].billingDiscount = _billingDiscount;
+        cart.save();
+    }
+});
+
+document.addEventListener('billingPeriodChanged', function(e) {
+    _billingPeriod = e.detail.period;
+    _billingDiscount = e.detail.discount;
+    // Update billing info on all current-page cart items
+    const currentPage = window.location.pathname;
+    for (const slug of Object.keys(cart.items)) {
+        if (cart.items[slug].page === currentPage) {
+            cart.items[slug].billingPeriod = _billingPeriod;
+            cart.items[slug].billingDiscount = _billingDiscount;
+        }
+    }
+    cart.save();
+    cart.renderSidebar();
 });
 
 // Initialize sidebar cart on pages with order-cart sidebar
