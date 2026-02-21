@@ -783,6 +783,34 @@ def export_cases_index(parsed_pages: List[Dict], output_dir: str,
     print(f"  Exported: {json_path} ({len(cases)} cases)")
 
 
+def normalize_blog_entities(parsed_pages: List[Dict]):
+    """
+    Normalize blog post data for graph integration.
+    Blog posts use flat YAML frontmatter. This copies:
+      - config.categories -> data.tags.categories (for tag-based graph pass)
+      - config.author -> data.relationships.author (for forward/reverse graph pass)
+    """
+    for page in parsed_pages:
+        if page.get("collection") != "blog" or page.get("is_listing"):
+            continue
+        data = page.get("data", {})
+        config = data.get("config", {})
+
+        # Inject tags.categories from config.categories
+        categories = config.get("categories", [])
+        if categories:
+            if "tags" not in data:
+                data["tags"] = {}
+            data["tags"]["categories"] = categories
+
+        # Inject relationships.author from config.author
+        author = config.get("author", "")
+        if author:
+            if "relationships" not in data:
+                data["relationships"] = {}
+            data["relationships"]["author"] = author
+
+
 ###############################################################################
 # Phase 2: Relationship Graph
 ###############################################################################
@@ -893,6 +921,7 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
         "services": "services", "team": "specialists", "cases": "cases",
         "solutions": "solutions", "categories": "categories",
         "industries": "industries", "countries": "countries", "languages": "languages",
+        "blog": "blog-posts",
     }
 
     # Relationship key -> target collection mapping
@@ -900,6 +929,7 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
         "specialists": "team", "cases": "cases", "languages": "languages",
         "countries": "countries", "services_used": "services", "tasks_used": None,
         "door_opener_task": None, "available_tasks": None, "tasks": None,
+        "author": "team",
     }
 
     def add_relation(source_slug, target_type, target_data):
@@ -1034,7 +1064,7 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
 # All possible section types. Each entity page can show any of these;
 # empty sections are automatically omitted by inject_related_blocks().
 ALL_SECTIONS = ["services", "specialists", "cases", "solutions", "categories",
-                "industries", "countries", "languages"]
+                "industries", "countries", "languages", "blog-posts"]
 
 # Section display order per entity type (all sections, minus self-type)
 RELATED_SECTION_ORDER = {
@@ -1046,6 +1076,7 @@ RELATED_SECTION_ORDER = {
     "industry":   [s for s in ALL_SECTIONS if s != "industries"],
     "country":    [s for s in ALL_SECTIONS if s != "countries"],
     "language":   [s for s in ALL_SECTIONS if s != "languages"],
+    "blog-post":  [s for s in ALL_SECTIONS if s != "blog-posts"],
 }
 
 SECTION_TITLES = {
@@ -1057,6 +1088,7 @@ SECTION_TITLES = {
     "industries": "Industries",
     "countries": "Countries",
     "languages": "Languages",
+    "blog-posts": "Blog Posts",
 }
 
 # Contextual subtitles: {parent_entity_type: {section_type: template}}
@@ -1070,6 +1102,7 @@ SECTION_SUBTITLES = {
         "industries": "Industries benefiting from {name}",
         "countries": "{name} available in these countries",
         "languages": "{name} available in these languages",
+        "blog-posts": "Articles about {name}",
     },
     "specialist": {
         "services": "Services by {name}",
@@ -1079,6 +1112,7 @@ SECTION_SUBTITLES = {
         "industries": "Industries {name} serves",
         "countries": "Countries {name} works in",
         "languages": "Languages {name} speaks",
+        "blog-posts": "Articles by {name}",
     },
     "case": {
         "services": "Services used in this project",
@@ -1088,6 +1122,7 @@ SECTION_SUBTITLES = {
         "industries": "Industry context for this case",
         "countries": "Geographic scope of this project",
         "languages": "Languages involved in this project",
+        "blog-posts": "Related articles",
     },
     "solution": {
         "services": "Core services behind {name}",
@@ -1097,6 +1132,7 @@ SECTION_SUBTITLES = {
         "industries": "Industries targeted by {name}",
         "countries": "{name} available in these countries",
         "languages": "{name} available in these languages",
+        "blog-posts": "Articles about {name}",
     },
     "category": {
         "services": "{name} services we offer",
@@ -1106,6 +1142,7 @@ SECTION_SUBTITLES = {
         "industries": "Industries we serve with {name}",
         "countries": "Countries where we offer {name}",
         "languages": "Languages for {name} delivery",
+        "blog-posts": "{name} articles",
     },
     "industry": {
         "services": "Services tailored for {name}",
@@ -1115,6 +1152,7 @@ SECTION_SUBTITLES = {
         "categories": "Disciplines we apply in {name}",
         "countries": "Countries we serve in {name}",
         "languages": "Languages supported for {name}",
+        "blog-posts": "Articles about {name}",
     },
     "country": {
         "services": "Services available in {name}",
@@ -1124,6 +1162,7 @@ SECTION_SUBTITLES = {
         "categories": "Service categories in {name}",
         "industries": "Industries we serve in {name}",
         "languages": "Languages we support in {name}",
+        "blog-posts": "Articles about {name}",
     },
     "language": {
         "services": "Services available in {name}",
@@ -1133,6 +1172,17 @@ SECTION_SUBTITLES = {
         "categories": "Service categories in {name}",
         "industries": "Industries we serve in {name}",
         "countries": "Countries for {name} services",
+        "blog-posts": "Articles in {name}",
+    },
+    "blog-post": {
+        "services": "Related services",
+        "specialists": "Written by",
+        "cases": "Related case studies",
+        "solutions": "Related solutions",
+        "categories": "Topics covered",
+        "industries": "Industry focus",
+        "countries": "Geographic focus",
+        "languages": "Available in",
     },
 }
 
