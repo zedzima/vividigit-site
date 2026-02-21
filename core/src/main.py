@@ -1469,6 +1469,9 @@ def load_tasks(tasks_dir: str, lang: str) -> Dict[str, Dict]:
                     "title": meta.get("title", "").split("—")[0].split("–")[0].strip(),
                     "description": meta.get("description", ""),
                     "delivery_type": config.get("delivery_type", "one-time"),
+                    "one_time": config.get("one_time", None),
+                    "monthly": config.get("monthly", None),
+                    "yearly": config.get("yearly", None),
                     "unit_type": sidebar.get("unit_type", ""),
                     "door_opener": config.get("door_opener", False),
                     "deliverables": deliverables,
@@ -1515,7 +1518,7 @@ def resolve_task_pickers(parsed_pages: List[Dict], tasks: Dict[str, Dict]):
                         if task_slug in tasks and not task.get("tiers"):
                             # Merge: inline overrides _tasks defaults
                             base = tasks[task_slug].copy()
-                            base.update({k: v for k, v in task.items() if v})
+                            base.update({k: v for k, v in task.items() if v is not None and v != ""})
                             enriched.append(base)
                         else:
                             enriched.append(task)

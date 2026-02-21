@@ -11,7 +11,12 @@
     </div>
     {% endif %}
 
-    {% if data.yearly_discount %}
+    {% set has_yearly = namespace(val=false) %}
+    {% for t in data.tasks %}
+        {% if t.yearly %}{% set has_yearly.val = true %}{% endif %}
+    {% endfor %}
+
+    {% if data.yearly_discount and has_yearly.val %}
     <div class="pricing-toggle task-picker-billing-toggle" data-discount="{{ data.yearly_discount }}">
         <button class="pricing-toggle-btn active" data-period="monthly" type="button">Monthly</button>
         <button class="pricing-toggle-btn" data-period="yearly" type="button">
@@ -23,6 +28,9 @@
     {% if data.tasks %}
     <div class="task-picker-items">
         {% for task in data.tasks %}
+        {% set ot = task.one_time if task.one_time is not none else (task.delivery_type != 'monthly') %}
+        {% set mo = task.monthly if task.monthly is not none else (task.delivery_type == 'monthly') %}
+        {% set yr = task.yearly if task.yearly is not none else false %}
         <div class="task-picker-item {% if task.door_opener %}task-picker-opener{% endif %}" data-task-slug="{{ task.slug }}">
 
             <!-- Task Header (always visible) -->
@@ -31,6 +39,9 @@
                     <input type="checkbox" class="task-select-cb"
                            data-slug="{{ task.slug }}"
                            data-title="{{ task.title }}"
+                           data-one-time="{{ ot | lower }}"
+                           data-monthly="{{ mo | lower }}"
+                           data-yearly="{{ yr | lower }}"
                            {% if task.door_opener %}checked{% endif %}>
                     <span class="task-check-box"></span>
                 </label>
@@ -41,8 +52,12 @@
                             {% if task.door_opener %}
                             <span class="task-badge badge-opener">Door Opener</span>
                             {% endif %}
-                            {% if task.delivery_type %}
-                            <span class="task-badge badge-delivery">{{ task.delivery_type }}</span>
+                            {% if ot and mo %}
+                            <span class="task-badge badge-delivery">one-time / monthly</span>
+                            {% elif mo %}
+                            <span class="task-badge badge-delivery">monthly</span>
+                            {% elif ot %}
+                            <span class="task-badge badge-delivery">one-time</span>
                             {% endif %}
                         </div>
                     </div>
@@ -118,9 +133,22 @@
         var monthly = parseInt(btn.dataset.monthlyPrice) || 0;
         if (monthly === 0) return 0;
         if (currentPeriod === 'yearly' && discount > 0) {
-            return Math.round(monthly * (100 - discount) / 100);
+            /* Only apply discount to tasks that support yearly billing */
+            var item = btn.closest('.task-picker-item');
+            var cb = item ? item.querySelector('.task-select-cb') : null;
+            if (cb && cb.dataset.yearly === 'true') {
+                return Math.round(monthly * (100 - discount) / 100);
+            }
         }
         return monthly;
+    }
+
+    function getBilling(cb) {
+        return {
+            oneTime: cb.dataset.oneTime === 'true',
+            monthly: cb.dataset.monthly === 'true',
+            yearly: cb.dataset.yearly === 'true'
+        };
     }
 
     function updateAllPrices() {
@@ -142,7 +170,8 @@
                         tierName: activeTier.dataset.tierName,
                         tierLabel: activeTier.dataset.tierLabel,
                         price: parseInt(activeTier.dataset.price) || 0,
-                        custom: activeTier.dataset.custom === 'true'
+                        custom: activeTier.dataset.custom === 'true',
+                        billing: getBilling(cb)
                     }
                 }));
             }
@@ -186,13 +215,16 @@
                 e.stopPropagation();
                 selector.querySelectorAll('.tier-btn').forEach(function(b) { b.classList.remove('active'); });
                 btn.classList.add('active');
+                var item = btn.closest('.task-picker-item');
+                var cb = item ? item.querySelector('.task-select-cb') : null;
                 document.dispatchEvent(new CustomEvent('tierChanged', {
                     detail: {
                         taskSlug: selector.dataset.taskSlug,
                         tierName: btn.dataset.tierName,
                         tierLabel: btn.dataset.tierLabel,
                         price: parseInt(btn.dataset.price) || 0,
-                        custom: btn.dataset.custom === 'true'
+                        custom: btn.dataset.custom === 'true',
+                        billing: cb ? getBilling(cb) : { oneTime: true, monthly: false, yearly: false }
                     }
                 }));
             });
@@ -215,7 +247,8 @@
                     tierName: activeTier ? activeTier.dataset.tierName : 'S',
                     tierLabel: activeTier ? activeTier.dataset.tierLabel : '',
                     price: activeTier ? (parseInt(activeTier.dataset.price) || 0) : 0,
-                    custom: activeTier ? activeTier.dataset.custom === 'true' : false
+                    custom: activeTier ? activeTier.dataset.custom === 'true' : false,
+                    billing: getBilling(cb)
                 }
             }));
         });

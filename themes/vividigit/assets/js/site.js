@@ -119,16 +119,18 @@ const cart = {
         updateCartBadge();
     },
 
-    add(slug, title, tierName, tierLabel, price, custom, delivery) {
+    add(slug, title, tierName, tierLabel, price, custom, delivery, billing) {
         const prev = this.items[slug];
+        const b = billing || { oneTime: true, monthly: false, yearly: false };
         this.items[slug] = {
             title, tierName, tierLabel, price, custom,
-            delivery: delivery || 'one-time',
+            delivery: delivery || (b.monthly ? 'monthly' : 'one-time'),
+            billing: b,
             page: window.location.pathname,
             langCount: prev ? prev.langCount || 0 : 0,
             countryCount: prev ? prev.countryCount || 0 : 0,
-            billingPeriod: _billingPeriod,
-            billingDiscount: _billingDiscount
+            billingPeriod: (b.yearly && _billingPeriod === 'yearly') ? 'yearly' : 'monthly',
+            billingDiscount: (b.yearly && _billingPeriod === 'yearly') ? _billingDiscount : 0
         };
         this.save();
         this.renderSidebar();
@@ -147,12 +149,13 @@ const cart = {
         this.renderSidebar();
     },
 
-    updateTier(slug, tierName, tierLabel, price, custom) {
+    updateTier(slug, tierName, tierLabel, price, custom, billing) {
         if (this.items[slug]) {
             this.items[slug].tierName = tierName;
             this.items[slug].tierLabel = tierLabel;
             this.items[slug].price = price;
             this.items[slug].custom = custom;
+            if (billing) this.items[slug].billing = billing;
             this.save();
             this.renderSidebar();
         }
@@ -365,41 +368,41 @@ var _billingDiscount = 0;
 // Listen for events from task-picker and pricing blocks
 document.addEventListener('taskToggled', function(e) {
     const d = e.detail;
+    const billing = d.billing || { oneTime: true, monthly: false, yearly: false };
+    const delivery = billing.monthly ? 'monthly' : 'one-time';
     if (d.replaceAll) {
         // Clear only current page items, keep others
         const currentPage = window.location.pathname;
         for (const slug of Object.keys(cart.items)) {
             if (cart.items[slug].page === currentPage) delete cart.items[slug];
         }
-        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom);
+        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, delivery, billing);
     } else if (d.selected) {
-        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom);
+        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, delivery, billing);
     } else {
         cart.remove(d.slug);
-    }
-    // Tag item with current billing period and re-render to show suffix
-    if (d.selected !== false && cart.items[d.slug]) {
-        cart.items[d.slug].billingPeriod = _billingPeriod;
-        cart.items[d.slug].billingDiscount = _billingDiscount;
-        cart.save();
-        cart.renderSidebar();
     }
 });
 
 document.addEventListener('tierChanged', function(e) {
     const d = e.detail;
-    cart.updateTier(d.taskSlug, d.tierName, d.tierLabel, d.price, d.custom);
+    cart.updateTier(d.taskSlug, d.tierName, d.tierLabel, d.price, d.custom, d.billing);
 });
 
 document.addEventListener('billingPeriodChanged', function(e) {
     _billingPeriod = e.detail.period;
     _billingDiscount = e.detail.discount;
-    // Update billing info on all current-page cart items
+    // Update billing info only on yearly-capable items from current page
     const currentPage = window.location.pathname;
     for (const slug of Object.keys(cart.items)) {
-        if (cart.items[slug].page === currentPage) {
-            cart.items[slug].billingPeriod = _billingPeriod;
-            cart.items[slug].billingDiscount = _billingDiscount;
+        const item = cart.items[slug];
+        if (item.page !== currentPage) continue;
+        if (_billingPeriod === 'yearly' && item.billing && item.billing.yearly) {
+            item.billingPeriod = 'yearly';
+            item.billingDiscount = _billingDiscount;
+        } else {
+            item.billingPeriod = 'monthly';
+            item.billingDiscount = 0;
         }
     }
     cart.save();
@@ -433,13 +436,21 @@ if (document.getElementById('cartItems')) {
         document.querySelectorAll('.task-select-cb:checked').forEach(function(cb) {
             const item = cb.closest('.task-picker-item');
             const activeTier = item?.querySelector('.tier-btn.active');
+            const billing = {
+                oneTime: cb.dataset.oneTime === 'true',
+                monthly: cb.dataset.monthly === 'true',
+                yearly: cb.dataset.yearly === 'true'
+            };
+            const delivery = billing.monthly ? 'monthly' : 'one-time';
             cart.add(
                 cb.dataset.slug,
                 cb.dataset.title,
                 activeTier ? activeTier.dataset.tierName : 'S',
                 activeTier ? activeTier.dataset.tierLabel : '',
                 activeTier ? (parseInt(activeTier.dataset.price) || 0) : 0,
-                activeTier ? activeTier.dataset.custom === 'true' : false
+                activeTier ? activeTier.dataset.custom === 'true' : false,
+                delivery,
+                billing
             );
         });
     }
@@ -732,10 +743,21 @@ updateCartBadge();
                     '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + basePriceStr + billingNote + '</span>' +
                 '</td>' +
                 '<td>' +
-                    '<div class="cart-delivery-tabs">' +
-                        '<button class="cart-delivery-opt' + (!isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="one-time">One-time</button>' +
-                        '<button class="cart-delivery-opt' + (isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>' +
-                    '</div>' +
+                    (function() {
+                        var b = item.billing || { oneTime: true, monthly: false, yearly: false };
+                        var hasOt = b.oneTime;
+                        var hasMo = b.monthly || b.yearly;
+                        if (hasOt && hasMo) {
+                            return '<div class="cart-delivery-tabs">' +
+                                '<button class="cart-delivery-opt' + (!isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="one-time">One-time</button>' +
+                                '<button class="cart-delivery-opt' + (isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>' +
+                            '</div>';
+                        } else if (hasMo) {
+                            return '<span class="cart-delivery-label">Monthly</span>';
+                        } else {
+                            return '<span class="cart-delivery-label">One-time</span>';
+                        }
+                    })() +
                 '</td>' +
                 '<td>' +
                     '<div class="cart-inline-counter">' +

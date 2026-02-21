@@ -126,7 +126,10 @@ See `docs/plans/2026-01-27-service-taxonomy-design.md` for full taxonomy.
 Service pages use a `task-picker` block to display available tasks inline. The right sidebar uses `type = "order-cart"` to show the live order summary.
 
 **Task attributes (data only, no standalone pages):**
-- `delivery_type`: one-time | monthly | both
+- `one_time`: boolean — available as one-time purchase
+- `monthly`: boolean — available as monthly subscription
+- `yearly`: boolean — available as yearly subscription (billed annually with discount)
+- `delivery_type`: one-time | monthly (legacy, used as fallback when billing flags absent)
 - `unit_model`: unit_type (pages, keywords, campaigns, etc.) + tiers (S/M/L/XL)
 - `door_opener`: boolean — recommended entry point for category
 
