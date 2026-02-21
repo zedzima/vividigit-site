@@ -119,3 +119,10 @@ Right sidebar showing live order summary, driven by task-picker events.
 - Services in this category: cards with task counts
 - Featured tasks: grid of key tasks
 - Right sidebar: "Start with [door opener task]" CTA
+
+### Blog Post Page
+- Hero: title + publication date + author (specialist link) + content type badge
+- Body: Markdown-rendered article content
+- Related entities: auto-generated links to categories, services, specialists
+- Card template: `blocks/cards/blog-post-card.html` for related-entities rendering
+- Right sidebar: default CTA + contact form (same as other listing items)

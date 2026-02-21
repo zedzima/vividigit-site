@@ -240,7 +240,7 @@ Collections (paths relative to `sites/vividigit/content/`):
 - `services/` — service offerings (with embedded task-picker blocks)
 - `team/` — specialist profiles
 - `cases/` — case studies
-- `blog/` — blog articles
+- `blog/` — blog posts (Markdown `.md` with flat YAML frontmatter; entity type `blog-post`)
 - `categories/` — category pillar pages
 - `industries/` — industry pillar pages
 - `countries/` — country pillar pages
@@ -274,7 +274,7 @@ sites/vividigit/content/
     blog/
         blog.en.toml                  # listing page
         how-ai-works/
-            how-ai-works.en.toml      # article
+            how-ai-works.en.md        # blog post (Markdown with YAML frontmatter)
 ```
 
 ---
@@ -291,7 +291,7 @@ The index contains:
 - relationships (references to other entities),
 - other filterable metadata.
 
-Entity indexes (services, team, cases, solutions) also include:
+Entity indexes (services, team, cases, solutions, blog) also include:
 - `facets` — per-item dict of connected entity slugs by type (from the bidirectional map),
 - `labels` — top-level dict mapping slugs to display names for all referenced entities.
 
@@ -324,7 +324,7 @@ JSON files are output to `public/data/<collection>.json`.
 
 ## Catalog filters are auto-generated from the entity graph.
 
-Entity listing pages (services, team, cases, solutions) receive faceted filters at build time.
+Entity listing pages (services, team, cases, solutions, blog) receive faceted filters at build time.
 Filters are injected into the `catalog` block's `data.filters` and rendered inside the catalog section (not the sidebar).
 
 Each filter dimension corresponds to a connected entity type from the bidirectional map.
@@ -371,6 +371,24 @@ Rules:
 - Relationships are stored in content but rendered by templates.
 - The generator uses relationships to build graph indexes for cross-entity linking.
 - If a relationship references a non-existent slug, the link is silently skipped.
+
+---
+
+## Blog posts use Markdown with flat YAML frontmatter.
+
+Blog posts (collection `blog`, entity type `blog-post`) are the only content type that uses
+Markdown (`.md`) files with YAML frontmatter instead of TOML.
+
+Frontmatter fields map to the standard system sections:
+- `author` → `data.relationships.author` (specialist slug)
+- `categories` → `data.tags.categories` (category entity slugs)
+- `type` field is set to `"blog-post"` for graph (`config.type`); original content type
+  (research/article/guide/etc.) is preserved in `config.content_type` for catalog display.
+
+During build, `normalize_blog_entities()` in `main.py` bridges flat frontmatter to
+graph-compatible `data.tags` and `data.relationships` before graph building.
+
+Card template: `blocks/cards/blog-post-card.html`.
 
 ---
 

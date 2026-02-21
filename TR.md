@@ -18,6 +18,8 @@
 5. Case study: `/cases/[slug]`
 6. Pillar pages: `/categories/[slug]`, `/industries/[slug]`, `/countries/[slug]`, `/languages/[slug]`
 7. Solution landing pages: `/solutions/[slug]`
+8. Blog listing: `/blog`
+9. Blog post: `/blog/[slug]` (Markdown with YAML frontmatter, entity type `blog-post`)
 
 ### Global UI
 - Two sidebars layout:
@@ -51,6 +53,8 @@
 - `/countries/[slug]` — Country pillar
 - `/languages/[slug]` — Language aggregator
 - `/solutions/[slug]` — Problem-focused landing page
+- `/blog` — Blog listing (catalog with static filters)
+- `/blog/[slug]` — Blog post (Markdown content, entity type `blog-post`)
 
 ---
 
@@ -341,7 +345,19 @@ Total = Σ(task tier prices) + (langCount × language_fee) + (countryCount × co
 - testimonial
 - relationships: {industry, country, language, services_used[], tasks_used[], specialists[]}
 
-### 8.5 Order Cart Options (Service Sidebar, `type = "order-cart"`)
+### 8.5 Blog Post (entity type `blog-post`)
+- slug
+- title
+- content_type (article, research, guide, news, etc.) — preserved in `config.content_type` for catalog display
+- date
+- author (specialist slug — via `data.relationships.author`)
+- categories (category entity slugs — via `data.tags.categories`)
+- body (Markdown content)
+- Content format: Markdown (`.md`) with flat YAML frontmatter (not TOML)
+- Normalization: `normalize_blog_entities()` in main.py bridges flat frontmatter to graph-compatible `data.tags` and `data.relationships`
+- Card template: `blocks/cards/blog-post-card.html`
+
+### 8.6 Order Cart Options (Service Sidebar, `type = "order-cart"`)
 - Selected tasks from task-picker block
 - Per-task: tier choice (S/M/L/XL)
 - Order-level: languages[] (+$200 each), countries[] (+$100 each)
@@ -387,7 +403,7 @@ Last updated: 2026-02-20
 - Local development mode (`--local` flag)
 
 **Content Graph:**
-- Full 28-edge bidirectional entity graph (8 primary entities)
+- Full bidirectional entity graph (9 primary entities including Blog Post)
 - Auto-generated `related-entities` blocks with contextual headings
 - Auto-generated faceted filters from entity graph (in catalog block, not sidebar)
 - JSON exports with `facets` and `labels` for client-side filtering

@@ -60,7 +60,7 @@ CMS/
 - `countries/` — Country pillars
 - `languages/` — Language aggregators
 - `solutions/` — Problem-focused landing pages
-- `blog/` — Blog articles
+- `blog/` — Blog posts (Markdown `.md` with YAML frontmatter; entity type `blog-post`)
 
 ## Block Naming
 
@@ -86,7 +86,7 @@ Templates use `.lstrip('/')` to strip leading slashes. For JavaScript, use `.rep
 
 The website is a **graph of connected entities**. Each entity is a node. Relationships are edges. Pages are visual representations of nodes. Internal links represent edges.
 
-### Entity Types (8 Primary)
+### Entity Types (9 Primary)
 
 | Entity | URL Pattern | Description |
 |--------|-------------|-------------|
@@ -98,6 +98,7 @@ The website is a **graph of connected entities**. Each entity is a node. Relatio
 | **Industry** | `/industries/{slug}/` | Vertical market |
 | **Country** | `/countries/{slug}/` | Geographic market |
 | **Language** | `/languages/{slug}/` | Linguistic capability |
+| **Blog Post** | `/blog/{slug}/` | Blog content (Markdown with YAML frontmatter, type `blog-post`) |
 
 > **Note:** Tasks still exist as data but do not have their own URL pattern or collection. They are embedded within service pages via the `task-picker` block.
 
@@ -164,11 +165,12 @@ Pillar pages use `collection` and listing pages use `is_listing = true`. See GUI
 
 ### Auto-Generated Filters
 
-Entity listings (services, team, cases, solutions) get faceted filters **auto-generated from the entity graph** at build time. Filters are rendered inside the `catalog` block (not sidebar) for mobile visibility. Each entity gets up to 7 filter dimensions matching connected entity types.
+Entity listings (services, team, cases, solutions) get faceted filters **auto-generated from the entity graph** at build time. Filters are rendered inside the `catalog` block (not sidebar) for mobile visibility. Each entity gets filter dimensions matching connected entity types.
 
 Dimension listings (categories, industries, countries, languages) have sort-only, no filters.
 
 Blog uses static `[[catalog.filters]]` in TOML (category, type, date with `match = "startsWith"`, author).
+Blog posts use flat YAML frontmatter; `normalize_blog_entities()` bridges `author` → `data.relationships` and `categories` → `data.tags` for graph compatibility. `config.type` = `"blog-post"` for graph; `config.content_type` preserves original type (research/article/guide) for catalog display.
 
 **All listing sidebars** show the default CTA + contact form (no `[sidebar]` in TOML).
 
