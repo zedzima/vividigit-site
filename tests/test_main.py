@@ -16,6 +16,7 @@ from main import (
     load_tasks,
     resolve_task_pickers,
     configure_paths,
+    normalize_blog_entities,
 )
 
 
@@ -435,3 +436,62 @@ def test_inject_related_blocks_skips_no_relations():
     ]
     inject_related_blocks(pages, {})
     assert len(pages[0]["data"]["blocks"]) == 1
+
+
+# --- Blog post entity tests ---
+
+def test_normalize_blog_entities_injects_tags_and_relationships():
+    """normalize_blog_entities copies config.categories -> tags and config.author -> relationships."""
+    pages = [
+        {"url": "/blog/test-post", "collection": "blog", "is_listing": False,
+         "data": {"config": {"slug": "test-post", "type": "blog-post", "url": "/blog/test-post",
+                              "author": "ivan", "categories": ["aeo"]},
+                  "meta": {"title": "Test Post", "description": "A test"},
+                  "blocks": []}},
+    ]
+    normalize_blog_entities(pages)
+    data = pages[0]["data"]
+    assert data["tags"]["categories"] == ["aeo"]
+    assert data["relationships"]["author"] == "ivan"
+
+
+def test_bidirectional_map_blog_post_via_tags():
+    """Blog post with categories tag creates reverse link on category page."""
+    pages = [
+        {"url": "/blog/test-post", "collection": "blog", "is_listing": False,
+         "data": {"config": {"slug": "test-post", "type": "blog-post", "url": "/blog/test-post",
+                              "menu": "Test Post"},
+                  "meta": {"title": "Test Post", "description": "A test"},
+                  "sidebar": {}, "relationships": {},
+                  "tags": {"categories": ["aeo"]}}},
+        {"url": "/categories/aeo", "collection": "categories", "is_listing": False,
+         "data": {"config": {"slug": "aeo", "type": "category", "url": "/categories/aeo"},
+                  "meta": {"title": "AEO", "description": "AEO category"},
+                  "sidebar": {}, "relationships": {}}},
+    ]
+    result, _ = build_bidirectional_map(pages)
+    # Category gets blog post via tag
+    assert any(e["slug"] == "test-post" for e in result["aeo"]["blog-posts"])
+    # Blog post gets category via tag
+    assert any(e["slug"] == "aeo" for e in result["test-post"]["categories"])
+
+
+def test_bidirectional_map_blog_post_author():
+    """Blog post with author relationship creates bidirectional link to specialist."""
+    pages = [
+        {"url": "/blog/test-post", "collection": "blog", "is_listing": False,
+         "data": {"config": {"slug": "test-post", "type": "blog-post", "url": "/blog/test-post",
+                              "menu": "Test Post"},
+                  "meta": {"title": "Test Post", "description": "A test"},
+                  "sidebar": {}, "relationships": {"author": "ivan"},
+                  "tags": {}}},
+        {"url": "/team/ivan", "collection": "team", "is_listing": False,
+         "data": {"config": {"slug": "ivan", "type": "specialist", "url": "/team/ivan"},
+                  "meta": {"title": "Ivan", "description": "Specialist"},
+                  "sidebar": {}, "relationships": {}}},
+    ]
+    result, _ = build_bidirectional_map(pages)
+    # Blog post has forward link to specialist
+    assert any(e["slug"] == "ivan" for e in result["test-post"]["specialists"])
+    # Specialist gets reverse link to blog post
+    assert any(e["slug"] == "test-post" for e in result["ivan"]["blog-posts"])
