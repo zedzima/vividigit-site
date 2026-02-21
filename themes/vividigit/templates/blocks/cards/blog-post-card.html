@@ -1,0 +1,26 @@
+{# Blog post card — for related-entities blocks #}
+{% set url = item.url | default('/blog/' ~ item.slug) %}
+{% set cats = item.tags.categories | default([]) %}
+{% set category_label_map = {'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO', 'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics', 'social-media': 'Social Media', 'email': 'Email', 'cro': 'CRO', 'video': 'Video', 'pr': 'PR', 'automation': 'Automation', 'marketplace-management': 'Marketplace', 'affiliate': 'Affiliate'} %}
+<a href="{{ url }}" class="blog-post-card">
+    <div class="blog-post-card-header">
+        {% for cat in cats[:2] %}
+        <span class="blog-post-category">{{ category_label_map.get(cat, cat|replace('-', ' ')|title) }}</span>
+        {% endfor %}
+        {% if item.config.date %}
+        <span class="blog-post-date">{{ item.config.date }}</span>
+        {% endif %}
+    </div>
+    <h3>{{ item.menu or item.title }}</h3>
+    <p>{{ item.description }}</p>
+    {% if item.config.type %}
+    <div class="blog-post-card-footer">
+        <span class="blog-post-type">{{ item.config.type | title }}</span>
+        <span class="blog-post-cta">Read →</span>
+    </div>
+    {% else %}
+    <div class="blog-post-card-footer">
+        <span class="blog-post-cta">Read →</span>
+    </div>
+    {% endif %}
+</a>
