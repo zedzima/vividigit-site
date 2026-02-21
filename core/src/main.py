@@ -316,7 +316,7 @@ def export_collection_json(collection_name: str, items: List[Dict], output_dir: 
             "featured": config.get("featured", False),
             "date": str(config.get("date", "")) if config.get("date") else "",
             "author": config.get("author", ""),
-            "type": config.get("type", ""),
+            "type": config.get("content_type", config.get("type", "")),
         })
 
     with open(json_path, "w", encoding="utf-8") as f:
@@ -795,6 +795,12 @@ def normalize_blog_entities(parsed_pages: List[Dict]):
             continue
         data = page.get("data", {})
         config = data.get("config", {})
+
+        # Set entity type for graph (preserve content_type for display/export)
+        content_type = config.get("type", "")
+        if content_type != "blog-post":
+            config["content_type"] = content_type
+            config["type"] = "blog-post"
 
         # Inject tags.categories from config.categories
         categories = config.get("categories", [])
