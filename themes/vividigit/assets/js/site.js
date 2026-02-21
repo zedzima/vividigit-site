@@ -288,18 +288,19 @@ const cart = {
         let subtotal = 0;
         let hasCustom = false;
 
+        var hasBillingYearly = false;
         for (const slug of keys) {
             const item = pageItems[slug];
             if (item.custom) hasCustom = true;
             subtotal += item.price;
-            var periodSuffix = item.billingPeriod === 'yearly' ? '/mo <span class="cart-billing-note">billed yearly</span>' : '';
+            if (item.billingPeriod === 'yearly') hasBillingYearly = true;
             html += '<div class="cart-line-item">' +
                 '<div class="cart-item-info">' +
                     '<span class="cart-item-title">' + item.title + '</span>' +
                     '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + '</span>' +
                 '</div>' +
                 '<div class="cart-item-actions">' +
-                    '<span class="cart-item-price">' + (item.price > 0 ? '$' + item.price.toLocaleString() + periodSuffix : 'Custom') + '</span>' +
+                    '<span class="cart-item-price">' + (item.price > 0 ? '$' + item.price.toLocaleString() : 'Custom') + '</span>' +
                     '<button class="cart-item-remove" data-slug="' + slug + '" title="Remove">&times;</button>' +
                 '</div>' +
             '</div>';
@@ -337,6 +338,20 @@ const cart = {
         if (subtotalEl) subtotalEl.textContent = (hasCustom ? 'From $' : '$') + subtotal.toLocaleString();
         if (feesEl) feesEl.textContent = modifierTotal > 0 ? '+$' + modifierTotal.toLocaleString() : '$0';
         if (totalEl) totalEl.textContent = (hasCustom ? 'From $' : '$') + grandTotal.toLocaleString();
+
+        // Show billing period badge in totals area
+        var billingBadge = document.getElementById('cartBillingBadge');
+        if (hasBillingYearly) {
+            if (!billingBadge && totalsEl) {
+                billingBadge = document.createElement('div');
+                billingBadge.id = 'cartBillingBadge';
+                billingBadge.className = 'cart-billing-badge';
+                totalsEl.insertBefore(billingBadge, totalsEl.firstChild);
+            }
+            if (billingBadge) billingBadge.textContent = 'Yearly billing — ' + (_billingDiscount || 20) + '% off';
+        } else if (billingBadge) {
+            billingBadge.remove();
+        }
     }
 };
 
