@@ -392,18 +392,12 @@ document.addEventListener('tierChanged', function(e) {
 document.addEventListener('billingPeriodChanged', function(e) {
     _billingPeriod = e.detail.period;
     _billingDiscount = e.detail.discount;
-    // Update billing info only on yearly-capable items from current page
+    // Update billing info on all current-page cart items
     const currentPage = window.location.pathname;
     for (const slug of Object.keys(cart.items)) {
-        const item = cart.items[slug];
-        if (item.page !== currentPage) continue;
-        if (_billingPeriod === 'yearly' && item.billing && item.billing.yearly) {
-            item.billingPeriod = 'yearly';
-            item.billingDiscount = _billingDiscount;
-        } else {
-            item.billingPeriod = 'monthly';
-            item.billingDiscount = 0;
-        }
+        if (cart.items[slug].page !== currentPage) continue;
+        cart.items[slug].billingPeriod = _billingPeriod;
+        cart.items[slug].billingDiscount = _billingDiscount;
     }
     cart.save();
     cart.renderSidebar();
@@ -743,21 +737,10 @@ updateCartBadge();
                     '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + basePriceStr + billingNote + '</span>' +
                 '</td>' +
                 '<td>' +
-                    (function() {
-                        var b = item.billing || { oneTime: true, monthly: false, yearly: false };
-                        var hasOt = b.oneTime;
-                        var hasMo = b.monthly || b.yearly;
-                        if (hasOt && hasMo) {
-                            return '<div class="cart-delivery-tabs">' +
-                                '<button class="cart-delivery-opt' + (!isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="one-time">One-time</button>' +
-                                '<button class="cart-delivery-opt' + (isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>' +
-                            '</div>';
-                        } else if (hasMo) {
-                            return '<span class="cart-delivery-label">Monthly</span>';
-                        } else {
-                            return '<span class="cart-delivery-label">One-time</span>';
-                        }
-                    })() +
+                    '<div class="cart-delivery-tabs">' +
+                        '<button class="cart-delivery-opt' + (!isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="one-time">One-time</button>' +
+                        '<button class="cart-delivery-opt' + (isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>' +
+                    '</div>' +
                 '</td>' +
                 '<td>' +
                     '<div class="cart-inline-counter">' +

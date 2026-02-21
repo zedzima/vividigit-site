@@ -11,12 +11,7 @@
     </div>
     {% endif %}
 
-    {% set has_yearly = namespace(val=false) %}
-    {% for t in data.tasks %}
-        {% if t.yearly %}{% set has_yearly.val = true %}{% endif %}
-    {% endfor %}
-
-    {% if data.yearly_discount and has_yearly.val %}
+    {% if data.yearly_discount %}
     <div class="pricing-toggle task-picker-billing-toggle" data-discount="{{ data.yearly_discount }}">
         <button class="pricing-toggle-btn active" data-period="monthly" type="button">Monthly</button>
         <button class="pricing-toggle-btn" data-period="yearly" type="button">
