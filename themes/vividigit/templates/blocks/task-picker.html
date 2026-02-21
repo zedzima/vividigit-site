@@ -156,10 +156,12 @@
                 billingToggle.querySelectorAll('.pricing-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
                 btn.classList.add('active');
                 currentPeriod = btn.dataset.period;
-                updateAllPrices();
+                /* Dispatch billingPeriodChanged BEFORE updateAllPrices so site.js
+                   _billingPeriod is set before tierChanged events fire */
                 document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
                     detail: { period: currentPeriod, discount: discount }
                 }));
+                updateAllPrices();
             });
         });
     }

@@ -126,7 +126,9 @@ const cart = {
             delivery: delivery || 'one-time',
             page: window.location.pathname,
             langCount: prev ? prev.langCount || 0 : 0,
-            countryCount: prev ? prev.countryCount || 0 : 0
+            countryCount: prev ? prev.countryCount || 0 : 0,
+            billingPeriod: _billingPeriod,
+            billingDiscount: _billingDiscount
         };
         this.save();
         this.renderSidebar();
@@ -360,23 +362,18 @@ document.addEventListener('taskToggled', function(e) {
     } else {
         cart.remove(d.slug);
     }
-    // Tag item with current billing period
+    // Tag item with current billing period and re-render to show suffix
     if (d.selected !== false && cart.items[d.slug]) {
         cart.items[d.slug].billingPeriod = _billingPeriod;
         cart.items[d.slug].billingDiscount = _billingDiscount;
         cart.save();
+        cart.renderSidebar();
     }
 });
 
 document.addEventListener('tierChanged', function(e) {
     const d = e.detail;
     cart.updateTier(d.taskSlug, d.tierName, d.tierLabel, d.price, d.custom);
-    // Keep billing period in sync
-    if (cart.items[d.taskSlug]) {
-        cart.items[d.taskSlug].billingPeriod = _billingPeriod;
-        cart.items[d.taskSlug].billingDiscount = _billingDiscount;
-        cart.save();
-    }
 });
 
 document.addEventListener('billingPeriodChanged', function(e) {
@@ -713,10 +710,11 @@ updateCartBadge();
             const perCountry = Math.round(item.price * SITE_CONFIG.countryPct);
 
             var basePriceStr = item.price > 0 ? '$' + item.price.toLocaleString() : 'Custom';
+            var billingNote = item.billingPeriod === 'yearly' ? ' <span class="cart-billing-note">(billed yearly, -' + (item.billingDiscount || 0) + '%)</span>' : '';
             html += '<tr>' +
                 '<td>' +
                     '<span class="cart-item-name">' + item.title + '</span>' +
-                    '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + basePriceStr + '</span>' +
+                    '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + basePriceStr + billingNote + '</span>' +
                 '</td>' +
                 '<td>' +
                     '<div class="cart-delivery-tabs">' +
