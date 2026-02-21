@@ -1758,6 +1758,9 @@ def main(lang: str = DEFAULT_LANG, local: bool = False, site_name: str = "vividi
         for err in block_errors:
             print(f"  ✗ {err}")
 
+    # Normalize blog posts for graph integration (before graph building)
+    normalize_blog_entities(parsed_pages)
+
     # Build relationship graph (Phase 2)
     print("\nBuilding relationship graph...")
     graph = build_relationship_graph(parsed_pages)
