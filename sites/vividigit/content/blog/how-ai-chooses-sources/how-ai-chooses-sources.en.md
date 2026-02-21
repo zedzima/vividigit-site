@@ -3,9 +3,11 @@ title: How AI Chooses Which Websites to Cite
 slug: how-ai-chooses-sources
 url: /blog/how-ai-chooses-sources
 date: 2025-01-06
-author: V\V\D\G\T Team
+author: ivan-petrov
 type: research
 category: AI Visibility
+categories:
+  - aeo
 tags:
   - AI
   - LLM Citations
