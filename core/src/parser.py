@@ -83,7 +83,7 @@ def process_markdown_content(frontmatter: Dict[str, Any], body: str) -> Dict[str
     # If no nested config, treat top-level as config
     if not config_data:
         flat_fields = ["title", "slug", "url", "date", "author", "tags",
-                       "category", "type", "lang", "featured", "draft", "menu"]
+                       "category", "categories", "type", "lang", "featured", "draft", "menu"]
         for field in flat_fields:
             if field in frontmatter:
                 config_data[field] = frontmatter[field]
@@ -135,7 +135,7 @@ def process_markdown_content(frontmatter: Dict[str, Any], body: str) -> Dict[str
 
     # System fields to skip
     SYSTEM_FIELDS = {"config", "meta", "translations", "title", "slug", "url",
-                     "date", "author", "tags", "category", "lang", "featured",
+                     "date", "author", "tags", "category", "categories", "lang", "featured",
                      "draft", "menu", "description", "excerpt"}
 
     for key, value in frontmatter.items():
