@@ -165,10 +165,10 @@ Filters are **auto-generated from the entity graph** — no hardcoding in TOML.
 Each card shows:
 - Service name
 - 1-line value proposition
-- Category tag
-- Number of available tasks
+- Category tags
+- Delivery badge (if configured)
+- Compact counters: industries, countries, languages, tasks
 - Door opener price: "From $X"
-- Rating + reviews count (mock)
 - CTA button: "View service"
 
 ---
@@ -183,11 +183,11 @@ Each card shows:
 
 ### 6.2 Content Blocks (Main Content)
 1. Hero (H1 + value proposition + primary CTA)
-2. Door opener callout (featured entry-point task with price)
-3. Available tasks grid (with tier/price summary for each)
-4. How it works (process steps)
-5. Case highlights
-6. Specialists who deliver this service
+2. Logos (client/partner trust badges)
+3. Features — "What You Get" section
+4. Task-picker (interactive task selection with tiers and pricing)
+5. Process steps (how it works)
+6. Testimonials (social proof)
 7. FAQ (include pricing transparency notes)
 8. Final CTA section
 
@@ -245,18 +245,20 @@ type = "order-cart"                         # Sidebar type identifier
 button_label = "Request Quote"              # Primary CTA text
 button_url = "contact/?service=technical-seo"  # CTA target
 note = "Estimated pricing. Final quote after brief."
-language_fee = 200                          # Per-language modifier cost
-country_fee = 100                           # Per-country modifier cost
 extra_languages = true                      # Show language counter
 extra_countries = true                      # Show country counter
 ```
+
+Modifier pricing uses percentage multipliers from `site.js`:
+- language modifier: `+60%` per additional language
+- country modifier: `+40%` per additional country
 
 **Cart contents:**
 - Selected tasks with chosen tiers and prices (line items)
 - Remove button (×) per item — unchecks the task in task-picker
 - Order-level modifiers (if enabled):
-  - Languages: +/− counter, fee per additional language
-  - Countries: +/− counter, fee per additional country
+  - Languages: +/− counter, percentage uplift per additional language
+  - Countries: +/− counter, percentage uplift per additional country
 - Price breakdown: Subtotal | Modifier fees | Estimated Total
 - Primary CTA button
 
@@ -289,7 +291,8 @@ cart.render()                                              → rebuild cart HTML
 
 **Pricing formula:**
 ```
-Total = Σ(task tier prices) + (langCount × language_fee) + (countryCount × country_fee)
+Per-item total = base_price + (base_price × 0.6 × langCount) + (base_price × 0.4 × countryCount)
+Order total = Σ(per-item totals)
 ```
 
 - If any task has `price = 0` (custom), total shows "From $X" prefix
@@ -306,9 +309,13 @@ Total = Σ(task tier prices) + (langCount × language_fee) + (countryCount × co
 - tags: {categories[], industries[], countries[], languages[]}
 - relationships: {available_tasks[], door_opener_task, specialists[], cases[]}
 - fromPrice (door opener task price)
-- rating
-- reviewsCount
-- ordersCount
+- specialist_count
+- industry_count
+- country_count
+- language_count
+- task_count
+- case_count
+- article_count
 
 ### 8.2 Task (atomic product)
 - slug
@@ -332,8 +339,9 @@ Total = Σ(task tier prices) + (langCount × language_fee) + (countryCount × co
 - photo
 - bio
 - projects_count
-- rating
-- hourly_rate
+- case_count
+- article_count
+- industries[]
 - relationships: {tasks[], languages[], countries[], cases[]}
 
 ### 8.4 Case
@@ -382,7 +390,7 @@ Total = Σ(task tier prices) + (langCount × language_fee) + (countryCount × co
 
 ## 10) Implementation Status
 
-Last updated: 2026-02-20
+Last updated: 2026-02-21
 
 ### Completed
 
@@ -408,6 +416,8 @@ Last updated: 2026-02-20
 - Auto-generated faceted filters from entity graph (in catalog block, not sidebar)
 - JSON exports with `facets` and `labels` for client-side filtering
 - Graph export (`graph.json`) for visualization
+- Unified specialist card renderer reused in catalog and related blocks
+- Compact card metrics implemented for services, categories, solutions, countries, and languages
 
 **Faceted Architecture:**
 - Tag-based and relationship-based entity connections
@@ -419,9 +429,9 @@ Last updated: 2026-02-20
 - Home page (`/`)
 - Blocks library (`/blocks/*`) — demos for all block types
 - 2 service pages: technical-seo, ai-optimisation (with task-picker + order-cart)
+- 2 solution pages: seo-ecommerce, ai-visibility
 - 1 specialist profile: ivan-petrov
 - 1 case study: ecommerce-migration-2025
-- 1 solution: seo-ecommerce
 - 14 category pages, 4 industry pages, 5 country pages, 7 language pages
 - Blog section with article support and 4-filter catalog (category, type, date, author)
 
