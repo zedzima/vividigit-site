@@ -268,11 +268,13 @@ type = "order-cart"
 button_label = "Request Quote"
 button_url = "contact/?service=technical-seo"
 note = "Estimated pricing. Final quote after brief."
-language_fee = 200
-country_fee = 100
 extra_languages = true
 extra_countries = true
 ```
+
+Modifier pricing is percentage-based in `themes/vividigit/assets/js/site.js`:
+- additional language: `+60%` of base item price
+- additional country: `+40%` of base item price
 
 **How it works:**
 - `door_opener = true` tasks are pre-checked and appear in the cart on page load
@@ -389,18 +391,30 @@ url = "industries/ecommerce"
 
 Build generates JSON indexes for client-side filtering and cross-entity navigation:
 
-- `public/data/services-index.json` — services with facets and labels
-- `public/data/team.json` — specialists with facets and labels
-- `public/data/cases.json` — case studies with facets and labels
-- `public/data/solutions-index.json` — solutions with facets and labels
-- `public/data/categories-index.json` — categories with service counts
-- `public/data/industries-index.json` — industries with service counts
-- `public/data/countries-index.json` — countries with service counts
-- `public/data/languages-index.json` — languages with service counts
-- `public/data/blog.json` — blog posts with category, type, tags, date, author
+- `public/data/services-index.json` — services + card counters (`specialist_count`, `industry_count`, `country_count`, `language_count`, `task_count`, `case_count`, `article_count`) + `facets`/`labels`
+- `public/data/team.json` — specialists + card fields (`projects`, `languages`, `countries`, `industries`, `case_count`, `article_count`) + `facets`/`labels`
+- `public/data/cases.json` — case studies + computed `primary_result` and `timeline` + `facets`/`labels`
+- `public/data/solutions-index.json` — solutions + `starting_price`, `specialist_count`, `case_count` + `facets`/`labels`
+- `public/data/categories-index.json` — categories + `service_count`, `specialist_count`, `industry_count`, `country_count`, `language_count`
+- `public/data/industries-index.json` — industries with `service_count`
+- `public/data/countries-index.json` — countries with `service_count`, `population_total`, `official_languages_count`
+- `public/data/languages-index.json` — languages with `service_count`, `native_speakers_l1`, `official_countries_count`
+- `public/data/blog.json` — blog posts (`category`, `type`, `date`, `author`; `type` uses `config.content_type` for blog-posts)
 - `public/data/graph.json` — full entity graph (nodes + edges) for visualization
 
 Entity indexes include `facets` (per-item connected slugs) and `labels` (slug-to-name map) for client-side filtering.
+
+### Unified Card Rules (Current)
+
+- Specialist card is unified and rendered from one source: `themes/vividigit/assets/js/cards.js` (`renderSpecialistCard`).
+- `catalog`, `catalog-mini`, and `related-entities` use the same specialist card markup.
+- Specialist cards do not render rating/hourly-rate (legacy fields removed from card UI).
+- Service and solution cards intentionally do not use cover images.
+- Service cards use compact counters (industries, countries, languages, tasks) instead of long tag rows.
+- Category cards include `specialist_count` in addition to service/dimension counters.
+- Country/language cards show market facts:
+  - language: `native_speakers_l1`, `official_countries_count`
+  - country: `population_total`, `official_languages_count`
 
 ### Auto-Generated Catalog Filters
 

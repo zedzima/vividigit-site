@@ -1,13 +1,22 @@
 {# Service card — matches catalog.html renderServiceCard() #}
 {% set cats = item.tags.categories | default([]) %}
+{% set industries = item.tags.industries | default([]) %}
 {% set countries = item.tags.countries | default([]) %}
 {% set langs = item.tags.languages | default([]) %}
 {% set rels = item.relationships | default({}) %}
-{% set spec_count = rels.specialists | default([]) | length %}
+{% set industry_count = industries | length %}
+{% set country_count = countries | length %}
+{% set language_count = langs | length %}
+{% set task_count = rels.available_tasks | default([], true) | length %}
+{% if not task_count %}
+    {% set task_count = rels.tasks | default([], true) | length %}
+{% endif %}
+{% if not task_count and rels.door_opener_task %}
+    {% set task_count = 1 %}
+{% endif %}
 {% set url = item.url | default('/services/' ~ item.slug) %}
+{% set delivery = item.config.delivery | default('') %}
 {% set category_label_map = {'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO', 'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics', 'social-media': 'Social Media', 'email': 'Email', 'cro': 'CRO', 'video': 'Video', 'pr': 'PR', 'automation': 'Automation', 'marketplace-management': 'Marketplace', 'affiliate': 'Affiliate'} %}
-{% set country_label_map = {'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain'} %}
-{% set lang_code_map = {'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT'} %}
 <a href="{{ url }}" class="service-card">
     <div class="service-card-header">
         <div class="service-categories">
@@ -15,32 +24,26 @@
             <span class="service-category">{{ category_label_map.get(cat, cat|replace('-', ' ')|title) }}</span>
             {% endfor %}
         </div>
-        {% if spec_count %}
-        <span class="service-spec-count">{{ spec_count }} spec.</span>
+        {% if delivery %}
+        <span class="service-spec-count">{{ delivery|replace('-', ' ')|title }}</span>
         {% endif %}
     </div>
     <h3>{{ item.menu or item.title }}</h3>
     <p>{{ item.description }}</p>
-    {% if countries %}
-    <div class="service-countries">
-        {% for c in countries %}
-        <span class="service-country">{{ country_label_map.get(c, c|title) }}</span>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% if langs %}
-    <div class="service-languages">
-        {% for l in langs %}
-        <span class="service-lang">{{ lang_code_map.get(l, l[:2]|upper) }}</span>
-        {% endfor %}
+    {% if industry_count or country_count or language_count or task_count %}
+    <div class="service-card-meta">
+        {% if industry_count %}<span class="service-metric">{{ industry_count }} industr{% if industry_count == 1 %}y{% else %}ies{% endif %}</span>{% endif %}
+        {% if country_count %}<span class="service-metric">{{ country_count }} countr{% if country_count == 1 %}y{% else %}ies{% endif %}</span>{% endif %}
+        {% if language_count %}<span class="service-metric">{{ language_count }} language{% if language_count != 1 %}s{% endif %}</span>{% endif %}
+        {% if task_count %}<span class="service-metric">{{ task_count }} task{% if task_count != 1 %}s{% endif %}</span>{% endif %}
     </div>
     {% endif %}
     <div class="service-card-footer">
         {% if item.config.from_price or item.config.price %}
-        <span class="service-price">From ${{ item.config.from_price or item.config.price }}</span>
+        <span class="service-price">From ${{ '{:,.0f}'.format((item.config.from_price or item.config.price)|float) }}</span>
         {% else %}
         <span></span>
         {% endif %}
-        <span class="service-cta">View →</span>
+        <span class="service-cta">View Service →</span>
     </div>
 </a>

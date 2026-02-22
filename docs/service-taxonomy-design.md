@@ -50,11 +50,11 @@ Task Base Price × Unit Tier × Delivery Type
 
 ### Order Modifiers (apply to entire order)
 ```
-Subtotal (sum of Tasks) + Language fees + Country fees = Total
+Subtotal (sum of Tasks) + Language modifiers + Country modifiers = Total
 ```
 
-**Language modifier:** +$200 per additional language
-**Country modifier:** +$100 per additional country
+**Language modifier:** +60% of item base price per additional language
+**Country modifier:** +40% of item base price per additional country
 
 ---
 

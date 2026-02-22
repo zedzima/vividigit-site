@@ -35,7 +35,8 @@
             {% endif %}
         </div>
 
-        <div class="pricing-cta-card card">
+        <div class="pricing-cta-card card"
+             data-one-time="{{ data.one_time | default(true) | lower }}" data-monthly="{{ data.monthly | default(false) | lower }}" data-yearly="{{ data.yearly | default(false) | lower }}">
             {% if data.badge %}
             <span class="pricing-badge">{{ data.badge }}</span>
             {% endif %}
@@ -97,7 +98,11 @@
 
     <div class="pricing-packages-grid" data-service="{{ data.title | default('') }}" data-discount="{{ data.yearly_discount | default(20) }}">
         {% for pkg in data.packages %}
-        <div class="pricing-package {% if pkg.highlighted %}pricing-package-highlighted{% endif %}">
+        {% set pkg_ot = pkg.one_time if pkg.one_time is defined else data.one_time | default(false) %}
+        {% set pkg_mo = pkg.monthly if pkg.monthly is defined else data.monthly | default(true) %}
+        {% set pkg_yr = pkg.yearly if pkg.yearly is defined else data.yearly | default(false) %}
+        <div class="pricing-package {% if pkg.highlighted %}pricing-package-highlighted{% endif %}"
+             data-one-time="{{ pkg_ot | lower }}" data-monthly="{{ pkg_mo | lower }}" data-yearly="{{ pkg_yr | lower }}">
             {% if pkg.badge %}
             <span class="package-badge">{{ pkg.badge }}</span>
             {% endif %}
@@ -147,6 +152,15 @@
 
     {% elif pricing_style == 'simple' %}
     <!-- Style 3: Simple - split layout -->
+    {% if data.yearly_discount %}
+    <div class="pricing-toggle pricing-simple-toggle" data-discount="{{ data.yearly_discount }}">
+        <button class="pricing-toggle-btn active" data-period="monthly">Monthly</button>
+        <button class="pricing-toggle-btn" data-period="yearly">
+            Yearly
+            <span class="pricing-toggle-badge">-{{ data.yearly_discount }}%</span>
+        </button>
+    </div>
+    {% endif %}
     <div class="pricing-simple-grid">
         <div class="pricing-simple-left">
             <div class="pricing-simple-info">
@@ -157,19 +171,20 @@
             </div>
         </div>
         <div class="pricing-simple-right">
-            <div class="pricing-simple-card card">
+            <div class="pricing-simple-card card"
+                 data-one-time="{{ data.one_time | default(false) | lower }}" data-monthly="{{ data.monthly | default(true) | lower }}" data-yearly="{{ data.yearly | default(false) | lower }}">
                 <div class="pricing-simple-price">
                     {% if data.price_prefix %}
                     <span class="price-label">{{ data.price_prefix }}</span>
                     {% endif %}
-                    <span class="price-current">${{ data.price }}</span>
+                    <span class="price-current" data-monthly="{{ data.price }}">${{ data.price }}</span>
                     {% if data.price_period %}
                     <span class="price-period">{{ data.price_period }}</span>
                     {% endif %}
                 </div>
 
                 <div class="pricing-simple-actions">
-                    <a href="{{ (data.button_url | default('#')).lstrip('/') }}" class="btn btn-primary btn-full">
+                    <a href="{{ (data.button_url | default('#')).lstrip('/') }}" class="btn btn-primary btn-full pricing-simple-cta">
                         {{ data.button_label | default('Get Started') }}
                     </a>
                     {% if data.button_secondary_label %}
@@ -195,12 +210,44 @@
     document.querySelectorAll('.pricing-cta-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             if (window.innerWidth < 2200) {
-                const actionToggle = document.getElementById('actionToggle');
+                const actionToggle = document.getElementById('btnAction');
                 if (actionToggle && btn.getAttribute('href') === '#sidebar') {
                     e.preventDefault();
                     actionToggle.click();
                 }
             }
+        });
+    });
+
+    // Monthly/Yearly toggle for simple pricing
+    document.querySelectorAll('.pricing-simple-toggle').forEach(toggle => {
+        const buttons = toggle.querySelectorAll('.pricing-toggle-btn');
+        const discount = parseInt(toggle.dataset.discount) || 20;
+        const section = toggle.closest('.pricing-block');
+        const priceEl = section ? section.querySelector('.price-current') : null;
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const isYearly = btn.dataset.period === 'yearly';
+
+                /* Dispatch billingPeriodChanged so site.js updates sidebar/cart */
+                document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
+                    detail: { period: btn.dataset.period, discount: discount }
+                }));
+
+                if (priceEl && priceEl.dataset.monthly) {
+                    const monthlyPrice = parseInt(priceEl.dataset.monthly);
+                    if (isYearly) {
+                        const yearlyMonthly = Math.round(monthlyPrice * (100 - discount) / 100);
+                        priceEl.textContent = '$' + yearlyMonthly;
+                    } else {
+                        priceEl.textContent = '$' + monthlyPrice;
+                    }
+                }
+            });
         });
     });
 
@@ -219,6 +266,11 @@
                 btn.classList.add('active');
 
                 const isYearly = btn.dataset.period === 'yearly';
+
+                /* Dispatch billingPeriodChanged so site.js updates sidebar/cart */
+                document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
+                    detail: { period: btn.dataset.period, discount: discount }
+                }));
 
                 packages.forEach(pkg => {
                     const priceEl = pkg.querySelector('.price-current');
@@ -242,6 +294,10 @@
                         }
                     }
                 });
+
+                /* Re-trigger selected package so cart gets the updated price */
+                var selectedBtn = grid.querySelector('.pricing-package-selected .btn');
+                if (selectedBtn) selectedBtn.click();
             });
         });
     });

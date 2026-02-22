@@ -44,9 +44,7 @@ button_label = "Request Quote"
 button_url = "contact?service=ai-optimisation"
 note = "Estimated pricing. Final quote after brief."
 extra_languages = true
-language_fee = 200
 extra_countries = true
-country_fee = 100
 
 [links]
 service = "ai-optimisation"
@@ -701,8 +699,6 @@ type = "order-cart"
 button_label = "Request Quote"
 button_url = "contact/?service=ai-optimisation"
 note = "Estimated pricing. Final quote after brief."
-language_fee = 200
-country_fee = 100
 extra_languages = true
 extra_countries = true
 ```

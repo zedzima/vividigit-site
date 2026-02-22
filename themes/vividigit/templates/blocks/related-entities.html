@@ -18,7 +18,7 @@
             {% if card_type == 'service' %}
                 {% include 'blocks/cards/service-card.html' %}
             {% elif card_type == 'specialist' %}
-                {% include 'blocks/cards/specialist-card.html' %}
+                <div class="js-specialist-card" data-specialist='{{ item | tojson | forceescape }}'></div>
             {% elif card_type == 'case' %}
                 {% include 'blocks/cards/case-card.html' %}
             {% elif card_type == 'solution' %}
@@ -35,4 +35,21 @@
     </section>
     {% endfor %}
 </div>
+<script>
+(function() {
+    var root = document.currentScript.previousElementSibling;
+    if (!window.CMSCards || typeof window.CMSCards.renderSpecialistCard !== 'function') return;
+
+    root.querySelectorAll('.js-specialist-card').forEach(function(node) {
+        var raw = node.getAttribute('data-specialist');
+        if (!raw) return;
+        try {
+            var specialist = JSON.parse(raw);
+            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist);
+        } catch (e) {
+            /* Keep placeholder unchanged if parsing fails */
+        }
+    });
+})();
+</script>
 {% endif %}

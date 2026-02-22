@@ -1,6 +1,10 @@
 # Graph-Based Related Entities — Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+>
+> **Historical note (2026-02-22):** This plan file is kept as an implementation log. Current code diverged in two places:
+> - specialist cards are rendered via shared JS (`themes/vividigit/assets/js/cards.js`) instead of `blocks/cards/specialist-card.html`
+> - legacy specialist card fields (`rating`, `hourly_rate`) were removed from card UI
 
 **Goal:** Automatically display bidirectional relationship blocks on all entity pages, rendering rich cards at build time with JS progressive enhancement.
 

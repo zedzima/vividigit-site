@@ -56,7 +56,7 @@ Each entity has two types of attributes:
 
 | Type | Definition | Example | Storage |
 |------|------------|---------|---------|
-| **Simple** | Value (string, number) | `name: "Ivan"`, `rating: 4.9` | Field in TOML |
+| **Simple** | Value (string, number) | `name: "Ivan"`, `projects_count: 47` | Field in TOML |
 | **Reference** | Link to another entity | `tasks: [site-audit]` | Slug of another Entity |
 
 **Reference attributes = graph edges.** They create connections between nodes.
@@ -66,8 +66,8 @@ Each entity has two types of attributes:
 
 # Simple attributes (values)
 name: "Ivan Petrov"
-rating: 4.9
-hourly_rate: 75
+projects_count: 47
+case_count: 12
 
 # Reference attributes (edges → other Entities)
 tasks: [site-audit, schema-markup, cwv-optimization]  # → 3 edges to /tasks/*
@@ -144,8 +144,8 @@ role: "Technical SEO Specialist"
 photo: "team/ivan.jpg"
 bio: "8 years in technical SEO..."
 projects_count: 47
-rating: 4.9
-hourly_rate: 75
+case_count: 12
+article_count: 8
 
 # Reference attributes (graph edges)
 tasks: [site-audit, schema-markup, cwv-optimization]      # → EDGE to /tasks/*
@@ -270,14 +270,14 @@ items:
     price: 200
 
 # Order-level modifiers
-languages: [german, french]           # +$200 per language
-countries: [germany, austria]         # +$100 per country
+languages: [german, french]           # +60% per language (from item base price)
+countries: [germany, austria]         # +40% per country (from item base price)
 
 # Pricing calculation
 subtotal: 1400                        # sum of tasks
-language_fee: 400                     # 2 languages × $200
-country_fee: 200                      # 2 countries × $100
-total: 2000
+language_modifier: 1680               # 2 × (1400 × 60%)
+country_modifier: 1120                # 2 × (1400 × 40%)
+total: 4200
 ```
 
 ### Solution
@@ -589,7 +589,7 @@ Intersections =
 - Real photos and names
 - Tasks specialist can perform
 - Languages and countries served
-- Project count and rating
+- Project, case, and article counts
 
 ### Process Transparency
 - Step-by-step delivery process on each task

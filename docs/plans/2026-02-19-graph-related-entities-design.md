@@ -1,7 +1,7 @@
 # Graph-Based Related Entities Design
 
 **Date:** 2026-02-19
-**Status:** Approved
+**Status:** Implemented (updated 2026-02-21)
 **Approach:** Build-time Jinja2 rendering with JS progressive enhancement
 
 ---
@@ -15,7 +15,7 @@ Fully leverage the graph architecture: every entity page automatically displays 
 | Decision | Choice |
 |----------|--------|
 | Rendering | Hybrid: build-time HTML (SEO) + JS progressive enhancement |
-| Scope | All 8 entity types simultaneously |
+| Scope | All 9 entity types simultaneously (including `blog-post`) |
 | Automation | Fully automatic — no TOML configuration needed |
 | Relationship depth | Direct + reverse (1-hop), no chain traversal |
 | Visual style | Same card designs as existing catalog-mini |
@@ -49,14 +49,15 @@ Each entity type has a card template with auto-populated fields:
 
 | Card Type | Fields |
 |-----------|--------|
-| **Service** | Title, description, category tags, from_price, specialist count, CTA |
-| **Specialist** | Photo/avatar, name, role, description, rating, projects, hourly rate, languages, countries |
-| **Case** | Image/placeholder, client, title, description, industry, 2 key results |
-| **Solution** | Title, description, service, industry, starting price |
-| **Category** | Icon (CSS mask), title, description, service count, door-opener price |
+| **Service** | Category chips, delivery badge, title, description, counters (industries/countries/languages/tasks), from-price |
+| **Specialist** | Centered avatar, name, role, stats (projects/cases/articles), industries/languages/countries tags (no rating/hourly rate) |
+| **Case** | Image/placeholder, scope chips (industry/country/language/client), title, description, primary result + timeline |
+| **Solution** | Service/industry chips, title, description, counters (specialists/cases/countries/languages), starting price, no cover |
+| **Category** | Icon (CSS mask), title, description, counters (services/specialists/industries/countries/languages), door-opener price |
 | **Industry** | Icon/flag, title, description, service count |
-| **Country** | Flag, title, description, service count |
-| **Language** | Code (EN/DE/FR), title, description, service count |
+| **Country** | Flag, title, description, market population, official language coverage, service count |
+| **Language** | Code (EN/DE/FR), title, description, native speakers, official country footprint, service count |
+| **Blog Post** | Type/category chips, title, excerpt, date, author |
 
 All data sourced from TOML content at build time — no JSON fetch requests.
 
@@ -125,12 +126,14 @@ Renders sections in a loop. Each section: heading + card grid. Cards selected vi
 
 ```
 blocks/cards/service-card.html
-blocks/cards/specialist-card.html
 blocks/cards/case-card.html
 blocks/cards/solution-card.html
 blocks/cards/category-card.html
 blocks/cards/dimension-card.html   (industry, country, language)
+blocks/cards/blog-post-card.html
 ```
+
+Specialist cards are rendered via a placeholder + shared JS renderer (`assets/js/cards.js`) so catalog and related-entities use identical specialist markup.
 
 ### CSS
 Reuse existing card styles from `styles.css` (`.service-card`, `.specialist-card`, `.case-card`, etc.). New CSS only for section wrapper (heading + grid layout).

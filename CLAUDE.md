@@ -136,10 +136,11 @@ Service pages use a `task-picker` block to display available tasks inline. The r
 
 **Pricing formula:**
 ```
-Total = Σ(task tier prices) + (extra_languages × $200) + (extra_countries × $100)
+Total = Σ(item base prices) + Σ(language modifiers + country modifiers)
 ```
 
 Languages and countries are **order-level modifiers** (apply to entire order, not per-task).
+Current default modifier rates in `site.js`: language `+60%` and country `+40%` of item base price.
 
 ## Faceted Architecture
 
@@ -174,11 +175,35 @@ Blog posts use flat YAML frontmatter; `normalize_blog_entities()` bridges `autho
 
 **All listing sidebars** show the default CTA + contact form (no `[sidebar]` in TOML).
 
+### Card Contracts (Implemented)
+
+- Specialist card has a single renderer: `themes/vividigit/assets/js/cards.js` (`window.CMSCards.renderSpecialistCard`).
+- The same specialist markup is used in `catalog.html`, `catalog-mini.html`, and `related-entities.html`.
+- Rating/hourly-rate fields are not rendered on specialist cards (removed as legacy UI fields).
+
+| Collection | Card fields (current) |
+|-----------|------------------------|
+| `services` | Category chips, delivery badge, title, description, counters (`industry_count`, `country_count`, `language_count`, `task_count`), footer price |
+| `team` | Centered circular avatar (inside card), name, role, stats (`projects`, `case_count`, `article_count`), industries/languages/countries tags |
+| `cases` | Image/logo placeholder, scope chips (industry/country/language/client), title, description, `primary_result`, `timeline` |
+| `solutions` | Service/industry chips, title, description, counters (`specialist_count`, `case_count`, countries/languages from facets), starting price |
+| `categories` | Icon, title, description, counters (`service_count`, `specialist_count`, `industry_count`, `country_count`, `language_count`), door-opener price |
+| `countries` | Flag/title/description, market metrics (`population_total`, `official_languages_count`), `service_count` |
+| `languages` | Code/flag/title/description, market metrics (`native_speakers_l1`, `official_countries_count`), `service_count` |
+| `blog` | Type + category chips, title, excerpt, formatted date + author |
+
 ### JSON Exports
 
-Entity JSON indexes include:
-- `facets` — per-item dict of connected entity slugs by type (from `bi_map`)
-- `labels` — top-level dict mapping slugs to display names (from `page_lookup`)
+Core indexes now include card-ready counters/metrics:
+
+- `public/data/services-index.json`: `specialist_count`, `industry_count`, `country_count`, `language_count`, `task_count`, graph counts (`case_count`, `article_count`) + `facets`/`labels`
+- `public/data/team.json`: specialist card fields (`projects`, `languages`, `countries`, `industries`, `case_count`, `article_count`) + `facets`/`labels`
+- `public/data/cases.json`: `client`, `results`, computed `primary_result`, computed `timeline` + `facets`/`labels`
+- `public/data/categories-index.json`: `service_count`, `specialist_count`, `industry_count`, `country_count`, `language_count`
+- `public/data/solutions-index.json`: `starting_price`, `specialist_count`, `case_count` + `facets`/`labels`
+- `public/data/countries-index.json`: `population_total`, `official_languages_count`, `service_count`
+- `public/data/languages-index.json`: `native_speakers_l1`, `official_countries_count`, `service_count`
+- `public/data/blog.json`: `type` (from `config.content_type`), `category`, `date`, `author`
 
 These are used by catalog.html JS for unified `matchFilter()` and dynamic label rendering.
 

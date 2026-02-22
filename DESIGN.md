@@ -98,7 +98,7 @@ Right sidebar showing live order summary, driven by task-picker events.
 
 ### Specialist Page
 - Hero: name + role + photo
-- Stats row: projects count, rating, hourly rate
+- Stats row: project-oriented metrics (projects/cases/articles in card UI)
 - Tasks grid: cards of tasks this specialist performs
 - Languages/Countries: badge rows
 - Cases: carousel of case studies this specialist worked on

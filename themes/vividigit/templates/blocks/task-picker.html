@@ -128,12 +128,7 @@
         var monthly = parseInt(btn.dataset.monthlyPrice) || 0;
         if (monthly === 0) return 0;
         if (currentPeriod === 'yearly' && discount > 0) {
-            /* Only apply discount to tasks that support yearly billing */
-            var item = btn.closest('.task-picker-item');
-            var cb = item ? item.querySelector('.task-select-cb') : null;
-            if (cb && cb.dataset.yearly === 'true') {
-                return Math.round(monthly * (100 - discount) / 100);
-            }
+            return Math.round(monthly * (100 - discount) / 100);
         }
         return monthly;
     }

@@ -13,6 +13,7 @@ import os
 import sys
 import json
 import shutil
+import re
 import tomllib
 import yaml
 from pathlib import Path
@@ -404,6 +405,7 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
             "url": config.get("url", ""),
             "title": meta.get("title", ""),
             "description": meta.get("description", ""),
+            "menu": config.get("menu", ""),
         }
 
         # Include rating, price, and delivery type if available
@@ -417,10 +419,23 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
         # Count specialists linked to this service
         rels = data.get("relationships", {})
         entry["specialist_count"] = len(rels.get("specialists", []))
+        service_tags = data.get("tags", {})
+        entry["industry_count"] = len(ensure_list(service_tags.get("industries", [])))
+        entry["country_count"] = len(ensure_list(service_tags.get("countries", [])))
+        entry["language_count"] = len(ensure_list(service_tags.get("languages", [])))
+
+        task_slugs = set(ensure_list(rels.get("available_tasks", [])) + ensure_list(rels.get("tasks", [])))
+        door_opener_task = rels.get("door_opener_task")
+        if door_opener_task:
+            task_slugs.add(door_opener_task)
+        entry["task_count"] = len(task_slugs)
 
         # Build facets from graph
         if bi_map:
-            entry["facets"] = build_facets_for_item(slug, bi_map, "services")
+            facets = build_facets_for_item(slug, bi_map, "services")
+            entry["facets"] = facets
+            entry["case_count"] = len(facets.get("cases", []))
+            entry["article_count"] = len(facets.get("blog-posts", []))
 
         services.append(entry)
 
@@ -440,6 +455,145 @@ def export_services_index(parsed_pages: List[Dict], tag_index: Dict, output_dir:
 
     print(f"  Exported: {json_path} ({len(services)} services)")
 
+
+def ensure_list(value: Any) -> List[Any]:
+    """Normalize scalar/list field values into a list."""
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return value
+    if value == "":
+        return []
+    return [value]
+
+
+def get_block_data(blocks: List[Dict], block_type: str) -> Dict[str, Any]:
+    """Return first block.data for a given block type."""
+    for block in blocks:
+        if block.get("type") == block_type and isinstance(block.get("data"), dict):
+            return block["data"]
+    return {}
+
+
+def extract_numeric_value(raw_value: Any) -> Optional[float]:
+    """Extract a numeric value from text like '$75', '4.9/5', '47 projects'."""
+    if raw_value is None:
+        return None
+    if isinstance(raw_value, (int, float)):
+        return float(raw_value)
+
+    text = str(raw_value).strip()
+    if not text:
+        return None
+
+    match = re.search(r"-?\d+(?:[.,]\d+)?", text)
+    if not match:
+        return None
+
+    number = match.group(0)
+    if "," in number and "." not in number:
+        number = number.replace(",", ".")
+    else:
+        number = number.replace(",", "")
+
+    try:
+        return float(number)
+    except ValueError:
+        return None
+
+
+def parse_specialist_projects(hero_data: Dict[str, Any]) -> Optional[int]:
+    """Extract project count from specialist hero.stats."""
+    for stat in hero_data.get("stats", []):
+        if not isinstance(stat, dict):
+            continue
+        label = str(stat.get("label", "")).strip().lower()
+        if "project" not in label:
+            continue
+
+        numeric_value = extract_numeric_value(stat.get("value"))
+        if numeric_value is not None:
+            return int(numeric_value)
+
+    return None
+
+
+def parse_solution_starting_price(blocks: List[Dict]) -> Optional[float]:
+    """
+    Extract solution starting price from pricing block.
+
+    Supports both:
+    - package pricing (minimum package price)
+    - simple pricing (single `price` field)
+    """
+    for block in blocks:
+        if block.get("type") != "pricing":
+            continue
+
+        block_data = block.get("data", {})
+        packages = block_data.get("packages", [])
+        if packages:
+            prices = [p.get("price", 0) for p in packages if p.get("price")]
+            if prices:
+                return min(prices)
+
+        price = block_data.get("price")
+        if price not in (None, ""):
+            numeric = extract_numeric_value(price)
+            if numeric is not None:
+                return numeric
+
+        break
+
+    return None
+
+
+def extract_case_results(hero_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Extract case result stats from hero block."""
+    results = []
+    for stat in hero_data.get("stats", []):
+        if not isinstance(stat, dict):
+            continue
+        results.append({
+            "value": stat.get("value", ""),
+            "label": stat.get("label", ""),
+        })
+    return results
+
+
+def extract_case_primary_and_timeline(
+    results: List[Dict[str, Any]]
+) -> tuple[Optional[Dict[str, Any]], Optional[Dict[str, Any]]]:
+    """Derive primary success metric and timeline metric from case results."""
+    primary_result = None
+    timeline_result = None
+
+    for result in results:
+        label = str(result.get("label", "")).strip().lower()
+        value = str(result.get("value", "")).strip().lower()
+        is_timeline = (
+            "timeline" in label
+            or "duration" in label
+            or "time" in label
+            or bool(re.search(r"\b(day|days|week|weeks|month|months|year|years)\b", value))
+        )
+
+        if is_timeline and timeline_result is None:
+            timeline_result = result
+            continue
+
+        if not is_timeline and primary_result is None:
+            primary_result = result
+
+    if primary_result is None and results:
+        primary_result = results[0]
+
+    if timeline_result is None and len(results) > 1:
+        fallback = results[1]
+        if fallback != primary_result:
+            timeline_result = fallback
+
+    return primary_result, timeline_result
 
 
 def export_team_index(parsed_pages: List[Dict], output_dir: str,
@@ -469,26 +623,50 @@ def export_team_index(parsed_pages: List[Dict], output_dir: str,
         slug = config.get("slug", "")
         relationships = data.get("relationships", {})
         sidebar = data.get("sidebar", {})
+        hero_data = get_block_data(data.get("blocks", []), "hero")
+        hero_projects = parse_specialist_projects(hero_data)
+        facets = build_facets_for_item(slug, bi_map, "specialists") if bi_map else {}
+
+        title = (
+            hero_data.get("h1")
+            or config.get("menu")
+            or data.get("meta", {}).get("title", "")
+        )
+        role = sidebar.get("role") or hero_data.get("subtitle", "")
+
+        projects = sidebar.get("projects")
+        if projects in (None, ""):
+            projects = hero_projects
+
+        languages = ensure_list(relationships.get("languages", []))
+        countries = ensure_list(relationships.get("countries", []))
+        tasks = ensure_list(relationships.get("tasks", []))
+        direct_cases = ensure_list(relationships.get("cases", []))
+
+        industries = facets.get("industries") or ensure_list(data.get("tags", {}).get("industries", []))
+        case_slugs = facets.get("cases", direct_cases)
+        article_slugs = facets.get("blog-posts", [])
 
         entry = {
             "slug": slug,
             "url": config.get("url", ""),
-            "title": data.get("meta", {}).get("title", ""),
+            "title": title,
             "description": data.get("meta", {}).get("description", ""),
-            "role": sidebar.get("role", ""),
+            "role": role,
             "avatar": config.get("avatar", ""),
-            "rating": sidebar.get("rating"),
-            "projects": sidebar.get("projects"),
-            "hourly_rate": sidebar.get("hourly_rate"),
-            "languages": relationships.get("languages", []),
-            "countries": relationships.get("countries", []),
-            "tasks": relationships.get("tasks", []),
-            "cases": relationships.get("cases", []),
+            "projects": projects,
+            "languages": languages,
+            "countries": countries,
+            "industries": industries,
+            "tasks": tasks,
+            "cases": direct_cases,
+            "case_count": len(case_slugs),
+            "article_count": len(article_slugs),
         }
 
         # Build facets from graph
-        if bi_map:
-            entry["facets"] = build_facets_for_item(slug, bi_map, "specialists")
+        if facets:
+            entry["facets"] = facets
 
         specialists.append(entry)
 
@@ -504,7 +682,7 @@ def export_team_index(parsed_pages: List[Dict], output_dir: str,
     print(f"  Exported: {json_path} ({len(specialists)} specialists)")
 
 
-def export_categories_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str):
+def export_categories_index(parsed_pages: List[Dict], tag_index: Dict, output_dir: str, bi_map: Dict = None):
     """
     Export enriched categories index for catalog rendering.
 
@@ -528,6 +706,11 @@ def export_categories_index(parsed_pages: List[Dict], tag_index: Dict, output_di
 
         slug = config["slug"]
         service_count = len(tag_index.get("categories", {}).get(slug, []))
+        tags = data.get("tags", {})
+        specialist_count = 0
+        if bi_map:
+            facets = build_facets_for_item(slug, bi_map, "categories")
+            specialist_count = len(facets.get("specialists", []))
 
         categories.append({
             "slug": slug,
@@ -537,6 +720,10 @@ def export_categories_index(parsed_pages: List[Dict], tag_index: Dict, output_di
             "menu": config.get("menu", ""),
             "door_opener_price": config.get("door_opener_price"),
             "service_count": service_count,
+            "specialist_count": specialist_count,
+            "industry_count": len(ensure_list(tags.get("industries", []))),
+            "country_count": len(ensure_list(tags.get("countries", []))),
+            "language_count": len(ensure_list(tags.get("languages", []))),
         })
 
     json_path = os.path.join(json_dir, "categories-index.json")
@@ -573,29 +760,25 @@ def export_solutions_index(parsed_pages: List[Dict], output_dir: str,
         links = data.get("links", {})
 
         # Extract starting price from pricing block
-        starting_price = None
-        for block in data.get("blocks", []):
-            if block.get("type") == "pricing":
-                packages = block.get("data", {}).get("packages", [])
-                if packages:
-                    prices = [p.get("price", 0) for p in packages if p.get("price")]
-                    if prices:
-                        starting_price = min(prices)
-                break
+        starting_price = parse_solution_starting_price(data.get("blocks", []))
+        facets = build_facets_for_item(slug, bi_map, "solutions") if bi_map else {}
 
         entry = {
             "slug": slug,
             "url": config.get("url", ""),
             "title": data.get("meta", {}).get("title", ""),
             "description": data.get("meta", {}).get("description", ""),
+            "menu": config.get("menu", ""),
             "service": links.get("service", ""),
             "industry": links.get("industry", ""),
             "starting_price": starting_price,
+            "specialist_count": len(facets.get("specialists", [])),
+            "case_count": len(facets.get("cases", [])),
         }
 
         # Build facets from graph
-        if bi_map:
-            entry["facets"] = build_facets_for_item(slug, bi_map, "solutions")
+        if facets:
+            entry["facets"] = facets
 
         solutions.append(entry)
 
@@ -664,6 +847,8 @@ def export_countries_index(parsed_pages: List[Dict], tag_index: Dict, output_dir
             "description": data.get("meta", {}).get("description", ""),
             "menu": config.get("menu", ""),
             "flag": config.get("flag", ""),
+            "population_total": config.get("population_total", ""),
+            "official_languages_count": config.get("official_languages_count"),
             "service_count": service_count,
         })
 
@@ -704,6 +889,8 @@ def export_languages_index(parsed_pages: List[Dict], tag_index: Dict, output_dir
             "menu": config.get("menu", ""),
             "flag": config.get("flag", ""),
             "code": (lang_code_map.get(slug) or slug[:2].upper()),
+            "native_speakers_l1": config.get("native_speakers_l1", ""),
+            "official_countries_count": config.get("official_countries_count"),
             "service_count": service_count,
         })
 
@@ -739,30 +926,24 @@ def export_cases_index(parsed_pages: List[Dict], output_dir: str,
 
         slug = config.get("slug", "")
         relationships = data.get("relationships", {})
-
-        # Extract results from hero stats or dedicated results field
-        results = []
-        hero_data = next(
-            (b["data"] for b in data.get("blocks", []) if b.get("type") == "hero"),
-            {}
-        )
-        if hero_data.get("stats"):
-            results = [
-                {"value": s.get("value", ""), "label": s.get("label", "")}
-                for s in hero_data["stats"]
-            ]
+        hero_data = get_block_data(data.get("blocks", []), "hero")
+        results = extract_case_results(hero_data)
+        primary_result, timeline = extract_case_primary_and_timeline(results)
 
         entry = {
             "slug": slug,
             "url": config.get("url", ""),
             "title": data.get("meta", {}).get("title", ""),
             "description": data.get("meta", {}).get("description", ""),
-            "client": config.get("client", ""),
+            "menu": config.get("menu", ""),
+            "client": config.get("client", "") or hero_data.get("subtitle", ""),
             "image": config.get("image", ""),
             "industry": relationships.get("industry", ""),
             "country": relationships.get("country", ""),
             "language": relationships.get("language", ""),
             "results": results,
+            "primary_result": primary_result,
+            "timeline": timeline,
         }
 
         # Build facets from graph
@@ -890,32 +1071,35 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
             "config": config,
         }
 
+        if entity_type == "specialist":
+            hero_data = get_block_data(data.get("blocks", []), "hero")
+            hero_projects = parse_specialist_projects(hero_data)
+            sidebar = data.get("sidebar", {})
+
+            entry["title"] = (
+                hero_data.get("h1")
+                or config.get("menu")
+                or entry["title"]
+            )
+            entry["role"] = sidebar.get("role") or hero_data.get("subtitle", "")
+            entry["projects"] = sidebar.get("projects")
+            if entry["projects"] in (None, ""):
+                entry["projects"] = hero_projects
+
         # Extract case-specific fields for card rendering
         if entity_type == "case":
-            results = []
-            for block in data.get("blocks", []):
-                if block.get("type") == "hero":
-                    stats = block.get("data", {}).get("stats", [])
-                    results = [
-                        {"value": s.get("value", ""), "label": s.get("label", "")}
-                        for s in stats
-                    ]
-                    break
+            hero_data = get_block_data(data.get("blocks", []), "hero")
+            results = extract_case_results(hero_data)
+            primary_result, timeline = extract_case_primary_and_timeline(results)
+            entry["client"] = config.get("client", "") or hero_data.get("subtitle", "")
             entry["results"] = results
+            entry["primary_result"] = primary_result
+            entry["timeline"] = timeline
 
         # Extract solution-specific fields for card rendering
         elif entity_type == "solution":
             entry["links"] = data.get("links", {})
-            starting_price = None
-            for block in data.get("blocks", []):
-                if block.get("type") == "pricing":
-                    packages = block.get("data", {}).get("packages", [])
-                    if packages:
-                        prices = [p.get("price", 0) for p in packages if p.get("price")]
-                        if prices:
-                            starting_price = min(prices)
-                    break
-            entry["starting_price"] = starting_price
+            entry["starting_price"] = parse_solution_starting_price(data.get("blocks", []))
 
         page_lookup[slug] = entry
 
@@ -966,9 +1150,21 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
             "tags": p["tags"],
             "relationships": p["relationships"],
         }
+        if "role" in p:
+            card["role"] = p["role"]
+        if "projects" in p:
+            card["projects"] = p["projects"]
+        if "avatar" in p:
+            card["avatar"] = p["avatar"]
         # Include type-specific computed fields
         if "results" in p:
             card["results"] = p["results"]
+        if "client" in p:
+            card["client"] = p["client"]
+        if "primary_result" in p:
+            card["primary_result"] = p["primary_result"]
+        if "timeline" in p:
+            card["timeline"] = p["timeline"]
         if "links" in p:
             card["links"] = p["links"]
         if "starting_price" in p:
@@ -1052,7 +1248,7 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
             add_relation(slug, group_key, target_card)
             add_relation(target_slug, source_group, source_card)
 
-    # Pass 5: Enrich dimension/category cards with service_count
+    # Pass 5: Enrich dimension/category cards with aggregate counts
     for slug, relations in result.items():
         for entity_type, cards in relations.items():
             for card in cards:
@@ -1063,6 +1259,10 @@ def build_bidirectional_map(parsed_pages: List[Dict]) -> Dict[str, Dict[str, Lis
                         card["service_count"] = len(
                             result[card_slug].get("services", [])
                         )
+                        if card_type == "category":
+                            card["specialist_count"] = len(
+                                result[card_slug].get("specialists", [])
+                            )
 
     return result, page_lookup
 
@@ -1856,7 +2056,7 @@ def main(lang: str = DEFAULT_LANG, local: bool = False, site_name: str = "vividi
 
     # Export categories index
     print("\nExporting categories index...")
-    export_categories_index(parsed_pages, tag_index, output_dir)
+    export_categories_index(parsed_pages, tag_index, output_dir, bi_map)
 
     # Export solutions index
     print("\nExporting solutions index...")

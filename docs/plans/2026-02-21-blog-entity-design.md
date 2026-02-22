@@ -1,7 +1,7 @@
 # Blog Post Entity Design
 
 **Date:** 2026-02-21
-**Status:** Approved
+**Status:** Implemented (updated 2026-02-21)
 
 ## Summary
 
@@ -15,7 +15,7 @@ Blog Post becomes the 9th primary entity in the CMS relationship graph. Speciali
 | Collection | `blog` |
 | Content format | Markdown (`.md`) with YAML frontmatter |
 | URL pattern | `/blog/{slug}` |
-| Listing page | `/blog/` (existing, unchanged) |
+| Listing page | `/blog/` (existing route; card formatting updated to chips + formatted meta) |
 
 ## Relationships
 
@@ -50,16 +50,14 @@ The `category` text field is replaced by `categories` array of entity slugs. The
 
 ### main.py Changes
 
-1. **Add `blog-post` to `RELATED_SECTION_ORDER`** — determines display order in related-entities blocks.
+1. **Add `blog-post` to graph section ordering/constants** (`ALL_SECTIONS`, `RELATED_SECTION_ORDER`, `SECTION_TITLES`, contextual subtitles).
 
-2. **`load_blog_posts()`** — new function (or extend existing blog loading) that:
-   - Reads `.md` files from `content/blog/*/`
-   - Parses YAML frontmatter
-   - Returns structured data compatible with the entity/graph system
-   - Extracts `categories` from frontmatter as tag-like relationships
-   - Stores `author` in `[relationships]` for graph resolution
+2. **`normalize_blog_entities()`** (implemented) bridges flat frontmatter to graph data:
+   - `config.categories` → `data.tags.categories`
+   - `config.author` → `data.relationships.author`
+   - preserves original post type in `config.content_type`, sets graph entity type to `config.type = "blog-post"`
 
-3. **`build_bidirectional_map()`** — handle `blog-post` entities:
+3. **`build_bidirectional_map()`** handles `blog-post` entities:
    - `author` relationship: blog-post → specialist (forward), specialist → blog-post (reverse)
    - `categories` from frontmatter: blog-post → category (forward), category → blog-post (reverse)
 
@@ -71,7 +69,7 @@ The `category` text field is replaced by `categories` array of entity slugs. The
 
 1. **`blog-post-card.html`** — new partial template for rendering blog post cards in related-entities blocks. Shows: title, date, category badge, excerpt/description, author name.
 
-2. **Existing `catalog.html` / `renderBlogCard()`** — unchanged. The blog listing page continues to work as-is.
+2. **`catalog.html` / `renderBlogCard()`** — listing keeps the same data source (`public/data/blog.json`) but now renders compact type/category chips and formatted date/author meta.
 
 3. **Blog post page template** — unchanged. Posts render as hero + markdown body.
 
@@ -97,6 +95,6 @@ Blog posts use a simple layout: hero block + markdown body. No sidebar, no compl
 | File | Change |
 |------|--------|
 | `core/src/main.py` | Add blog-post entity loading, graph integration |
-| `themes/vividigit/templates/blocks/blog-post-card.html` | New card template for related-entities |
+| `themes/vividigit/templates/blocks/cards/blog-post-card.html` | New card template for related-entities |
 | `sites/vividigit/content/blog/how-ai-chooses-sources/how-ai-chooses-sources.en.md` | Update frontmatter to entity slugs |
 | `public/data/blog.json` | Will be regenerated with new fields |

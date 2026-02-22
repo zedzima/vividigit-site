@@ -1,12 +1,19 @@
 {# Blog post card — matches catalog.html renderBlogCard() #}
 {% set url = item.url | default('/blog/' ~ item.slug) %}
 {% set category = item.config.category | default('') %}
+{% set post_type = item.config.content_type | default(item.config.type, true) %}
+{% set author = item.config.author | default('') %}
 <article class="blog-card">
-    {% if category %}<div class="blog-card-category">{{ category }}</div>{% endif %}
+    {% if post_type or category %}
+    <div class="blog-card-tags">
+        {% if post_type %}<span class="blog-chip">{{ post_type | replace('-', ' ') | title }}</span>{% endif %}
+        {% if category %}<span class="blog-chip">{{ category }}</span>{% endif %}
+    </div>
+    {% endif %}
     <h3 class="blog-card-title"><a href="{{ url }}">{{ item.menu or item.title }}</a></h3>
     <p class="blog-card-excerpt">{{ item.description }}</p>
     <div class="blog-card-meta">
         {% if item.config.date %}<span>{{ item.config.date }}</span>{% endif %}
-        {% if item.config.author %}<span>by {{ item.config.author }}</span>{% endif %}
+        {% if author %}<span>By {{ author | replace('-', ' ') | title }}</span>{% endif %}
     </div>
 </article>

@@ -67,7 +67,7 @@
         team: {
             url: 'data/team.json',
             dataKey: 'specialists',
-            sortOptions: [['rating', 'Highest Rated'], ['projects', 'Most Projects'], ['name', 'A-Z']]
+            sortOptions: [['projects', 'Most Projects'], ['name', 'A-Z']]
         },
         cases: {
             url: 'data/cases.json',
@@ -121,105 +121,153 @@
     }
 
     function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
-    function getInitials(name) { return (name || '').split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2); }
+    function toTitleCase(text) {
+        return String(text || '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\b\w/g, function(ch) { return ch.toUpperCase(); });
+    }
+    function formatAuthorName(author) {
+        if (!author) return '';
+        return toTitleCase(author);
+    }
+    function formatDate(value) {
+        if (!value) return '';
+        var d = new Date(value);
+        if (isNaN(d.getTime())) return String(value);
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    function pluralize(count, singular, plural) {
+        return count + ' ' + (count === 1 ? singular : plural);
+    }
+    function formatCurrency(value) {
+        var n = Number(value);
+        if (!isFinite(n) || n <= 0) return '';
+        return '$' + Math.round(n).toLocaleString();
+    }
 
     /* ===== Card renderers ===== */
     function renderServiceCard(s) {
         var f = s.facets || {};
         var cats = (f.categories || []).map(function(c){ return '<span class="service-category">' + esc(label('categories', c)) + '</span>'; }).join('');
-        var countries = (f.countries || []).map(function(c){ return '<span class="service-country">' + esc(label('countries', c)) + '</span>'; }).join('');
-        var langs = (f.languages || []).map(function(l){ return '<span class="service-lang">' + (langCodeMap[l] || l.toUpperCase().slice(0,2)) + '</span>'; }).join('');
-        var specCount = s.specialist_count || 0;
+        var industryCount = Number(s.industry_count || (f.industries || []).length || 0);
+        var countryCount = Number(s.country_count || (f.countries || []).length || 0);
+        var languageCount = Number(s.language_count || (f.languages || []).length || 0);
+        var taskCount = Number(s.task_count || 0);
+        var metrics = [];
+        if (industryCount > 0) metrics.push('<span class="service-metric">' + esc(pluralize(industryCount, 'industry', 'industries')) + '</span>');
+        if (countryCount > 0) metrics.push('<span class="service-metric">' + esc(pluralize(countryCount, 'country', 'countries')) + '</span>');
+        if (languageCount > 0) metrics.push('<span class="service-metric">' + esc(pluralize(languageCount, 'language', 'languages')) + '</span>');
+        if (taskCount > 0) metrics.push('<span class="service-metric">' + esc(pluralize(taskCount, 'task', 'tasks')) + '</span>');
+        var delivery = s.delivery ? toTitleCase(String(s.delivery).replace('-', ' ')) : '';
+        var price = formatCurrency(s.price || s.from_price);
         var url = (s.url || '/services/' + s.slug).replace(/^\//, '');
         return '<a href="' + url + '" class="service-card">' +
             '<div class="service-card-header"><div class="service-categories">' + cats + '</div>' +
-            (specCount ? '<span class="service-spec-count">' + specCount + ' spec.</span>' : '') + '</div>' +
-            '<h3>' + esc(s.title) + '</h3><p>' + esc(s.description) + '</p>' +
-            (countries ? '<div class="service-countries">' + countries + '</div>' : '') +
-            (langs ? '<div class="service-languages">' + langs + '</div>' : '') +
-            '<div class="service-card-footer"><span class="service-price">From $' + (s.price || s.from_price || 0) + '</span><span class="service-cta">View →</span></div></a>';
+            (delivery ? '<span class="service-spec-count">' + esc(delivery) + '</span>' : '') + '</div>' +
+            '<h3>' + esc(s.menu || s.title) + '</h3><p>' + esc(s.description) + '</p>' +
+            (metrics.length ? '<div class="service-card-meta">' + metrics.join('') + '</div>' : '') +
+            '<div class="service-card-footer">' + (price ? '<span class="service-price">From ' + price + '</span>' : '<span></span>') + '<span class="service-cta">View Service →</span></div></a>';
     }
 
     function renderSpecialistCard(s) {
-        var url = (s.url || '/team/' + s.slug).replace(/^\//, '');
-        var initials = getInitials(s.title || s.slug);
-        var avatarHtml = s.avatar
-            ? '<div class="specialist-avatar"><img src="' + esc(s.avatar) + '" alt="' + esc(s.title) + '"></div>'
-            : '<div class="specialist-avatar"><div class="specialist-avatar-initials">' + initials + '</div></div>';
-        var langTags = (s.languages || []).map(function(l){ return '<span class="specialist-tag lang">' + (langCodeMap[l] || l.toUpperCase().slice(0,2)) + '</span>'; }).join('');
-        var countryTags = (s.countries || []).map(function(c){ return '<span class="specialist-tag">' + esc(label('countries', c)) + '</span>'; }).join('');
-        return '<a href="' + url + '" class="specialist-card">' +
-            '<div class="specialist-card-top">' + avatarHtml + '<div class="specialist-info"><h3>' + esc(s.title) + '</h3>' + (s.role ? '<div class="specialist-role">' + esc(s.role) + '</div>' : '') + '</div></div>' +
-            '<div class="specialist-stats">' +
-            (s.rating ? '<div class="specialist-stat"><span class="specialist-stat-value rating">★ ' + s.rating + '</span><span class="specialist-stat-label">Rating</span></div>' : '') +
-            (s.projects ? '<div class="specialist-stat"><span class="specialist-stat-value">' + s.projects + '</span><span class="specialist-stat-label">Projects</span></div>' : '') +
-            '</div>' +
-            '<div class="specialist-tags">' +
-            (langTags ? '<div class="specialist-tag-row">' + langTags + '</div>' : '') +
-            (countryTags ? '<div class="specialist-tag-row">' + countryTags + '</div>' : '') +
-            '</div>' +
-            '<div class="specialist-card-footer">' +
-            (s.hourly_rate ? '<span class="specialist-rate">$' + s.hourly_rate + '/h</span>' : '<span></span>') +
-            '<span class="specialist-cta">View Profile →</span></div></a>';
+        return window.CMSCards.renderSpecialistCard(s, {
+            langCodeMap: langCodeMap,
+            countryLabel: function(slug) { return label('countries', slug); },
+            industryLabel: function(slug) { return label('industries', slug); }
+        });
     }
 
     function renderCaseCard(s) {
         var url = (s.url || '/cases/' + s.slug).replace(/^\//, '');
-        var letter = (s.client || s.title || 'C').charAt(0).toUpperCase();
+        var title = s.menu || s.title;
+        var letter = (s.client || title || 'C').charAt(0).toUpperCase();
         var imageHtml = s.image
-            ? '<div class="case-image"><img src="' + esc(s.image) + '" alt="' + esc(s.title) + '" loading="lazy"></div>'
+            ? '<div class="case-image"><img src="' + esc(s.image) + '" alt="' + esc(title) + '" loading="lazy"></div>'
             : '<div class="case-image"><div class="case-image-placeholder"><span>' + letter + '</span></div></div>';
-        var resultsHtml = '';
-        if (s.results && s.results.length > 0) {
-            resultsHtml = '<div class="case-results">' + s.results.slice(0,2).map(function(r){ return '<div class="case-result"><span class="result-value">' + esc(r.value) + '</span><span class="result-label">' + esc(r.label) + '</span></div>'; }).join('') + '</div>';
-        }
         var metaHtml = '';
-        if (s.industry || s.client) {
+        var scope = [];
+        if (s.industry) scope.push('<span class="case-industry">' + esc(label('industries', s.industry)) + '</span>');
+        if (s.country) scope.push('<span class="case-industry">' + esc(label('countries', s.country)) + '</span>');
+        if (s.language) scope.push('<span class="case-industry">' + esc(langCodeMap[s.language] || (label('languages', s.language) || s.language).slice(0, 2).toUpperCase()) + '</span>');
+        if (scope.length || s.client) {
             metaHtml = '<div class="case-meta">' +
-                (s.industry ? '<span class="case-industry">' + esc(label('industries', s.industry)) + '</span>' : '') +
+                scope.join('') +
                 (s.client ? '<span class="case-client">' + esc(s.client) + '</span>' : '') + '</div>';
         }
+        var primary = s.primary_result || ((s.results || [])[0] || null);
+        var timeline = s.timeline || null;
+        if (timeline && primary && timeline.value === primary.value && timeline.label === primary.label) {
+            timeline = null;
+        }
+        var resultParts = [];
+        if (primary) resultParts.push('<div class="case-result"><span class="result-value">' + esc(primary.value) + '</span><span class="result-label">' + esc(primary.label) + '</span></div>');
+        if (timeline) resultParts.push('<div class="case-result"><span class="result-value">' + esc(timeline.value) + '</span><span class="result-label">' + esc(timeline.label) + '</span></div>');
+        var resultsHtml = resultParts.length ? '<div class="case-results">' + resultParts.join('') + '</div>' : '';
         return '<a href="' + url + '" class="case-card">' + imageHtml +
             '<div class="case-content">' + metaHtml +
-            '<h3>' + esc(s.title) + '</h3><p>' + esc(s.description) + '</p>' +
+            '<h3>' + esc(title) + '</h3><p>' + esc(s.description) + '</p>' +
             resultsHtml + '</div></a>';
     }
 
     function renderBlogCard(s) {
         var url = (s.url || '/blog/' + s.slug).replace(/^\//, '');
         if (url && url.slice(-1) !== '/') url += '/';
+        var chips = [];
+        if (s.type) chips.push('<span class="blog-chip">' + esc(toTitleCase(s.type)) + '</span>');
+        if (s.category) chips.push('<span class="blog-chip">' + esc(s.category) + '</span>');
+        var dateLabel = formatDate(s.date);
+        var authorLabel = formatAuthorName(s.author);
         return '<article class="blog-card">' +
-            (s.category ? '<div class="blog-card-category">' + esc(s.category) + '</div>' : '') +
+            (chips.length ? '<div class="blog-card-tags">' + chips.join('') + '</div>' : '') +
             '<h3 class="blog-card-title"><a href="' + url + '">' + esc(s.title) + '</a></h3>' +
             '<p class="blog-card-excerpt">' + esc(s.description) + '</p>' +
-            '<div class="blog-card-meta">' + (s.date ? '<span>' + esc(s.date) + '</span>' : '') + (s.author ? '<span>by ' + esc(s.author) + '</span>' : '') + '</div></article>';
+            '<div class="blog-card-meta">' + (dateLabel ? '<span>' + esc(dateLabel) + '</span>' : '') + (authorLabel ? '<span>By ' + esc(authorLabel) + '</span>' : '') + '</div></article>';
     }
 
     function renderCategoryCard(s) {
         var url = (s.url || '/categories/' + s.slug).replace(/^\//, '');
         var iconName = categoryIconMap[s.slug] || 'settings';
         var iconHtml = '<div class="category-card-icon" style="--icon-url: url(/assets/icons/' + iconName + '.svg)"></div>';
-        var price = s.door_opener_price ? 'From $' + s.door_opener_price : '';
+        var price = formatCurrency(s.door_opener_price);
+        var metrics = [];
+        if (s.service_count) metrics.push('<span class="category-meta-item">' + esc(pluralize(s.service_count, 'service', 'services')) + '</span>');
+        if (s.specialist_count) metrics.push('<span class="category-meta-item">' + esc(pluralize(s.specialist_count, 'specialist', 'specialists')) + '</span>');
+        if (s.industry_count) metrics.push('<span class="category-meta-item">' + esc(pluralize(s.industry_count, 'industry', 'industries')) + '</span>');
+        if (s.country_count) metrics.push('<span class="category-meta-item">' + esc(pluralize(s.country_count, 'country', 'countries')) + '</span>');
+        if (s.language_count) metrics.push('<span class="category-meta-item">' + esc(pluralize(s.language_count, 'language', 'languages')) + '</span>');
         return '<a href="' + url + '" class="category-card">' +
             '<div class="category-card-header">' +
             '<h3>' + esc(s.menu || s.title) + '</h3>' +
             iconHtml + '</div>' +
             '<p>' + esc(s.description) + '</p>' +
+            (metrics.length ? '<div class="category-card-meta">' + metrics.join('') + '</div>' : '') +
             '<div class="category-card-footer">' +
-            (price ? '<span class="category-price">' + price + '</span>' : '<span></span>') +
+            (price ? '<span class="category-price">From ' + price + '</span>' : '<span></span>') +
             '<span class="category-cta">Explore →</span></div></a>';
     }
 
     function renderSolutionCard(s) {
         var url = (s.url || '/solutions/' + s.slug).replace(/^\//, '');
+        var f = s.facets || {};
         var tags = '';
         if (s.service) tags += '<span class="solution-tag">' + esc(label('services', s.service)) + '</span>';
         if (s.industry) tags += '<span class="solution-tag industry">' + esc(label('industries', s.industry)) + '</span>';
+        var metrics = [];
+        var specialistCount = Number(s.specialist_count || (f.specialists || []).length || 0);
+        var caseCount = Number(s.case_count || (f.cases || []).length || 0);
+        var countryCount = (f.countries || []).length;
+        var languageCount = (f.languages || []).length;
+        if (specialistCount > 0) metrics.push('<span class="solution-meta-item">' + esc(pluralize(specialistCount, 'specialist', 'specialists')) + '</span>');
+        if (caseCount > 0) metrics.push('<span class="solution-meta-item">' + esc(pluralize(caseCount, 'case', 'cases')) + '</span>');
+        if (countryCount > 0) metrics.push('<span class="solution-meta-item">' + esc(pluralize(countryCount, 'country', 'countries')) + '</span>');
+        if (languageCount > 0) metrics.push('<span class="solution-meta-item">' + esc(pluralize(languageCount, 'language', 'languages')) + '</span>');
+        var price = formatCurrency(s.starting_price);
         return '<a href="' + url + '" class="solution-card">' +
             (tags ? '<div class="solution-card-tags">' + tags + '</div>' : '') +
-            '<h3>' + esc(s.title) + '</h3><p>' + esc(s.description) + '</p>' +
+            '<h3>' + esc(s.menu || s.title) + '</h3><p>' + esc(s.description) + '</p>' +
+            (metrics.length ? '<div class="solution-card-meta">' + metrics.join('') + '</div>' : '') +
             '<div class="solution-card-footer">' +
-            (s.starting_price ? '<span class="solution-price">From $' + s.starting_price + '</span>' : '<span></span>') +
+            (price ? '<span class="solution-price">From ' + price + '</span>' : '<span></span>') +
             '<span class="solution-cta">View Solution →</span></div></a>';
     }
 
@@ -233,12 +281,22 @@
         } else if (s.code) {
             badgeHtml = '<div class="dimension-card-badge code">' + esc(s.code) + '</div>';
         }
+        var meta = [];
+        if (collection === 'languages') {
+            if (s.native_speakers_l1) meta.push('<span class="dimension-stat">Global native speakers: ' + esc(s.native_speakers_l1) + '</span>');
+            if (s.official_countries_count) meta.push('<span class="dimension-stat">Official country footprint: ' + s.official_countries_count + '</span>');
+        } else if (collection === 'countries') {
+            if (s.population_total) meta.push('<span class="dimension-stat">Market population: ' + esc(s.population_total) + '</span>');
+            if (s.official_languages_count) meta.push('<span class="dimension-stat">Official language coverage: ' + s.official_languages_count + '</span>');
+        }
+        var metaHtml = meta.length ? '<div class="dimension-card-meta">' + meta.join('') + '</div>' : '';
         var countText = s.service_count ? s.service_count + ' services' : '';
         return '<a href="' + url + '" class="dimension-card">' +
             '<div class="dimension-card-header">' +
             '<h3>' + esc(s.menu || s.title) + '</h3>' +
             badgeHtml + '</div>' +
             '<p>' + esc(s.description) + '</p>' +
+            metaHtml +
             '<div class="dimension-card-footer">' +
             (countText ? '<span class="dimension-count">' + countText + '</span>' : '<span></span>') +
             '<span class="dimension-cta">Explore →</span></div></a>';

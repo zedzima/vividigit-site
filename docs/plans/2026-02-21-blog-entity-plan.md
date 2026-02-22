@@ -1,6 +1,8 @@
 # Blog Post Entity Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+>
+> **Historical note (2026-02-22):** This plan file is kept as an implementation log. Current code uses shared specialist card rendering via `themes/vividigit/assets/js/cards.js` (no standalone `blocks/cards/specialist-card.html` template).
 
 **Goal:** Make Blog Post the 9th primary entity in the CMS relationship graph, so blog posts appear on specialist and category pages as related entities.
 

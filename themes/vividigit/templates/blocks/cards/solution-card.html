@@ -1,8 +1,14 @@
 {# Solution card — matches catalog.html renderSolutionCard() #}
 {% set url = item.url | default('/solutions/' ~ item.slug) %}
 {% set links = item.links | default({}) %}
+{% set rels = item.relationships | default({}) %}
+{% set tags = item.tags | default({}) %}
 {% set service_label_map = {'technical-seo': 'Technical SEO', 'ai-optimisation': 'AI Optimization', 'content-strategy': 'Content Strategy', 'ppc-management': 'PPC Management', 'analytics-setup': 'Analytics', 'localization': 'Localization'} %}
 {% set industry_label_map = {'ecommerce': 'E-commerce', 'saas': 'SaaS', 'fintech': 'Fintech', 'healthcare': 'Healthcare', 'education': 'Education', 'realestate': 'Real Estate', 'travel': 'Travel'} %}
+{% set specialist_count = rels.specialists | default([]) | length %}
+{% set case_count = rels.cases | default([]) | length %}
+{% set country_count = tags.countries | default([]) | length %}
+{% set language_count = tags.languages | default([]) | length %}
 <a href="{{ url }}" class="solution-card">
     {% if links.service or links.industry %}
     <div class="solution-card-tags">
@@ -12,9 +18,17 @@
     {% endif %}
     <h3>{{ item.menu or item.title }}</h3>
     <p>{{ item.description }}</p>
+    {% if specialist_count or case_count or country_count or language_count %}
+    <div class="solution-card-meta">
+        {% if specialist_count %}<span class="solution-meta-item">{{ specialist_count }} specialist{% if specialist_count != 1 %}s{% endif %}</span>{% endif %}
+        {% if case_count %}<span class="solution-meta-item">{{ case_count }} case{% if case_count != 1 %}s{% endif %}</span>{% endif %}
+        {% if country_count %}<span class="solution-meta-item">{{ country_count }} countr{% if country_count == 1 %}y{% else %}ies{% endif %}</span>{% endif %}
+        {% if language_count %}<span class="solution-meta-item">{{ language_count }} language{% if language_count != 1 %}s{% endif %}</span>{% endif %}
+    </div>
+    {% endif %}
     <div class="solution-card-footer">
         {% if item.starting_price %}
-        <span class="solution-price">From ${{ item.starting_price }}</span>
+        <span class="solution-price">From ${{ '{:,.0f}'.format(item.starting_price|float) }}</span>
         {% else %}
         <span></span>
         {% endif %}

@@ -281,50 +281,40 @@ sites/vividigit/content/
 
 ## Collection items are automatically indexed.
 
-During build, each collection generates a JSON index file.
+During build, collection-specific JSON exports are generated under `public/data/`.
 
-The index contains:
-- item URLs,
-- titles,
-- descriptions,
-- tags and categories,
-- relationships (references to other entities),
-- other filterable metadata.
+Current exports:
+- `services-index.json` — service catalog data with card counters and graph facets
+- `team.json` — specialists with card fields and graph facets
+- `cases.json` — cases with computed card metrics and graph facets
+- `solutions-index.json` — solutions with pricing/counter fields and graph facets
+- `categories-index.json` — categories with aggregate counters
+- `industries-index.json` — industries with aggregate service counts
+- `countries-index.json` — countries with aggregate service counts and market metrics
+- `languages-index.json` — languages with aggregate service counts and market metrics
+- `blog.json` — blog listing data (flat array export)
+- `graph.json` — full node/edge graph export
 
-Entity indexes (services, team, cases, solutions, blog) also include:
-- `facets` — per-item dict of connected entity slugs by type (from the bidirectional map),
-- `labels` — top-level dict mapping slugs to display names for all referenced entities.
+Graph-faceted exports (`services-index.json`, `team.json`, `cases.json`, `solutions-index.json`) include:
+- per-item `facets` (connected entity slugs by type),
+- top-level `labels` (slug-to-display-name lookup for connected entities).
 
-```json
-{
-  "services": [
-    {
-      "slug": "technical-seo",
-      "facets": {
-        "specialists": ["ivan-petrov"],
-        "categories": ["seo"],
-        "industries": ["ecommerce", "saas"],
-        ...
-      }
-    }
-  ],
-  "labels": {
-    "specialists": {"ivan-petrov": "Ivan Petrov"},
-    "categories": {"seo": "SEO"},
-    ...
-  }
-}
-```
+Dimension exports include card-ready counters:
+- `categories-index.json`: `service_count`, `specialist_count`, `industry_count`, `country_count`, `language_count`
+- `countries-index.json`: `service_count`, `population_total`, `official_languages_count`
+- `languages-index.json`: `service_count`, `native_speakers_l1`, `official_countries_count`
 
-This index is used for client-side filtering, search, and cross-entity navigation.
+Case export includes computed card metrics:
+- `primary_result` and `timeline` derived from case hero stats.
 
-JSON files are output to `public/data/<collection>.json`.
+Service export includes compact card counters:
+- `industry_count`, `country_count`, `language_count`, `task_count`, plus graph-derived `case_count` and `article_count`.
 
 ---
 
 ## Catalog filters are auto-generated from the entity graph.
 
-Entity listing pages (services, team, cases, solutions, blog) receive faceted filters at build time.
+Entity listing pages (`services`, `team`, `cases`, `solutions`) receive faceted filters at build time.
 Filters are injected into the `catalog` block's `data.filters` and rendered inside the catalog section (not the sidebar).
 
 Each filter dimension corresponds to a connected entity type from the bidirectional map.
@@ -332,7 +322,29 @@ Filter options and labels are derived from `page_lookup`.
 
 Dimension listings (categories, industries, countries, languages) have sort-only, no filters.
 
-Blog uses static filters defined in `[[catalog.filters]]` in TOML with `match = "startsWith"` support for date year filtering.
+Blog listing uses static filters defined in `[[catalog.filters]]` in TOML with `match = "startsWith"` support for date year filtering.
+
+---
+
+## Card contracts are consistent across catalogs and related blocks.
+
+Specialist card is rendered from a single shared source:
+- `themes/vividigit/assets/js/cards.js` (`window.CMSCards.renderSpecialistCard`)
+
+The same specialist card markup is used in:
+- `catalog` block,
+- `catalog-mini` block,
+- `related-entities` block.
+
+Specialist card does not render legacy `rating` and `hourly_rate` fields.
+
+Entity card data priorities:
+- Services: category chips, delivery badge, description, counters (`industry_count`, `country_count`, `language_count`, `task_count`)
+- Specialists: avatar, name, role, `projects`, `case_count`, `article_count`, industries/languages/countries
+- Cases: scope tags, description, `primary_result`, `timeline`
+- Categories: `service_count`, `specialist_count`, dimension counters
+- Solutions: no cover image, compact counters (`specialist_count`, `case_count`, countries/languages via facets)
+- Countries/Languages: market metrics in card meta (`population_total`, `official_languages_count`, `native_speakers_l1`, `official_countries_count`)
 
 ---
 
@@ -401,7 +413,7 @@ Its structure varies by page type:
 - **Listing pages**: default CTA + contact form (filters are in the catalog block, not sidebar)
 - **Other pages**: CTA panels, links, or custom widgets
 
-> **Note:** Listing pages (services, team, cases, solutions, categories, industries, countries, languages, blog) do not define `[sidebar]` in TOML. They fall through to the default sidebar (CTA + contact form, same as homepage). Filters for entity listings are auto-generated from the entity graph and rendered inside the `catalog` block.
+> **Note:** Listing pages (services, team, cases, solutions, categories, industries, countries, languages, blog) do not define `[sidebar]` in TOML. They fall through to the default sidebar (CTA + contact form, same as homepage). Filters for services/team/cases/solutions are auto-generated from the entity graph and rendered inside the `catalog` block. Blog filters remain static in `[[catalog.filters]]`.
 
 ### Order Cart Sidebar (`type = "order-cart"`)
 
@@ -414,11 +426,13 @@ type = "order-cart"
 button_label = "Request Quote"
 button_url = "contact/?service=technical-seo"
 note = "Estimated pricing. Final quote after brief."
-language_fee = 200        # USD per additional language (default: 200)
-country_fee = 100         # USD per additional country (default: 100)
 extra_languages = true    # Show language modifier counter
 extra_countries = true    # Show country modifier counter
 ```
+
+Modifier pricing is percentage-based (configured in `themes/vividigit/assets/js/site.js`):
+- additional language: +60% of base item price
+- additional country: +40% of base item price
 
 ---
 

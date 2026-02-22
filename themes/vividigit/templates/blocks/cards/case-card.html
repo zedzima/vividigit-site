@@ -2,6 +2,8 @@
 {% set url = item.url | default('/cases/' ~ item.slug) %}
 {% set rels = item.relationships | default({}) %}
 {% set industry_label_map = {'ecommerce': 'E-commerce', 'saas': 'SaaS', 'fintech': 'Fintech', 'healthcare': 'Healthcare', 'education': 'Education', 'realestate': 'Real Estate', 'travel': 'Travel'} %}
+{% set country_label_map = {'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain'} %}
+{% set lang_code_map = {'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT'} %}
 <a href="{{ url }}" class="case-card">
     <div class="case-image">
         {% if item.config.image %}
@@ -12,24 +14,35 @@
     </div>
     <div class="case-content">
         {% set industry = rels.industry | default('') %}
-        {% set client = item.config.client | default('') %}
-        {% if industry or client %}
+        {% set country = rels.country | default('') %}
+        {% set language = rels.language | default('') %}
+        {% set client = item.client | default(item.config.client, true) %}
+        {% if industry or country or language or client %}
         <div class="case-meta">
             {% if industry %}<span class="case-industry">{{ industry_label_map.get(industry, industry|replace('-', ' ')|title) }}</span>{% endif %}
+            {% if country %}<span class="case-industry">{{ country_label_map.get(country, country|replace('-', ' ')|title) }}</span>{% endif %}
+            {% if language %}<span class="case-industry">{{ lang_code_map.get(language, language[:2]|upper) }}</span>{% endif %}
             {% if client %}<span class="case-client">{{ client }}</span>{% endif %}
         </div>
         {% endif %}
         <h3>{{ item.menu or item.title }}</h3>
         <p>{{ item.description }}</p>
-        {% set results = item.results | default([]) %}
-        {% if results %}
+        {% set primary_result = item.primary_result | default((item.results | default([]))[0], true) %}
+        {% set timeline = item.timeline | default(None, true) %}
+        {% if primary_result or timeline %}
         <div class="case-results">
-            {% for r in results[:2] %}
+            {% if primary_result %}
             <div class="case-result">
-                <span class="result-value">{{ r.value }}</span>
-                <span class="result-label">{{ r.label }}</span>
+                <span class="result-value">{{ primary_result.value }}</span>
+                <span class="result-label">{{ primary_result.label }}</span>
             </div>
-            {% endfor %}
+            {% endif %}
+            {% if timeline and (not primary_result or timeline.value != primary_result.value or timeline.label != primary_result.label) %}
+            <div class="case-result">
+                <span class="result-value">{{ timeline.value }}</span>
+                <span class="result-label">{{ timeline.label }}</span>
+            </div>
+            {% endif %}
         </div>
         {% endif %}
     </div>

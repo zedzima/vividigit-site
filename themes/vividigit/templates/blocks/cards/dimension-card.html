@@ -1,6 +1,10 @@
 {# Dimension card (industry, country, language) — matches renderDimensionCard() #}
 {% set url = item.url | default('/' ~ item.collection ~ '/' ~ item.slug) %}
 {% set lang_code_map = {'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT'} %}
+{% set native_speakers_l1 = item.native_speakers_l1 | default(item.config.native_speakers_l1, true) %}
+{% set official_countries_count = item.official_countries_count | default(item.config.official_countries_count, true) %}
+{% set population_total = item.population_total | default(item.config.population_total, true) %}
+{% set official_languages_count = item.official_languages_count | default(item.config.official_languages_count, true) %}
 <a href="{{ url }}" class="dimension-card">
     <div class="dimension-card-header">
         <h3>{{ item.menu or item.title }}</h3>
@@ -15,6 +19,17 @@
         {% endif %}
     </div>
     <p>{{ item.description }}</p>
+    {% if item.type == 'language' and (native_speakers_l1 or official_countries_count) %}
+    <div class="dimension-card-meta">
+        {% if native_speakers_l1 %}<span class="dimension-stat">Global native speakers: {{ native_speakers_l1 }}</span>{% endif %}
+        {% if official_countries_count %}<span class="dimension-stat">Official country footprint: {{ official_countries_count }}</span>{% endif %}
+    </div>
+    {% elif item.type == 'country' and (population_total or official_languages_count) %}
+    <div class="dimension-card-meta">
+        {% if population_total %}<span class="dimension-stat">Market population: {{ population_total }}</span>{% endif %}
+        {% if official_languages_count %}<span class="dimension-stat">Official language coverage: {{ official_languages_count }}</span>{% endif %}
+    </div>
+    {% endif %}
     <div class="dimension-card-footer">
         {% if item.service_count %}
         <span class="dimension-count">{{ item.service_count }} services</span>

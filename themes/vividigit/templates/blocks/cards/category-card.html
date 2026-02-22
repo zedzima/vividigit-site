@@ -2,15 +2,31 @@
 {% set url = item.url | default('/categories/' ~ item.slug) %}
 {% set category_icon_map = {'seo': 'search', 'aeo': 'lightning', 'digital-marketing': 'globe', 'content': 'pen-tool', 'social-media': 'megaphone', 'ppc': 'target', 'email': 'mail', 'analytics': 'analytics', 'cro': 'chart', 'video': 'video', 'pr': 'newspaper', 'automation': 'code', 'marketplace-management': 'layers', 'affiliate': 'users'} %}
 {% set icon_name = category_icon_map.get(item.slug, 'settings') %}
+{% set tags = item.tags | default({}) %}
+{% set rels = item.relationships | default({}) %}
+{% set service_count = item.service_count | default(0) %}
+{% set specialist_count = item.specialist_count | default(rels.specialists | default([]) | length, true) %}
+{% set industry_count = tags.industries | default([]) | length %}
+{% set country_count = tags.countries | default([]) | length %}
+{% set language_count = tags.languages | default([]) | length %}
 <a href="{{ url }}" class="category-card">
     <div class="category-card-header">
         <h3>{{ item.menu or item.title }}</h3>
         <div class="category-card-icon" style="--icon-url: url(/assets/icons/{{ icon_name }}.svg)"></div>
     </div>
     <p>{{ item.description }}</p>
+    {% if service_count or specialist_count or industry_count or country_count or language_count %}
+    <div class="category-card-meta">
+        {% if service_count %}<span class="category-meta-item">{{ service_count }} service{% if service_count != 1 %}s{% endif %}</span>{% endif %}
+        {% if specialist_count %}<span class="category-meta-item">{{ specialist_count }} specialist{% if specialist_count != 1 %}s{% endif %}</span>{% endif %}
+        {% if industry_count %}<span class="category-meta-item">{{ industry_count }} industr{% if industry_count == 1 %}y{% else %}ies{% endif %}</span>{% endif %}
+        {% if country_count %}<span class="category-meta-item">{{ country_count }} countr{% if country_count == 1 %}y{% else %}ies{% endif %}</span>{% endif %}
+        {% if language_count %}<span class="category-meta-item">{{ language_count }} language{% if language_count != 1 %}s{% endif %}</span>{% endif %}
+    </div>
+    {% endif %}
     <div class="category-card-footer">
         {% if item.config.door_opener_price %}
-        <span class="category-price">From ${{ item.config.door_opener_price }}</span>
+        <span class="category-price">From ${{ '{:,.0f}'.format(item.config.door_opener_price|float) }}</span>
         {% else %}
         <span></span>
         {% endif %}

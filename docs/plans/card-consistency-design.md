@@ -1,65 +1,65 @@
 # Card Consistency Design
 
-> **Status: Partially Implemented** (as of 2026-02-18)
->
-> - Change #1 (services-list full cards): **Not implemented** — `services-list.html` template does not exist yet.
-> - Change #2 (cases listing page): **Implemented differently** — cases listing uses `[catalog]` block with `source = "cases"` instead of the proposed `[cases]` block.
-> - Change #3 (process sidebar font/padding): **Implemented** — `process.html` already uses `var(--font-size-body)` and `var(--space-xl)` padding.
+> **Status: Implemented** (updated 2026-02-21)
 
-## Problem
+## Goal
 
-Card implementations across pages are inconsistent with their dedicated block templates:
+Keep one visual/data contract per entity card, so catalog pages and related-entities blocks show the same key information and do not diverge.
 
-1. **Service cards on category/country/industry pages** use `services-list` block with simplified cards (title + description + 2 tags), while `/services/` catalog has full cards (categories, rating, description, industries, languages, price, CTA).
-2. **Cases listing page** (`/cases/`) uses generic `[cards]` block instead of the dedicated `[cases]` block with image, client, results, and metadata.
-3. **Process block sidebar** has narrow navigation and small font (13px `font-size-ui`), making it feel cramped.
+## Implemented Decisions
 
-## Solution
+1. **Single specialist card implementation**
+   - Source of truth: `themes/vividigit/assets/js/cards.js` (`renderSpecialistCard`)
+   - Reused in:
+     - `themes/vividigit/templates/blocks/catalog.html`
+     - `themes/vividigit/templates/blocks/catalog-mini.html`
+     - `themes/vividigit/templates/blocks/related-entities.html`
+   - Removed legacy specialist card fields: `rating`, `hourly_rate`
+   - Current specialist card fields: avatar, name, role, projects, cases, articles, industries/languages/countries
 
-### 1. services-list.html — Full Service Cards
+2. **Service cards use compact metrics (no cover image)**
+   - Category chips + delivery badge
+   - Title + description
+   - Counters: industries, countries, languages, tasks
+   - Footer price
 
-Update `renderCard()` in `services-list.html` to match `catalog.html` card format:
+3. **Solution cards use compact metrics (no cover image)**
+   - Service/industry chips
+   - Title + description
+   - Counters: specialists, cases, countries, languages
+   - Footer starting price
 
-- Header: category badges + rating star
-- Body: title (font-size-body, 600 weight) + description (font-size-ui)
-- Industries row (font-size-caption tags)
-- Languages row (uppercase code badges)
-- Footer: price + "View →" CTA, separated by border-top
+4. **Category cards include specialist count**
+   - Service count + specialist count + industry/country/language counts
+   - Door-opener price retained in footer
 
-Copy `.service-card` CSS from `catalog.html` into `services-list.html` (scoped under `.services-list-grid`). Data fields already exist in `services-index.json`: `tags.categories`, `tags.industries`, `tags.languages`, `from_price`, `rating`.
+5. **Case cards expose success signal + timeline**
+   - Meta scope: industry/country/language/client
+   - Computed `primary_result` and `timeline` shown as KPI row
 
-Label maps for slug-to-display conversion (e.g., `digital-marketing` → `Digital Marketing`, `english` → `EN`) should be included in the JS.
+6. **Country/language cards include market metrics**
+   - Language: `native_speakers_l1`, `official_countries_count`
+   - Country: `population_total`, `official_languages_count`
 
-### 2. Cases Listing Page — Use [cases] Block
+7. **Blog cards aligned between listing and related blocks**
+   - Type/category chips
+   - Title + excerpt
+   - Date + author meta
 
-Replace `[cards]` block in `content/cases/cases.en.toml` with `[cases]` block. Populate with full case data:
+## Data Contract (Build Exports)
 
-- `client`, `title`, `description`
-- `results` array with `value` + `label`
-- `service`, `service_label`, `industry`, `industry_label`, `language_codes`
-- `url` pointing to case detail page
-- Optional `image`
+| Export | Card-critical fields |
+|-------|-----------------------|
+| `public/data/services-index.json` | `industry_count`, `country_count`, `language_count`, `task_count`, `case_count`, `article_count` |
+| `public/data/team.json` | `projects`, `industries`, `languages`, `countries`, `case_count`, `article_count` |
+| `public/data/cases.json` | `client`, `primary_result`, `timeline`, `results` |
+| `public/data/categories-index.json` | `service_count`, `specialist_count`, `industry_count`, `country_count`, `language_count` |
+| `public/data/solutions-index.json` | `starting_price`, `specialist_count`, `case_count` |
+| `public/data/countries-index.json` | `population_total`, `official_languages_count`, `service_count` |
+| `public/data/languages-index.json` | `native_speakers_l1`, `official_countries_count`, `service_count` |
 
-Add filter definitions (`services`, `industries`, `languages`) to enable the built-in filtering UI from the cases block template.
+## Implementation Notes
 
-### 3. Process Block Sidebar — Font and Width
-
-In `templates/blocks/process.html`:
-
-- Change `.process-sidebar .process-btn` font-size from `var(--font-size-ui)` (13px) to `var(--font-size-body)` (14px) — uses existing variable, no new sizes
-- Increase sidebar padding: `var(--space-md) var(--space-xl)` (was `var(--space-md) var(--space-lg)`)
-- These changes make navigation labels more readable and sidebar slightly wider
-
-## Files to Modify
-
-| File | Change |
-|------|--------|
-| `templates/blocks/services-list.html` | Full card markup + CSS + updated renderCard() |
-| `content/cases/cases.en.toml` | Switch from [cards] to [cases] block with full data |
-| `templates/blocks/process.html` | Sidebar button font-size and padding |
-
-## Non-Goals
-
-- No changes to `catalog.html` (already correct)
-- No changes to `cases.html` template (already correct)
-- No new CSS variables or font sizes
+- Specialist card is intentionally JS-rendered in related sections through placeholders to reuse identical markup.
+- Other related-entities cards use dedicated Jinja partials under `themes/vividigit/templates/blocks/cards/`.
+- `catalog.html` and `catalog-mini.html` mirror the same field priorities as related card partials.

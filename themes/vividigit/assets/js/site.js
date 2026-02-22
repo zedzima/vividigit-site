@@ -106,6 +106,21 @@ const cart = {
             if (saved) {
                 const data = JSON.parse(saved);
                 this.items = data.items || {};
+                // Migrate legacy items (delivery/billingPeriod → payment/discount)
+                for (const slug of Object.keys(this.items)) {
+                    const item = this.items[slug];
+                    if (!item.payment) {
+                        item.payment = item.delivery === 'monthly'
+                            ? (item.billingPeriod === 'yearly' ? 'yearly' : 'monthly')
+                            : 'one-time';
+                        item.discount = item.billingDiscount || item.discount || 0;
+                        if (!item.billing) item.billing = { oneTime: true, monthly: false, yearly: false };
+                        if (!item.itemType) item.itemType = 'Service';
+                        delete item.delivery;
+                        delete item.billingPeriod;
+                        delete item.billingDiscount;
+                    }
+                }
             }
         } catch (e) { /* ignore parse errors */ }
     },
@@ -119,18 +134,17 @@ const cart = {
         updateCartBadge();
     },
 
-    add(slug, title, tierName, tierLabel, price, custom, delivery, billing) {
+    add(slug, title, tierName, tierLabel, price, custom, payment, billing, itemType) {
         const prev = this.items[slug];
-        const b = billing || { oneTime: true, monthly: false, yearly: false };
         this.items[slug] = {
             title, tierName, tierLabel, price, custom,
-            delivery: delivery || (b.monthly ? 'monthly' : 'one-time'),
-            billing: b,
+            payment: payment || 'one-time',
+            discount: _billingDiscount,
+            billing: billing || { oneTime: true, monthly: false, yearly: false },
+            itemType: itemType || 'Service',
             page: window.location.pathname,
             langCount: prev ? prev.langCount || 0 : 0,
-            countryCount: prev ? prev.countryCount || 0 : 0,
-            billingPeriod: (b.yearly && _billingPeriod === 'yearly') ? 'yearly' : 'monthly',
-            billingDiscount: (b.yearly && _billingPeriod === 'yearly') ? _billingDiscount : 0
+            countryCount: prev ? prev.countryCount || 0 : 0
         };
         this.save();
         this.renderSidebar();
@@ -185,10 +199,18 @@ const cart = {
         return true;
     },
 
+    getEffectivePrice(item) {
+        if (item.payment === 'yearly' && item.discount > 0) {
+            return Math.round(item.price * (100 - item.discount) / 100);
+        }
+        return item.price;
+    },
+
     getItemTotal(item) {
-        const langExtra = Math.round(item.price * SITE_CONFIG.langPct) * (item.langCount || 0);
-        const countryExtra = Math.round(item.price * SITE_CONFIG.countryPct) * (item.countryCount || 0);
-        return item.price + langExtra + countryExtra;
+        const base = this.getEffectivePrice(item);
+        const langExtra = Math.round(base * SITE_CONFIG.langPct) * (item.langCount || 0);
+        const countryExtra = Math.round(base * SITE_CONFIG.countryPct) * (item.countryCount || 0);
+        return base + langExtra + countryExtra;
     },
 
     getTotal() {
@@ -209,10 +231,10 @@ const cart = {
             const item = this.items[slug];
             const lc = item.langCount || 0;
             const cc = item.countryCount || 0;
-            const delivery = item.delivery === 'monthly' ? 'Monthly' : 'One-time';
-            const billing = item.billingPeriod === 'yearly' ? ' (billed yearly, -' + (item.billingDiscount || 0) + '%)' : '';
+            const paymentLabel = item.payment === 'yearly' ? 'Yearly' : (item.payment === 'monthly' ? 'Monthly' : 'One-time');
             const itemTotal = this.getItemTotal(item);
-            let line = '- ' + item.title + ' (' + item.tierName + ') — ' + delivery + billing;
+            let line = '- ' + item.title + (item.tierName ? ' (' + item.tierName + ')' : '') + ' — ' + paymentLabel;
+            if (item.payment === 'yearly' && item.discount) line += ' (-' + item.discount + '%)';
             if (lc > 0) line += ', +' + lc + ' lang (×' + Math.round(SITE_CONFIG.langPct * 100) + '%)';
             if (cc > 0) line += ', +' + cc + ' countries (×' + Math.round(SITE_CONFIG.countryPct * 100) + '%)';
             line += ' — ' + (item.price > 0 ? '$' + itemTotal.toLocaleString() : 'Custom');
@@ -231,16 +253,18 @@ const cart = {
             const item = this.items[slug];
             const lc = item.langCount || 0;
             const cc = item.countryCount || 0;
-            const delivery = item.delivery === 'monthly' ? 'Monthly' : 'One-time';
+            const paymentLabel = item.payment === 'yearly' ? 'Yearly' : (item.payment === 'monthly' ? 'Monthly' : 'One-time');
+            const effectivePrice = this.getEffectivePrice(item);
             const itemTotal = this.getItemTotal(item);
-            lines.push(num + '. ' + item.title + ' (' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ')');
-            lines.push('   Delivery: ' + delivery);
-            if (item.billingPeriod === 'yearly') lines.push('   Billing: Yearly (-' + (item.billingDiscount || 0) + '%)');
-            const perLang = Math.round(item.price * SITE_CONFIG.langPct);
-            const perCountry = Math.round(item.price * SITE_CONFIG.countryPct);
+            lines.push(num + '. ' + item.title + (item.tierName ? ' (' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ')' : ''));
+            lines.push('   Type: ' + (item.itemType || 'Service'));
+            lines.push('   Payment: ' + paymentLabel);
+            if (item.payment === 'yearly' && item.discount) lines.push('   Discount: -' + item.discount + '% (yearly)');
+            const perLang = Math.round(effectivePrice * SITE_CONFIG.langPct);
+            const perCountry = Math.round(effectivePrice * SITE_CONFIG.countryPct);
             if (lc > 0) lines.push('   Languages: +' + lc + ' × $' + perLang + ' (60%) = $' + (lc * perLang));
             if (cc > 0) lines.push('   Countries: +' + cc + ' × $' + perCountry + ' (40%) = $' + (cc * perCountry));
-            lines.push('   Subtotal: ' + (item.price > 0 ? '$' + itemTotal.toLocaleString() : 'Custom quote'));
+            lines.push('   Subtotal: ' + (effectivePrice > 0 ? '$' + itemTotal.toLocaleString() : 'Custom quote'));
             lines.push('');
             num++;
         }
@@ -291,19 +315,21 @@ const cart = {
         let subtotal = 0;
         let hasCustom = false;
 
-        var hasBillingYearly = false;
         for (const slug of keys) {
             const item = pageItems[slug];
             if (item.custom) hasCustom = true;
-            subtotal += item.price;
-            if (item.billingPeriod === 'yearly') hasBillingYearly = true;
+            const effectivePrice = cart.getEffectivePrice(item);
+            subtotal += effectivePrice;
+            var paymentLabel = '';
+            if (item.payment === 'monthly') paymentLabel = ' (Monthly)';
+            else if (item.payment === 'yearly') paymentLabel = ' (Yearly)';
             html += '<div class="cart-line-item">' +
                 '<div class="cart-item-info">' +
-                    '<span class="cart-item-title">' + item.title + '</span>' +
+                    '<span class="cart-item-title">' + item.title + paymentLabel + '</span>' +
                     '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + '</span>' +
                 '</div>' +
                 '<div class="cart-item-actions">' +
-                    '<span class="cart-item-price">' + (item.price > 0 ? '$' + item.price.toLocaleString() : 'Custom') + '</span>' +
+                    '<span class="cart-item-price">' + (effectivePrice > 0 ? '$' + effectivePrice.toLocaleString() : 'Custom') + '</span>' +
                     '<button class="cart-item-remove" data-slug="' + slug + '" title="Remove">&times;</button>' +
                 '</div>' +
             '</div>';
@@ -342,43 +368,37 @@ const cart = {
         if (feesEl) feesEl.textContent = modifierTotal > 0 ? '+$' + modifierTotal.toLocaleString() : '$0';
         if (totalEl) totalEl.textContent = (hasCustom ? 'From $' : '$') + grandTotal.toLocaleString();
 
-        // Show billing period badge in totals area
+        // Clean up legacy billing badge if present
         var billingBadge = document.getElementById('cartBillingBadge');
-        if (hasBillingYearly) {
-            if (!billingBadge && totalsEl) {
-                billingBadge = document.createElement('div');
-                billingBadge.id = 'cartBillingBadge';
-                billingBadge.className = 'cart-billing-badge';
-                totalsEl.insertBefore(billingBadge, totalsEl.firstChild);
-            }
-            if (billingBadge) billingBadge.textContent = 'Yearly billing — ' + (_billingDiscount || 20) + '% off';
-        } else if (billingBadge) {
-            billingBadge.remove();
-        }
+        if (billingBadge) billingBadge.remove();
     }
 };
 
 // Load saved cart from localStorage
 cart.load();
 
-// Billing period state (set by task-picker billing toggle)
+// Billing period state (set by toggle on any page)
 var _billingPeriod = 'monthly';
 var _billingDiscount = 0;
+// Initialize discount from page toggle if present (so cart.add gets correct discount even before toggle click)
+(function() {
+    var el = document.querySelector('[data-discount]');
+    if (el) _billingDiscount = parseInt(el.dataset.discount) || 0;
+})();
 
 // Listen for events from task-picker and pricing blocks
 document.addEventListener('taskToggled', function(e) {
     const d = e.detail;
     const billing = d.billing || { oneTime: true, monthly: false, yearly: false };
-    const delivery = billing.monthly ? 'monthly' : 'one-time';
+    const payment = billing.monthly ? _billingPeriod : 'one-time';
     if (d.replaceAll) {
-        // Clear only current page items, keep others
         const currentPage = window.location.pathname;
         for (const slug of Object.keys(cart.items)) {
             if (cart.items[slug].page === currentPage) delete cart.items[slug];
         }
-        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, delivery, billing);
+        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Service');
     } else if (d.selected) {
-        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, delivery, billing);
+        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Service');
     } else {
         cart.remove(d.slug);
     }
@@ -392,12 +412,16 @@ document.addEventListener('tierChanged', function(e) {
 document.addEventListener('billingPeriodChanged', function(e) {
     _billingPeriod = e.detail.period;
     _billingDiscount = e.detail.discount;
-    // Update billing info on all current-page cart items
+    // Update payment + discount on all current-page cart items
     const currentPage = window.location.pathname;
     for (const slug of Object.keys(cart.items)) {
         if (cart.items[slug].page !== currentPage) continue;
-        cart.items[slug].billingPeriod = _billingPeriod;
-        cart.items[slug].billingDiscount = _billingDiscount;
+        const item = cart.items[slug];
+        item.discount = _billingDiscount;
+        // Toggle only affects recurring items, not one-time
+        if (item.payment !== 'one-time') {
+            item.payment = _billingPeriod;
+        }
     }
     cart.save();
     cart.renderSidebar();
@@ -435,7 +459,7 @@ if (document.getElementById('cartItems')) {
                 monthly: cb.dataset.monthly === 'true',
                 yearly: cb.dataset.yearly === 'true'
             };
-            const delivery = billing.monthly ? 'monthly' : 'one-time';
+            const payment = billing.monthly ? _billingPeriod : 'one-time';
             cart.add(
                 cb.dataset.slug,
                 cb.dataset.title,
@@ -443,8 +467,9 @@ if (document.getElementById('cartItems')) {
                 activeTier ? activeTier.dataset.tierLabel : '',
                 activeTier ? (parseInt(activeTier.dataset.price) || 0) : 0,
                 activeTier ? activeTier.dataset.custom === 'true' : false,
-                delivery,
-                billing
+                payment,
+                billing,
+                'Service'
             );
         });
     }
@@ -490,12 +515,59 @@ if (document.getElementById('cartItems')) {
             });
             pkg.classList.add('pricing-package-selected');
 
+            // Read billing flags from package data attributes
+            var billing = {
+                oneTime: pkg.dataset.oneTime === 'true',
+                monthly: pkg.dataset.monthly !== 'false',
+                yearly: pkg.dataset.yearly === 'true'
+            };
+            var payment = billing.monthly ? _billingPeriod : 'one-time';
+
             // Clear current page items, add package
             var curPage = window.location.pathname;
             for (var s of Object.keys(cart.items)) {
                 if (cart.items[s].page === curPage) delete cart.items[s];
             }
-            cart.add(slug, serviceName || pkgName, pkgName, '', price, false);
+            var monthlyPrice = parseInt(priceEl.dataset.monthly) || price;
+            cart.add(slug, serviceName || pkgName, pkgName, '', monthlyPrice, false, payment, billing, 'Package');
+        });
+    });
+
+    // Simple pricing CTA → Order Cart integration
+    document.querySelectorAll('.pricing-simple-cta').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            var section = btn.closest('.pricing-block');
+            var titleEl = section ? section.querySelector('h2') : null;
+            var priceEl = section ? section.querySelector('.price-current') : null;
+            if (!titleEl || !priceEl) return;
+
+            e.preventDefault();
+            var title = titleEl.textContent.trim();
+            var slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            // Always use base monthly price, not displayed (possibly discounted) price
+            var price = parseInt(priceEl.dataset.monthly) || parseInt(priceEl.textContent.replace(/[^0-9]/g, '')) || 0;
+
+            // Read billing flags from card data attributes
+            var card = btn.closest('.pricing-simple-card');
+            var billing = {
+                oneTime: card && card.dataset.oneTime === 'true',
+                monthly: !card || card.dataset.monthly !== 'false',
+                yearly: card && card.dataset.yearly === 'true'
+            };
+            var payment = billing.monthly ? _billingPeriod : 'one-time';
+
+            // Clear current page items, add solution
+            var curPage = window.location.pathname;
+            for (var s of Object.keys(cart.items)) {
+                if (cart.items[s].page === curPage) delete cart.items[s];
+            }
+            cart.add(slug, title, '', '', price, false, payment, billing, 'Solution');
+
+            // Open sidebar on mobile
+            if (window.innerWidth < 2200) {
+                var actionBtn = document.getElementById('btnAction');
+                if (actionBtn) actionBtn.click();
+            }
         });
     });
 
@@ -518,11 +590,20 @@ if (document.getElementById('cartItems')) {
             });
             tier.classList.add('active');
 
+            // Read billing flags from spotlight card
+            var ctaCard = section ? section.querySelector('.pricing-cta-card') : null;
+            var billing = {
+                oneTime: ctaCard && ctaCard.dataset.oneTime === 'true',
+                monthly: !ctaCard || ctaCard.dataset.monthly !== 'false',
+                yearly: ctaCard && ctaCard.dataset.yearly === 'true'
+            };
+            var payment = billing.monthly ? _billingPeriod : 'one-time';
+
             var curPage = window.location.pathname;
             for (var s of Object.keys(cart.items)) {
                 if (cart.items[s].page === curPage) delete cart.items[s];
             }
-            cart.add(slug, serviceName || tierName, tierName, '', price, false);
+            cart.add(slug, serviceName || tierName, tierName, '', price, false, payment, billing, 'Package');
         });
     });
 }
@@ -708,7 +789,8 @@ updateCartBadge();
         // Table
         let html = '<div class="cart-table-wrap"><table class="cart-table"><thead><tr>' +
             '<th>Service</th>' +
-            '<th>Delivery</th>' +
+            '<th>Type</th>' +
+            '<th>Payment</th>' +
             '<th>Languages</th>' +
             '<th>Countries</th>' +
             '<th class="text-right">Total</th>' +
@@ -723,25 +805,33 @@ updateCartBadge();
             if (item.custom) hasCustom = true;
             const lc = item.langCount || 0;
             const cc = item.countryCount || 0;
+            const effectivePrice = cart.getEffectivePrice(item);
             const itemTotal = cart.getItemTotal(item);
             grandTotal += itemTotal;
-            const isMonthly = item.delivery === 'monthly';
-            const perLang = Math.round(item.price * SITE_CONFIG.langPct);
-            const perCountry = Math.round(item.price * SITE_CONFIG.countryPct);
+            const perLang = Math.round(effectivePrice * SITE_CONFIG.langPct);
+            const perCountry = Math.round(effectivePrice * SITE_CONFIG.countryPct);
 
-            var basePriceStr = item.price > 0 ? '$' + item.price.toLocaleString() : 'Custom';
-            var billingNote = item.billingPeriod === 'yearly' ? ' <span class="cart-billing-note">(billed yearly, -' + (item.billingDiscount || 0) + '%)</span>' : '';
+            var basePriceStr = effectivePrice > 0 ? '$' + effectivePrice.toLocaleString() : 'Custom';
+            var paymentLabel = '';
+            if (item.payment === 'monthly') paymentLabel = ' (Monthly)';
+            else if (item.payment === 'yearly') paymentLabel = ' (Yearly)';
+            var tierStr = item.tierName ? item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' : '';
+
+            // All 3 payment buttons always visible; disabled ones grayed out
+            var billing = item.billing || {oneTime: true, monthly: false, yearly: false};
+            var paymentBtns = '<div class="cart-payment-tabs">';
+            paymentBtns += '<button class="cart-payment-opt' + (item.payment === 'one-time' ? ' active' : '') + (billing.oneTime ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="one-time"' + (billing.oneTime ? '' : ' disabled') + '>One-time</button>';
+            paymentBtns += '<button class="cart-payment-opt' + (item.payment === 'monthly' ? ' active' : '') + (billing.monthly ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="monthly"' + (billing.monthly ? '' : ' disabled') + '>Monthly</button>';
+            paymentBtns += '<button class="cart-payment-opt' + (item.payment === 'yearly' ? ' active' : '') + (billing.yearly ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="yearly"' + (billing.yearly ? '' : ' disabled') + '>Yearly</button>';
+            paymentBtns += '</div>';
+
             html += '<tr>' +
                 '<td>' +
-                    '<span class="cart-item-name">' + item.title + '</span>' +
-                    '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + basePriceStr + billingNote + '</span>' +
+                    '<span class="cart-item-name">' + item.title + paymentLabel + '</span>' +
+                    '<span class="cart-item-tier">' + tierStr + basePriceStr + '</span>' +
                 '</td>' +
-                '<td>' +
-                    '<div class="cart-delivery-tabs">' +
-                        '<button class="cart-delivery-opt' + (!isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="one-time">One-time</button>' +
-                        '<button class="cart-delivery-opt' + (isMonthly ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>' +
-                    '</div>' +
-                '</td>' +
+                '<td>' + (item.itemType || 'Service') + '</td>' +
+                '<td>' + paymentBtns + '</td>' +
                 '<td>' +
                     '<div class="cart-inline-counter">' +
                         '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="langCount" data-action="minus">−</button>' +
@@ -758,7 +848,7 @@ updateCartBadge();
                     '</div>' +
                     (cc > 0 ? '<span class="cart-inline-fee">+$' + (perCountry * cc).toLocaleString() + '</span>' : '') +
                 '</td>' +
-                '<td class="text-right"><span class="cart-item-price">' + (item.price > 0 ? '$' + itemTotal.toLocaleString() : 'Custom') + '</span></td>' +
+                '<td class="text-right"><span class="cart-item-price">' + (effectivePrice > 0 ? '$' + itemTotal.toLocaleString() : 'Custom') + '</span></td>' +
                 '<td><button class="cart-item-remove-btn" data-slug="' + slug + '">&times;</button></td>' +
             '</tr>';
         }
@@ -820,14 +910,14 @@ updateCartBadge();
             });
         });
 
-        // Delivery tabs
-        cartPage.querySelectorAll('.cart-delivery-opt').forEach(function(btn) {
+        // Payment tabs
+        cartPage.querySelectorAll('.cart-payment-opt').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 const slug = btn.dataset.slug;
                 const val = btn.dataset.val;
                 const item = cart.items[slug];
-                if (!item || item.delivery === val) return;
-                item.delivery = val;
+                if (!item || item.payment === val) return;
+                item.payment = val;
                 cart.save();
                 renderCartPage();
             });
