@@ -1,0 +1,393 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Hero Doodle v2: Strategy Mind Map / Constellation Diagram -->
+  <!-- Hand-drawn style with wobbly lines, purple-magenta palette -->
+
+  <defs>
+    <!-- Wobbly line filters for hand-drawn feel -->
+    <filter id="wobble1" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="turbulence" baseFrequency="0.03" numOctaves="3" seed="1" result="turb"/>
+      <feDisplacementMap in="SourceGraphic" in2="turb" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="wobble2" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="turbulence" baseFrequency="0.025" numOctaves="2" seed="7" result="turb"/>
+      <feDisplacementMap in="SourceGraphic" in2="turb" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- ============================================ -->
+  <!-- CONNECTION LINES (drawn first, behind nodes) -->
+  <!-- ============================================ -->
+
+  <!-- Center to Magnifying Glass (top-left) - wavy line -->
+  <path d="M 398,298 C 370,275 330,240 295,215 C 275,200 255,190 238,182"
+        stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-dasharray="8 5"
+        opacity="0.6" filter="url(#wobble1)"/>
+
+  <!-- Center to Chart (top-right) - wavy line -->
+  <path d="M 405,293 C 430,265 470,225 510,195 C 530,180 548,172 560,165"
+        stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-dasharray="8 5"
+        opacity="0.6" filter="url(#wobble1)"/>
+
+  <!-- Center to Gear (right) - dotted line -->
+  <path d="M 420,305 C 460,310 520,320 570,335 C 600,345 625,355 648,368"
+        stroke="#C026D3" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 6"
+        opacity="0.55" filter="url(#wobble2)"/>
+
+  <!-- Center to Globe (bottom-right) - wavy line -->
+  <path d="M 408,318 C 425,355 448,400 470,435 C 482,455 490,468 498,478"
+        stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-dasharray="8 5"
+        opacity="0.6" filter="url(#wobble1)"/>
+
+  <!-- Center to Lightning (bottom-left) - dotted line -->
+  <path d="M 388,318 C 365,360 330,410 295,445 C 278,462 262,472 250,480"
+        stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 6"
+        opacity="0.55" filter="url(#wobble2)"/>
+
+  <!-- Center to Target (left) - wavy line -->
+  <path d="M 380,302 C 340,298 280,290 230,288 C 200,286 175,288 155,292"
+        stroke="#C026D3" stroke-width="2" stroke-linecap="round" stroke-dasharray="8 5"
+        opacity="0.6" filter="url(#wobble1)"/>
+
+  <!-- Cross-connections between nodes (network feel) -->
+  <!-- Magnifying Glass to Chart -->
+  <path d="M 245,168 C 310,135 420,120 545,155"
+        stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 7"
+        opacity="0.35" filter="url(#wobble2)"/>
+
+  <!-- Target to Lightning -->
+  <path d="M 148,318 C 165,380 195,430 238,478"
+        stroke="#A855F7" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 7"
+        opacity="0.35" filter="url(#wobble1)"/>
+
+  <!-- Gear to Globe -->
+  <path d="M 655,398 C 630,430 585,462 512,488"
+        stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 7"
+        opacity="0.35" filter="url(#wobble2)"/>
+
+  <!-- Chart to Gear -->
+  <path d="M 582,178 C 620,225 650,290 660,358"
+        stroke="#A855F7" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 7"
+        opacity="0.35" filter="url(#wobble1)"/>
+
+  <!-- Lightning to Globe -->
+  <path d="M 262,492 C 330,510 415,505 488,495"
+        stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 7"
+        opacity="0.3" filter="url(#wobble2)"/>
+
+
+  <!-- ============================================ -->
+  <!-- CENTRAL HUB - Diamond shape (hand-drawn)    -->
+  <!-- ============================================ -->
+  <g filter="url(#wobble1)">
+    <!-- Outer glow ring -->
+    <path d="M 400,268 C 407,265 432,293 435,300 C 432,307 407,335 400,332
+             C 393,335 368,307 365,300 C 368,293 393,265 400,268 Z"
+          stroke="#C026D3" stroke-width="1.5" opacity="0.3"/>
+    <!-- Main diamond -->
+    <path d="M 400,275 C 405,273 425,296 427,300 C 425,304 405,327 400,325
+             C 395,327 375,304 373,300 C 375,296 395,273 400,275 Z"
+          stroke="#7C3AED" stroke-width="3" fill="none"/>
+    <!-- Inner diamond -->
+    <path d="M 400,288 C 403,287 413,297 414,300 C 413,303 403,313 400,312
+             C 397,313 387,303 386,300 C 387,297 397,287 400,288 Z"
+          stroke="#A855F7" stroke-width="2" fill="#A855F7" fill-opacity="0.15"/>
+    <!-- Small dot at center -->
+    <circle cx="400" cy="300" r="2.5" fill="#7C3AED" opacity="0.8"/>
+  </g>
+
+
+  <!-- ============================================ -->
+  <!-- NODE 1: MAGNIFYING GLASS (top-left)          -->
+  <!-- ============================================ -->
+  <g transform="translate(205, 150)" filter="url(#wobble1)">
+    <!-- Hand-drawn annotation circle around icon -->
+    <path d="M -2,38 C -18,30 -25,5 -15,-12 C -5,-28 25,-32 40,-22
+             C 55,-12 58,15 50,32 C 42,48 15,52 -2,38"
+          stroke="#C026D3" stroke-width="1.2" stroke-dasharray="5 4" opacity="0.3" fill="none"/>
+
+    <!-- Glass circle (wobbly) -->
+    <path d="M 8,2 C 15,-3 30,-2 35,5 C 40,12 38,27 32,32
+             C 26,37 12,38 6,32 C 0,26 1,8 8,2 Z"
+          stroke="#7C3AED" stroke-width="2.5" fill="none"/>
+    <!-- Handle -->
+    <path d="M 32,33 C 36,37 46,48 50,52 C 52,54 53,55 51,57 C 49,58 48,57 46,55 C 42,50 34,40 30,36"
+          stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <!-- Glare line inside -->
+    <path d="M 14,10 C 16,8 22,7 25,9"
+          stroke="#A855F7" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  </g>
+
+
+  <!-- ============================================ -->
+  <!-- NODE 2: CHART BARS (top-right)               -->
+  <!-- ============================================ -->
+  <g transform="translate(545, 135)" filter="url(#wobble2)">
+    <!-- Bar 1 (shortest) -->
+    <path d="M 2,42 L 3,28 C 3,27 5,26 9,27 L 10,42"
+          stroke="#A855F7" stroke-width="2.5" fill="#A855F7" fill-opacity="0.12" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Bar 2 (medium) -->
+    <path d="M 15,42 L 16,16 C 16,15 18,14 22,15 L 23,42"
+          stroke="#7C3AED" stroke-width="2.5" fill="#7C3AED" fill-opacity="0.12" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Bar 3 (tallest) -->
+    <path d="M 28,42 L 29,4 C 29,3 31,2 35,3 L 36,42"
+          stroke="#C026D3" stroke-width="2.5" fill="#C026D3" fill-opacity="0.12" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Base line (wobbly) -->
+    <path d="M -2,43 C 8,44 28,43 40,44"
+          stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+    <!-- Trend arrow going up -->
+    <path d="M 5,30 C 12,22 22,12 36,0"
+          stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 3" opacity="0.5"/>
+    <path d="M 30,-2 L 37,0 L 34,7"
+          stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.5"/>
+  </g>
+
+
+  <!-- ============================================ -->
+  <!-- NODE 3: GEAR/COG (right)                     -->
+  <!-- ============================================ -->
+  <g transform="translate(650, 365)" filter="url(#wobble1)">
+    <!-- Gear teeth (hand-drawn) -->
+    <path d="M 15,-2 L 18,-10 L 24,-10 L 27,-2
+             M 34,5 L 42,2 L 45,8 L 38,13
+             M 38,22 L 46,26 L 44,32 L 36,30
+             M 27,38 L 28,46 L 22,47 L 19,39
+             M 10,35 L 4,40 L 0,35 L 5,29
+             M 2,18 L -6,18 L -6,12 L 2,11"
+          stroke="#C026D3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <!-- Inner circle -->
+    <path d="M 14,13 C 18,9 28,9 32,14 C 36,19 35,29 30,33
+             C 25,37 16,36 12,31 C 8,26 10,17 14,13 Z"
+          stroke="#C026D3" stroke-width="2.5" fill="none"/>
+    <!-- Center dot -->
+    <circle cx="21" cy="22" r="3" stroke="#C026D3" stroke-width="1.5" fill="#C026D3" fill-opacity="0.2"/>
+  </g>
+
+
+  <!-- ============================================ -->
+  <!-- NODE 4: GLOBE (bottom-right)                 -->
+  <!-- ============================================ -->
+  <g transform="translate(485, 472)" filter="url(#wobble2)">
+    <!-- Outer circle (wobbly) -->
+    <path d="M 22,0 C 33,-2 46,8 48,20 C 50,32 42,46 30,48
+             C 18,50 4,42 1,30 C -2,18 10,2 22,0 Z"
+          stroke="#A855F7" stroke-width="2.5" fill="none"/>
+    <!-- Vertical meridian -->
+    <path d="M 24,-1 C 18,10 16,22 18,34 C 20,42 23,48 26,49"
+          stroke="#A855F7" stroke-width="1.5" fill="none" opacity="0.6"/>
+    <!-- Horizontal equator -->
+    <path d="M 2,22 C 12,26 28,27 47,22"
+          stroke="#A855F7" stroke-width="1.5" fill="none" opacity="0.6"/>
+    <!-- Upper latitude line -->
+    <path d="M 8,11 C 18,14 32,14 42,11"
+          stroke="#A855F7" stroke-width="1" fill="none" opacity="0.4"/>
+    <!-- Lower latitude line -->
+    <path d="M 6,35 C 15,38 30,38 44,34"
+          stroke="#A855F7" stroke-width="1" fill="none" opacity="0.4"/>
+  </g>
+
+
+  <!-- ============================================ -->
+  <!-- NODE 5: LIGHTNING BOLT (bottom-left)         -->
+  <!-- ============================================ -->
+  <g transform="translate(225, 465)" filter="url(#wobble1)">
+    <!-- Main bolt shape -->
+    <path d="M 22,0 L 25,2 L 14,22 L 24,20 L 12,48 L 15,46 L 10,50 L 18,28 L 8,30 L 22,0 Z"
+          stroke="#7C3AED" stroke-width="2.5" fill="#7C3AED" fill-opacity="0.1"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Sparkle lines around bolt -->
+    <path d="M 30,8 L 36,5" stroke="#A855F7" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M 32,18 L 38,17" stroke="#A855F7" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M -2,28 L -7,30" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  </g>
+
+
+  <!-- ============================================ -->
+  <!-- NODE 6: TARGET/BULLSEYE (left)               -->
+  <!-- ============================================ -->
+  <g transform="translate(110, 272)" filter="url(#wobble2)">
+    <!-- Outer ring -->
+    <path d="M 24,0 C 38,-2 52,10 53,24 C 54,38 44,52 30,53
+             C 16,54 2,44 0,30 C -2,16 10,2 24,0 Z"
+          stroke="#C026D3" stroke-width="2.5" fill="none"/>
+    <!-- Middle ring -->
+    <path d="M 22,10 C 30,8 40,16 40,25 C 40,34 32,42 24,42
+             C 16,42 8,34 8,25 C 8,16 14,10 22,10 Z"
+          stroke="#C026D3" stroke-width="2" fill="none" opacity="0.7"/>
+    <!-- Inner ring -->
+    <path d="M 23,18 C 28,17 34,22 34,27 C 34,32 29,36 24,36
+             C 19,36 14,32 14,27 C 14,22 18,18 23,18 Z"
+          stroke="#C026D3" stroke-width="1.5" fill="#C026D3" fill-opacity="0.1" opacity="0.8"/>
+    <!-- Bullseye dot -->
+    <circle cx="25" cy="27" r="3" fill="#C026D3" opacity="0.7"/>
+    <!-- Arrow hitting target -->
+    <path d="M 50,5 L 28,25" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <path d="M 44,3 L 51,4 L 50,11" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6"/>
+  </g>
+
+
+  <!-- ============================================ -->
+  <!-- DECORATIVE ELEMENTS                          -->
+  <!-- ============================================ -->
+
+  <!-- Star 1 (crossed lines style) - top area -->
+  <g transform="translate(320, 105)" opacity="0.5">
+    <line x1="0" y1="-7" x2="0" y2="7" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-7" y1="0" x2="7" y2="0" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-4" y1="-4" x2="4" y2="4" stroke="#C026D3" stroke-width="1" stroke-linecap="round"/>
+    <line x1="4" y1="-4" x2="-4" y2="4" stroke="#C026D3" stroke-width="1" stroke-linecap="round"/>
+  </g>
+
+  <!-- Star 2 - right area -->
+  <g transform="translate(700, 280)" opacity="0.4">
+    <line x1="0" y1="-6" x2="0" y2="6" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-6" y1="0" x2="6" y2="0" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-4" y1="-4" x2="4" y2="4" stroke="#7C3AED" stroke-width="1" stroke-linecap="round"/>
+    <line x1="4" y1="-4" x2="-4" y2="4" stroke="#7C3AED" stroke-width="1" stroke-linecap="round"/>
+  </g>
+
+  <!-- Star 3 - bottom area -->
+  <g transform="translate(380, 530)" opacity="0.45">
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#A855F7" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#A855F7" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-3" y1="-3" x2="3" y2="3" stroke="#A855F7" stroke-width="1" stroke-linecap="round"/>
+    <line x1="3" y1="-3" x2="-3" y2="3" stroke="#A855F7" stroke-width="1" stroke-linecap="round"/>
+  </g>
+
+  <!-- Star 4 - near chart -->
+  <g transform="translate(610, 118)" opacity="0.35">
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-3" y1="-3" x2="3" y2="3" stroke="#C026D3" stroke-width="1" stroke-linecap="round"/>
+    <line x1="3" y1="-3" x2="-3" y2="3" stroke="#C026D3" stroke-width="1" stroke-linecap="round"/>
+  </g>
+
+  <!-- Sparkle marks (3-line bursts) -->
+  <!-- Sparkle near magnifying glass -->
+  <g transform="translate(185, 128)" opacity="0.4">
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#A855F7" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="-4" y1="-3" x2="4" y2="3" stroke="#A855F7" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="4" y1="-3" x2="-4" y2="3" stroke="#A855F7" stroke-width="1.2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Sparkle near gear -->
+  <g transform="translate(710, 385)" opacity="0.35">
+    <line x1="0" y1="-4" x2="0" y2="4" stroke="#7C3AED" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="-3" y1="-3" x2="3" y2="3" stroke="#7C3AED" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="3" y1="-3" x2="-3" y2="3" stroke="#7C3AED" stroke-width="1.2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Sparkle near lightning -->
+  <g transform="translate(205, 520)" opacity="0.4">
+    <line x1="0" y1="-4" x2="0" y2="4" stroke="#C026D3" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="-3" y1="-2" x2="3" y2="2" stroke="#C026D3" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="3" y1="-2" x2="-3" y2="2" stroke="#C026D3" stroke-width="1.2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Scattered dots -->
+  <circle cx="350" cy="185" r="2" fill="#7C3AED" opacity="0.35"/>
+  <circle cx="455" cy="210" r="1.5" fill="#A855F7" opacity="0.4"/>
+  <circle cx="480" cy="245" r="2" fill="#C026D3" opacity="0.3"/>
+  <circle cx="310" cy="250" r="1.5" fill="#7C3AED" opacity="0.35"/>
+  <circle cx="340" cy="380" r="2" fill="#A855F7" opacity="0.3"/>
+  <circle cx="460" cy="370" r="1.5" fill="#C026D3" opacity="0.35"/>
+  <circle cx="275" cy="330" r="2" fill="#7C3AED" opacity="0.3"/>
+  <circle cx="530" cy="310" r="1.5" fill="#A855F7" opacity="0.35"/>
+  <circle cx="180" cy="380" r="2" fill="#C026D3" opacity="0.25"/>
+  <circle cx="620" cy="450" r="1.5" fill="#7C3AED" opacity="0.3"/>
+  <circle cx="440" cy="148" r="2" fill="#A855F7" opacity="0.3"/>
+  <circle cx="150" cy="210" r="1.5" fill="#C026D3" opacity="0.3"/>
+  <circle cx="680" cy="320" r="2" fill="#7C3AED" opacity="0.25"/>
+  <circle cx="320" cy="460" r="1.5" fill="#A855F7" opacity="0.3"/>
+
+  <!-- Small arrows (decorative, pointing along connections) -->
+  <!-- Arrow near top-left connection -->
+  <g filter="url(#wobble1)">
+    <path d="M 325,225 L 315,218 M 325,225 L 320,215"
+          stroke="#A855F7" stroke-width="1.5" stroke-linecap="round" opacity="0.45"/>
+  </g>
+
+  <!-- Arrow near right connection -->
+  <g filter="url(#wobble2)">
+    <path d="M 540,332 L 535,322 M 540,332 L 548,325"
+          stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+  </g>
+
+  <!-- Arrow near bottom-left connection -->
+  <g filter="url(#wobble1)">
+    <path d="M 335,398 L 328,390 M 335,398 L 342,392"
+          stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+  </g>
+
+  <!-- Squiggly underlines (annotation style) -->
+  <!-- Under magnifying glass area -->
+  <path d="M 195,215 C 200,220 208,215 215,220 C 222,225 228,218 235,222 C 242,226 248,220 255,224"
+        stroke="#7C3AED" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.3"/>
+
+  <!-- Under chart area -->
+  <path d="M 542,192 C 548,196 555,190 562,194 C 569,198 575,192 582,196 C 589,200 595,193 600,197"
+        stroke="#A855F7" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.3"/>
+
+  <!-- Under globe area -->
+  <path d="M 488,528 C 494,533 502,527 508,532 C 514,537 520,530 526,534 C 532,538 538,532 542,536"
+        stroke="#C026D3" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.3"/>
+
+  <!-- Bracket marks (annotation style) -->
+  <!-- Left bracket near target -->
+  <path d="M 85,265 C 78,270 75,285 75,295 C 75,305 78,320 85,330"
+        stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.3"
+        filter="url(#wobble2)"/>
+
+  <!-- Right bracket near gear -->
+  <path d="M 715,355 C 722,362 725,378 725,390 C 725,402 722,415 715,422"
+        stroke="#A855F7" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.3"
+        filter="url(#wobble1)"/>
+
+  <!-- Hand-drawn circle annotation around chart node -->
+  <path d="M 538,122 C 560,115 605,118 615,140 C 625,162 618,200 595,208
+           C 572,216 535,210 528,188 C 521,166 525,130 538,122"
+        stroke="#7C3AED" stroke-width="1.2" stroke-dasharray="6 5" fill="none" opacity="0.25"
+        filter="url(#wobble2)"/>
+
+  <!-- Hand-drawn circle annotation around lightning node -->
+  <path d="M 218,458 C 238,445 272,450 280,472 C 288,494 278,528 258,535
+           C 238,542 210,532 205,512 C 200,492 205,465 218,458"
+        stroke="#A855F7" stroke-width="1.2" stroke-dasharray="6 5" fill="none" opacity="0.25"
+        filter="url(#wobble1)"/>
+
+  <!-- Small decorative arrow pointing to center hub -->
+  <g filter="url(#wobble1)">
+    <path d="M 435,255 C 430,260 420,272 415,280"
+          stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+    <path d="M 432,250 L 436,256 L 429,258"
+          stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.4"/>
+  </g>
+
+  <!-- Another small annotation arrow from bottom -->
+  <g filter="url(#wobble2)">
+    <path d="M 370,345 C 378,338 388,325 393,318"
+          stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+    <path d="M 365,350 L 370,344 L 376,349"
+          stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.35"/>
+  </g>
+
+  <!-- Extra scattered tiny sparkle dots (smallest) -->
+  <circle cx="470" cy="170" r="1" fill="#C026D3" opacity="0.4"/>
+  <circle cx="298" cy="142" r="1" fill="#7C3AED" opacity="0.35"/>
+  <circle cx="630" cy="250" r="1" fill="#A855F7" opacity="0.35"/>
+  <circle cx="180" cy="450" r="1" fill="#C026D3" opacity="0.3"/>
+  <circle cx="560" cy="475" r="1" fill="#7C3AED" opacity="0.3"/>
+  <circle cx="90" cy="310" r="1" fill="#A855F7" opacity="0.3"/>
+  <circle cx="730" cy="350" r="1" fill="#C026D3" opacity="0.25"/>
+  <circle cx="400" cy="85" r="1" fill="#7C3AED" opacity="0.3"/>
+  <circle cx="350" cy="550" r="1" fill="#A855F7" opacity="0.25"/>
+
+  <!-- Final detail: tiny "x" marks scattered -->
+  <g opacity="0.25">
+    <path d="M 495,135 L 500,140 M 500,135 L 495,140" stroke="#C026D3" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M 120,365 L 125,370 M 125,365 L 120,370" stroke="#7C3AED" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M 590,520 L 595,525 M 595,520 L 590,525" stroke="#A855F7" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M 675,180 L 680,185 M 680,180 L 675,185" stroke="#C026D3" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M 105,185 L 110,190 M 110,185 L 105,190" stroke="#A855F7" stroke-width="1.2" stroke-linecap="round"/>
+  </g>
+
+</svg>

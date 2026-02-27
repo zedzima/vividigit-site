@@ -1,0 +1,92 @@
+<svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="ga" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#7C3AED"/>
+    <stop offset="100%" stop-color="#C026D3"/>
+  </linearGradient>
+  <filter id="gl">
+    <feGaussianBlur stdDeviation="5" result="blur"/>
+    <feMerge>
+      <feMergeNode in="blur"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+</defs>
+
+<!-- GLOBE — large central element -->
+<circle cx="300" cy="280" r="150" stroke="url(#ga)" stroke-width="4" fill="none" filter="url(#gl)"/>
+<!-- Meridians -->
+<ellipse cx="300" cy="280" rx="80" ry="150" stroke="#A855F7" stroke-width="2" fill="none" opacity="0.5"/>
+<ellipse cx="300" cy="280" rx="40" ry="150" stroke="#A855F7" stroke-width="1.5" fill="none" opacity="0.3"/>
+<!-- Parallels -->
+<ellipse cx="300" cy="200" rx="142" ry="30" stroke="#A855F7" stroke-width="1.5" fill="none" opacity="0.3"/>
+<ellipse cx="300" cy="280" rx="150" ry="30" stroke="#A855F7" stroke-width="2" fill="none" opacity="0.4"/>
+<ellipse cx="300" cy="360" rx="142" ry="30" stroke="#A855F7" stroke-width="1.5" fill="none" opacity="0.3"/>
+
+<!-- Connection nodes on globe surface -->
+<circle cx="220" cy="220" r="8" fill="#C026D3" fill-opacity="0.3" stroke="#C026D3" stroke-width="2.5"/>
+<circle cx="370" cy="250" r="8" fill="#7C3AED" fill-opacity="0.3" stroke="#7C3AED" stroke-width="2.5"/>
+<circle cx="260" cy="340" r="6" fill="#A855F7" fill-opacity="0.3" stroke="#A855F7" stroke-width="2"/>
+<circle cx="350" cy="330" r="7" fill="#C026D3" fill-opacity="0.3" stroke="#C026D3" stroke-width="2"/>
+<circle cx="300" cy="190" r="6" fill="#A855F7" fill-opacity="0.3" stroke="#A855F7" stroke-width="2"/>
+
+<!-- Connection lines between nodes -->
+<line x1="220" y1="220" x2="370" y2="250" stroke="#C026D3" stroke-width="2" opacity="0.4" stroke-dasharray="5 5"/>
+<line x1="370" y1="250" x2="350" y2="330" stroke="#7C3AED" stroke-width="2" opacity="0.4" stroke-dasharray="5 5"/>
+<line x1="220" y1="220" x2="260" y2="340" stroke="#A855F7" stroke-width="2" opacity="0.3" stroke-dasharray="5 5"/>
+<line x1="300" y1="190" x2="370" y2="250" stroke="#A855F7" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 6"/>
+
+<!-- CHART — floating top-left card -->
+<g filter="url(#gl)">
+  <rect x="55" y="80" width="140" height="95" rx="10" stroke="#7C3AED" stroke-width="3" fill="#7C3AED" fill-opacity="0.05"/>
+  <!-- Mini bars -->
+  <rect x="75" y="138" width="16" height="22" rx="2" fill="#7C3AED" fill-opacity="0.4"/>
+  <rect x="98" y="125" width="16" height="35" rx="2" fill="#A855F7" fill-opacity="0.5"/>
+  <rect x="121" y="110" width="16" height="50" rx="2" fill="url(#ga)" fill-opacity="0.6"/>
+  <rect x="144" y="120" width="16" height="40" rx="2" fill="#A855F7" fill-opacity="0.4"/>
+  <!-- Trend arrow -->
+  <path d="M80 130 L115 105 L155 115" stroke="#C026D3" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Label line -->
+  <line x1="75" y1="95" x2="130" y2="95" stroke="#A855F7" stroke-width="2" opacity="0.3" stroke-linecap="round"/>
+</g>
+
+<!-- MAGNIFIER — floating top-right -->
+<g filter="url(#gl)">
+  <circle cx="505" cy="130" r="35" stroke="url(#ga)" stroke-width="3.5" fill="none"/>
+  <line x1="530" y1="155" x2="555" y2="180" stroke="url(#ga)" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Lens shine -->
+  <path d="M490 115 Q500 108 510 115" stroke="#A855F7" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round"/>
+</g>
+
+<!-- CURSOR + CLICK — bottom-left -->
+<g transform="translate(85, 450)">
+  <path d="M0 0 L0 38 L10 30 L20 48 L28 44 L18 26 L30 24Z" stroke="#A855F7" stroke-width="3" fill="#A855F7" fill-opacity="0.15" stroke-linejoin="round" filter="url(#gl)"/>
+  <!-- Click rings -->
+  <circle cx="-2" cy="-2" r="14" stroke="#C026D3" stroke-width="2" fill="none" opacity="0.4"/>
+  <circle cx="-2" cy="-2" r="24" stroke="#C026D3" stroke-width="1.5" fill="none" opacity="0.2"/>
+</g>
+
+<!-- LIGHTNING — bottom-right -->
+<g transform="translate(490, 440)" filter="url(#gl)">
+  <path d="M10 0 L-8 28 L8 28 L-10 58" stroke="#C026D3" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+
+<!-- CHECKMARKS row — bottom center -->
+<g stroke="#7C3AED" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M245 520 L255 533 L275 510"/>
+  <path d="M290 520 L300 533 L320 510" stroke="#A855F7"/>
+  <path d="M335 520 L345 533 L365 510" stroke="#C026D3"/>
+</g>
+
+<!-- Connecting lines from globe to floating elements -->
+<line x1="180" y1="180" x2="160" y2="155" stroke="#7C3AED" stroke-width="2" stroke-dasharray="4 6" opacity="0.3"/>
+<line x1="420" y1="180" x2="475" y2="150" stroke="#A855F7" stroke-width="2" stroke-dasharray="4 6" opacity="0.3"/>
+<line x1="170" y1="380" x2="110" y2="445" stroke="#A855F7" stroke-width="2" stroke-dasharray="4 6" opacity="0.25"/>
+<line x1="430" y1="380" x2="485" y2="435" stroke="#C026D3" stroke-width="2" stroke-dasharray="4 6" opacity="0.25"/>
+
+<!-- Orbit ring around globe -->
+<ellipse cx="300" cy="280" rx="200" ry="60" stroke="#7C3AED" stroke-width="1.5" fill="none" opacity="0.2" transform="rotate(-20 300 280)"/>
+<!-- Satellite dot on orbit -->
+<circle cx="500" cy="260" r="5" fill="#C026D3" fill-opacity="0.6" stroke="#C026D3" stroke-width="2"/>
+
+</svg>
