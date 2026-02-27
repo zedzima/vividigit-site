@@ -685,10 +685,6 @@ function openContactSidebar() {
     }
 
     if (contactWidget) {
-        contactWidget.classList.remove('contact-focus');
-        // Restart animation if user clicks repeatedly.
-        void contactWidget.offsetWidth;
-        contactWidget.classList.add('contact-focus');
         contactWidget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 }
@@ -913,14 +909,17 @@ function initSidebarShare() {
         } else if (network === 'facebook' && btn.tagName === 'A') {
             btn.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodedUrl;
         } else if (network === 'copy') {
+            const originalTitle = btn.getAttribute('title') || 'Copy Link';
+            const originalAria = btn.getAttribute('aria-label') || 'Copy Link';
             btn.addEventListener('click', function() {
-                const original = btn.textContent;
                 const markCopied = function() {
-                    btn.textContent = 'Copied';
                     btn.classList.add('copied');
+                    btn.setAttribute('title', 'Copied');
+                    btn.setAttribute('aria-label', 'Copied');
                     setTimeout(function() {
-                        btn.textContent = original;
                         btn.classList.remove('copied');
+                        btn.setAttribute('title', originalTitle);
+                        btn.setAttribute('aria-label', originalAria);
                     }, 1200);
                 };
 
@@ -936,9 +935,162 @@ function initSidebarShare() {
     });
 }
 
+function initSourceSelectDropdowns() {
+    const selects = document.querySelectorAll(
+        '.sidebar-content .widget select.form-input[name="source"], #cartSource.cart-field-input'
+    );
+    if (!selects.length) return;
+    const viewportPadding = 16;
+    const menuDefaultMaxHeight = 220;
+    const menuMinHeight = 120;
+    const menuMaxHeight = 360;
+
+    function closeAllSourceSelects(except) {
+        document.querySelectorAll('.source-select.open').forEach(function(wrapper) {
+            if (except && wrapper === except) return;
+            wrapper.classList.remove('open', 'open-up');
+            const toggle = wrapper.querySelector('.source-select-toggle');
+            if (toggle) toggle.setAttribute('aria-expanded', 'false');
+            const menu = wrapper.querySelector('.source-select-menu');
+            if (menu) menu.style.maxHeight = '';
+        });
+    }
+
+    function positionSourceMenu(wrapper, menu) {
+        const rect = wrapper.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom - viewportPadding;
+        const spaceAbove = rect.top - viewportPadding;
+        const openUp = spaceBelow < menuDefaultMaxHeight && spaceAbove > spaceBelow;
+        const availableSpace = openUp ? spaceAbove : spaceBelow;
+        const nextMaxHeight = Math.max(menuMinHeight, Math.min(menuMaxHeight, Math.floor(availableSpace)));
+
+        wrapper.classList.toggle('open-up', openUp);
+        menu.style.maxHeight = nextMaxHeight + 'px';
+    }
+
+    function repositionOpenSourceMenus() {
+        document.querySelectorAll('.source-select.open').forEach(function(wrapper) {
+            const menu = wrapper.querySelector('.source-select-menu');
+            if (menu) positionSourceMenu(wrapper, menu);
+        });
+    }
+
+    selects.forEach(function(select) {
+        if (select.dataset.enhanced === 'true') return;
+        select.dataset.enhanced = 'true';
+
+        const group = select.closest('.form-group') || select.parentElement;
+        if (!group) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'source-select';
+        if (select.id === 'cartSource') {
+            wrapper.classList.add('source-select-cart');
+        }
+
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'source-select-toggle';
+        toggle.setAttribute('aria-haspopup', 'listbox');
+        toggle.setAttribute('aria-expanded', 'false');
+
+        const label = document.createElement('span');
+        label.className = 'source-select-label';
+        toggle.appendChild(label);
+
+        const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        arrow.setAttribute('class', 'dropdown-arrow');
+        arrow.setAttribute('viewBox', '0 0 24 24');
+        arrow.setAttribute('fill', 'none');
+        arrow.setAttribute('stroke', 'currentColor');
+        arrow.setAttribute('stroke-width', '2');
+        const arrowPath = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        arrowPath.setAttribute('points', '6 9 12 15 18 9');
+        arrow.appendChild(arrowPath);
+        toggle.appendChild(arrow);
+
+        const menu = document.createElement('div');
+        menu.className = 'source-select-menu';
+        menu.setAttribute('role', 'listbox');
+
+        function updateState() {
+            const selected = select.options[select.selectedIndex] || select.options[0];
+            const fallback = select.options[0];
+            const hasValue = !!(selected && selected.value);
+            label.textContent = hasValue ? selected.textContent : (fallback ? fallback.textContent : 'Select');
+            toggle.classList.toggle('is-placeholder', !hasValue);
+
+            menu.querySelectorAll('.source-select-option').forEach(function(optionBtn) {
+                const value = optionBtn.dataset.value || '';
+                const isActive = value === select.value && value !== '';
+                optionBtn.classList.toggle('active', isActive);
+            });
+        }
+
+        Array.from(select.options).forEach(function(option) {
+            const optionBtn = document.createElement('button');
+            optionBtn.type = 'button';
+            optionBtn.className = 'source-select-option dropdown-option';
+            optionBtn.textContent = option.textContent;
+            optionBtn.dataset.value = option.value;
+
+            if (option.disabled) {
+                optionBtn.disabled = true;
+                optionBtn.classList.add('disabled');
+            }
+
+            optionBtn.addEventListener('click', function() {
+                if (optionBtn.disabled) return;
+                select.value = optionBtn.dataset.value || '';
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+                wrapper.classList.remove('open', 'open-up');
+                toggle.setAttribute('aria-expanded', 'false');
+                menu.style.maxHeight = '';
+            });
+
+            menu.appendChild(optionBtn);
+        });
+
+        toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const willOpen = !wrapper.classList.contains('open');
+            closeAllSourceSelects(wrapper);
+            wrapper.classList.toggle('open', willOpen);
+            if (willOpen) {
+                positionSourceMenu(wrapper, menu);
+            } else {
+                wrapper.classList.remove('open-up');
+                menu.style.maxHeight = '';
+            }
+            toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+
+        select.addEventListener('change', updateState);
+        group.appendChild(wrapper);
+        wrapper.appendChild(toggle);
+        wrapper.appendChild(menu);
+        select.classList.add('source-select-native');
+        wrapper.appendChild(select);
+        updateState();
+    });
+
+    if (!document.body.dataset.sourceSelectInit) {
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.source-select')) closeAllSourceSelects();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeAllSourceSelects();
+        });
+        window.addEventListener('resize', repositionOpenSourceMenus);
+        window.addEventListener('scroll', repositionOpenSourceMenus, true);
+        document.body.dataset.sourceSelectInit = 'true';
+    }
+}
+
 normalizeCtaButtons();
 setupGlobalCtaActions();
 initSidebarShare();
+initSourceSelectDropdowns();
 
 // ========================================
 // Cart CTA → Navigate to cart page
@@ -1037,6 +1189,7 @@ document.querySelectorAll('.sidebar-content .widget').forEach(function(widget) {
                 inputs.forEach(function(input) {
                     if (input.tagName === 'SELECT') {
                         input.selectedIndex = 0;
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
                     } else {
                         input.value = '';
                     }
@@ -1201,6 +1354,9 @@ updateCartBadge();
                     '<option value="social">Social media</option>' +
                     '<option value="referral">Referral</option>' +
                     '<option value="ad">Advertisement</option>' +
+                    '<option value="ai">Artificial Intelligence</option>' +
+                    '<option value="friends">Friends / Colleagues</option>' +
+                    '<option value="newsletter">Email Newsletter</option>' +
                     '<option value="other">Other</option>' +
                 '</select>' +
             '</div>' +
@@ -1218,6 +1374,7 @@ updateCartBadge();
         if (savedPhone) document.getElementById('cartPhone').value = savedPhone;
         if (savedEmail) document.getElementById('cartEmail').value = savedEmail;
         if (savedSource) document.getElementById('cartSource').value = savedSource;
+        initSourceSelectDropdowns();
 
         // --- Bind events ---
 
