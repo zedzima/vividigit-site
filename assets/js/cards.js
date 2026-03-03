@@ -77,11 +77,10 @@
         var serviceRefs = toArray(
             s.services ||
             facets.services ||
-            facets.categories ||
             (s.relationships && s.relationships.services) ||
             []
         );
-        var industryRefs = toArray(s.industries || facets.industries || (s.tags && s.tags.industries) || []);
+        var industryRefs = toArray(s.industries || facets.industries || (s.relationships && s.relationships.industries) || []);
         var languageRefs = toArray(s.languages || (s.relationships && s.relationships.languages) || []);
         var countryRefs = toArray(s.countries || (s.relationships && s.relationships.countries) || []);
         var caseRefs = toArray(facets.cases || s.cases || (s.relationships && s.relationships.cases) || []);

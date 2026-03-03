@@ -126,7 +126,7 @@ const cart = {
                             : 'one-time';
                         item.discount = item.billingDiscount || item.discount || 0;
                         if (!item.billing) item.billing = { oneTime: true, monthly: false, yearly: false };
-                        if (!item.itemType) item.itemType = 'Service';
+                        if (!item.itemType) item.itemType = 'Scope';
                         delete item.delivery;
                         delete item.billingPeriod;
                         delete item.billingDiscount;
@@ -408,9 +408,9 @@ document.addEventListener('taskToggled', function(e) {
         for (const slug of Object.keys(cart.items)) {
             if (cart.items[slug].page === currentPage) delete cart.items[slug];
         }
-        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Service');
+        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Scope');
     } else if (d.selected) {
-        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Service');
+        cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Scope');
     } else {
         cart.remove(d.slug);
     }
@@ -456,7 +456,7 @@ if (document.getElementById('cartItems')) {
     // Render sidebar with current page items only (no checkbox syncing from other pages)
     cart.renderSidebar();
 
-    // Init from pre-checked tasks (door openers) only if NO current-page items in cart
+    // Init from pre-checked tasks only if NO current-page items in cart
     const currentPage = window.location.pathname;
     let hasPageItems = false;
     for (const slug of Object.keys(cart.items)) {
@@ -481,7 +481,7 @@ if (document.getElementById('cartItems')) {
                 activeTier ? activeTier.dataset.custom === 'true' : false,
                 payment,
                 billing,
-                'Service'
+                'Scope'
             );
         });
     }
@@ -802,8 +802,8 @@ function normalizeCtaButtons() {
 function setupGlobalCtaActions() {
     const path = window.location.pathname.replace(/\/+$/, '');
     const hasOrderCart = !!document.getElementById('cartItems');
+    const isScopeDetail = /^\/scopes\/[^/]+$/.test(path);
     const isServiceDetail = /^\/services\/[^/]+$/.test(path);
-    const isCategoryDetail = /^\/categories\/[^/]+$/.test(path);
     const isSolutionDetail = /^\/solutions\/[^/]+$/.test(path);
 
     document.addEventListener('click', function(e) {
@@ -840,7 +840,7 @@ function setupGlobalCtaActions() {
             return;
         }
 
-        if (!inPricingBlock && isCategoryDetail && /^start with\b/i.test(label)) {
+        if (!inPricingBlock && isServiceDetail && /^start with\b/i.test(label)) {
             e.preventDefault();
             if (addFromPricingBlock()) {
                 openOrderSidebar();
@@ -860,7 +860,7 @@ function setupGlobalCtaActions() {
             return;
         }
 
-        if (!inPricingBlock && isServiceDetail && (href === '#task-picker' || /^start with\b/i.test(label) || (/^get\b/i.test(label) && /\baudit\b/i.test(label)))) {
+        if (!inPricingBlock && isScopeDetail && (href === '#task-picker' || /^start with\b/i.test(label) || (/^get\b/i.test(label) && /\baudit\b/i.test(label)))) {
             e.preventDefault();
             if (addFromTaskPicker()) {
                 openOrderSidebar();
