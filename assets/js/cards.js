@@ -62,6 +62,14 @@
         return fallbackMap[slug] || '';
     }
 
+    function resolveCountryName(countryLabel, slug) {
+        if (!slug) return '';
+        if (typeof countryLabel === 'function') return countryLabel(slug);
+        if (countryLabel && typeof countryLabel === 'object' && countryLabel[slug]) return countryLabel[slug];
+        if (String(slug).length <= 3) return String(slug).toUpperCase();
+        return defaultLabel(slug);
+    }
+
     function normalizeCount(value, fallback) {
         var n = Number(value);
         if (isFinite(n) && n >= 0) return n;
@@ -222,7 +230,7 @@
         var hiringBadge = '';
         if (d.hiring && d.hiring.status === 'active') {
             var neededCountries = (d.hiring.countries_needed || []).map(function(c) {
-                return resolveLabel(opts.countryLabel, c) || defaultLabel(c);
+                return resolveCountryName(opts.countryLabel, c);
             }).join(', ');
             hiringBadge = '<div class="position-hiring-badge">Hiring' +
                 (neededCountries ? ': ' + esc(neededCountries) : '') + '</div>';
