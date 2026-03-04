@@ -166,4 +166,87 @@
 
     window.CMSCards = window.CMSCards || {};
     window.CMSCards.renderSpecialistCard = renderSpecialistCard;
+
+    /* === Position Card === */
+    function normalizePositionCardData(p) {
+        var facets = p.facets || {};
+        var serviceRefs = toArray(
+            p.services || facets.services ||
+            (p.relationships && p.relationships.services) || []
+        );
+        var countryRefs = toArray(
+            p.countries || facets.countries ||
+            (p.relationships && p.relationships.countries) || []
+        );
+        var specialistRefs = toArray(
+            facets.specialists || p.specialists ||
+            (p.relationships && p.relationships.specialists) || []
+        );
+
+        return {
+            slug: p.slug || '',
+            url: (p.url || ('/positions/' + (p.slug || ''))).replace(/^\//, ''),
+            title: p.title || p.menu || p.slug || 'Position',
+            description: p.description || '',
+            specialist_count: normalizeCount(p.specialist_count, specialistRefs.length),
+            service_count: normalizeCount(p.service_count, serviceRefs.length),
+            services: serviceRefs,
+            countries: countryRefs,
+            hiring: p.hiring || {}
+        };
+    }
+
+    function renderPositionCard(p, options) {
+        var opts = options || {};
+        var d = normalizePositionCardData(p || {});
+
+        var countries = d.countries.map(function(c) {
+            var label = resolveLabel(opts.countryLabel, c);
+            var flag = resolveCountryFlag(opts.countryFlagMap, c);
+            var value = flag || label;
+            if (!value) return '';
+            var className = 'position-tag country ' + (flag ? 'country-flag' : 'country-label');
+            return '<span class="' + className + '" title="' + esc(label || defaultLabel(c)) + '">' + esc(value) + '</span>';
+        }).filter(Boolean);
+
+        var metricTags = [];
+        if (d.specialist_count > 0) {
+            metricTags.push('<span class="position-tag position-tag-count">' +
+                esc(pluralize(d.specialist_count, 'specialist', 'specialists')) + '</span>');
+        }
+        if (d.service_count > 0) {
+            metricTags.push('<span class="position-tag position-tag-count">' +
+                esc(pluralize(d.service_count, 'service', 'services')) + '</span>');
+        }
+
+        var hiringBadge = '';
+        if (d.hiring && d.hiring.status === 'active') {
+            var neededCountries = (d.hiring.countries_needed || []).map(function(c) {
+                return resolveLabel(opts.countryLabel, c) || defaultLabel(c);
+            }).join(', ');
+            hiringBadge = '<div class="position-hiring-badge">Hiring' +
+                (neededCountries ? ': ' + esc(neededCountries) : '') + '</div>';
+        }
+
+        var metricRow = metricTags.length
+            ? '<div class="position-tag-row position-tag-row-metrics">' + metricTags.join('') + '</div>'
+            : '';
+        var countryRow = countries.length
+            ? '<div class="position-tag-row position-tag-row-countries">' + countries.join('') + '</div>'
+            : '';
+        var tagsHtml = (metricRow || countryRow)
+            ? '<div class="position-tags">' + metricRow + countryRow + '</div>'
+            : '';
+
+        return '<a href="' + d.url + '" class="position-card">' +
+            '<h3>' + esc(d.title) + '</h3>' +
+            (d.description ? '<p class="position-summary">' + esc(d.description) + '</p>' : '') +
+            tagsHtml +
+            hiringBadge +
+            '<div class="position-card-footer">' +
+            '<span class="position-cta">View Position →</span>' +
+            '</div></a>';
+    }
+
+    window.CMSCards.renderPositionCard = renderPositionCard;
 })();

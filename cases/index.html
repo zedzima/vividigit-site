@@ -179,9 +179,18 @@
                     </a>
                     
                     
-                    <a href="blog/"
+                    <a href="positions/"
                        class="icon-bar-link "
                        data-nav-index="8"
+                       title="Join Us">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <span class="icon-bar-label">Join Us</span>
+                    </a>
+                    
+                    
+                    <a href="blog/"
+                       class="icon-bar-link "
+                       data-nav-index="9"
                        title="Blog">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
 
@@ -466,6 +475,11 @@
             url: 'data/languages-index.json',
             dataKey: 'languages',
             sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['scopes', 'Most Scopes']]
+        },
+        positions: {
+            url: 'data/positions-index.json',
+            dataKey: 'positions',
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['specialists', 'Most Specialists']]
         }
     };
 
@@ -672,7 +686,8 @@
         services: renderServiceCard, solutions: renderSolutionCard,
         industries: function(s) { return renderDimensionCard(s, 'industries'); },
         countries: function(s) { return renderDimensionCard(s, 'countries'); },
-        languages: function(s) { return renderDimensionCard(s, 'languages'); }
+        languages: function(s) { return renderDimensionCard(s, 'languages'); },
+        positions: function(s) { return window.CMSCards.renderPositionCard(s, { countryFlagMap: countryFlagMap, countryLabel: function(slug) { return label('countries', slug); } }); }
     };
 
     /* ===== Init sort dropdown ===== */
@@ -767,6 +782,7 @@
             case 'popular': sorted.sort(function(a,b){ return (b.rating||0)-(a.rating||0); }); break;
             case 'scopes': sorted.sort(function(a,b){ return (b.scope_count||0)-(a.scope_count||0); }); break;
             case 'price': sorted.sort(function(a,b){ return (a.starting_price||9999)-(b.starting_price||9999); }); break;
+            case 'specialists': sorted.sort(function(a,b){ return (b.specialist_count||0)-(a.specialist_count||0); }); break;
             default: break;
         }
         return sorted;

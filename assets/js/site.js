@@ -108,6 +108,58 @@ syncSidebarOverlay();
 // ========================================
 // Order Cart (with localStorage persistence)
 // ========================================
+function normalizeCartItemType(value) {
+    var normalized = String(value || '').trim().toLowerCase();
+    if (normalized === 'scope') return 'Scope';
+    if (normalized === 'solution') return 'Solution';
+    if (normalized === 'service' || normalized === 'package') return 'Service';
+    return 'Service';
+}
+
+function isServiceCartItem(itemOrType) {
+    var itemType = typeof itemOrType === 'string'
+        ? itemOrType
+        : (itemOrType && itemOrType.itemType);
+    return normalizeCartItemType(itemType) === 'Service';
+}
+
+function normalizeCartBilling(item) {
+    if (!item) return item;
+
+    item.itemType = normalizeCartItemType(item.itemType);
+
+    var billing = item.billing || {};
+    billing = {
+        oneTime: billing.oneTime !== false,
+        monthly: !!billing.monthly,
+        yearly: !!billing.yearly
+    };
+
+    if (!isServiceCartItem(item)) {
+        item.billing = { oneTime: true, monthly: false, yearly: false };
+        item.payment = 'one-time';
+        item.discount = 0;
+        return item;
+    }
+
+    if (!billing.oneTime && !billing.monthly && !billing.yearly) {
+        billing.oneTime = true;
+    }
+
+    if (item.payment === 'monthly' && !billing.monthly) {
+        item.payment = billing.oneTime ? 'one-time' : (billing.yearly ? 'yearly' : 'one-time');
+    } else if (item.payment === 'yearly' && !billing.yearly) {
+        item.payment = billing.monthly ? 'monthly' : (billing.oneTime ? 'one-time' : 'one-time');
+    } else if (item.payment !== 'one-time' && item.payment !== 'monthly' && item.payment !== 'yearly') {
+        item.payment = billing.oneTime ? 'one-time' : (billing.monthly ? 'monthly' : (billing.yearly ? 'yearly' : 'one-time'));
+    } else if (item.payment === 'one-time' && !billing.oneTime) {
+        item.payment = billing.monthly ? 'monthly' : (billing.yearly ? 'yearly' : 'one-time');
+    }
+
+    item.billing = billing;
+    return item;
+}
+
 const cart = {
     items: {},
 
@@ -126,11 +178,17 @@ const cart = {
                             : 'one-time';
                         item.discount = item.billingDiscount || item.discount || 0;
                         if (!item.billing) item.billing = { oneTime: true, monthly: false, yearly: false };
-                        if (!item.itemType) item.itemType = 'Scope';
+                        if (!item.itemType) {
+                            var pagePath = String(item.page || '');
+                            if (/^\/solutions\/[^/]+\/?$/.test(pagePath)) item.itemType = 'Solution';
+                            else if (/^\/scopes\/[^/]+\/?$/.test(pagePath)) item.itemType = 'Scope';
+                            else item.itemType = 'Service';
+                        }
                         delete item.delivery;
                         delete item.billingPeriod;
                         delete item.billingDiscount;
                     }
+                    normalizeCartBilling(item);
                 }
             }
         } catch (e) { /* ignore parse errors */ }
@@ -153,11 +211,12 @@ const cart = {
             payment: payment || 'one-time',
             discount: _billingDiscount,
             billing: billing || { oneTime: true, monthly: false, yearly: false },
-            itemType: itemType || 'Service',
+            itemType: normalizeCartItemType(itemType),
             page: window.location.pathname,
             langCount: prev ? prev.langCount || 0 : 0,
             countryCount: prev ? prev.countryCount || 0 : 0
         };
+        normalizeCartBilling(this.items[slug]);
         this.save();
         this.renderSidebar();
     },
@@ -182,6 +241,7 @@ const cart = {
             this.items[slug].price = price;
             this.items[slug].custom = custom;
             if (billing) this.items[slug].billing = billing;
+            normalizeCartBilling(this.items[slug]);
             this.save();
             this.renderSidebar();
         }
@@ -269,7 +329,7 @@ const cart = {
             const effectivePrice = this.getEffectivePrice(item);
             const itemTotal = this.getItemTotal(item);
             lines.push(num + '. ' + item.title + (item.tierName ? ' (' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ')' : ''));
-            lines.push('   Type: ' + (item.itemType || 'Service'));
+            lines.push('   Type: ' + normalizeCartItemType(item.itemType));
             lines.push('   Payment: ' + paymentLabel);
             if (item.payment === 'yearly' && item.discount) lines.push('   Discount: -' + item.discount + '% (yearly)');
             const perLang = Math.round(effectivePrice * SITE_CONFIG.langPct);
@@ -429,11 +489,16 @@ document.addEventListener('billingPeriodChanged', function(e) {
     for (const slug of Object.keys(cart.items)) {
         if (cart.items[slug].page !== currentPage) continue;
         const item = cart.items[slug];
+        if (!isServiceCartItem(item)) {
+            normalizeCartBilling(item);
+            continue;
+        }
         item.discount = _billingDiscount;
         // Toggle only affects recurring items, not one-time
         if (item.payment !== 'one-time') {
             item.payment = _billingPeriod;
         }
+        normalizeCartBilling(item);
     }
     cart.save();
     cart.renderSidebar();
@@ -541,7 +606,7 @@ if (document.getElementById('cartItems')) {
                 if (cart.items[s].page === curPage) delete cart.items[s];
             }
             var monthlyPrice = parseInt(priceEl.dataset.monthly) || price;
-            cart.add(slug, serviceName || pkgName, pkgName, '', monthlyPrice, false, payment, billing, 'Package');
+            cart.add(slug, serviceName || pkgName, pkgName, '', monthlyPrice, false, payment, billing, 'Service');
         });
     });
 
@@ -615,7 +680,7 @@ if (document.getElementById('cartItems')) {
             for (var s of Object.keys(cart.items)) {
                 if (cart.items[s].page === curPage) delete cart.items[s];
             }
-            cart.add(slug, serviceName || tierName, tierName, '', price, false, payment, billing, 'Package');
+            cart.add(slug, serviceName || tierName, tierName, '', price, false, payment, billing, 'Service');
         });
     });
 }
@@ -785,10 +850,14 @@ function normalizeCtaButtons() {
         }
 
         if (/^book consultation$/i.test(label)) {
-            btn.dataset.ctaAction = 'booking-disabled';
-            btn.classList.add('btn-disabled');
-            btn.setAttribute('aria-disabled', 'true');
-            if (btn.tagName === 'A') btn.setAttribute('href', '#');
+            if (btn.tagName === 'A' && isSidebarContactHref(href)) {
+                btn.dataset.ctaAction = 'open-contact';
+            } else {
+                btn.dataset.ctaAction = 'booking-disabled';
+                btn.classList.add('btn-disabled');
+                btn.setAttribute('aria-disabled', 'true');
+                if (btn.tagName === 'A') btn.setAttribute('href', '#');
+            }
             return;
         }
 
@@ -1260,7 +1329,7 @@ updateCartBadge();
 
         // Table
         let html = '<div class="cart-table-wrap"><table class="cart-table"><thead><tr>' +
-            '<th>Service</th>' +
+            '<th>Item</th>' +
             '<th>Type</th>' +
             '<th>Payment</th>' +
             '<th>Languages</th>' +
@@ -1274,6 +1343,7 @@ updateCartBadge();
 
         for (const slug of keys) {
             const item = cart.items[slug];
+            normalizeCartBilling(item);
             if (item.custom) hasCustom = true;
             const lc = item.langCount || 0;
             const cc = item.countryCount || 0;
@@ -1282,6 +1352,7 @@ updateCartBadge();
             grandTotal += itemTotal;
             const perLang = Math.round(effectivePrice * SITE_CONFIG.langPct);
             const perCountry = Math.round(effectivePrice * SITE_CONFIG.countryPct);
+            const itemType = normalizeCartItemType(item.itemType);
 
             var basePriceStr = effectivePrice > 0 ? '$' + effectivePrice.toLocaleString() : 'Custom';
             var paymentLabel = '';
@@ -1289,21 +1360,23 @@ updateCartBadge();
             else if (item.payment === 'yearly') paymentLabel = ' (Yearly)';
             var tierStr = item.tierName ? item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' : '';
 
-            // All 3 payment buttons always visible; disabled ones grayed out
             var billing = item.billing || {oneTime: true, monthly: false, yearly: false};
-            var paymentBtns = '<div class="cart-payment-tabs">';
-            paymentBtns += '<button class="cart-payment-opt' + (item.payment === 'one-time' ? ' active' : '') + (billing.oneTime ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="one-time"' + (billing.oneTime ? '' : ' disabled') + '>One-time</button>';
-            paymentBtns += '<button class="cart-payment-opt' + (item.payment === 'monthly' ? ' active' : '') + (billing.monthly ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="monthly"' + (billing.monthly ? '' : ' disabled') + '>Monthly</button>';
-            paymentBtns += '<button class="cart-payment-opt' + (item.payment === 'yearly' ? ' active' : '') + (billing.yearly ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="yearly"' + (billing.yearly ? '' : ' disabled') + '>Yearly</button>';
-            paymentBtns += '</div>';
+            var paymentCell = '<span class="cart-payment-label">One-time</span>';
+            if (isServiceCartItem(itemType)) {
+                paymentCell = '<div class="cart-payment-tabs">';
+                paymentCell += '<button class="cart-payment-opt' + (item.payment === 'one-time' ? ' active' : '') + (billing.oneTime ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="one-time"' + (billing.oneTime ? '' : ' disabled') + '>One-time</button>';
+                paymentCell += '<button class="cart-payment-opt' + (item.payment === 'monthly' ? ' active' : '') + (billing.monthly ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="monthly"' + (billing.monthly ? '' : ' disabled') + '>Monthly</button>';
+                paymentCell += '<button class="cart-payment-opt' + (item.payment === 'yearly' ? ' active' : '') + (billing.yearly ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="yearly"' + (billing.yearly ? '' : ' disabled') + '>Yearly</button>';
+                paymentCell += '</div>';
+            }
 
             html += '<tr>' +
                 '<td>' +
                     '<span class="cart-item-name">' + item.title + paymentLabel + '</span>' +
                     '<span class="cart-item-tier">' + tierStr + basePriceStr + '</span>' +
                 '</td>' +
-                '<td>' + (item.itemType || 'Service') + '</td>' +
-                '<td>' + paymentBtns + '</td>' +
+                '<td>' + itemType + '</td>' +
+                '<td>' + paymentCell + '</td>' +
                 '<td>' +
                     '<div class="cart-inline-counter">' +
                         '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="langCount" data-action="minus">−</button>' +
@@ -1393,7 +1466,9 @@ updateCartBadge();
                 const val = btn.dataset.val;
                 const item = cart.items[slug];
                 if (!item || item.payment === val) return;
+                if (!isServiceCartItem(item)) return;
                 item.payment = val;
+                normalizeCartBilling(item);
                 cart.save();
                 renderCartPage();
             });
