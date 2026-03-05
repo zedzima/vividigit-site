@@ -40,6 +40,22 @@
         return (href || '').trim().toLowerCase() === '#sidebar-contact';
     }
 
+    function findLocalOrderSection() {
+        var root = document.querySelector('main') || document;
+        return (
+            root.querySelector('.pricing-block') ||
+            root.querySelector('#task-picker') ||
+            root.querySelector('.task-picker-block')
+        );
+    }
+
+    function scrollToLocalOrderSection() {
+        var section = findLocalOrderSection();
+        if (!section) return false;
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return true;
+    }
+
     function openContactSidebar() {
         app.sidebarNav?.classList.remove('open');
         app.sidebarAction?.classList.add('open');
@@ -131,17 +147,25 @@
         return true;
     }
 
-    function openOrderSidebar() {
-        app.sidebarNav?.classList.remove('open');
-        app.sidebarAction?.classList.add('open');
-        app.syncSidebarOverlay?.();
+    function openOrderSidebar(options) {
+        var opts = options || {};
+        var shouldOpenSidebar = opts.openSidebar !== false;
+        var shouldScroll = opts.scroll !== false;
+
+        if (shouldOpenSidebar) {
+            app.sidebarNav?.classList.remove('open');
+            app.sidebarAction?.classList.add('open');
+            app.syncSidebarOverlay?.();
+        }
 
         var orderTab = document.querySelector('.sidebar-tabs .sidebar-tab[data-tab="order"]');
         if (orderTab && !orderTab.classList.contains('active')) {
             orderTab.click();
         }
 
-        document.getElementById('cartItems')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (shouldScroll) {
+            document.getElementById('cartItems')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     }
 
     function normalizeCtaButtons() {
@@ -180,6 +204,12 @@
                 return;
             }
 
+            if (/^order audit$/i.test(label)) {
+                btn.dataset.ctaAction = 'scroll-order';
+                if (btn.tagName === 'A') btn.setAttribute('href', '#pricing');
+                return;
+            }
+
             if (btn.tagName === 'A' && (isContactHref(href) || isSidebarContactHref(href))) {
                 btn.dataset.ctaAction = 'open-contact';
                 btn.setAttribute('href', '#sidebar-contact');
@@ -206,6 +236,10 @@
                 href = (link.getAttribute('href') || '').trim();
                 if (hasOrderCart && link.closest('.pricing-block')) {
                     // Pricing buttons on order-cart pages should add to order, not jump to contact tab.
+                } else if (href === '#pricing' || href === '#task-picker') {
+                    e.preventDefault();
+                    if (!scrollToLocalOrderSection()) openOrderSidebar();
+                    return;
                 } else if (isContactHref(href) || isSidebarContactHref(href)) {
                     e.preventDefault();
                     openContactSidebar();
@@ -231,6 +265,12 @@
             if (ctaAction === 'open-contact') {
                 e.preventDefault();
                 openContactSidebar();
+                return;
+            }
+
+            if (ctaAction === 'scroll-order') {
+                e.preventDefault();
+                if (!scrollToLocalOrderSection()) openOrderSidebar();
                 return;
             }
 
@@ -652,6 +692,7 @@
     }
 
     app.openContactSidebar = openContactSidebar;
+    app.openOrderSidebar = openOrderSidebar;
     app.initSourceSelectDropdowns = initSourceSelectDropdowns;
     app.submitWeb3Form = submitWeb3Form;
     app.initForms = initForms;

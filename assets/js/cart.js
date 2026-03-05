@@ -418,6 +418,18 @@
         if (el) _billingDiscount = parseInt(el.dataset.discount) || 0;
     }
 
+    function revealOrderTabForSelection() {
+        if (typeof app.openOrderSidebar === 'function') {
+            app.openOrderSidebar({ openSidebar: false, scroll: false });
+            return;
+        }
+
+        var orderTab = document.querySelector('.sidebar-tabs .sidebar-tab[data-tab="order"]');
+        if (orderTab && !orderTab.classList.contains('active')) {
+            orderTab.click();
+        }
+    }
+
     function bindTaskPickerEvents() {
         document.addEventListener('taskToggled', function(e) {
             var d = e.detail;
@@ -427,8 +439,10 @@
             if (d.replaceAll) {
                 cart.clearCurrentPage();
                 cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Scope');
+                revealOrderTabForSelection();
             } else if (d.selected) {
                 cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Scope');
+                revealOrderTabForSelection();
             } else {
                 cart.remove(d.slug);
             }
@@ -437,6 +451,7 @@
         document.addEventListener('tierChanged', function(e) {
             var d = e.detail;
             cart.updateTier(d.taskSlug, d.tierName, d.tierLabel, d.price, d.custom, d.billing);
+            revealOrderTabForSelection();
         });
 
         document.addEventListener('billingPeriodChanged', function(e) {
@@ -570,6 +585,7 @@
 
                 cart.clearCurrentPage();
                 cart.add(slug, serviceName || pkgName, pkgName, '', monthlyPrice, false, payment, billing, 'Service');
+                revealOrderTabForSelection();
             });
         });
 
@@ -597,6 +613,7 @@
 
                 cart.clearCurrentPage();
                 cart.add(slug, title, '', '', price, false, payment, billing, 'Solution');
+                revealOrderTabForSelection();
 
                 if (window.innerWidth < 2200) {
                     app.btnAction?.click();
@@ -639,6 +656,7 @@
 
                 cart.clearCurrentPage();
                 cart.add(slug, serviceName || tierName, tierName, '', price, false, payment, billing, 'Service');
+                revealOrderTabForSelection();
             });
         });
     }
