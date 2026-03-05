@@ -403,15 +403,21 @@
             label.className = 'source-select-label';
             toggle.appendChild(label);
 
-            arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            arrow.setAttribute('class', 'dropdown-arrow');
-            arrow.setAttribute('viewBox', '0 0 24 24');
-            arrow.setAttribute('fill', 'none');
-            arrow.setAttribute('stroke', 'currentColor');
-            arrow.setAttribute('stroke-width', '2');
-            arrowPath = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-            arrowPath.setAttribute('points', '6 9 12 15 18 9');
-            arrow.appendChild(arrowPath);
+            var arrowTemplate = document.querySelector('#svg-chevron-down svg');
+            if (arrowTemplate) {
+                arrow = arrowTemplate.cloneNode(true);
+                arrow.setAttribute('class', 'dropdown-arrow');
+            } else {
+                arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                arrow.setAttribute('class', 'dropdown-arrow');
+                arrow.setAttribute('viewBox', '0 0 24 24');
+                arrow.setAttribute('fill', 'none');
+                arrow.setAttribute('stroke', 'currentColor');
+                arrow.setAttribute('stroke-width', '2');
+                arrowPath = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                arrowPath.setAttribute('points', '6 9 12 15 18 9');
+                arrow.appendChild(arrowPath);
+            }
             toggle.appendChild(arrow);
 
             menu = document.createElement('div');

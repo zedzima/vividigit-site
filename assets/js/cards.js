@@ -186,6 +186,14 @@
             p.countries || facets.countries ||
             (p.relationships && p.relationships.countries) || []
         );
+        var languageRefs = toArray(
+            p.languages || facets.languages ||
+            (p.relationships && p.relationships.languages) || []
+        );
+        var industryRefs = toArray(
+            p.industries || facets.industries ||
+            (p.relationships && p.relationships.industries) || []
+        );
         var specialistRefs = toArray(
             facets.specialists || p.specialists ||
             (p.relationships && p.relationships.specialists) || []
@@ -198,8 +206,11 @@
             description: p.description || '',
             specialist_count: normalizeCount(p.specialist_count, specialistRefs.length),
             service_count: normalizeCount(p.service_count, serviceRefs.length),
+            industry_count: normalizeCount(p.industry_count, industryRefs.length),
             services: serviceRefs,
             countries: countryRefs,
+            languages: languageRefs,
+            industries: industryRefs,
             hiring: p.hiring || {}
         };
     }
@@ -208,14 +219,15 @@
         var opts = options || {};
         var d = normalizePositionCardData(p || {});
 
-        var countries = d.countries.map(function(c) {
-            var label = resolveLabel(opts.countryLabel, c);
-            var flag = resolveCountryFlag(opts.countryFlagMap, c);
-            var value = flag || label;
-            if (!value) return '';
-            var className = 'position-tag country ' + (flag ? 'country-flag' : 'country-label');
-            return '<span class="' + className + '" title="' + esc(label || defaultLabel(c)) + '">' + esc(value) + '</span>';
-        }).filter(Boolean);
+        var hiringBadge = '';
+        var hiringStatus = d.hiring && d.hiring.status;
+        if (hiringStatus === 'active') {
+            hiringBadge = '<div class="position-hiring-badge position-hiring-active">Actively Hiring</div>';
+        } else if (hiringStatus === 'moderate') {
+            hiringBadge = '<div class="position-hiring-badge position-hiring-moderate">Moderate Hiring</div>';
+        } else if (hiringStatus === 'paused') {
+            hiringBadge = '<div class="position-hiring-badge position-hiring-paused">Hiring Paused</div>';
+        }
 
         var metricTags = [];
         if (d.specialist_count > 0) {
@@ -226,15 +238,25 @@
             metricTags.push('<span class="position-tag position-tag-count">' +
                 esc(pluralize(d.service_count, 'service', 'services')) + '</span>');
         }
-
-        var hiringBadge = '';
-        if (d.hiring && d.hiring.status === 'active') {
-            var neededCountries = (d.hiring.countries_needed || []).map(function(c) {
-                return resolveCountryName(opts.countryLabel, c);
-            }).join(', ');
-            hiringBadge = '<div class="position-hiring-badge">Hiring' +
-                (neededCountries ? ': ' + esc(neededCountries) : '') + '</div>';
+        if (d.industry_count > 0) {
+            metricTags.push('<span class="position-tag position-tag-count">' +
+                esc(pluralize(d.industry_count, 'industry', 'industries')) + '</span>');
         }
+
+        var countries = d.countries.map(function(c) {
+            var label = resolveLabel(opts.countryLabel, c);
+            var flag = resolveCountryFlag(opts.countryFlagMap, c);
+            var value = flag || label;
+            if (!value) return '';
+            var className = 'position-tag country ' + (flag ? 'country-flag' : 'country-label');
+            return '<span class="' + className + '" title="' + esc(label || defaultLabel(c)) + '">' + esc(value) + '</span>';
+        }).filter(Boolean);
+
+        var languages = d.languages.map(function(l) {
+            var code = resolveLangCode(opts.langCodeMap, l);
+            var label = resolveLabel(opts.languageLabel, l);
+            return '<span class="position-tag lang" title="' + esc(label || defaultLabel(l)) + '">' + esc(code) + '</span>';
+        });
 
         var metricRow = metricTags.length
             ? '<div class="position-tag-row position-tag-row-metrics">' + metricTags.join('') + '</div>'
@@ -242,15 +264,18 @@
         var countryRow = countries.length
             ? '<div class="position-tag-row position-tag-row-countries">' + countries.join('') + '</div>'
             : '';
-        var tagsHtml = (metricRow || countryRow)
-            ? '<div class="position-tags">' + metricRow + countryRow + '</div>'
+        var languageRow = languages.length
+            ? '<div class="position-tag-row position-tag-row-languages">' + languages.join('') + '</div>'
+            : '';
+        var tagsHtml = (metricRow || countryRow || languageRow)
+            ? '<div class="position-tags">' + metricRow + countryRow + languageRow + '</div>'
             : '';
 
         return '<a href="' + d.url + '" class="position-card">' +
+            hiringBadge +
             '<h3>' + esc(d.title) + '</h3>' +
             (d.description ? '<p class="position-summary">' + esc(d.description) + '</p>' : '') +
             tagsHtml +
-            hiringBadge +
             '<div class="position-card-footer">' +
             '<span class="position-cta">View Position →</span>' +
             '</div></a>';
