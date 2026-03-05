@@ -325,7 +325,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9049)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-9049" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6450)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-6450" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -407,7 +407,7 @@
         <div class="feature-item feature-reversed">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9782)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-map"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/><defs><linearGradient id="icon-grad-9782" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6315)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-map"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/><defs><linearGradient id="icon-grad-6315" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -485,7 +485,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4045)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-4045" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7905)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-7905" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -607,6 +607,7 @@
 
     
 
+    
     
     <div class="text-body">Spanish is spoken natively by nearly 500 million people across more than 20 countries, and it is the second most spoken native language in the world. The commercial opportunity is immense — but so is the complexity.
 
@@ -1141,13 +1142,30 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     var root = document.currentScript.previousElementSibling;
     if (!window.CMSCards) return;
+    var langCodeMap = {
+        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
+        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
+    };
+    var countryFlagMap = {
+        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
+        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
+    };
+    var countryLabelMap = {
+        germany: 'Germany', austria: 'Austria', usa: 'USA',
+        uk: 'UK', france: 'France', spain: 'Spain'
+    };
+    var cardOptions = {
+        langCodeMap: langCodeMap,
+        countryFlagMap: countryFlagMap,
+        countryLabel: countryLabelMap
+    };
 
     root.querySelectorAll('.js-specialist-card').forEach(function(node) {
         var raw = node.getAttribute('data-specialist');
         if (!raw) return;
         try {
             var specialist = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist);
+            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
         } catch (e) {
             /* Keep placeholder unchanged if parsing fails */
         }
@@ -1158,7 +1176,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!raw) return;
         try {
             var position = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderPositionCard(position);
+            node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
         } catch (e) { /* Keep placeholder */ }
     });
 })();

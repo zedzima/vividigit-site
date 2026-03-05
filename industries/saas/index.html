@@ -311,7 +311,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1345)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-funnel"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/><defs><linearGradient id="icon-grad-1345" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1376)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-funnel"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/><defs><linearGradient id="icon-grad-1376" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -403,7 +403,7 @@
         <div class="feature-item feature-reversed">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5635)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-5635" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5563)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-5563" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -503,7 +503,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6401)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><defs><linearGradient id="icon-grad-6401" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5091)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><defs><linearGradient id="icon-grad-5091" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -584,6 +584,7 @@
 
     
 
+    
     
     <div class="text-body">SaaS companies face unique challenges that traditional marketing playbooks cannot solve. Your revenue depends on recurring subscriptions, which means acquisition is only the beginning — retention and expansion are equally critical.
 
@@ -1561,13 +1562,30 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     var root = document.currentScript.previousElementSibling;
     if (!window.CMSCards) return;
+    var langCodeMap = {
+        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
+        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
+    };
+    var countryFlagMap = {
+        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
+        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
+    };
+    var countryLabelMap = {
+        germany: 'Germany', austria: 'Austria', usa: 'USA',
+        uk: 'UK', france: 'France', spain: 'Spain'
+    };
+    var cardOptions = {
+        langCodeMap: langCodeMap,
+        countryFlagMap: countryFlagMap,
+        countryLabel: countryLabelMap
+    };
 
     root.querySelectorAll('.js-specialist-card').forEach(function(node) {
         var raw = node.getAttribute('data-specialist');
         if (!raw) return;
         try {
             var specialist = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist);
+            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
         } catch (e) {
             /* Keep placeholder unchanged if parsing fails */
         }
@@ -1578,7 +1596,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!raw) return;
         try {
             var position = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderPositionCard(position);
+            node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
         } catch (e) { /* Keep placeholder */ }
     });
 })();

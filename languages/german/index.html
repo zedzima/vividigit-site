@@ -314,7 +314,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2709)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-2709" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9162)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-9162" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -412,7 +412,7 @@
         <div class="feature-item feature-reversed">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9565)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-search"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><defs><linearGradient id="icon-grad-9565" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5734)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-search"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><defs><linearGradient id="icon-grad-5734" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -494,7 +494,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9922)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-pen-tool"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/><defs><linearGradient id="icon-grad-9922" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3341)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-pen-tool"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/><defs><linearGradient id="icon-grad-3341" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -590,6 +590,7 @@
 
     
 
+    
     
     <div class="text-body">German is the most widely spoken native language in the European Union, with over 100 million native speakers across Germany, Austria, Switzerland, and neighboring regions. For businesses targeting DACH markets, native-quality German content is not optional — it is essential.
 
@@ -1646,13 +1647,30 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     var root = document.currentScript.previousElementSibling;
     if (!window.CMSCards) return;
+    var langCodeMap = {
+        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
+        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
+    };
+    var countryFlagMap = {
+        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
+        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
+    };
+    var countryLabelMap = {
+        germany: 'Germany', austria: 'Austria', usa: 'USA',
+        uk: 'UK', france: 'France', spain: 'Spain'
+    };
+    var cardOptions = {
+        langCodeMap: langCodeMap,
+        countryFlagMap: countryFlagMap,
+        countryLabel: countryLabelMap
+    };
 
     root.querySelectorAll('.js-specialist-card').forEach(function(node) {
         var raw = node.getAttribute('data-specialist');
         if (!raw) return;
         try {
             var specialist = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist);
+            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
         } catch (e) {
             /* Keep placeholder unchanged if parsing fails */
         }
@@ -1663,7 +1681,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!raw) return;
         try {
             var position = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderPositionCard(position);
+            node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
         } catch (e) { /* Keep placeholder */ }
     });
 })();

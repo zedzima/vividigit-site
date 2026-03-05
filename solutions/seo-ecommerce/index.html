@@ -297,6 +297,7 @@
     
 
     
+    
     <div class="text-body">Online stores face unique SEO challenges that general SEO strategies don't address:
 
 - **Duplicate content** from product variants and filters
@@ -952,13 +953,30 @@ We combine technical SEO with conversion optimization to ensure your products no
 (function() {
     var root = document.currentScript.previousElementSibling;
     if (!window.CMSCards) return;
+    var langCodeMap = {
+        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
+        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
+    };
+    var countryFlagMap = {
+        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
+        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
+    };
+    var countryLabelMap = {
+        germany: 'Germany', austria: 'Austria', usa: 'USA',
+        uk: 'UK', france: 'France', spain: 'Spain'
+    };
+    var cardOptions = {
+        langCodeMap: langCodeMap,
+        countryFlagMap: countryFlagMap,
+        countryLabel: countryLabelMap
+    };
 
     root.querySelectorAll('.js-specialist-card').forEach(function(node) {
         var raw = node.getAttribute('data-specialist');
         if (!raw) return;
         try {
             var specialist = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist);
+            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
         } catch (e) {
             /* Keep placeholder unchanged if parsing fails */
         }
@@ -969,7 +987,7 @@ We combine technical SEO with conversion optimization to ensure your products no
         if (!raw) return;
         try {
             var position = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderPositionCard(position);
+            node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
         } catch (e) { /* Keep placeholder */ }
     });
 })();

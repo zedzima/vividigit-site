@@ -325,7 +325,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3148)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-flag"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/><defs><linearGradient id="icon-grad-3148" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7955)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-flag"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/><defs><linearGradient id="icon-grad-7955" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -409,7 +409,7 @@
         <div class="feature-item feature-reversed">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8951)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-search"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><defs><linearGradient id="icon-grad-8951" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5213)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-search"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><defs><linearGradient id="icon-grad-5213" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -491,7 +491,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3574)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><defs><linearGradient id="icon-grad-3574" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2045)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><defs><linearGradient id="icon-grad-2045" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -572,6 +572,7 @@
 
     
 
+    
     
     <div class="text-body">The United Kingdom is Europe's largest e-commerce market and the third-largest in the world. With 67 million people, high digital literacy, and strong online purchasing habits, the UK is a priority market for any business with international ambitions.
 
@@ -1570,13 +1571,30 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     var root = document.currentScript.previousElementSibling;
     if (!window.CMSCards) return;
+    var langCodeMap = {
+        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
+        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
+    };
+    var countryFlagMap = {
+        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
+        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
+    };
+    var countryLabelMap = {
+        germany: 'Germany', austria: 'Austria', usa: 'USA',
+        uk: 'UK', france: 'France', spain: 'Spain'
+    };
+    var cardOptions = {
+        langCodeMap: langCodeMap,
+        countryFlagMap: countryFlagMap,
+        countryLabel: countryLabelMap
+    };
 
     root.querySelectorAll('.js-specialist-card').forEach(function(node) {
         var raw = node.getAttribute('data-specialist');
         if (!raw) return;
         try {
             var specialist = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist);
+            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
         } catch (e) {
             /* Keep placeholder unchanged if parsing fails */
         }
@@ -1587,7 +1605,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!raw) return;
         try {
             var position = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderPositionCard(position);
+            node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
         } catch (e) { /* Keep placeholder */ }
     });
 })();

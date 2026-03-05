@@ -66,7 +66,6 @@
     justify-content: center;
     gap: var(--space-sm);
     padding: var(--btn-padding-y) var(--btn-padding-x);
-    font-family: var(--font-mono);
     font-size: var(--font-size-ui);
     font-weight: 500;
     border-radius: var(--radius-sm);
@@ -119,7 +118,7 @@
 .btn-full { width: 100%; }
 .btn-sm {
     padding: var(--space-xs) var(--space-sm);
-    font-size: var(--font-size-caption);
+    font-size: var(--font-size-ui);
 }
 
 .btn-disabled,
@@ -175,7 +174,6 @@
     background: var(--bg-input);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    font-family: var(--font-mono);
     font-size: var(--font-size-ui);
     color: var(--text-primary);
     transition: var(--transition);
@@ -192,7 +190,6 @@
 textarea.form-input {
     resize: vertical;
     min-height: calc(80px * var(--scale));
-    font-family: var(--font-mono);
 }
 
 .quick-contact-form {
@@ -261,7 +258,6 @@ select.form-input option {
     border-radius: var(--radius-sm);
     background: var(--bg-input);
     color: var(--text-primary);
-    font-family: var(--font-mono);
     font-size: var(--font-size-ui);
     text-align: left;
     cursor: pointer;
@@ -338,7 +334,6 @@ select.form-input option {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     background: var(--bg-card);
-    font-family: inherit;
     font-size: var(--font-size-body);
 }
 
@@ -665,8 +660,8 @@ main h2:first-child { margin-top: 0; }
    Small text in sidebar
    ========================================================================== */
 
-.sidebar-action p {
-    font-size: var(--font-size-ui);
+.sidebar-action p:not(.widget-text):not(.widget-note):not(.cart-empty-msg) {
+    font-size: var(--font-size-body);
     color: var(--text-secondary);
     margin-bottom: var(--space-sm);
 }

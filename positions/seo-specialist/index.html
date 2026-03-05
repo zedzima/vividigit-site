@@ -316,7 +316,7 @@
     <div class="hiring-inner">
         <div class="hiring-header">
             
-            <span class="hiring-badge hiring-badge-active"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8054)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-briefcase"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><defs><linearGradient id="icon-grad-8054" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <span class="hiring-badge hiring-badge-active"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6165)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-briefcase"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><defs><linearGradient id="icon-grad-6165" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -416,7 +416,7 @@
             <div class="competency-scope-header">
                 <a href="scopes/technical-seo" class="competency-scope-link">
                     <h3>Technical SEO</h3>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5987)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-arrow-right"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/><defs><linearGradient id="icon-grad-5987" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4378)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-arrow-right"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/><defs><linearGradient id="icon-grad-4378" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -1014,8 +1014,7 @@
         
         <details class="faq-item" open>
             <summary class="faq-question">
-                <span>Is this a remote position?</span>
-                <span class="faq-icon">+</span>
+                Is this a remote position?
             </summary>
             <div class="faq-answer">
                 <p>Yes. We're a remote-first team. You can work from anywhere, though we prefer candidates in European time zones (UTC-1 to UTC+3) for easier collaboration with the team and clients.</p>
@@ -1024,8 +1023,7 @@
         
         <details class="faq-item" >
             <summary class="faq-question">
-                <span>What tools do you use?</span>
-                <span class="faq-icon">+</span>
+                What tools do you use?
             </summary>
             <div class="faq-answer">
                 <p>Google Search Console, Ahrefs, Screaming Frog, Semrush, Surfer SEO, and custom internal tools. You'll have full access to all premium subscriptions from day one.</p>
@@ -1034,8 +1032,7 @@
         
         <details class="faq-item" >
             <summary class="faq-question">
-                <span>What&#39;s the team structure?</span>
-                <span class="faq-icon">+</span>
+                What&#39;s the team structure?
             </summary>
             <div class="faq-answer">
                 <p>You'll report to the Head of SEO and work alongside other SEO specialists, content writers, and developers. Each specialist manages their own client projects with support from the team.</p>
@@ -1044,8 +1041,7 @@
         
         <details class="faq-item" >
             <summary class="faq-question">
-                <span>Is there room for growth?</span>
-                <span class="faq-icon">+</span>
+                Is there room for growth?
             </summary>
             <div class="faq-answer">
                 <p>Absolutely. We're growing fast and believe in promoting from within. Senior Specialist, Team Lead, and Head of Department tracks are all open and well-defined.</p>
@@ -1385,13 +1381,30 @@
 (function() {
     var root = document.currentScript.previousElementSibling;
     if (!window.CMSCards) return;
+    var langCodeMap = {
+        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
+        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
+    };
+    var countryFlagMap = {
+        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
+        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
+    };
+    var countryLabelMap = {
+        germany: 'Germany', austria: 'Austria', usa: 'USA',
+        uk: 'UK', france: 'France', spain: 'Spain'
+    };
+    var cardOptions = {
+        langCodeMap: langCodeMap,
+        countryFlagMap: countryFlagMap,
+        countryLabel: countryLabelMap
+    };
 
     root.querySelectorAll('.js-specialist-card').forEach(function(node) {
         var raw = node.getAttribute('data-specialist');
         if (!raw) return;
         try {
             var specialist = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist);
+            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
         } catch (e) {
             /* Keep placeholder unchanged if parsing fails */
         }
@@ -1402,7 +1415,7 @@
         if (!raw) return;
         try {
             var position = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderPositionCard(position);
+            node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
         } catch (e) { /* Keep placeholder */ }
     });
 })();

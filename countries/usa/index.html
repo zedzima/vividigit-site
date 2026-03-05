@@ -325,7 +325,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5536)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-5536" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4313)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4313" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -409,7 +409,7 @@
         <div class="feature-item feature-reversed">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5858)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/><defs><linearGradient id="icon-grad-5858" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6055)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/><defs><linearGradient id="icon-grad-6055" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -494,7 +494,7 @@
         <div class="feature-item feature-normal">
             <div class="feature-content">
                 
-                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9124)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/><defs><linearGradient id="icon-grad-9124" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4762)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" class="icon icon-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/><defs><linearGradient id="icon-grad-4762" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -599,6 +599,7 @@
 
     
 
+    
     
     <div class="text-body">The United States represents the single largest digital advertising market in the world, with over 300 million internet users and consumer spending that dwarfs any other single country. For businesses with global ambitions, the US is the ultimate proving ground.
 
@@ -1661,13 +1662,30 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     var root = document.currentScript.previousElementSibling;
     if (!window.CMSCards) return;
+    var langCodeMap = {
+        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
+        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
+    };
+    var countryFlagMap = {
+        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
+        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
+    };
+    var countryLabelMap = {
+        germany: 'Germany', austria: 'Austria', usa: 'USA',
+        uk: 'UK', france: 'France', spain: 'Spain'
+    };
+    var cardOptions = {
+        langCodeMap: langCodeMap,
+        countryFlagMap: countryFlagMap,
+        countryLabel: countryLabelMap
+    };
 
     root.querySelectorAll('.js-specialist-card').forEach(function(node) {
         var raw = node.getAttribute('data-specialist');
         if (!raw) return;
         try {
             var specialist = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist);
+            node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
         } catch (e) {
             /* Keep placeholder unchanged if parsing fails */
         }
@@ -1678,7 +1696,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!raw) return;
         try {
             var position = JSON.parse(raw);
-            node.outerHTML = window.CMSCards.renderPositionCard(position);
+            node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
         } catch (e) { /* Keep placeholder */ }
     });
 })();
