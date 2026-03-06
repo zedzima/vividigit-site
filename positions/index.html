@@ -540,7 +540,7 @@
         return '<a href="' + url + '" class="scope-card">' +
             '<div class="scope-card-header"><div class="scope-services">' + svcs + '</div>' +
             (delivery ? '<span class="scope-spec-count">' + esc(delivery) + '</span>' : '') + '</div>' +
-            '<h3>' + esc(s.menu || s.title) + '</h3><p>' + esc(s.description) + '</p>' +
+            '<h4>' + esc(s.menu || s.title) + '</h4><p>' + esc(s.description) + '</p>' +
             (metrics.length ? '<div class="scope-card-meta">' + metrics.join('') + '</div>' : '') +
             '<div class="scope-card-footer">' + (price ? '<span class="scope-price">From ' + price + '</span>' : '<span></span>') + '<span class="scope-cta">View Scope →</span></div></a>';
     }
@@ -582,7 +582,7 @@
         var resultsHtml = resultParts.length ? '<div class="case-results">' + resultParts.join('') + '</div>' : '';
         return '<a href="' + url + '" class="case-card">' + imageHtml +
             '<div class="case-content">' + metaHtml +
-            '<h3>' + esc(title) + '</h3><p>' + esc(s.description) + '</p>' +
+            '<h4>' + esc(title) + '</h4><p>' + esc(s.description) + '</p>' +
             resultsHtml + '</div></a>';
     }
 
@@ -596,7 +596,7 @@
         var authorLabel = formatAuthorName(s.author);
         return '<article class="blog-card">' +
             (chips.length ? '<div class="blog-card-tags">' + chips.join('') + '</div>' : '') +
-            '<h3 class="blog-card-title"><a href="' + url + '">' + esc(s.title) + '</a></h3>' +
+            '<h4 class="blog-card-title"><a href="' + url + '">' + esc(s.title) + '</a></h4>' +
             '<p class="blog-card-excerpt">' + esc(s.description) + '</p>' +
             '<div class="blog-card-meta">' + (dateLabel ? '<span>' + esc(dateLabel) + '</span>' : '') + (authorLabel ? '<span>By ' + esc(authorLabel) + '</span>' : '') + '</div></article>';
     }
@@ -613,7 +613,7 @@
         if (s.language_count) metrics.push('<span class="service-meta-item">' + esc(pluralize(s.language_count, 'language', 'languages')) + '</span>');
         return '<a href="' + url + '" class="service-card">' +
             '<div class="service-card-header">' +
-            '<h3>' + esc(s.menu || s.title) + '</h3>' +
+            '<h4>' + esc(s.menu || s.title) + '</h4>' +
             iconHtml + '</div>' +
             '<p>' + esc(s.description) + '</p>' +
             (metrics.length ? '<div class="service-card-meta">' + metrics.join('') + '</div>' : '') +
@@ -640,7 +640,7 @@
         var price = formatCurrency(s.starting_price);
         return '<a href="' + url + '" class="solution-card">' +
             (tags ? '<div class="solution-card-tags">' + tags + '</div>' : '') +
-            '<h3>' + esc(s.menu || s.title) + '</h3><p>' + esc(s.description) + '</p>' +
+            '<h4>' + esc(s.menu || s.title) + '</h4><p>' + esc(s.description) + '</p>' +
             (metrics.length ? '<div class="solution-card-meta">' + metrics.join('') + '</div>' : '') +
             '<div class="solution-card-footer">' +
             (price ? '<span class="solution-price">From ' + price + '</span>' : '<span></span>') +
@@ -669,7 +669,7 @@
         var countText = s.scope_count ? s.scope_count + ' scopes' : '';
         return '<a href="' + url + '" class="dimension-card">' +
             '<div class="dimension-card-header">' +
-            '<h3>' + esc(s.menu || s.title) + '</h3>' +
+            '<h4>' + esc(s.menu || s.title) + '</h4>' +
             badgeHtml + '</div>' +
             '<p>' + esc(s.description) + '</p>' +
             metaHtml +
@@ -894,7 +894,7 @@
         <h2>Don&#39;t See Your Role?</h2>
 
         
-        <p>We're always looking for talented marketing specialists. Send us your profile and we'll reach out when a matching position opens.</p>
+        <p class="cta-subtitle">We're always looking for talented marketing specialists. Send us your profile and we'll reach out when a matching position opens.</p>
         
 
         
@@ -929,7 +929,7 @@
                         </svg>
                     </div>
                     <div class="footer-column">
-                        <h4>Company</h4>
+                        <p class="footer-column-title">Company</p>
                         <ul>
                             <li><a href="team/">Our Team</a></li>
                             <li><a href="cases/">Case Studies</a></li>
@@ -938,7 +938,7 @@
                         </ul>
                     </div>
                     <div class="footer-column">
-                        <h4>Services</h4>
+                        <p class="footer-column-title">Services</p>
                         <ul>
                             <li><a href="scopes/technical-seo/">Technical SEO</a></li>
                             <li><a href="scopes/ai-optimisation/">AI Optimization</a></li>
@@ -946,7 +946,7 @@
                         </ul>
                     </div>
                     <div class="footer-column">
-                        <h4>Explore</h4>
+                        <p class="footer-column-title">Explore</p>
                         <ul>
                             <li><a href="services/">Services</a></li>
                             <li><a href="industries/">Industries</a></li>
@@ -955,7 +955,7 @@
                         </ul>
                     </div>
                     <div class="footer-column">
-                        <h4>Solutions</h4>
+                        <p class="footer-column-title">Solutions</p>
                         <ul>
                             <li><a href="solutions/">All Solutions</a></li>
                             <li><a href="solutions/seo-ecommerce/">SEO for E-commerce</a></li>

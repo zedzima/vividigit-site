@@ -127,7 +127,7 @@ a:hover { color: var(--accent-hover); }
     align-items: center;
     justify-content: center;
     background: var(--bg-card);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     cursor: pointer;
@@ -178,9 +178,7 @@ a:hover { color: var(--accent-hover); }
 .icon-bar {
     width: var(--icon-bar-width);
     height: 100%;
-    background: var(--bg-glass);
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    background: var(--bg-secondary);
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
@@ -232,11 +230,14 @@ a:hover { color: var(--accent-hover); }
 }
 
 .icon-bar-label {
-    font-size: 12px;
-    margin-top: 3px;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    opacity: 0.9;
+    font-size: var(--type-meta-size);
+    line-height: var(--type-meta-line);
+    font-weight: 400;
+    color: var(--type-meta-color);
+    margin-top: 2px;
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: 1;
     white-space: nowrap;
 }
 
@@ -360,9 +361,7 @@ a:hover { color: var(--accent-hover); }
     left: var(--icon-bar-width);
     bottom: 100px;
     min-width: 140px;
-    background: var(--bg-glass-solid);
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: var(--space-xs);
@@ -888,11 +887,8 @@ a:hover { color: var(--accent-hover); }
     right: 0;
     bottom: 0;
     width: var(--action-width);
-    background: var(--bg-glass);
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    background: var(--bg-secondary);
     border-left: 1px solid var(--border);
-    box-shadow: var(--shadow-glass);
     padding: 0 var(--space-md);
     overflow-y: auto;
     overflow-x: hidden;
@@ -973,7 +969,7 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: var(--space-xl) var(--space-lg);
+    padding: var(--space-xl) var(--space-lg) 0;
     max-width: var(--content-max-width);
     width: 100%;
     text-align: left;
@@ -984,7 +980,7 @@ main {
 @media (min-width: 801px) {
     main {
         margin-left: var(--icon-bar-width);
-        padding: var(--space-2xl) var(--content-gutter-desktop);
+        padding: var(--space-2xl) var(--content-gutter-desktop) 0;
         max-width: calc(
             100vw - var(--icon-bar-width) - (var(--content-gutter-desktop) * 2)
         );
@@ -995,7 +991,7 @@ main {
 @media (min-width: 1400px) {
     main {
         margin-right: var(--action-width);
-        padding: var(--space-2xl) calc(var(--content-gutter-wide) + var(--content-gutter-extra));
+        padding: var(--space-2xl) calc(var(--content-gutter-wide) + var(--content-gutter-extra)) 0;
         max-width: calc(
             100vw
             - var(--icon-bar-width)

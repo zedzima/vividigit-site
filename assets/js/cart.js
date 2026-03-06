@@ -742,7 +742,7 @@
                 var paymentLabel = '';
                 var tierStr;
                 var billing;
-                var paymentCell = '<span class="cart-payment-label">One-time</span>';
+                var paymentCell = '<span class="cart-cell-main">One-time</span>';
 
                 normalizeCartBilling(item);
                 if (item.custom) hasCustom = true;
@@ -776,8 +776,8 @@
                         '<span class="cart-item-name">' + item.title + paymentLabel + '</span>' +
                         '<span class="cart-item-tier">' + tierStr + basePriceStr + '</span>' +
                     '</td>' +
-                    '<td>' + itemType + '</td>' +
-                    '<td>' + paymentCell + '</td>' +
+                    '<td class="cart-col-type"><span class="cart-cell-main">' + itemType + '</span></td>' +
+                    '<td class="cart-col-payment">' + paymentCell + '</td>' +
                     '<td>' +
                         '<div class="cart-inline-counter">' +
                             '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="langCount" data-action="minus">−</button>' +

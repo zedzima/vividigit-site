@@ -158,7 +158,7 @@
 
         return '<a href="' + d.url + '" class="specialist-card">' +
             '<div class="specialist-card-top">' +
-            '<div class="specialist-info"><h3>' + esc(d.title) + '</h3>' +
+            '<div class="specialist-info"><h4>' + esc(d.title) + '</h4>' +
             (d.role ? '<div class="specialist-role">' + esc(d.role) + '</div>' : '') +
             '</div>' +
             avatarHtml +
@@ -273,7 +273,7 @@
 
         return '<a href="' + d.url + '" class="position-card">' +
             hiringBadge +
-            '<h3>' + esc(d.title) + '</h3>' +
+            '<h4>' + esc(d.title) + '</h4>' +
             (d.description ? '<p class="position-summary">' + esc(d.description) + '</p>' : '') +
             tagsHtml +
             '<div class="position-card-footer">' +
