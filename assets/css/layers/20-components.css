@@ -90,27 +90,29 @@
 
 /* Secondary: Navigation, "learn more" */
 .btn-secondary {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background: var(--bg-contrast);
+    border: 1px solid var(--border-strong);
     color: var(--text-primary);
 }
 
 .btn-secondary:hover {
-    background: var(--bg-tertiary);
-    border-color: var(--border-strong);
+    background: var(--bg-contrast-hover);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-primary) 35%, transparent);
     color: var(--text-primary);
 }
 
 /* Ghost: Tertiary actions, transparent with border */
 .btn-ghost {
-    background: transparent;
-    border: 1px solid var(--border-color);
+    background: var(--bg-contrast);
+    border: 1px solid var(--border-strong);
     color: var(--text-primary);
 }
 
 .btn-ghost:hover {
-    background: var(--bg-secondary);
-    border-color: var(--border-strong);
+    background: var(--bg-contrast-hover);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-primary) 35%, transparent);
     color: var(--text-primary);
 }
 
@@ -152,6 +154,14 @@
 .site-lang-option.active {
     background: var(--accent);
     color: var(--text-inverse);
+}
+
+.tab-btn.active:hover,
+.sidebar-tab.active:hover,
+.coverage-tab.active:hover {
+    color: var(--text-inverse);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-primary) 42%, transparent);
 }
 
 /* ==========================================================================
@@ -254,7 +264,7 @@ select.form-input option {
     align-items: center;
     width: 100%;
     padding: var(--input-padding-y) calc(var(--input-padding-x) + 22px) var(--input-padding-y) var(--input-padding-x);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
     background: var(--bg-input);
     color: var(--text-primary);
@@ -329,7 +339,7 @@ select.form-input option {
 .source-select-cart .source-select-toggle {
     width: 100%;
     padding: 0.625rem calc(0.75rem + 22px) 0.625rem 0.75rem;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
     background: var(--bg-input);
     font-size: var(--font-size-ui);
@@ -347,6 +357,29 @@ select.form-input option {
     box-shadow: var(--focus-ring);
 }
 
+/* Sidebar form fields follow the central canvas background and keep equal focus border size */
+.sidebar-action .form-input,
+.sidebar-action select.form-input,
+.sidebar-action .source-select-toggle,
+.sidebar-action .source-select-cart .source-select-toggle {
+    background: var(--bg-main);
+    background-color: var(--bg-main);
+}
+
+.sidebar-action select.form-input:hover,
+.sidebar-action .source-select-toggle:hover,
+.sidebar-action .source-select-cart .source-select-toggle:hover {
+    background: var(--bg-main);
+    background-color: var(--bg-main);
+}
+
+.sidebar-action .form-input:focus,
+.sidebar-action select.form-input:focus,
+.sidebar-action .source-select.open .source-select-toggle,
+.sidebar-action .source-select-cart.open .source-select-toggle {
+    box-shadow: inset 0 0 0 1px var(--accent);
+}
+
 /* ==========================================================================
    Tags
    ========================================================================== */
@@ -356,7 +389,7 @@ select.form-input option {
     padding: var(--space-xs) var(--space-sm);
     font-size: var(--font-size-caption);
     font-weight: 500;
-    background: var(--bg-tertiary);
+    background: var(--bg-contrast);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     color: var(--text-secondary);

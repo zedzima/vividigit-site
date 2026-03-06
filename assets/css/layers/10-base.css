@@ -90,7 +90,7 @@ a:hover { color: var(--accent-hover); }
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
     border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow-glass);
+    box-shadow: none;
     z-index: 100;
     display: flex;
     align-items: center;
@@ -126,7 +126,7 @@ a:hover { color: var(--accent-hover); }
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-card);
+    background: var(--bg-contrast);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
@@ -135,7 +135,7 @@ a:hover { color: var(--accent-hover); }
 }
 
 .header-btn:hover {
-    background: var(--bg-card-hover);
+    background: var(--bg-contrast-hover);
     color: var(--text-primary);
     border-color: var(--border-strong);
 }
@@ -205,6 +205,7 @@ a:hover { color: var(--accent-hover); }
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
     width: 84px;
     height: 58px;
     border: 1px solid transparent;
@@ -216,12 +217,29 @@ a:hover { color: var(--accent-hover); }
 
 .icon-bar-link:hover {
     background: var(--bg-card);
-    border-color: var(--border-strong);
+    border-color: transparent;
+    color: var(--accent-primary);
 }
 
 .icon-bar-link.active {
     background: var(--bg-card);
-    color: var(--accent);
+    color: var(--accent-primary);
+}
+
+.icon-bar-link.active::after {
+    content: "";
+    position: absolute;
+    right: calc(-1 * ((var(--icon-bar-width) - 84px) / 2));
+    top: 4px;
+    bottom: 4px;
+    width: 4px;
+    border-radius: var(--radius-full);
+    background: var(--accent-primary);
+}
+
+.icon-bar-link:hover .icon-bar-label,
+.icon-bar-link.active .icon-bar-label {
+    color: var(--accent-primary);
 }
 
 .icon-bar-link svg {
@@ -254,24 +272,24 @@ a:hover { color: var(--accent-hover); }
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
-    border: 1px solid transparent;
+    width: var(--btn-height);
+    height: var(--btn-height);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-md);
-    background: transparent;
+    background: var(--bg-contrast);
     color: var(--text-secondary);
     cursor: pointer;
     transition: var(--transition);
 }
 
 .icon-bar-btn:hover {
-    background: var(--bg-card);
-    border-color: var(--border-strong);
+    background: var(--bg-contrast-hover);
+    border-color: var(--border-color);
 }
 
 .icon-bar-btn svg {
-    width: 28px;
-    height: 28px;
+    width: var(--icon-md);
+    height: var(--icon-md);
 }
 
 /* Header Cart Button */
@@ -313,7 +331,7 @@ a:hover { color: var(--accent-hover); }
 .coverage-tab {
     padding: var(--space-sm) var(--space-lg);
     background: transparent;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     font-size: var(--font-size-ui);
@@ -325,6 +343,7 @@ a:hover { color: var(--accent-hover); }
 .coverage-tab:hover {
     border-color: var(--accent-primary);
     color: var(--accent-primary);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-primary) 30%, transparent);
 }
 
 /* Cart Summary (contact page) */
@@ -665,7 +684,7 @@ a:hover { color: var(--accent-hover); }
     align-items: center;
     width: 100%;
     padding: calc(10px * var(--scale)) calc(12px * var(--scale));
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
     background: var(--bg-input);
     font-size: var(--font-size-ui);
@@ -772,7 +791,7 @@ a:hover { color: var(--accent-hover); }
     align-items: center;
     width: 100%;
     padding: var(--input-padding-y) var(--input-padding-x);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
     background: var(--bg-input);
     font-size: var(--font-size-ui);
