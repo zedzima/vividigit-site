@@ -654,11 +654,11 @@
         if (s.service) chips.push('<span class="blog-chip entity-chip entity-chip-blog">' + esc(serviceLabelMap[s.service] || label('services', s.service) || toTitleCase(s.service)) + '</span>');
         var dateLabel = formatDate(s.date);
         var authorLabel = formatAuthorName(s.author);
-        return '<article class="blog-card entity-card entity-card-padded">' +
+        return '<a href="' + url + '" class="blog-card entity-card entity-card-padded">' +
             (chips.length ? '<div class="blog-card-tags">' + chips.join('') + '</div>' : '') +
-            '<h4 class="blog-card-title entity-card-title"><a href="' + url + '">' + esc(s.title) + '</a></h4>' +
+            '<h4 class="blog-card-title entity-card-title">' + esc(s.title) + '</h4>' +
             '<p class="blog-card-excerpt entity-card-copy">' + esc(s.description) + '</p>' +
-            '<div class="blog-card-meta type-meta">' + (dateLabel ? '<span>' + esc(dateLabel) + '</span>' : '') + (authorLabel ? '<span>By ' + esc(authorLabel) + '</span>' : '') + '</div></article>';
+            '<div class="blog-card-meta type-meta">' + (dateLabel ? '<span>' + esc(dateLabel) + '</span>' : '') + (authorLabel ? '<span>By ' + esc(authorLabel) + '</span>' : '') + '</div></a>';
     }
 
     function renderServiceCard(s) {

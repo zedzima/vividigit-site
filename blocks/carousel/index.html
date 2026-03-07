@@ -368,16 +368,47 @@
 
 <script>
 (function() {
-    const container = document.querySelector('.carousel-container');
-    const prev = document.querySelector('.carousel-prev');
-    const next = document.querySelector('.carousel-next');
+    var root = document.currentScript.previousElementSibling;
+    var container = root && root.querySelector('.carousel-container');
+    var prev = root && root.querySelector('.carousel-prev');
+    var next = root && root.querySelector('.carousel-next');
+
+    function scrollToAdjacentCard(direction) {
+        if (!container) return;
+        var containerRect = container.getBoundingClientRect();
+        var containerStyle = window.getComputedStyle(container);
+        var paddingStart = parseFloat(containerStyle.paddingLeft) || 0;
+        var items = Array.from(container.querySelectorAll('.carousel-item')).map(function(item) {
+            return {
+                snap: Math.max(
+                    0,
+                    item.getBoundingClientRect().left - containerRect.left + container.scrollLeft - paddingStart
+                )
+            };
+        });
+        if (!items.length) return;
+
+        var current = container.scrollLeft;
+        var threshold = 4;
+        var target = null;
+
+        if (direction > 0) {
+            target = items.find(function(item) { return item.snap > current + threshold; });
+            if (!target) target = items[items.length - 1];
+        } else {
+            target = items.slice().reverse().find(function(item) { return item.snap < current - threshold; });
+            if (!target) target = items[0];
+        }
+
+        container.scrollTo({ left: target.snap, behavior: 'smooth' });
+    }
 
     if (container && prev && next) {
-        prev.addEventListener('click', () => {
-            container.scrollBy({ left: -340, behavior: 'smooth' });
+        prev.addEventListener('click', function() {
+            scrollToAdjacentCard(-1);
         });
-        next.addEventListener('click', () => {
-            container.scrollBy({ left: 340, behavior: 'smooth' });
+        next.addEventListener('click', function() {
+            scrollToAdjacentCard(1);
         });
     }
 })();

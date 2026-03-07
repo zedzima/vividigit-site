@@ -264,21 +264,13 @@
     
 
     <div class="comparison-table-wrapper">
-        
-            
-        
-            
-        <span class="comparison-badge" data-col="2">Popular</span>
-            
-        
-            
-        
         <table class="comparison-table">
             <thead>
                 <tr>
                     <th class="feature-col">Feature</th>
                     
                     <th class="option-col " data-col="1">
+                        
                         <span class="option-name">Basic</span>
                         
                         <span class="option-desc">For individuals</span>
@@ -286,6 +278,9 @@
                     </th>
                     
                     <th class="option-col option-highlighted" data-col="2">
+                        
+                        <span class="comparison-badge">Popular</span>
+                        
                         <span class="option-name">Pro</span>
                         
                         <span class="option-desc">For teams</span>
@@ -293,6 +288,7 @@
                     </th>
                     
                     <th class="option-col " data-col="3">
+                        
                         <span class="option-name">Enterprise</span>
                         
                         <span class="option-desc">For organizations</span>
@@ -449,30 +445,6 @@
     </div>
     
 </section>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.comparison-table-wrapper').forEach(function(wrapper) {
-        var badges = wrapper.querySelectorAll('.comparison-badge');
-        if (!badges.length) return;
-
-        function positionBadges() {
-            badges.forEach(function(badge) {
-                var colIndex = badge.getAttribute('data-col');
-                var th = wrapper.querySelector('th[data-col="' + colIndex + '"]');
-                if (!th) return;
-                var thRect = th.getBoundingClientRect();
-                var wrapperRect = wrapper.getBoundingClientRect();
-                var left = thRect.left - wrapperRect.left + thRect.width / 2;
-                badge.style.left = left + 'px';
-            });
-        }
-
-        positionBadges();
-        window.addEventListener('resize', positionBadges);
-    });
-});
-</script>
             </div>
             
 

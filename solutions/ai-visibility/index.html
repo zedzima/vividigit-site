@@ -910,19 +910,13 @@
     
 
     <div class="comparison-table-wrapper">
-        
-            
-        
-            
-        <span class="comparison-badge" data-col="2">Different Game</span>
-            
-        
         <table class="comparison-table">
             <thead>
                 <tr>
                     <th class="feature-col">Factor</th>
                     
                     <th class="option-col " data-col="1">
+                        
                         <span class="option-name">SEO</span>
                         
                         <span class="option-desc">Search optimization</span>
@@ -930,6 +924,9 @@
                     </th>
                     
                     <th class="option-col option-highlighted" data-col="2">
+                        
+                        <span class="comparison-badge">Different Game</span>
+                        
                         <span class="option-name">AI/LLM</span>
                         
                         <span class="option-desc">Citation optimization</span>
@@ -1116,34 +1113,11 @@
     </div>
     
 </section>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.comparison-table-wrapper').forEach(function(wrapper) {
-        var badges = wrapper.querySelectorAll('.comparison-badge');
-        if (!badges.length) return;
-
-        function positionBadges() {
-            badges.forEach(function(badge) {
-                var colIndex = badge.getAttribute('data-col');
-                var th = wrapper.querySelector('th[data-col="' + colIndex + '"]');
-                if (!th) return;
-                var thRect = th.getBoundingClientRect();
-                var wrapperRect = wrapper.getBoundingClientRect();
-                var left = thRect.left - wrapperRect.left + thRect.width / 2;
-                badge.style.left = left + 'px';
-            });
-        }
-
-        positionBadges();
-        window.addEventListener('resize', positionBadges);
-    });
-});
-</script>
             </div>
             
             <div class="block">
                 <!-- Testimonials Block: Customer reviews and social proof -->
+
 
 
     
@@ -1160,6 +1134,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <h2>What Clients Say</h2>
             <p class="block-subtitle">Real feedback from businesses who invested in AI visibility</p>
         </div>
+        
         <div class="testimonials-nav">
             <button class="testimonials-nav-btn" data-dir="prev" aria-label="Previous">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1172,11 +1147,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 </svg>
             </button>
         </div>
+        
     </div>
     
 
     <div class="testimonials-carousel">
         <div class="testimonials-track">
+            
             
             
             <div class="testimonial-card card card-gradient">
@@ -1211,10 +1188,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 
+                
             </div>
             
         </div>
         
+            
             
             <div class="testimonial-card card ">
             <blockquote class="testimonial-quote">
@@ -1248,10 +1227,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 
+                
             </div>
             
         </div>
         
+            
             
             <div class="testimonial-card card ">
             <blockquote class="testimonial-quote">
@@ -1283,6 +1264,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 </div>
+                
                 
                 
             </div>
@@ -2144,11 +2126,40 @@ document.addEventListener('DOMContentLoaded', function() {
         var next = section.querySelector('.related-next');
         if (!grid || !prev || !next) return;
 
+        function scrollToAdjacentCard(direction) {
+            var gridRect = grid.getBoundingClientRect();
+            var gridStyle = window.getComputedStyle(grid);
+            var paddingStart = parseFloat(gridStyle.paddingLeft) || 0;
+            var items = Array.from(grid.children).map(function(item) {
+                return {
+                    snap: Math.max(
+                        0,
+                        item.getBoundingClientRect().left - gridRect.left + grid.scrollLeft - paddingStart
+                    )
+                };
+            });
+            if (!items.length) return;
+
+            var current = grid.scrollLeft;
+            var threshold = 4;
+            var target = null;
+
+            if (direction > 0) {
+                target = items.find(function(item) { return item.snap > current + threshold; });
+                if (!target) target = items[items.length - 1];
+            } else {
+                target = items.slice().reverse().find(function(item) { return item.snap < current - threshold; });
+                if (!target) target = items[0];
+            }
+
+            grid.scrollTo({ left: target.snap, behavior: 'smooth' });
+        }
+
         prev.addEventListener('click', function() {
-            grid.scrollBy({ left: -340, behavior: 'smooth' });
+            scrollToAdjacentCard(-1);
         });
         next.addEventListener('click', function() {
-            grid.scrollBy({ left: 340, behavior: 'smooth' });
+            scrollToAdjacentCard(1);
         });
     });
 })();

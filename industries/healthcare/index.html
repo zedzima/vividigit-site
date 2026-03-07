@@ -618,6 +618,7 @@ Our healthcare marketing team combines SEO expertise with medical content knowle
                 <!-- Testimonials Block: Customer reviews and social proof -->
 
 
+
     
 
 <section class="testimonials-block">
@@ -628,23 +629,13 @@ Our healthcare marketing team combines SEO expertise with medical content knowle
             <h2>Client Results</h2>
             
         </div>
-        <div class="testimonials-nav">
-            <button class="testimonials-nav-btn" data-dir="prev" aria-label="Previous">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </button>
-            <button class="testimonials-nav-btn" data-dir="next" aria-label="Next">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 6 15 12 9 18"></polyline>
-                </svg>
-            </button>
-        </div>
+        
     </div>
     
 
     <div class="testimonials-carousel">
         <div class="testimonials-track">
+            
             
             
             <div class="testimonial-card card card-gradient">
@@ -666,6 +657,24 @@ Our healthcare marketing team combines SEO expertise with medical content knowle
                 </div>
             </div>
 
+            
+            <div class="testimonial-footer">
+                
+                
+                
+                <div class="testimonial-rating" aria-label="4 star rating">
+                    
+                    <span class="star">★</span>
+                    
+                    <span class="star">★</span>
+                    
+                    <span class="star">★</span>
+                    
+                    <span class="star">★</span>
+                    
+                </div>
+                
+            </div>
             
         </div>
         
@@ -1356,11 +1365,40 @@ document.addEventListener('DOMContentLoaded', function() {
         var next = section.querySelector('.related-next');
         if (!grid || !prev || !next) return;
 
+        function scrollToAdjacentCard(direction) {
+            var gridRect = grid.getBoundingClientRect();
+            var gridStyle = window.getComputedStyle(grid);
+            var paddingStart = parseFloat(gridStyle.paddingLeft) || 0;
+            var items = Array.from(grid.children).map(function(item) {
+                return {
+                    snap: Math.max(
+                        0,
+                        item.getBoundingClientRect().left - gridRect.left + grid.scrollLeft - paddingStart
+                    )
+                };
+            });
+            if (!items.length) return;
+
+            var current = grid.scrollLeft;
+            var threshold = 4;
+            var target = null;
+
+            if (direction > 0) {
+                target = items.find(function(item) { return item.snap > current + threshold; });
+                if (!target) target = items[items.length - 1];
+            } else {
+                target = items.slice().reverse().find(function(item) { return item.snap < current - threshold; });
+                if (!target) target = items[0];
+            }
+
+            grid.scrollTo({ left: target.snap, behavior: 'smooth' });
+        }
+
         prev.addEventListener('click', function() {
-            grid.scrollBy({ left: -340, behavior: 'smooth' });
+            scrollToAdjacentCard(-1);
         });
         next.addEventListener('click', function() {
-            grid.scrollBy({ left: 340, behavior: 'smooth' });
+            scrollToAdjacentCard(1);
         });
     });
 })();
