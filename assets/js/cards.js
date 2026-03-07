@@ -121,27 +121,27 @@
             ? '<div class="specialist-avatar"><img src="' + esc(d.avatar) + '" alt="' + esc(d.title) + '"></div>'
             : '<div class="specialist-avatar"><div class="specialist-avatar-initials">' + esc(initials) + '</div></div>';
         var summary = d.description
-            ? '<p class="specialist-summary">' + esc(d.description) + '</p>'
+            ? '<p class="specialist-summary entity-card-copy">' + esc(d.description) + '</p>'
             : '';
         var metricTags = [];
         if (d.industryCount > 0) {
-            metricTags.push('<span class="specialist-tag specialist-tag-count">' + esc(pluralize(d.industryCount, 'industry', 'industries')) + '</span>');
+            metricTags.push('<span class="specialist-tag specialist-tag-count entity-chip entity-chip-count">' + esc(pluralize(d.industryCount, 'industry', 'industries')) + '</span>');
         }
-        if (d.serviceCount > 0) {
-            metricTags.push('<span class="specialist-tag specialist-tag-count">' + esc(pluralize(d.serviceCount, 'service', 'services')) + '</span>');
+        if (d.caseCount > 0) {
+            metricTags.push('<span class="specialist-tag specialist-tag-count entity-chip entity-chip-count">' + esc(pluralize(d.caseCount, 'case', 'cases')) + '</span>');
         }
         var countries = d.countries.map(function(c) {
             var label = resolveLabel(opts.countryLabel, c);
             var flag = resolveCountryFlag(opts.countryFlagMap, c);
             var value = flag || label;
             if (!value) return '';
-            var className = 'specialist-tag country ' + (flag ? 'country-flag' : 'country-label');
+            var className = 'specialist-tag country entity-chip entity-chip-soft ' + (flag ? 'country-flag entity-chip-flag' : 'country-label');
             return '<span class="' + className + '" title="' + esc(label || defaultLabel(c)) + '">' + esc(value) + '</span>';
         }).filter(Boolean);
         var languages = d.languages.map(function(l) {
             var code = resolveLangCode(opts.langCodeMap, l);
             var label = resolveLabel(opts.languageLabel, l);
-            return '<span class="specialist-tag lang" title="' + esc(label || defaultLabel(l)) + '">' + esc(code) + '</span>';
+            return '<span class="specialist-tag lang entity-chip entity-chip-soft entity-chip-code" title="' + esc(label || defaultLabel(l)) + '">' + esc(code) + '</span>';
         });
         var metricRow = metricTags.length
             ? '<div class="specialist-tag-row specialist-tag-row-metrics">' + metricTags.join('') + '</div>'
@@ -156,18 +156,18 @@
             ? '<div class="specialist-tags">' + metricRow + countryRow + languageRow + '</div>'
             : '';
 
-        return '<a href="' + d.url + '" class="specialist-card">' +
+        return '<a href="' + d.url + '" class="specialist-card entity-card entity-card-padded">' +
             '<div class="specialist-card-top">' +
-            '<div class="specialist-info"><h4>' + esc(d.title) + '</h4>' +
-            (d.role ? '<div class="specialist-role">' + esc(d.role) + '</div>' : '') +
+            '<div class="specialist-info"><h4 class="entity-card-title">' + esc(d.title) + '</h4>' +
+            (d.role ? '<div class="specialist-role type-meta">' + esc(d.role) + '</div>' : '') +
             '</div>' +
             avatarHtml +
             '</div>' +
             summary +
             tagsHtml +
-            '<div class="specialist-card-footer">' +
-            '<span class="specialist-case-count">' + esc(pluralize(d.caseCount, 'case', 'cases')) + '</span>' +
-            '<span class="specialist-cta">View Profile →</span>' +
+            '<div class="specialist-card-footer entity-card-footer">' +
+            (d.serviceCount > 0 ? '<span class="specialist-service-count type-meta">' + esc(pluralize(d.serviceCount, 'service', 'services')) + '</span>' : '<span></span>') +
+            '<span class="specialist-cta entity-card-cta">View Profile →</span>' +
             '</div>' +
             '</a>';
     }
@@ -231,15 +231,15 @@
 
         var metricTags = [];
         if (d.specialist_count > 0) {
-            metricTags.push('<span class="position-tag position-tag-count">' +
+            metricTags.push('<span class="position-tag position-tag-count entity-chip entity-chip-count">' +
                 esc(pluralize(d.specialist_count, 'specialist', 'specialists')) + '</span>');
         }
         if (d.service_count > 0) {
-            metricTags.push('<span class="position-tag position-tag-count">' +
+            metricTags.push('<span class="position-tag position-tag-count entity-chip entity-chip-count">' +
                 esc(pluralize(d.service_count, 'service', 'services')) + '</span>');
         }
         if (d.industry_count > 0) {
-            metricTags.push('<span class="position-tag position-tag-count">' +
+            metricTags.push('<span class="position-tag position-tag-count entity-chip entity-chip-count">' +
                 esc(pluralize(d.industry_count, 'industry', 'industries')) + '</span>');
         }
 
@@ -248,14 +248,14 @@
             var flag = resolveCountryFlag(opts.countryFlagMap, c);
             var value = flag || label;
             if (!value) return '';
-            var className = 'position-tag country ' + (flag ? 'country-flag' : 'country-label');
+            var className = 'position-tag country entity-chip entity-chip-soft ' + (flag ? 'country-flag entity-chip-flag' : 'country-label');
             return '<span class="' + className + '" title="' + esc(label || defaultLabel(c)) + '">' + esc(value) + '</span>';
         }).filter(Boolean);
 
         var languages = d.languages.map(function(l) {
             var code = resolveLangCode(opts.langCodeMap, l);
             var label = resolveLabel(opts.languageLabel, l);
-            return '<span class="position-tag lang" title="' + esc(label || defaultLabel(l)) + '">' + esc(code) + '</span>';
+            return '<span class="position-tag lang entity-chip entity-chip-soft entity-chip-code" title="' + esc(label || defaultLabel(l)) + '">' + esc(code) + '</span>';
         });
 
         var metricRow = metricTags.length
@@ -271,13 +271,13 @@
             ? '<div class="position-tags">' + metricRow + countryRow + languageRow + '</div>'
             : '';
 
-        return '<a href="' + d.url + '" class="position-card">' +
+        return '<a href="' + d.url + '" class="position-card entity-card entity-card-padded">' +
             hiringBadge +
-            '<h4>' + esc(d.title) + '</h4>' +
-            (d.description ? '<p class="position-summary">' + esc(d.description) + '</p>' : '') +
+            '<h4 class="entity-card-title">' + esc(d.title) + '</h4>' +
+            (d.description ? '<p class="position-summary entity-card-copy">' + esc(d.description) + '</p>' : '') +
             tagsHtml +
-            '<div class="position-card-footer">' +
-            '<span class="position-cta">View Position →</span>' +
+            '<div class="position-card-footer entity-card-footer entity-card-footer-end">' +
+            '<span class="position-cta entity-card-cta">View Position →</span>' +
             '</div></a>';
     }
 
