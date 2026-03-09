@@ -34,22 +34,68 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="assets/images/site/favicon.svg">
 
+    
+    
+
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
 
     <!-- Styles -->
+    <link rel="preload" href="assets/css/styles.css?v=20260306-contrast-fix" as="style">
     <link rel="stylesheet" href="assets/css/styles.css?v=20260306-contrast-fix">
-    <script src="assets/js/cards.js"></script>
+    <script src="assets/js/cards.js" defer></script>
 
     <!-- Analytics -->
     
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WXWHHQXN');</script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    (function(w, d, l, i) {
+        var loaded = false;
+        var idleHandle = null;
+        var triggers = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
+
+        function cleanup() {
+            triggers.forEach(function(type) {
+                w.removeEventListener(type, loadGtm, { passive: true });
+            });
+            if (idleHandle) {
+                if ('cancelIdleCallback' in w) {
+                    w.cancelIdleCallback(idleHandle);
+                } else {
+                    w.clearTimeout(idleHandle);
+                }
+            }
+        }
+
+        function loadGtm() {
+            var firstScript;
+            var script;
+            var layerQuery;
+
+            if (loaded) return;
+            loaded = true;
+            cleanup();
+
+            w[l].push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+            firstScript = d.getElementsByTagName('script')[0];
+            script = d.createElement('script');
+            layerQuery = l !== 'dataLayer' ? '&l=' + l : '';
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + layerQuery;
+            firstScript.parentNode.insertBefore(script, firstScript);
+        }
+
+        triggers.forEach(function(type) {
+            w.addEventListener(type, loadGtm, { once: true, passive: true });
+        });
+
+        if ('requestIdleCallback' in w) {
+            idleHandle = w.requestIdleCallback(loadGtm, { timeout: 3500 });
+        } else {
+            idleHandle = w.setTimeout(loadGtm, 3500);
+        }
+    })(window, document, 'dataLayer', 'GTM-WXWHHQXN');
+    </script>
     
 </head>
 <body>
@@ -69,8 +115,7 @@
         </div>
 
         <a href="./" class="logo">
-            <img src="assets/images/site/logo-gradient.svg" alt="Vividigit" class="logo-text logo-dark">
-            <img src="assets/images/site/logo-gradient.svg" alt="Vividigit" class="logo-text logo-light">
+            <img src="assets/images/site/logo-gradient.svg" alt="Vividigit" class="logo-text" width="156" height="30" decoding="async">
         </a>
 
         <div class="header-right">
@@ -957,7 +1002,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6570)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><defs><linearGradient id="icon-grad-6570" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9091)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><defs><linearGradient id="icon-grad-9091" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -967,7 +1012,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7381)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-ecommerce"><path d="M4 7l2-4h12l2 4"/><rect x="4" y="7" width="16" height="14" rx="1"/><path d="M10 21v-5h4v5"/><path d="M4 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M8 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M12 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M16 7c0 1.1.9 2 2 2s2-.9 2-2"/><defs><linearGradient id="icon-grad-7381" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7046)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-ecommerce"><path d="M4 7l2-4h12l2 4"/><rect x="4" y="7" width="16" height="14" rx="1"/><path d="M10 21v-5h4v5"/><path d="M4 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M8 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M12 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M16 7c0 1.1.9 2 2 2s2-.9 2-2"/><defs><linearGradient id="icon-grad-7046" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -978,7 +1023,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7549)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-fintech"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M6 17l4-4 3 2 5-6"/><path d="M16 9h2v2"/><line x1="6" y1="7" x2="6" y2="7.01"/><defs><linearGradient id="icon-grad-7549" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5925)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-fintech"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M6 17l4-4 3 2 5-6"/><path d="M16 9h2v2"/><line x1="6" y1="7" x2="6" y2="7.01"/><defs><linearGradient id="icon-grad-5925" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -989,7 +1034,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2204)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-healthcare"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/><defs><linearGradient id="icon-grad-2204" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2290)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-healthcare"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/><defs><linearGradient id="icon-grad-2290" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -1156,134 +1201,134 @@
         <div class="logos-track">
             
             <div class="logos-item">
-                <img src="assets/logos/cryomed.svg" alt="Cryomed" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/cryomed.svg" alt="Cryomed" loading="lazy" decoding="async" width="140" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Cryomed</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/porto-montenegro.svg" alt="Porto Montenegro" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/porto-montenegro.svg" alt="Porto Montenegro" loading="lazy" decoding="async" width="180" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Porto Montenegro</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/minto.svg" alt="Minto" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/minto.svg" alt="Minto" loading="lazy" decoding="async" width="120" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Minto</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/weestep.svg" alt="Weestep" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/weestep.svg" alt="Weestep" loading="lazy" decoding="async" width="140" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Weestep</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/alfacash.svg" alt="Alfacash" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/alfacash.svg" alt="Alfacash" loading="lazy" decoding="async" width="130" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Alfacash</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/bamboo-group.svg" alt="Bamboo Group" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/bamboo-group.svg" alt="Bamboo Group" loading="lazy" decoding="async" width="160" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Bamboo Group</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/kisa.svg" alt="KISA" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/kisa.svg" alt="KISA" loading="lazy" decoding="async" width="80" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">KISA</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/promwad.svg" alt="Promwad" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/promwad.svg" alt="Promwad" loading="lazy" decoding="async" width="180" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Promwad</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/alvadi.svg" alt="Alvadi" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/alvadi.svg" alt="Alvadi" loading="lazy" decoding="async" width="110" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Alvadi</span>
             </div>
             
             <div class="logos-item logos-item-alconost">
-                <img src="assets/logos/alconost.svg" alt="Alconost" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/alconost.svg" alt="Alconost" loading="lazy" decoding="async" width="258" height="45" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Alconost</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/alfa-coins.svg" alt="Alfa Coins" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/alfa-coins.svg" alt="Alfa Coins" loading="lazy" decoding="async" width="130" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Alfa Coins</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/infatica.svg" alt="Infatica" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/infatica.svg" alt="Infatica" loading="lazy" decoding="async" width="130" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Infatica</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/ethplorer.svg" alt="Ethplorer" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/ethplorer.svg" alt="Ethplorer" loading="lazy" decoding="async" width="140" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Ethplorer</span>
             </div>
             
             
             
             <div class="logos-item">
-                <img src="assets/logos/cryomed.svg" alt="Cryomed" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/cryomed.svg" alt="Cryomed" loading="lazy" decoding="async" width="140" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Cryomed</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/porto-montenegro.svg" alt="Porto Montenegro" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/porto-montenegro.svg" alt="Porto Montenegro" loading="lazy" decoding="async" width="180" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Porto Montenegro</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/minto.svg" alt="Minto" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/minto.svg" alt="Minto" loading="lazy" decoding="async" width="120" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Minto</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/weestep.svg" alt="Weestep" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/weestep.svg" alt="Weestep" loading="lazy" decoding="async" width="140" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Weestep</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/alfacash.svg" alt="Alfacash" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/alfacash.svg" alt="Alfacash" loading="lazy" decoding="async" width="130" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Alfacash</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/bamboo-group.svg" alt="Bamboo Group" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/bamboo-group.svg" alt="Bamboo Group" loading="lazy" decoding="async" width="160" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Bamboo Group</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/kisa.svg" alt="KISA" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/kisa.svg" alt="KISA" loading="lazy" decoding="async" width="80" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">KISA</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/promwad.svg" alt="Promwad" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/promwad.svg" alt="Promwad" loading="lazy" decoding="async" width="180" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Promwad</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/alvadi.svg" alt="Alvadi" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/alvadi.svg" alt="Alvadi" loading="lazy" decoding="async" width="110" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Alvadi</span>
             </div>
             
             <div class="logos-item logos-item-alconost">
-                <img src="assets/logos/alconost.svg" alt="Alconost" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/alconost.svg" alt="Alconost" loading="lazy" decoding="async" width="258" height="45" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Alconost</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/alfa-coins.svg" alt="Alfa Coins" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/alfa-coins.svg" alt="Alfa Coins" loading="lazy" decoding="async" width="130" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Alfa Coins</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/infatica.svg" alt="Infatica" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/infatica.svg" alt="Infatica" loading="lazy" decoding="async" width="130" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Infatica</span>
             </div>
             
             <div class="logos-item">
-                <img src="assets/logos/ethplorer.svg" alt="Ethplorer" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                <img src="assets/logos/ethplorer.svg" alt="Ethplorer" loading="lazy" decoding="async" width="140" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
                 <span class="logos-fallback">Ethplorer</span>
             </div>
             
@@ -1375,7 +1420,7 @@
                     <div class="footer-top-section footer-heritage">
                         <p class="footer-column-title">Background</p>
                         <div class="footer-heritage-logo">
-                            <img src="/assets/images/site/alconost-logo.svg" alt="Alconost logo" loading="lazy">
+                            <img src="/assets/images/site/alconost-logo.svg" alt="Alconost logo" loading="lazy" decoding="async" width="258" height="45">
                         </div>
                         <p class="footer-brand-line">Former <a href="https://alconost.digital/en/" target="_blank" rel="noopener" class="footer-inline-link">Alconost Digital</a> team</p>
                         <p class="footer-brand-note">Working in multilingual digital services since 2008</p>
@@ -1532,8 +1577,7 @@
     </div>
 
     <!-- Site JavaScript -->
-    <script src="assets/js/app-core.js"></script>
-    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/app-core.js" defer></script>
     <!-- SVG templates for JS runtime use -->
     <div id="svg-templates" hidden>
         <span id="svg-theme-system"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
@@ -1542,8 +1586,8 @@
         <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
 
-    <script src="assets/js/forms.js"></script>
-    <script src="assets/js/ui.js"></script>
-    <script src="assets/js/site.js"></script>
+    <script src="assets/js/forms.js" defer></script>
+    <script src="assets/js/ui.js" defer></script>
+    <script src="assets/js/site.js" defer></script>
 </body>
 </html>

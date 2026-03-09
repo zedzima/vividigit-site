@@ -282,4 +282,5 @@
     }
 
     window.CMSCards.renderPositionCard = renderPositionCard;
+    document.dispatchEvent(new Event('cmscards:ready'));
 })();

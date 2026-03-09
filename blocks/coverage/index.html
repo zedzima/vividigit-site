@@ -34,22 +34,68 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="assets/images/site/favicon.svg">
 
+    
+    
+
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
 
     <!-- Styles -->
+    <link rel="preload" href="assets/css/styles.css?v=20260306-contrast-fix" as="style">
     <link rel="stylesheet" href="assets/css/styles.css?v=20260306-contrast-fix">
-    <script src="assets/js/cards.js"></script>
+    <script src="assets/js/cards.js" defer></script>
 
     <!-- Analytics -->
     
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WXWHHQXN');</script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    (function(w, d, l, i) {
+        var loaded = false;
+        var idleHandle = null;
+        var triggers = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
+
+        function cleanup() {
+            triggers.forEach(function(type) {
+                w.removeEventListener(type, loadGtm, { passive: true });
+            });
+            if (idleHandle) {
+                if ('cancelIdleCallback' in w) {
+                    w.cancelIdleCallback(idleHandle);
+                } else {
+                    w.clearTimeout(idleHandle);
+                }
+            }
+        }
+
+        function loadGtm() {
+            var firstScript;
+            var script;
+            var layerQuery;
+
+            if (loaded) return;
+            loaded = true;
+            cleanup();
+
+            w[l].push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+            firstScript = d.getElementsByTagName('script')[0];
+            script = d.createElement('script');
+            layerQuery = l !== 'dataLayer' ? '&l=' + l : '';
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + layerQuery;
+            firstScript.parentNode.insertBefore(script, firstScript);
+        }
+
+        triggers.forEach(function(type) {
+            w.addEventListener(type, loadGtm, { once: true, passive: true });
+        });
+
+        if ('requestIdleCallback' in w) {
+            idleHandle = w.requestIdleCallback(loadGtm, { timeout: 3500 });
+        } else {
+            idleHandle = w.setTimeout(loadGtm, 3500);
+        }
+    })(window, document, 'dataLayer', 'GTM-WXWHHQXN');
+    </script>
     
 </head>
 <body>
@@ -69,8 +115,7 @@
         </div>
 
         <a href="./" class="logo">
-            <img src="assets/images/site/logo-gradient.svg" alt="Vividigit" class="logo-text logo-dark">
-            <img src="assets/images/site/logo-gradient.svg" alt="Vividigit" class="logo-text logo-light">
+            <img src="assets/images/site/logo-gradient.svg" alt="Vividigit" class="logo-text" width="156" height="30" decoding="async">
         </a>
 
         <div class="header-right">
@@ -288,7 +333,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8035)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><defs><linearGradient id="icon-grad-8035" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3384)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><defs><linearGradient id="icon-grad-3384" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -298,7 +343,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7886)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-ecommerce"><path d="M4 7l2-4h12l2 4"/><rect x="4" y="7" width="16" height="14" rx="1"/><path d="M10 21v-5h4v5"/><path d="M4 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M8 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M12 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M16 7c0 1.1.9 2 2 2s2-.9 2-2"/><defs><linearGradient id="icon-grad-7886" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5506)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-ecommerce"><path d="M4 7l2-4h12l2 4"/><rect x="4" y="7" width="16" height="14" rx="1"/><path d="M10 21v-5h4v5"/><path d="M4 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M8 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M12 7c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M16 7c0 1.1.9 2 2 2s2-.9 2-2"/><defs><linearGradient id="icon-grad-5506" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -309,7 +354,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6914)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-fintech"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M6 17l4-4 3 2 5-6"/><path d="M16 9h2v2"/><line x1="6" y1="7" x2="6" y2="7.01"/><defs><linearGradient id="icon-grad-6914" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4683)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-fintech"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M6 17l4-4 3 2 5-6"/><path d="M16 9h2v2"/><line x1="6" y1="7" x2="6" y2="7.01"/><defs><linearGradient id="icon-grad-4683" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -320,7 +365,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8318)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-healthcare"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/><defs><linearGradient id="icon-grad-8318" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4212)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-healthcare"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/><defs><linearGradient id="icon-grad-4212" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -330,7 +375,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1289)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-education"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/><defs><linearGradient id="icon-grad-1289" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5233)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-education"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/><defs><linearGradient id="icon-grad-5233" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -340,7 +385,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2185)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-realestate"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4"/><line x1="8" y1="6" x2="10" y2="6"/><line x1="14" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><defs><linearGradient id="icon-grad-2185" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7962)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-realestate"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4"/><line x1="8" y1="6" x2="10" y2="6"/><line x1="14" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><defs><linearGradient id="icon-grad-7962" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -351,7 +396,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7541)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-legal"><path d="M12 3v18"/><path d="M5 6l7-3 7 3"/><path d="M5 6v3a7 7 0 0 0 7 7 7 7 0 0 0 7-7V6"/><path d="M5 21h14"/><defs><linearGradient id="icon-grad-7541" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3352)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-legal"><path d="M12 3v18"/><path d="M5 6l7-3 7 3"/><path d="M5 6v3a7 7 0 0 0 7 7 7 7 0 0 0 7-7V6"/><path d="M5 21h14"/><defs><linearGradient id="icon-grad-3352" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -361,7 +406,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1318)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-manufacturing"><path d="M2 20h20"/><path d="M5 20V8l5 4V8l5 4V4l5 4v12"/><defs><linearGradient id="icon-grad-1318" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3735)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-manufacturing"><path d="M2 20h20"/><path d="M5 20V8l5 4V8l5 4V4l5 4v12"/><defs><linearGradient id="icon-grad-3735" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -371,7 +416,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5908)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-travel"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/><defs><linearGradient id="icon-grad-5908" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5289)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-travel"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/><defs><linearGradient id="icon-grad-5289" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -381,7 +426,7 @@
                 
                 <div class="coverage-item">
                     
-                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9703)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-gaming"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4"/><path d="M8 10v4"/><circle cx="17" cy="10" r="1"/><circle cx="15" cy="14" r="1"/><defs><linearGradient id="icon-grad-9703" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <span class="coverage-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2050)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-gaming"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4"/><path d="M8 10v4"/><circle cx="17" cy="10" r="1"/><circle cx="15" cy="14" r="1"/><defs><linearGradient id="icon-grad-2050" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -705,7 +750,7 @@
                     <div class="footer-top-section footer-heritage">
                         <p class="footer-column-title">Background</p>
                         <div class="footer-heritage-logo">
-                            <img src="/assets/images/site/alconost-logo.svg" alt="Alconost logo" loading="lazy">
+                            <img src="/assets/images/site/alconost-logo.svg" alt="Alconost logo" loading="lazy" decoding="async" width="258" height="45">
                         </div>
                         <p class="footer-brand-line">Former <a href="https://alconost.digital/en/" target="_blank" rel="noopener" class="footer-inline-link">Alconost Digital</a> team</p>
                         <p class="footer-brand-note">Working in multilingual digital services since 2008</p>
@@ -862,8 +907,7 @@
     </div>
 
     <!-- Site JavaScript -->
-    <script src="assets/js/app-core.js"></script>
-    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/app-core.js" defer></script>
     <!-- SVG templates for JS runtime use -->
     <div id="svg-templates" hidden>
         <span id="svg-theme-system"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
@@ -872,8 +916,8 @@
         <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
 
-    <script src="assets/js/forms.js"></script>
-    <script src="assets/js/ui.js"></script>
-    <script src="assets/js/site.js"></script>
+    <script src="assets/js/forms.js" defer></script>
+    <script src="assets/js/ui.js" defer></script>
+    <script src="assets/js/site.js" defer></script>
 </body>
 </html>
