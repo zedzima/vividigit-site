@@ -581,7 +581,7 @@
         return '<a href="' + url + '" class="scope-card entity-card entity-card-padded">' +
             '<div class="scope-card-header"><div class="scope-services">' + svcs + '</div>' +
             (delivery ? '<span class="scope-spec-count type-meta">' + esc(delivery) + '</span>' : '') + '</div>' +
-            '<h4 class="entity-card-title">' + esc(s.menu || s.title) + '</h4><p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div><p class="entity-card-copy">' + esc(s.description) + '</p>' +
             (metrics.length ? '<div class="scope-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
             '<div class="scope-card-footer entity-card-footer">' + (price ? '<span class="scope-price entity-card-price">From ' + price + '</span>' : '<span></span>') + '<span class="scope-cta entity-card-cta">View Scope →</span></div></a>';
     }
@@ -615,7 +615,7 @@
             '<span class="case-cta entity-card-cta">View Case →</span></div>';
         return '<a href="' + url + '" class="case-card entity-card">' + imageHtml +
             '<div class="case-content">' +
-            '<h4 class="entity-card-title">' + esc(title) + '</h4>' + clientHtml + '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            '<div class="entity-card-title">' + esc(title) + '</div>' + clientHtml + '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
             tagsHtml + footerHtml + '</div></a>';
     }
 
@@ -629,7 +629,7 @@
         var authorLabel = formatAuthorName(s.author);
         return '<a href="' + url + '" class="blog-card entity-card entity-card-padded">' +
             (chips.length ? '<div class="blog-card-tags">' + chips.join('') + '</div>' : '') +
-            '<h4 class="blog-card-title entity-card-title">' + esc(s.title) + '</h4>' +
+            '<div class="blog-card-title entity-card-title">' + esc(s.title) + '</div>' +
             '<p class="blog-card-excerpt entity-card-copy">' + esc(s.description) + '</p>' +
             '<div class="blog-card-meta type-meta">' + (dateLabel ? '<span>' + esc(dateLabel) + '</span>' : '') + (authorLabel ? '<span>By ' + esc(authorLabel) + '</span>' : '') + '</div></a>';
     }
@@ -647,7 +647,7 @@
         if (s.language_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.language_count, 'language', 'languages')) + '</span>');
         return '<a href="' + url + '" class="service-card entity-card entity-card-padded">' +
             '<div class="service-card-header">' +
-            '<h4 class="entity-card-title">' + esc(s.menu || s.title) + '</h4>' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             iconHtml + '</div>' +
             '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
             (metrics.length ? '<div class="service-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
@@ -674,7 +674,7 @@
         var price = formatCurrency(s.starting_price);
         return '<a href="' + url + '" class="solution-card entity-card entity-card-padded">' +
             (tags ? '<div class="solution-card-tags">' + tags + '</div>' : '') +
-            '<h4 class="entity-card-title">' + esc(s.menu || s.title) + '</h4><p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div><p class="entity-card-copy">' + esc(s.description) + '</p>' +
             (metrics.length ? '<div class="solution-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
             '<div class="solution-card-footer entity-card-footer">' +
             (price ? '<span class="solution-price entity-card-price">From ' + price + '</span>' : '<span></span>') +
@@ -707,7 +707,7 @@
             '</div>';
         return '<a href="' + url + '" class="dimension-card entity-card entity-card-padded">' +
             '<div class="dimension-card-header">' +
-            '<h4 class="entity-card-title">' + esc(s.menu || s.title) + '</h4>' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             badgeHtml + '</div>' +
             '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
             footerHtml + '</a>';
@@ -1142,7 +1142,8 @@
                     <textarea class="form-input" rows="4" placeholder="Tell us about your project..." name="message"></textarea>
                 </div>
                 <div class="form-group">
-                    <select class="form-input" name="source">
+                    <label class="sr-only" for="sidebarSource">How did you hear about us?</label>
+                    <select class="form-input" id="sidebarSource" name="source">
                         <option value="" disabled selected>How did you hear about us?</option>
                         <option value="search">Search engine</option>
                         <option value="social">Social media</option>

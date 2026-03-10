@@ -815,6 +815,7 @@
                 '</div>' +
                 '<div class="cart-request-fields">' +
                     '<input type="tel" class="cart-field-input" id="cartPhone" placeholder="Phone number" />' +
+                    '<label class="sr-only" for="cartSource">How did you hear about us?</label>' +
                     '<select class="cart-field-input" id="cartSource">' +
                         '<option value="" disabled selected>How did you hear about us?</option>' +
                         '<option value="search">Search engine</option>' +

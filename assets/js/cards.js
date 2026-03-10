@@ -158,7 +158,7 @@
 
         return '<a href="' + d.url + '" class="specialist-card entity-card entity-card-padded">' +
             '<div class="specialist-card-top">' +
-            '<div class="specialist-info"><h4 class="entity-card-title">' + esc(d.title) + '</h4>' +
+            '<div class="specialist-info"><div class="entity-card-title">' + esc(d.title) + '</div>' +
             (d.role ? '<div class="specialist-role type-meta">' + esc(d.role) + '</div>' : '') +
             '</div>' +
             avatarHtml +
@@ -273,7 +273,7 @@
 
         return '<a href="' + d.url + '" class="position-card entity-card entity-card-padded">' +
             hiringBadge +
-            '<h4 class="entity-card-title">' + esc(d.title) + '</h4>' +
+            '<div class="entity-card-title">' + esc(d.title) + '</div>' +
             (d.description ? '<p class="position-summary entity-card-copy">' + esc(d.description) + '</p>' : '') +
             tagsHtml +
             '<div class="position-card-footer entity-card-footer entity-card-footer-end">' +
