@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/">
+    <title>Catalog Mini — Blocks Library</title>
+    <meta name="description" content="Universal entity showcase block. Shows any entity type with optional dimension filtering.">
+    
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vividigit.com/_blocks/catalog-mini/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Vividigit">
+    <meta property="og:title" content="Catalog Mini — Blocks Library">
+    <meta property="og:description" content="Universal entity showcase block. Shows any entity type with optional dimension filtering.">
+    <meta property="og:url" content="https://vividigit.com/_blocks/catalog-mini/">
+    <meta property="og:image" content="https://vividigit.com/_media/images/site/og-default.png">
+    <meta property="og:image:secure_url" content="https://vividigit.com/_media/images/site/og-default.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="VIVIDIGIT logo">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@vividigit">
+    <meta name="twitter:title" content="Catalog Mini — Blocks Library">
+    <meta name="twitter:description" content="Universal entity showcase block. Shows any entity type with optional dimension filtering.">
+    <meta name="twitter:image" content="https://vividigit.com/_media/images/site/og-default.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="_media/images/site/favicon.svg">
+
+    
+    
+
+    <!-- Fonts -->
+    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
+
+    <!-- Styles -->
+    <link rel="preload" href="_assets/css/styles.css?v=474207e1" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=474207e1">
+    <script src="_assets/js/cards.js" defer></script>
+
+    <!-- Analytics (skip on block demo pages) -->
+    
+</head>
+<body>
+    
+    
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="header-btn btn-menu" id="btnMenu" aria-label="Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <a href="./" class="logo">
+            <img src="_media/images/site/logo-gradient.svg" alt="Vividigit" class="logo-text" width="156" height="30" decoding="async">
+        </a>
+
+        <div class="header-right">
+            <a href="cart/" class="header-btn btn-cart" id="cartHeaderBtn" aria-label="Cart">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="cart-badge hidden" id="cartBadge">0</span>
+            </a>
+            <button class="header-btn btn-action" id="btnAction" aria-label="Actions">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Layout -->
+    
+    
+
+    <div class="layout">
+        <!-- Left Sidebar: ClickUp-style icon bar + expandable panel -->
+        <aside class="sidebar-nav" id="sidebarNav">
+            <!-- Icon Bar (always visible on desktop) -->
+            <div class="icon-bar">
+                <div class="icon-bar-nav">
+                    
+                    
+                    <a href="solutions/"
+                       class="icon-bar-link "
+                       data-nav-index="0"
+                       title="Solutions">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+                        <span class="icon-bar-label">Solutions</span>
+                    </a>
+                    
+                    
+                    <a href="services/"
+                       class="icon-bar-link "
+                       data-nav-index="1"
+                       title="Services">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+
+                        <span class="icon-bar-label">Services</span>
+                    </a>
+                    
+                    
+                    <a href="scopes/"
+                       class="icon-bar-link "
+                       data-nav-index="2"
+                       title="Scopes">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                        <span class="icon-bar-label">Scopes</span>
+                    </a>
+                    
+                    
+                    <a href="industries/"
+                       class="icon-bar-link "
+                       data-nav-index="3"
+                       title="Industries">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                        <span class="icon-bar-label">Industries</span>
+                    </a>
+                    
+                    
+                    <a href="countries/"
+                       class="icon-bar-link "
+                       data-nav-index="4"
+                       title="Countries">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        <span class="icon-bar-label">Countries</span>
+                    </a>
+                    
+                    
+                    <a href="languages/"
+                       class="icon-bar-link "
+                       data-nav-index="5"
+                       title="Languages">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>
+                        <span class="icon-bar-label">Languages</span>
+                    </a>
+                    
+                    
+                    <a href="cases/"
+                       class="icon-bar-link "
+                       data-nav-index="6"
+                       title="Cases">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-award"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                        <span class="icon-bar-label">Cases</span>
+                    </a>
+                    
+                    
+                    <a href="team/"
+                       class="icon-bar-link "
+                       data-nav-index="7"
+                       title="Team">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <span class="icon-bar-label">Team</span>
+                    </a>
+                    
+                    
+                    <a href="positions/"
+                       class="icon-bar-link "
+                       data-nav-index="8"
+                       title="Join Us">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <span class="icon-bar-label">Join Us</span>
+                    </a>
+                    
+                    
+                    <a href="blog/"
+                       class="icon-bar-link "
+                       data-nav-index="9"
+                       title="Blog">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+
+                        <span class="icon-bar-label">Blog</span>
+                    </a>
+                    
+                </div>
+
+                <div class="icon-bar-bottom">
+                    <!-- Theme Toggle -->
+                    <button class="icon-bar-btn" id="themeToggleBtn" title="Theme">
+                        <span id="themeIcon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+                    </button>
+                    <!-- Language Toggle -->
+                    <button class="icon-bar-btn" id="langToggleBtn" title="Language">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Theme Dropdown (floating) -->
+        <div class="floating-dropdown" id="themeDropdown">
+            <button class="dropdown-option active" data-theme="system">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> System
+            </button>
+            <button class="dropdown-option" data-theme="dark">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Dark
+            </button>
+            <button class="dropdown-option" data-theme="light">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> Light
+            </button>
+        </div>
+
+        <!-- Language Dropdown (floating, dynamic from translations) -->
+        <div class="floating-dropdown" id="langDropdownMenu">
+            
+            
+            <button class="dropdown-option active" data-lang="en">English</button>
+            
+            
+            <button class="dropdown-option disabled" data-lang="de" disabled>Deutsch (soon)</button>
+            
+        </div>
+
+        <!-- Main Content -->
+        <main>
+            
+            <nav class="breadcrumbs">
+                <a href="./">Home</a>
+                <span>/</span>
+                
+                <a href="_blocks/">_blocks</a>
+                <span>/</span>
+                
+                <span>Catalog Mini — Blocks Library</span>
+            </nav>
+            
+
+            
+            <div class="block">
+                <!-- Catalog Mini Block: Simplified entity grid with dimension filtering -->
+
+
+
+
+<section class="catalog-mini-block"
+    data-source="scopes"
+    data-dimension="services"
+    data-value="seo"
+    data-limit="6">
+
+    <div class="catalog-mini-header">
+        <div class="catalog-mini-header-text">
+            <span class="tag tag-accent">catalog</span>
+            <h2>SEO Scopes</h2>
+            <p class="catalog-mini-subtitle">Filtered by service dimension, limited to 6 items</p>
+        </div>
+        <div class="carousel-nav catalog-mini-nav">
+            <button class="carousel-btn catalog-mini-prev" aria-label="Previous">&larr;</button>
+            <button class="carousel-btn catalog-mini-next" aria-label="Next">&rarr;</button>
+        </div>
+    </div>
+
+    <div class="catalog-mini-grid entity-card-grid">
+        <div class="catalog-mini-loading">Loading...</div>
+    </div>
+
+    
+</section>
+
+<script>
+(function() {
+    var section = document.currentScript.previousElementSibling;
+    var source = section.dataset.source || 'scopes';
+    var dimension = section.dataset.dimension || '';
+    var value = section.dataset.value || '';
+    var limit = parseInt(section.dataset.limit) || 0;
+    var grid = section.querySelector('.catalog-mini-grid');
+    var prevBtn = section.querySelector('.catalog-mini-prev');
+    var nextBtn = section.querySelector('.catalog-mini-next');
+
+    /* ===== Source configs ===== */
+    var SOURCES = {
+        scopes:     { url: '_data/scopes-index.json', dataKey: 'scopes' },
+        team:       { url: '_data/team.json', dataKey: 'specialists' },
+        cases:      { url: '_data/cases.json', dataKey: 'cases' },
+        blog:       { url: '_data/blog.json', dataKey: null },
+        services:   { url: '_data/services-index.json', dataKey: 'services' },
+        solutions:  { url: '_data/solutions-index.json', dataKey: 'solutions' },
+        industries: { url: '_data/industries-index.json', dataKey: 'industries' },
+        countries:  { url: '_data/countries-index.json', dataKey: 'countries' },
+        languages:  { url: '_data/languages-index.json', dataKey: 'languages' },
+        positions:  { url: '_data/positions-index.json', dataKey: 'positions' }
+    };
+
+    var cfg = SOURCES[source] || SOURCES.scopes;
+
+    /* ===== Display maps ===== */
+    var langCodeMap = { 'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT' };
+    var countryFlagMap = { 'usa': '🇺🇸', 'uk': '🇬🇧', 'germany': '🇩🇪', 'austria': '🇦🇹', 'france': '🇫🇷', 'spain': '🇪🇸', 'italy': '🇮🇹', 'canada': '🇨🇦', 'china': '🇨🇳', 'japan': '🇯🇵', 'russia': '🇷🇺' };
+    var serviceLabelMap = { 'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO', 'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics', 'social-media': 'Social Media', 'email': 'Email', 'cro': 'CRO', 'video': 'Video', 'pr': 'PR', 'automation': 'Automation', 'ecommerce': 'E-commerce', 'affiliate': 'Affiliate' };
+    var industryLabelMap = { 'ecommerce': 'E-commerce', 'saas': 'SaaS', 'fintech': 'Fintech', 'healthcare': 'Healthcare', 'education': 'Education', 'realestate': 'Real Estate', 'travel': 'Travel' };
+    var scopeLabelMap = { 'technical-seo': 'Technical SEO', 'ai-optimisation': 'AI Optimization', 'content-strategy': 'Content Strategy', 'ppc-management': 'PPC Management', 'analytics-setup': 'Analytics', 'localization': 'Localization' };
+    var countryLabelMap = { 'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain' };
+    var serviceIconMap = { 'seo': 'search', 'aeo': 'lightning', 'digital-marketing': 'globe', 'content': 'pen-tool', 'social-media': 'megaphone', 'ppc': 'target', 'email': 'mail', 'analytics': 'analytics', 'cro': 'chart', 'video': 'video', 'pr': 'newspaper', 'automation': 'code', 'ecommerce': 'layers', 'affiliate': 'users' };
+
+    function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+    function toTitleCase(text) {
+        return String(text || '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\b\w/g, function(ch) { return ch.toUpperCase(); });
+    }
+    function formatAuthorName(author) {
+        if (!author) return '';
+        return toTitleCase(author);
+    }
+    function formatDate(value) {
+        if (!value) return '';
+        var d = new Date(value);
+        if (isNaN(d.getTime())) return String(value);
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    function pluralize(count, singular, plural) {
+        return count + ' ' + (count === 1 ? singular : plural);
+    }
+    function formatCurrency(value) {
+        var n = Number(value);
+        if (!isFinite(n) || n <= 0) return '';
+        return '$' + Math.round(n).toLocaleString();
+    }
+    function resolveLabel(map, slug) {
+        if (!slug) return '';
+        return map[slug] || toTitleCase(slug);
+    }
+
+    /* ===== Card renderers ===== */
+    function renderScopeCard(s) {
+        var svcs = (s.services || []).map(function(c){ return '<span class="scope-service entity-chip entity-chip-label entity-chip-wide entity-chip-accent">' + esc(resolveLabel(serviceLabelMap, c)) + '</span>'; }).join('');
+        var industryCount = Number(s.industry_count || (s.industries || []).length || 0);
+        var countryCount = Number(s.country_count || (s.countries || []).length || 0);
+        var languageCount = Number(s.language_count || (s.languages || []).length || 0);
+        var taskCount = Number(s.task_count || 0);
+        var metrics = [];
+        if (industryCount > 0) metrics.push('<span class="scope-metric entity-card-stat">' + esc(pluralize(industryCount, 'industry', 'industries')) + '</span>');
+        if (countryCount > 0) metrics.push('<span class="scope-metric entity-card-stat">' + esc(pluralize(countryCount, 'country', 'countries')) + '</span>');
+        if (languageCount > 0) metrics.push('<span class="scope-metric entity-card-stat">' + esc(pluralize(languageCount, 'language', 'languages')) + '</span>');
+        if (taskCount > 0) metrics.push('<span class="scope-metric entity-card-stat">' + esc(pluralize(taskCount, 'task', 'tasks')) + '</span>');
+        var delivery = s.delivery ? toTitleCase(String(s.delivery).replace('-', ' ')) : '';
+        var price = formatCurrency(s.price || s.from_price);
+        var url = (s.url || '/scopes/' + s.slug).replace(/^\//, '');
+        return '<a href="' + url + '" class="scope-card entity-card entity-card-padded">' +
+            '<div class="scope-card-header"><div class="scope-services">' + svcs + '</div>' +
+            (delivery ? '<span class="scope-spec-count type-meta">' + esc(delivery) + '</span>' : '') + '</div>' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div><p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            (metrics.length ? '<div class="scope-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
+            '<div class="scope-card-footer entity-card-footer">' + (price ? '<span class="scope-price entity-card-price">From ' + price + '</span>' : '<span></span>') + '<span class="scope-cta entity-card-cta">View Scope →</span></div></a>';
+    }
+
+    function renderSpecialistCard(s) {
+        return window.CMSCards.renderSpecialistCard(s, {
+            langCodeMap: langCodeMap,
+            countryFlagMap: countryFlagMap,
+            countryLabel: countryLabelMap,
+            industryLabel: industryLabelMap
+        });
+    }
+
+    function renderCaseCard(s) {
+        var url = (s.url || '/cases/' + s.slug).replace(/^\//, '');
+        var title = s.menu || s.title;
+        var letter = (s.client || title || 'C').charAt(0).toUpperCase();
+        var imageHtml = s.image
+            ? '<div class="case-image"><img src="' + esc(s.image) + '" alt="' + esc(title) + '" loading="lazy"></div>'
+            : '<div class="case-image"><div class="case-image-placeholder"><span>' + letter + '</span></div></div>';
+        var tags = [];
+        if (s.industry) tags.push('<span class="case-tag entity-chip entity-chip-label entity-chip-compact">' + esc(resolveLabel(industryLabelMap, s.industry)) + '</span>');
+        if (s.country) tags.push('<span class="case-tag entity-chip entity-chip-soft entity-chip-flag" title="' + esc(resolveLabel(countryLabelMap, s.country)) + '">' + esc(countryFlagMap[s.country] || resolveLabel(countryLabelMap, s.country)) + '</span>');
+        if (s.language) tags.push('<span class="case-tag entity-chip entity-chip-label entity-chip-compact">' + esc(langCodeMap[s.language] || s.language.toUpperCase().slice(0, 2)) + '</span>');
+        var tagsHtml = tags.length ? '<div class="case-tags">' + tags.join('') + '</div>' : '';
+        var clientHtml = s.client ? '<div class="case-meta"><span class="case-tag case-client-chip entity-chip entity-chip-count">' + esc(s.client) + '</span></div>' : '';
+        var primary = s.primary_result || ((s.results || [])[0] || null);
+        var footerClass = 'case-card-footer entity-card-footer' + (primary ? '' : ' entity-card-footer-end');
+        var footerHtml = '<div class="' + footerClass + '">' +
+            (primary ? '<div class="case-result"><span class="result-value">' + esc(primary.value) + '</span><span class="result-label">' + esc(primary.label) + '</span></div>' : '') +
+            '<span class="case-cta entity-card-cta">View Case →</span></div>';
+        return '<a href="' + url + '" class="case-card entity-card">' + imageHtml +
+            '<div class="case-content">' +
+            '<div class="entity-card-title">' + esc(title) + '</div>' + clientHtml + '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            tagsHtml + footerHtml + '</div></a>';
+    }
+
+    function renderBlogCard(s) {
+        var url = (s.url || '/blog/' + s.slug).replace(/^\//, '');
+        if (url && url.slice(-1) !== '/') url += '/';
+        var chips = [];
+        if (s.type) chips.push('<span class="blog-chip entity-chip entity-chip-blog">' + esc(toTitleCase(s.type)) + '</span>');
+        if (s.service) chips.push('<span class="blog-chip entity-chip entity-chip-blog">' + esc(resolveLabel(serviceLabelMap, s.service)) + '</span>');
+        var dateLabel = formatDate(s.date);
+        var authorLabel = formatAuthorName(s.author);
+        return '<a href="' + url + '" class="blog-card entity-card entity-card-padded">' +
+            (chips.length ? '<div class="blog-card-tags">' + chips.join('') + '</div>' : '') +
+            '<div class="blog-card-title entity-card-title">' + esc(s.title) + '</div>' +
+            '<p class="blog-card-excerpt entity-card-copy">' + esc(s.description) + '</p>' +
+            '<div class="blog-card-meta type-meta">' + (dateLabel ? '<span>' + esc(dateLabel) + '</span>' : '') + (authorLabel ? '<span>By ' + esc(authorLabel) + '</span>' : '') + '</div></a>';
+    }
+
+    function renderServiceCard(s) {
+        var url = (s.url || '/services/' + s.slug).replace(/^\//, '');
+        var iconName = serviceIconMap[s.slug] || 'settings';
+        var iconHtml = '<div class="service-card-icon" style="--icon-url: url(/_media/icons/' + iconName + '.svg)"></div>';
+        var price = formatCurrency(s.starting_price || s.from_price || s.price);
+        var metrics = [];
+        if (s.scope_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
+        if (s.specialist_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.specialist_count, 'specialist', 'specialists')) + '</span>');
+        if (s.industry_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.industry_count, 'industry', 'industries')) + '</span>');
+        if (s.country_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.country_count, 'country', 'countries')) + '</span>');
+        if (s.language_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.language_count, 'language', 'languages')) + '</span>');
+        return '<a href="' + url + '" class="service-card entity-card entity-card-padded">' +
+            '<div class="service-card-header">' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
+            iconHtml + '</div>' +
+            '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            (metrics.length ? '<div class="service-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
+            '<div class="service-card-footer entity-card-footer">' +
+            (price ? '<span class="service-price entity-card-price">From ' + price + '</span>' : '<span></span>') +
+            '<span class="service-cta entity-card-cta">View Service →</span></div></a>';
+    }
+
+    function renderSolutionCard(s) {
+        var url = (s.url || '/solutions/' + s.slug).replace(/^\//, '');
+        var f = s.facets || {};
+        var tags = '';
+        if (s.scope) tags += '<span class="solution-tag entity-chip entity-chip-label entity-chip-wide entity-chip-accent">' + esc(resolveLabel(scopeLabelMap, s.scope)) + '</span>';
+        if (s.industry) tags += '<span class="solution-tag industry entity-chip entity-chip-label entity-chip-wide">' + esc(resolveLabel(industryLabelMap, s.industry)) + '</span>';
+        var metrics = [];
+        var specialistCount = Number(s.specialist_count || (f.specialists || []).length || 0);
+        var caseCount = Number(s.case_count || (f.cases || []).length || 0);
+        var countryCount = (f.countries || []).length;
+        var languageCount = (f.languages || []).length;
+        if (specialistCount > 0) metrics.push('<span class="solution-meta-item entity-card-stat">' + esc(pluralize(specialistCount, 'specialist', 'specialists')) + '</span>');
+        if (caseCount > 0) metrics.push('<span class="solution-meta-item entity-card-stat">' + esc(pluralize(caseCount, 'case', 'cases')) + '</span>');
+        if (countryCount > 0) metrics.push('<span class="solution-meta-item entity-card-stat">' + esc(pluralize(countryCount, 'country', 'countries')) + '</span>');
+        if (languageCount > 0) metrics.push('<span class="solution-meta-item entity-card-stat">' + esc(pluralize(languageCount, 'language', 'languages')) + '</span>');
+        var price = formatCurrency(s.starting_price);
+        return '<a href="' + url + '" class="solution-card entity-card entity-card-padded">' +
+            (tags ? '<div class="solution-card-tags">' + tags + '</div>' : '') +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div><p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            (metrics.length ? '<div class="solution-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
+            '<div class="solution-card-footer entity-card-footer">' +
+            (price ? '<span class="solution-price entity-card-price">From ' + price + '</span>' : '<span></span>') +
+            '<span class="solution-cta entity-card-cta">Explore →</span></div></a>';
+    }
+
+    function renderDimensionCard(s, collection) {
+        var url = (s.url || '/' + collection + '/' + s.slug).replace(/^\//, '');
+        var badgeHtml = '';
+        if (s.icon) {
+            badgeHtml = '<div class="dimension-card-badge icon" style="--icon-url: url(/_media/icons/' + s.icon + '.svg)"></div>';
+        } else if (s.flag) {
+            badgeHtml = '<div class="dimension-card-badge">' + s.flag + '</div>';
+        } else if (s.code) {
+            badgeHtml = '<div class="dimension-card-badge code">' + esc(s.code) + '</div>';
+        }
+        var countText = s.scope_count ? s.scope_count + ' scopes' : '';
+        var highlightValue = '';
+        var highlightLabel = '';
+        if (collection === 'languages' && s.native_speakers_l1) {
+            highlightValue = s.native_speakers_l1;
+            highlightLabel = 'Global speakers';
+        } else if (collection === 'countries' && s.population_total) {
+            highlightValue = s.population_total;
+            highlightLabel = 'Market population';
+        }
+        var footerClass = 'dimension-card-footer entity-card-footer' + (highlightValue ? ' dimension-card-footer-highlight' : '');
+        var footerHtml = '<div class="' + footerClass + '">' +
+            (highlightValue ? '<div class="dimension-card-highlight case-result"><span class="result-value">' + esc(highlightValue) + '</span><span class="result-label">' + esc(highlightLabel) + '</span></div><span class="dimension-cta entity-card-cta">Explore →</span>' : (countText ? '<span class="dimension-count type-meta">' + countText + '</span>' : '<span></span>') + '<span class="dimension-cta entity-card-cta">Explore →</span>') +
+            '</div>';
+        return '<a href="' + url + '" class="dimension-card entity-card entity-card-padded">' +
+            '<div class="dimension-card-header">' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
+            badgeHtml + '</div>' +
+            '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            footerHtml + '</a>';
+    }
+
+    var RENDERERS = {
+        scopes: renderScopeCard,
+        team: renderSpecialistCard,
+        cases: renderCaseCard,
+        blog: renderBlogCard,
+        services: renderServiceCard,
+        solutions: renderSolutionCard,
+        industries: function(s) { return renderDimensionCard(s, 'industries'); },
+        countries: function(s) { return renderDimensionCard(s, 'countries'); },
+        languages: function(s) { return renderDimensionCard(s, 'languages'); },
+        positions: function(s) { return window.CMSCards.renderPositionCard(s, { countryFlagMap: countryFlagMap, countryLabel: countryLabelMap }); }
+    };
+
+    /* ===== Overflow trim for single-line tag rows ===== */
+    function trimOverflowTags() {
+        grid.querySelectorAll('.scope-countries, .scope-languages').forEach(function(row) {
+            var children = Array.from(row.children);
+            if (children.length <= 1 || row.scrollWidth <= row.clientWidth) return;
+            var tagClass = children[0].className;
+            var removed = 0;
+            while (children.length > 0 && row.scrollWidth > row.clientWidth) {
+                children.pop().remove();
+                removed++;
+            }
+            if (removed > 0) {
+                var more = document.createElement('span');
+                more.className = tagClass;
+                more.textContent = '+' + removed;
+                more.style.flexShrink = '0';
+                row.appendChild(more);
+                while (row.children.length > 1 && row.scrollWidth > row.clientWidth) {
+                    row.removeChild(row.children[row.children.length - 2]);
+                    removed++;
+                    more.textContent = '+' + removed;
+                }
+            }
+        });
+    }
+
+    /* ===== Filtering & rendering ===== */
+    function filterByDimension(items) {
+        if (!dimension || !value) return items;
+
+        return items.filter(function(item) {
+            /* For scopes: dimension fields are at item level (from relationships) */
+            if (source === 'scopes') {
+                var vals = item[dimension] || [];
+                if (!Array.isArray(vals)) vals = [vals];
+                return vals.indexOf(value) !== -1;
+            }
+            /* For cases: industry/country/language are scalars */
+            if (source === 'cases' && (dimension === 'industry' || dimension === 'country' || dimension === 'language')) {
+                return item[dimension] === value;
+            }
+            /* For solutions: scope/industry are scalars */
+            if (source === 'solutions' && (dimension === 'scope' || dimension === 'industry')) {
+                return item[dimension] === value;
+            }
+            /* For team, blog, etc: dimension is an array field */
+            var fieldVals = item[dimension] || [];
+            if (!Array.isArray(fieldVals)) fieldVals = [fieldVals];
+            return fieldVals.indexOf(value) !== -1;
+        });
+    }
+
+    function normalizeScopes(data) {
+        return (data.scopes || []).filter(function(s){ return s.slug; }).map(function(s) {
+            var facets = s.facets || {};
+            return {
+                slug: s.slug,
+                url: s.url,
+                title: s.title,
+                menu: s.menu,
+                description: s.description,
+                facets: facets,
+                services: facets.services || s.services || [],
+                industries: facets.industries || s.industries || [],
+                languages: facets.languages || s.languages || [],
+                countries: facets.countries || s.countries || [],
+                specialist_count: s.specialist_count || 0,
+                industry_count: s.industry_count || 0,
+                country_count: s.country_count || 0,
+                language_count: s.language_count || 0,
+                task_count: s.task_count || 0,
+                delivery: s.delivery || '',
+                rating: s.rating || 0,
+                price: s.from_price || s.price || 0,
+                from_price: s.from_price || s.price || 0
+            };
+        });
+    }
+
+    function init() {
+        function scrollToAdjacentCard(direction) {
+            if (!grid) return;
+            var gridRect = grid.getBoundingClientRect();
+            var gridStyle = window.getComputedStyle(grid);
+            var paddingStart = parseFloat(gridStyle.paddingLeft) || 0;
+            var items = Array.from(grid.children).filter(function(item) {
+                return !item.classList.contains('catalog-mini-loading') &&
+                    !item.classList.contains('catalog-mini-empty');
+            }).map(function(item) {
+                return {
+                    snap: Math.max(
+                        0,
+                        item.getBoundingClientRect().left - gridRect.left + grid.scrollLeft - paddingStart
+                    )
+                };
+            });
+            if (!items.length) return;
+
+            var current = grid.scrollLeft;
+            var threshold = 4;
+            var target = null;
+
+            if (direction > 0) {
+                target = items.find(function(item) { return item.snap > current + threshold; });
+                if (!target) target = items[items.length - 1];
+            } else {
+                target = items.slice().reverse().find(function(item) { return item.snap < current - threshold; });
+                if (!target) target = items[0];
+            }
+
+            grid.scrollTo({ left: target.snap, behavior: 'smooth' });
+        }
+
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', function() {
+                scrollToAdjacentCard(-1);
+            });
+            nextBtn.addEventListener('click', function() {
+                scrollToAdjacentCard(1);
+            });
+        }
+
+        fetch(cfg.url)
+            .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
+            .then(function(data) {
+                var items;
+                if (source === 'scopes') {
+                    items = normalizeScopes(data);
+                } else {
+                    items = cfg.dataKey ? (data[cfg.dataKey] || []) : (Array.isArray(data) ? data : []);
+                }
+
+                items = filterByDimension(items);
+                if (limit > 0) items = items.slice(0, limit);
+
+                var render = RENDERERS[source] || RENDERERS.scopes;
+                if (items.length === 0) {
+                    grid.innerHTML = '<div class="catalog-mini-empty">No items found</div>';
+                } else {
+                    grid.innerHTML = items.map(render).join('');
+                    trimOverflowTags();
+                }
+            })
+            .catch(function() {
+                grid.innerHTML = '<div class="catalog-mini-empty">Could not load data.</div>';
+            });
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();
+</script>
+            </div>
+            
+
+            <!-- Global Footer -->
+            
+                
+            
+            
+            <footer class="global-footer">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <p class="footer-column-title">Menu</p>
+                        <ul>
+                            
+                            <li><a href="solutions/">Solutions</a></li>
+                            
+                            <li><a href="services/">Services</a></li>
+                            
+                            <li><a href="scopes/">Scopes</a></li>
+                            
+                            <li><a href="industries/">Industries</a></li>
+                            
+                            <li><a href="countries/">Countries</a></li>
+                            
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <p class="footer-column-title">Explore</p>
+                        <ul>
+                            
+                            <li><a href="languages/">Languages</a></li>
+                            
+                            <li><a href="cases/">Cases</a></li>
+                            
+                            <li><a href="team/">Team</a></li>
+                            
+                            <li><a href="positions/">Join Us</a></li>
+                            
+                            <li><a href="blog/">Blog</a></li>
+                            
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <p class="footer-column-title">Utility</p>
+                        <ul>
+                            
+                            <li><a href="privacy/">Privacy Policy</a></li>
+                            
+                            <li><a href="terms/">Terms of Service</a></li>
+                            
+                            <li><a href="cart/">Cart</a></li>
+                            
+                            <li><a href="_blocks/">Block Library</a></li>
+                            
+                            <li><a href="http://127.0.0.1:5001/admin" target="_blank" rel="noopener">Admin</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <p class="footer-column-title">Social</p>
+                        <ul>
+                            
+                            <li><a href="https://facebook.com" target="_blank" rel="noopener">Facebook</a></li>
+                            
+                            <li><a href="https://x.com" target="_blank" rel="noopener">X</a></li>
+                            
+                            <li><a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a></li>
+                            
+                            <li><a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a></li>
+                            
+                            <li><a href="https://github.com" target="_blank" rel="noopener">GitHub</a></li>
+                            
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-top">
+                    
+                    <div class="footer-top-section footer-company">
+                        <p class="footer-column-title">Company</p>
+                        <div class="footer-brand">
+                            <div class="footer-logo">
+                                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M39 40H33L21 8L12 32H6L9 24H3L0 16H6L9 24L15 8H21L18 0H24L39 40Z" fill="white"/>
+                                </svg>
+                            </div>
+                            <div class="footer-brand-copy">
+                                <p class="footer-company-name">VIVIDIGIT LDA</p>
+                                <p class="footer-brand-line">Productized digital services company</p>
+                                <p class="footer-brand-note">NIF 299863727</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="footer-top-section footer-heritage">
+                        <p class="footer-column-title">Background</p>
+                        <div class="footer-heritage-logo">
+                            <img src="/_media/images/site/alconost-logo.svg" alt="Alconost Digital logo" loading="lazy" decoding="async" width="258" height="45">
+                        </div>
+                        <p class="footer-brand-line">Former Alconost Digital team</p>
+                        <p class="footer-brand-note">Working in multilingual digital services since 2008</p>
+                    </div>
+
+                    
+                    <div class="footer-top-section footer-company-details">
+                        <p class="footer-column-title">Contact</p>
+                        <dl class="footer-detail-list">
+                            <div class="footer-detail-row">
+                                <dt class="footer-info-label">Phone</dt>
+                                <dd class="footer-detail-value"><a href="tel:+351969218779" class="footer-info-link">+351 969 218 779</a></dd>
+                            </div>
+                            <div class="footer-detail-row footer-detail-row-stack">
+                                <dt class="footer-info-label">Registered address</dt>
+                                <dd class="footer-detail-value footer-address">Estrada Jose Avelino Pinto N88-B, AR, 9125-024, Caniço, Madeira, Portugal</dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <div class="footer-top-section footer-badges">
+                        <p class="footer-column-title">Public profiles</p>
+                        <div class="footer-badge-list">
+                            
+                            <a href="https://clutch.co" class="footer-badge-item" target="_blank" rel="noopener">
+                                <span class="footer-badge-visual">
+                                    <img src="/_media/logos/clutch.svg" alt="Clutch logo" loading="lazy">
+                                </span>
+                                <span class="footer-badge-meta">
+                                    <span class="footer-badge-name">Clutch</span>
+                                    <span class="footer-badge-rating">
+                                        <span class="footer-badge-stars">★★★★★</span>
+                                        <span class="footer-badge-note">1 review</span>
+                                    </span>
+                                </span>
+                            </a>
+                            
+                            <a href="https://www.google.com/maps" class="footer-badge-item" target="_blank" rel="noopener">
+                                <span class="footer-badge-visual">
+                                    <img src="/_media/logos/google-reviews.svg" alt="Google Reviews logo" loading="lazy">
+                                </span>
+                                <span class="footer-badge-meta">
+                                    <span class="footer-badge-name">Google Reviews</span>
+                                    <span class="footer-badge-rating">
+                                        <span class="footer-badge-stars">★★★★★</span>
+                                        <span class="footer-badge-note">1 review</span>
+                                    </span>
+                                </span>
+                            </a>
+                            
+                            <a href="https://www.trustpilot.com" class="footer-badge-item" target="_blank" rel="noopener">
+                                <span class="footer-badge-visual">
+                                    <img src="/_media/logos/trustpilot.svg" alt="Trustpilot logo" loading="lazy">
+                                </span>
+                                <span class="footer-badge-meta">
+                                    <span class="footer-badge-name">Trustpilot</span>
+                                    <span class="footer-badge-rating">
+                                        <span class="footer-badge-stars">★★★★★</span>
+                                        <span class="footer-badge-note">1 review</span>
+                                    </span>
+                                </span>
+                            </a>
+                            
+                            <a href="https://www.g2.com" class="footer-badge-item" target="_blank" rel="noopener">
+                                <span class="footer-badge-visual">
+                                    <img src="/_media/logos/g2.svg" alt="G2 logo" loading="lazy">
+                                </span>
+                                <span class="footer-badge-meta">
+                                    <span class="footer-badge-name">G2</span>
+                                    <span class="footer-badge-rating">
+                                        <span class="footer-badge-stars">★★★★★</span>
+                                        <span class="footer-badge-note">1 review</span>
+                                    </span>
+                                </span>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p class="footer-text">&copy; 2026 VIVIDIGIT LDA. All rights reserved.</p>
+                </div>
+            </footer>
+        </main>
+
+        <!-- Right Sidebar: Contextual Actions -->
+        <aside class="sidebar-action" id="sidebarAction">
+            <div class="sidebar-content">
+            
+            <!-- Home / Default: Lead CTA -->
+            
+            <div class="widget">
+                <div class="widget-title">Get Started</div>
+                <p class="widget-text">Ready to grow? Browse our services or book a consultation.</p>
+                <a href="services/" class="btn btn-primary btn-full btn-mb">Browse Services</a>
+                <a href="#sidebar-contact" class="btn btn-secondary btn-full">Book Consultation</a>
+            </div>
+
+            
+    
+    <div class="widget">
+        <div class="widget-title">Contact Us</div>
+        
+        <div class="form-group">
+            
+            <input type="text" class="form-input" placeholder="Your name" name="name">
+            
+        </div>
+        
+        <div class="form-group">
+            
+            <input type="tel" class="form-input" placeholder="Phone number" name="phone">
+            
+        </div>
+        
+        <div class="form-group">
+            
+            <input type="email" class="form-input" placeholder="Email address" name="email">
+            
+        </div>
+        
+        <div class="form-group">
+            
+            <textarea class="form-input" rows="4" placeholder="Tell us about your project..." name="message"></textarea>
+            
+        </div>
+        
+        <div class="form-group">
+            <label class="sr-only" for="sidebarSource">How did you hear about us?</label>
+            <select class="form-input" id="sidebarSource" name="source">
+                <option value="" disabled selected>How did you hear about us?</option>
+                
+                <option value="search">Search engine</option>
+                
+                <option value="social">Social media</option>
+                
+                <option value="referral">Referral</option>
+                
+                <option value="ad">Advertisement</option>
+                
+                <option value="ai">Artificial Intelligence</option>
+                
+                <option value="friends">Friends / Colleagues</option>
+                
+                <option value="newsletter">Email Newsletter</option>
+                
+                <option value="other">Other</option>
+                
+            </select>
+        </div>
+        <button class="btn btn-primary btn-full">Send Message</button>
+    </div>
+    
+            
+
+            <div class="widget sidebar-share" id="sidebarShare">
+                <div class="widget-title">Share This Page</div>
+                <div class="sidebar-share-buttons">
+                    <a class="sidebar-share-btn" data-share="linkedin" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-linkedin">
+  <circle cx="6" cy="6.2" r="1.2"/>
+  <path d="M4.8 9.5h2.4V19h-2.4z"/>
+  <path d="M11 12.2V19"/>
+  <path d="M11 14.2a3.2 3.2 0 0 1 6.4 0V19"/>
+</svg>
+</a>
+                    <a class="sidebar-share-btn" data-share="x" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on X" title="X"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-x-brand">
+  <path d="M4 4h4.2l4 5.6L17 4h3l-6.2 7.2L20 20h-4.2l-4.5-6.2L6 20H3l6.5-7.5z"/>
+</svg>
+</a>
+                    <a class="sidebar-share-btn" data-share="facebook" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" title="Facebook"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-facebook">
+  <path d="M14.5 8h2.8V5h-2.8c-2.5 0-4 1.5-4 4v2H8v3h2.5v5h3v-5h2.8l.4-3h-3.2V9c0-.7.4-1 1-1z"/>
+</svg>
+</a>
+                    <button type="button" class="sidebar-share-btn" data-share="copy" aria-label="Copy Link" title="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-copy"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+</button>
+                </div>
+            </div>
+            </div>
+
+        </aside>
+    </div>
+
+    <!-- Site JavaScript -->
+    <script src="_assets/js/app-core.js" defer></script>
+    <!-- SVG templates for JS runtime use -->
+    <div id="svg-templates" hidden>
+        <span id="svg-theme-system"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+        <span id="svg-theme-dark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <span id="svg-theme-light"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+        <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+
+    <script src="_assets/js/forms.js" defer></script>
+    <script src="_assets/js/ui.js" defer></script>
+    <script src="_assets/js/site.js" defer></script>
+</body>
+</html>
