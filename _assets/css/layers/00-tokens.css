@@ -190,16 +190,28 @@
      * Typography System - 7 sizes
      * Display (hero stats), H1-H4 (headings), Body (main text), Caption (small text)
      */
-    --font-size-display: calc(49px * var(--scale)); /* hero numbers, stats */
-    --font-size-h1: calc(33px * var(--scale));
-    --font-size-h2: calc(25px * var(--scale));
-    --font-size-h3: calc(19px * var(--scale));
-    --font-size-subtitle: calc(17px * var(--scale));
-    --font-size-h4: calc(16px * var(--scale));      /* subheadings */
-    --font-size-body: calc(15px * var(--scale));    /* main content text */
-    --font-size-ui: calc(14px * var(--scale));      /* sidebar text, buttons, labels - MUST be smaller than body */
-    --font-size-caption: calc(12px * var(--scale)); /* small labels, hints */
-    --font-size-4xl: calc(40px * var(--scale));
+    /*
+     * Typography scales separately from layout scale so wide screens do not
+     * over-enlarge UI/body/caption text while headings stay comparatively flat.
+     */
+    --type-scale-display: calc(1 + ((var(--scale) - 1) * 0.9));
+    --type-scale-heading: calc(1 + ((var(--scale) - 1) * 0.75));
+    --type-scale-subtitle: calc(1 + ((var(--scale) - 1) * 0.56));
+    --type-scale-h4: calc(1 + ((var(--scale) - 1) * 0.5));
+    --type-scale-body: calc(1 + ((var(--scale) - 1) * 0.32));
+    --type-scale-ui: calc(1 + ((var(--scale) - 1) * 0.18));
+    --type-scale-caption: calc(1 + ((var(--scale) - 1) * 0.1));
+
+    --font-size-display: calc(49px * var(--type-scale-display)); /* hero numbers, stats */
+    --font-size-h1: calc(33px * var(--type-scale-heading));
+    --font-size-h2: calc(25px * var(--type-scale-heading));
+    --font-size-h3: calc(19px * var(--type-scale-heading));
+    --font-size-subtitle: calc(17px * var(--type-scale-subtitle));
+    --font-size-h4: calc(16px * var(--type-scale-h4));          /* subheadings */
+    --font-size-body: calc(15px * var(--type-scale-body));      /* main content text */
+    --font-size-ui: calc(14px * var(--type-scale-ui));          /* sidebar text, buttons, labels - MUST be smaller than body */
+    --font-size-caption: calc(12px * var(--type-scale-caption));/* small labels, hints */
+    --font-size-4xl: calc(40px * var(--type-scale-display));
 
     /* Unified typography styles */
     --type-body-size: var(--font-size-body);
