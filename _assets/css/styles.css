@@ -5412,6 +5412,28 @@ a.cards-link:hover {
         opacity: 0.6;
     }
 
+    /* Specialist photo in hero */
+    .hero-visual-photo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border-color: transparent;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+    }
+
+    .hero-split .hero-visual.hero-visual-photo img {
+        width: auto;
+        height: auto;
+        max-width: min(100%, 420px);
+        max-height: 420px;
+        object-fit: contain;
+        object-position: center;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--border-color);
+    }
+
     /* Responsive */
     @media (max-width: 1000px) {
         .hero-block.hero-split {
@@ -5454,6 +5476,11 @@ a.cards-link:hover {
             object-fit: contain;
             object-position: center;
             padding: 0;
+        }
+
+        .hero-split .hero-visual.hero-visual-photo img {
+            max-width: min(100%, 280px);
+            max-height: 240px;
         }
     }
 

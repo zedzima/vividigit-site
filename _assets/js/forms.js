@@ -180,7 +180,6 @@
             href = btn.tagName === 'A' ? (btn.getAttribute('href') || '').trim() : '';
 
             if (/^(request quote|get quote)$/i.test(label)) {
-                btn.textContent = 'Contact Us';
                 btn.dataset.ctaAction = 'open-contact';
                 if (btn.tagName === 'A') btn.setAttribute('href', '#sidebar-contact');
                 return;

@@ -100,7 +100,7 @@
             title: s.title || s.menu || s.name || s.slug || 'Specialist',
             description: s.description || '',
             role: s.role || '',
-            avatar: s.avatar || ((s.config && s.config.avatar) || ''),
+            avatar: s.avatar || '',
             projects: s.projects || null,
             industries: industryRefs,
             industryCount: normalizeCount(s.industry_count, industryRefs.length),
