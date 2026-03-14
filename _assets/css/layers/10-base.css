@@ -589,6 +589,13 @@ a:hover { color: var(--accent-hover); }
     color: var(--text-muted);
 }
 
+.cart-billing-note {
+    display: block;
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
 .cart-item-actions {
     display: flex;
     align-items: center;
@@ -683,9 +690,10 @@ a:hover { color: var(--accent-hover); }
 
 /* Cart Total Row */
 .cart-total-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: var(--space-lg);
     padding-top: var(--space-md);
     margin-top: var(--space-sm);
     border-top: 2px solid var(--border-color);
@@ -695,12 +703,19 @@ a:hover { color: var(--accent-hover); }
     font-size: var(--font-size-ui);
     font-weight: 600;
     color: var(--text-primary);
+    padding-right: var(--space-sm);
 }
 
 .cart-total-value {
     font-size: var(--font-size-h3);
     font-weight: 700;
     color: var(--accent-primary);
+    text-align: right;
+    white-space: nowrap;
+}
+
+.cart-summary-items.hidden {
+    display: none;
 }
 
 /* Language Dropdown with checkboxes */

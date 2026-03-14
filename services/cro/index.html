@@ -44,7 +44,12 @@
     <!-- Styles -->
     <link rel="preload" href="_assets/css/styles.css?v=41d1c6d5" as="style">
     <link rel="stylesheet" href="_assets/css/styles.css?v=41d1c6d5">
-    <script src="_assets/js/cards.js" defer></script>
+    <script>
+    window.VividigitAssetHashes = {
+        cart: '0924df2e'
+    };
+    </script>
+    <script src="_assets/js/cards.js?v=dc197852" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -581,8 +586,10 @@
             </div>
 
             <div class="package-price">
-                <span class="price-current" data-monthly="500">$500</span>
-                <span class="price-period">/month</span>
+                <div class="package-price-main">
+                    <span class="price-current" data-monthly="500">$500</span>
+                    <span class="price-period">/month</span>
+                </div>
                 
                 <span class="package-savings">
                     Save $<span class="savings-amount">0</span>/year
@@ -631,8 +638,10 @@
             </div>
 
             <div class="package-price">
-                <span class="price-current" data-monthly="2000">$2000</span>
-                <span class="price-period">/month</span>
+                <div class="package-price-main">
+                    <span class="price-current" data-monthly="2000">$2000</span>
+                    <span class="price-period">/month</span>
+                </div>
                 
                 <span class="package-savings">
                     Save $<span class="savings-amount">0</span>/year
@@ -683,8 +692,10 @@
             </div>
 
             <div class="package-price">
-                <span class="price-current" data-monthly="4500">$4500</span>
-                <span class="price-period">/month</span>
+                <div class="package-price-main">
+                    <span class="price-current" data-monthly="4500">$4500</span>
+                    <span class="price-period">/month</span>
+                </div>
                 
                 <span class="package-savings">
                     Save $<span class="savings-amount">0</span>/year
@@ -727,6 +738,17 @@
 
 <script>
 (function() {
+    function formatPrice(value) {
+        return '$' + Math.round(value || 0);
+    }
+
+    function getYearlyPricing(monthlyPrice, discount) {
+        const monthlyEquivalent = Math.round(monthlyPrice * (100 - discount) / 100);
+        const annualTotal = monthlyEquivalent * 12;
+        const annualSavings = (monthlyPrice * 12) - annualTotal;
+        return { monthlyEquivalent, annualTotal, annualSavings };
+    }
+
     // Sidebar toggle for CTA buttons
     document.querySelectorAll('.pricing-cta-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -746,6 +768,9 @@
         const discount = parseInt(toggle.dataset.discount) || 20;
         const section = toggle.closest('.pricing-block');
         const priceEl = section ? section.querySelector('.price-current') : null;
+        const periodEl = section ? section.querySelector('.price-period') : null;
+        const metaEl = section ? section.querySelector('.pricing-simple-meta') : null;
+        const savingsEl = metaEl ? metaEl.querySelector('.savings-amount') : null;
 
         buttons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -762,10 +787,15 @@
                 if (priceEl && priceEl.dataset.monthly) {
                     const monthlyPrice = parseInt(priceEl.dataset.monthly);
                     if (isYearly) {
-                        const yearlyMonthly = Math.round(monthlyPrice * (100 - discount) / 100);
-                        priceEl.textContent = '$' + yearlyMonthly;
+                        const yearly = getYearlyPricing(monthlyPrice, discount);
+                        priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
+                        if (periodEl) periodEl.textContent = periodEl.dataset.monthlyLabel || '/month';
+                        if (savingsEl) savingsEl.textContent = String(yearly.annualSavings);
+                        if (metaEl) metaEl.hidden = false;
                     } else {
-                        priceEl.textContent = '$' + monthlyPrice;
+                        priceEl.textContent = formatPrice(monthlyPrice);
+                        if (periodEl) periodEl.textContent = periodEl.dataset.monthlyLabel || '/month';
+                        if (metaEl) metaEl.hidden = true;
                     }
                 }
             });
@@ -795,21 +825,23 @@
 
                 packages.forEach(pkg => {
                     const priceEl = pkg.querySelector('.price-current');
+                    const periodEl = pkg.querySelector('.price-period');
                     const savingsEl = pkg.querySelector('.package-savings');
                     const savingsAmount = pkg.querySelector('.savings-amount');
 
                     const monthlyPrice = parseInt(priceEl.dataset.monthly);
 
                     if (isYearly) {
-                        const yearlyMonthly = Math.round(monthlyPrice * (100 - discount) / 100);
-                        const yearlySavings = (monthlyPrice - yearlyMonthly) * 12;
-                        priceEl.textContent = '$' + yearlyMonthly;
+                        const yearly = getYearlyPricing(monthlyPrice, discount);
+                        priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
+                        if (periodEl) periodEl.textContent = '/month';
                         if (savingsEl) {
                             savingsEl.style.display = 'block';
-                            savingsAmount.textContent = yearlySavings;
+                            savingsAmount.textContent = String(yearly.annualSavings);
                         }
                     } else {
-                        priceEl.textContent = '$' + monthlyPrice;
+                        priceEl.textContent = formatPrice(monthlyPrice);
+                        if (periodEl) periodEl.textContent = '/month';
                         if (savingsEl) {
                             savingsEl.style.display = 'none';
                         }
@@ -1715,7 +1747,7 @@
         <div class="cards-item">
         
             
-            <span class="cards-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2711)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-search"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><defs><linearGradient id="icon-grad-2711" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <span class="cards-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9180)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-search"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><defs><linearGradient id="icon-grad-9180" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -1731,7 +1763,7 @@
         <div class="cards-item">
         
             
-            <span class="cards-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6435)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-git-branch"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/><defs><linearGradient id="icon-grad-6435" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <span class="cards-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1560)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-git-branch"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/><defs><linearGradient id="icon-grad-1560" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -1748,7 +1780,7 @@
         <div class="cards-item">
         
             
-            <span class="cards-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5663)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-layout"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/><defs><linearGradient id="icon-grad-5663" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <span class="cards-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2437)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-layout"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/><defs><linearGradient id="icon-grad-2437" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -1765,7 +1797,7 @@
         <div class="cards-item">
         
             
-            <span class="cards-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7241)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/><defs><linearGradient id="icon-grad-7241" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <span class="cards-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3074)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/><defs><linearGradient id="icon-grad-3074" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -1784,6 +1816,8 @@
             
             <div class="block">
                 <!-- Testimonials Block: Customer reviews and social proof -->
+
+
 
 
 
@@ -1908,6 +1942,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
             </div>
             
             <div class="block">
@@ -2028,10 +2063,20 @@ document.addEventListener('DOMContentLoaded', function() {
     function pluralize(count, singular, plural) {
         return count + ' ' + (count === 1 ? singular : plural);
     }
+    function isFeatured(item) {
+        return !!(item && item.featured);
+    }
     function formatCurrency(value) {
         var n = Number(value);
         if (!isFinite(n) || n <= 0) return '';
-        return '$' + Math.round(n).toLocaleString();
+        return '$' + Math.round(n);
+    }
+    function sortFeaturedFirst(items) {
+        return items.slice().sort(function(a, b) {
+            var featuredCompare = Number(isFeatured(b)) - Number(isFeatured(a));
+            if (featuredCompare !== 0) return featuredCompare;
+            return (a.__catalogMiniIndex || 0) - (b.__catalogMiniIndex || 0);
+        });
     }
     function resolveLabel(map, slug) {
         if (!slug) return '';
@@ -2262,6 +2307,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: s.title,
                 menu: s.menu,
                 description: s.description,
+                featured: !!s.featured,
                 facets: facets,
                 services: facets.services || s.services || [],
                 industries: facets.industries || s.industries || [],
@@ -2333,7 +2379,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     items = cfg.dataKey ? (data[cfg.dataKey] || []) : (Array.isArray(data) ? data : []);
                 }
 
+                items = items.map(function(item, index) {
+                    item.__catalogMiniIndex = index;
+                    return item;
+                });
                 items = filterByDimension(items);
+                items = sortFeaturedFirst(items);
                 if (limit > 0) items = items.slice(0, limit);
 
                 var render = RENDERERS[source] || RENDERERS.scopes;
@@ -3053,17 +3104,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="estimates-grid">
                     <div class="estimate-item">
                         <div class="estimate-value" id="cartSubtotal">$0</div>
-                        <div class="estimate-label">Tasks</div>
+                        <div class="estimate-label" id="cartSubtotalLabel">Base</div>
                     </div>
                     <div class="estimate-item">
                         <div class="estimate-value" id="cartFees">$0</div>
-                        <div class="estimate-label">Modifiers</div>
+                        <div class="estimate-label" id="cartFeesLabel">Modifiers</div>
                     </div>
                 </div>
                 <div class="cart-total-row">
-                    <span class="cart-total-label">Estimated Total</span>
+                    <span class="cart-total-label" id="cartTotalLabel">Estimated Total</span>
                     <span class="cart-total-value" id="cartTotal">$0</span>
                 </div>
+                <div class="cart-summary-items hidden" id="cartSummaryMeta"></div>
             </div>
 
             <!-- CTA -->
@@ -3167,7 +3219,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     <!-- Site JavaScript -->
-    <script src="_assets/js/app-core.js" defer></script>
+    <script src="_assets/js/app-core.js?v=04ceb676" defer></script>
     <!-- SVG templates for JS runtime use -->
     <div id="svg-templates" hidden>
         <span id="svg-theme-system"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
@@ -3176,8 +3228,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
 
-    <script src="_assets/js/forms.js" defer></script>
-    <script src="_assets/js/ui.js" defer></script>
-    <script src="_assets/js/site.js" defer></script>
+    <script src="_assets/js/forms.js?v=d8e2f396" defer></script>
+    <script src="_assets/js/ui.js?v=6870a332" defer></script>
+    <script src="_assets/js/site.js?v=50182ee9" defer></script>
 </body>
 </html>

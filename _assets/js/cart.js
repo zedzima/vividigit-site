@@ -47,6 +47,10 @@
         return Object.assign({}, defaults || DEFAULT_BILLING);
     }
 
+    function formatMoney(value) {
+        return '$' + Math.round(value || 0);
+    }
+
     function readBillingFromDataset(el, defaults) {
         var billing = cloneBilling(defaults);
         var dataset = el && el.dataset ? el.dataset : {};
@@ -247,32 +251,146 @@
             return true;
         },
 
-        getEffectivePrice: function(item) {
-            if (item.payment === 'yearly' && item.discount > 0) {
-                return Math.round(item.price * (100 - item.discount) / 100);
+        getEffectiveMonthlyPrice: function(item) {
+            var monthlyPrice = parseInt(item && item.price, 10) || 0;
+
+            if (isServiceCartItem(item) && item.payment === 'yearly' && item.discount > 0) {
+                return Math.round(monthlyPrice * (100 - item.discount) / 100);
             }
-            return item.price;
+
+            return monthlyPrice;
         },
 
-        getItemTotal: function(item) {
+        getBillingMultiplier: function(item) {
+            return isServiceCartItem(item) && item.payment === 'yearly' ? 12 : 1;
+        },
+
+        getEffectivePrice: function(item) {
+            return this.getEffectiveMonthlyPrice(item) * this.getBillingMultiplier(item);
+        },
+
+        getModifierUnitPrice: function(item, pct, useListPrice) {
+            var baseMonthly = useListPrice
+                ? (parseInt(item && item.price, 10) || 0)
+                : this.getEffectiveMonthlyPrice(item);
+
+            return Math.round(baseMonthly * pct) * this.getBillingMultiplier(item);
+        },
+
+        getEquivalentMonthlyTotal: function(item) {
             var config = getConfig();
-            var base = this.getEffectivePrice(item);
+            var base = this.getEffectiveMonthlyPrice(item);
             var langExtra = Math.round(base * config.langPct) * (item.langCount || 0);
             var countryExtra = Math.round(base * config.countryPct) * (item.countryCount || 0);
             return base + langExtra + countryExtra;
         },
 
-        getTotal: function() {
-            var total = 0;
-            var hasCustom = false;
+        getAnnualSavings: function(item) {
+            var config = getConfig();
+            var monthlyBase;
+            var listMonthlyTotal;
 
-            for (var slug of Object.keys(this.items)) {
-                var item = this.items[slug];
-                if (item.custom) hasCustom = true;
-                total += this.getItemTotal(item);
+            if (!isServiceCartItem(item) || item.payment !== 'yearly' || item.discount <= 0) {
+                return 0;
             }
 
-            return { total: total, hasCustom: hasCustom };
+            monthlyBase = parseInt(item && item.price, 10) || 0;
+            listMonthlyTotal = monthlyBase
+                + (Math.round(monthlyBase * config.langPct) * (item.langCount || 0))
+                + (Math.round(monthlyBase * config.countryPct) * (item.countryCount || 0));
+
+            return (listMonthlyTotal * 12) - this.getItemTotal(item);
+        },
+
+        getItemPricingMeta: function(item) {
+            var itemType = normalizeCartItemType(item.itemType);
+            var baseAmount = this.getEffectivePrice(item);
+            var totalAmount = this.getItemTotal(item);
+            var detailLines = [];
+            var suffix = '';
+
+            if (item.custom) {
+                return {
+                    baseLabel: 'Custom',
+                    totalLabel: 'Custom',
+                    detailLines: detailLines
+                };
+            }
+
+            if (isServiceCartItem(item)) {
+                if (item.payment === 'monthly') {
+                    suffix = '/mo';
+                    detailLines.push('Monthly subscription');
+                } else if (item.payment === 'yearly') {
+                    suffix = '/year';
+                    detailLines.push('Billed upfront · ' + formatMoney(this.getEquivalentMonthlyTotal(item)) + '/mo equivalent');
+                    if (this.getAnnualSavings(item) > 0) {
+                        detailLines.push('Save ' + formatMoney(this.getAnnualSavings(item)) + '/year');
+                    }
+                } else {
+                    detailLines.push('One-time service engagement');
+                }
+            } else if (itemType === 'Solution') {
+                detailLines.push('One-time solution audit');
+            } else if (itemType === 'Scope') {
+                detailLines.push('One-time scope deliverable');
+            } else {
+                detailLines.push('One-time deliverable');
+            }
+
+            return {
+                baseLabel: formatMoney(baseAmount) + suffix,
+                totalLabel: formatMoney(totalAmount) + suffix,
+                detailLines: detailLines
+            };
+        },
+
+        getSelectionSummary: function(items) {
+            var summary = {
+                dueToday: 0,
+                monthlyRecurring: 0,
+                yearlyEquivalentMonthly: 0,
+                yearlySavings: 0,
+                hasCustom: false
+            };
+            var list = Array.isArray(items) ? items : Object.values(items || {});
+
+            list.forEach(function(item) {
+                if (!item) return;
+
+                normalizeCartBilling(item);
+                if (item.custom) summary.hasCustom = true;
+
+                if (isServiceCartItem(item) && item.payment === 'monthly') {
+                    summary.monthlyRecurring += cart.getItemTotal(item);
+                }
+
+                summary.dueToday += cart.getItemTotal(item);
+
+                if (isServiceCartItem(item) && item.payment === 'yearly') {
+                    summary.yearlyEquivalentMonthly += cart.getEquivalentMonthlyTotal(item);
+                    summary.yearlySavings += cart.getAnnualSavings(item);
+                }
+            });
+
+            return summary;
+        },
+
+        getItemTotal: function(item) {
+            var config = getConfig();
+            var base = this.getEffectivePrice(item);
+            var langExtra = this.getModifierUnitPrice(item, config.langPct) * (item.langCount || 0);
+            var countryExtra = this.getModifierUnitPrice(item, config.countryPct) * (item.countryCount || 0);
+            return base + langExtra + countryExtra;
+        },
+
+        getTotal: function() {
+            var summary = this.getSelectionSummary(this.items);
+            return {
+                total: summary.dueToday,
+                hasCustom: summary.hasCustom,
+                summary: summary
+            };
         },
 
         buildOrderEmail: function(comment) {
@@ -286,26 +404,44 @@
                 var lc = item.langCount || 0;
                 var cc = item.countryCount || 0;
                 var paymentLabel = item.payment === 'yearly'
-                    ? 'Yearly'
-                    : (item.payment === 'monthly' ? 'Monthly' : 'One-time');
+                    ? 'Yearly prepay'
+                    : (item.payment === 'monthly' ? 'Monthly subscription' : 'One-time');
                 var effectivePrice = this.getEffectivePrice(item);
                 var itemTotal = this.getItemTotal(item);
-                var perLang = Math.round(effectivePrice * config.langPct);
-                var perCountry = Math.round(effectivePrice * config.countryPct);
+                var periodSuffix = item.payment === 'monthly' ? '/mo' : (item.payment === 'yearly' ? '/year' : '');
+                var perLang = this.getModifierUnitPrice(item, config.langPct);
+                var perCountry = this.getModifierUnitPrice(item, config.countryPct);
 
                 lines.push(num + '. ' + item.title + (item.tierName ? ' (' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ')' : ''));
                 lines.push('   Type: ' + normalizeCartItemType(item.itemType));
                 lines.push('   Payment: ' + paymentLabel);
-                if (item.payment === 'yearly' && item.discount) lines.push('   Discount: -' + item.discount + '% (yearly)');
-                if (lc > 0) lines.push('   Languages: +' + lc + ' × $' + perLang + ' (60%) = $' + (lc * perLang));
-                if (cc > 0) lines.push('   Countries: +' + cc + ' × $' + perCountry + ' (40%) = $' + (cc * perCountry));
-                lines.push('   Subtotal: ' + (effectivePrice > 0 ? '$' + itemTotal.toLocaleString() : 'Custom quote'));
+                if (item.payment === 'yearly') {
+                    lines.push('   Equivalent monthly: ' + formatMoney(this.getEquivalentMonthlyTotal(item)) + '/mo');
+                    if (this.getAnnualSavings(item) > 0) {
+                        lines.push('   Savings: ' + formatMoney(this.getAnnualSavings(item)) + '/year');
+                    }
+                }
+                if (lc > 0) lines.push('   Languages: +' + lc + ' × ' + formatMoney(perLang) + periodSuffix + ' = ' + formatMoney(lc * perLang));
+                if (cc > 0) lines.push('   Countries: +' + cc + ' × ' + formatMoney(perCountry) + periodSuffix + ' = ' + formatMoney(cc * perCountry));
+                lines.push('   Base: ' + (effectivePrice > 0 ? formatMoney(effectivePrice) + periodSuffix : 'Custom quote'));
+                lines.push('   Subtotal: ' + (effectivePrice > 0 ? formatMoney(itemTotal) + periodSuffix : 'Custom quote'));
                 lines.push('');
                 num++;
             }
 
             var totals = this.getTotal();
-            lines.push('GRAND TOTAL: ' + (totals.hasCustom ? 'From ' : '') + '$' + totals.total.toLocaleString());
+            if (totals.summary.dueToday > 0) {
+                lines.push('DUE TODAY: ' + (totals.hasCustom ? 'From ' : '') + formatMoney(totals.summary.dueToday));
+            }
+            if (totals.summary.monthlyRecurring > 0) {
+                lines.push('MONTHLY RECURRING: ' + (totals.hasCustom ? 'From ' : '') + formatMoney(totals.summary.monthlyRecurring) + '/mo');
+            }
+            if (totals.summary.yearlyEquivalentMonthly > 0) {
+                lines.push('YEARLY EQUIVALENT: ' + formatMoney(totals.summary.yearlyEquivalentMonthly) + '/mo');
+            }
+            if (totals.summary.yearlySavings > 0) {
+                lines.push('ANNUAL SAVINGS: ' + formatMoney(totals.summary.yearlySavings) + '/year');
+            }
             if (comment) {
                 lines.push('');
                 lines.push('COMMENT:');
@@ -330,6 +466,10 @@
             var subtotalEl;
             var feesEl;
             var totalEl;
+            var subtotalLabelEl;
+            var feesLabelEl;
+            var totalLabelEl;
+            var summaryMetaEl;
             var billingBadge;
 
             if (!container) return;
@@ -350,6 +490,14 @@
             if (modifiers) modifiers.classList.remove('hidden');
             if (totalsEl) totalsEl.classList.remove('hidden');
 
+            var langCount = parseInt(document.getElementById('langCount')?.textContent) || 0;
+            var countryCount = parseInt(document.getElementById('countryCount')?.textContent) || 0;
+
+            for (var pageSlug of keys) {
+                pageItems[pageSlug].langCount = langCount;
+                pageItems[pageSlug].countryCount = countryCount;
+            }
+
             html = '';
             subtotal = 0;
             hasCustom = false;
@@ -357,22 +505,35 @@
             for (var itemSlug of keys) {
                 var item = pageItems[itemSlug];
                 var effectivePrice;
-                var paymentLabel = '';
+                var pricingMeta;
+                var sidebarBaseLabel;
+                var sidebarTotalLabel;
+                var tierLine;
 
                 if (item.custom) hasCustom = true;
                 effectivePrice = cart.getEffectivePrice(item);
+                pricingMeta = cart.getItemPricingMeta(item);
+                sidebarBaseLabel = (item.payment === 'yearly' || item.payment === 'monthly')
+                    ? pricingMeta.baseLabel.replace(/\/(?:mo|year)$/, '')
+                    : pricingMeta.baseLabel;
+                sidebarTotalLabel = (item.payment === 'yearly' || item.payment === 'monthly')
+                    ? pricingMeta.totalLabel.replace(/\/(?:mo|year)$/, '')
+                    : pricingMeta.totalLabel;
                 subtotal += effectivePrice;
-
-                if (item.payment === 'monthly') paymentLabel = ' (Monthly)';
-                else if (item.payment === 'yearly') paymentLabel = ' (Yearly)';
+                tierLine = item.tierName
+                    ? item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + sidebarBaseLabel
+                    : sidebarBaseLabel;
 
                 html += '<div class="cart-line-item">' +
                     '<div class="cart-item-info">' +
-                        '<span class="cart-item-title">' + item.title + paymentLabel + '</span>' +
-                        '<span class="cart-item-tier">' + item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + '</span>' +
+                        '<span class="cart-item-title">' + item.title + '</span>' +
+                        '<span class="cart-item-tier">' + tierLine + '</span>' +
+                        pricingMeta.detailLines.map(function(line) {
+                            return '<span class="cart-billing-note">' + line + '</span>';
+                        }).join('') +
                     '</div>' +
                     '<div class="cart-item-actions">' +
-                        '<span class="cart-item-price">' + (effectivePrice > 0 ? '$' + effectivePrice.toLocaleString() : 'Custom') + '</span>' +
+                        '<span class="cart-item-price">' + sidebarTotalLabel + '</span>' +
                         '<button class="cart-item-remove" data-slug="' + itemSlug + '" title="Remove">&times;</button>' +
                     '</div>' +
                 '</div>';
@@ -384,14 +545,6 @@
                     cart.remove(btn.dataset.slug);
                 });
             });
-
-            var langCount = parseInt(document.getElementById('langCount')?.textContent) || 0;
-            var countryCount = parseInt(document.getElementById('countryCount')?.textContent) || 0;
-
-            for (var pageSlug of keys) {
-                pageItems[pageSlug].langCount = langCount;
-                pageItems[pageSlug].countryCount = countryCount;
-            }
             cart.save();
 
             grandTotal = 0;
@@ -403,10 +556,41 @@
             subtotalEl = document.getElementById('cartSubtotal');
             feesEl = document.getElementById('cartFees');
             totalEl = document.getElementById('cartTotal');
+            subtotalLabelEl = document.getElementById('cartSubtotalLabel');
+            feesLabelEl = document.getElementById('cartFeesLabel');
+            totalLabelEl = document.getElementById('cartTotalLabel');
+            summaryMetaEl = document.getElementById('cartSummaryMeta');
 
-            if (subtotalEl) subtotalEl.textContent = (hasCustom ? 'From $' : '$') + subtotal.toLocaleString();
-            if (feesEl) feesEl.textContent = modifierTotal > 0 ? '+$' + modifierTotal.toLocaleString() : '$0';
-            if (totalEl) totalEl.textContent = (hasCustom ? 'From $' : '$') + grandTotal.toLocaleString();
+            var pageSummary = cart.getSelectionSummary(pageItems);
+            var summaryLines = [];
+
+            if (subtotalEl) subtotalEl.textContent = (hasCustom ? 'From ' : '') + formatMoney(subtotal);
+            if (feesEl) feesEl.textContent = modifierTotal > 0 ? '+' + formatMoney(modifierTotal) : '$0';
+            if (subtotalLabelEl) subtotalLabelEl.textContent = pageSummary.monthlyRecurring > 0 && pageSummary.dueToday === 0 ? 'Base / mo' : (pageSummary.yearlyEquivalentMonthly > 0 && pageSummary.monthlyRecurring === 0 ? 'Base / year' : 'Base');
+            if (feesLabelEl) feesLabelEl.textContent = pageSummary.monthlyRecurring > 0 && pageSummary.dueToday === 0 ? 'Modifiers / mo' : (pageSummary.yearlyEquivalentMonthly > 0 && pageSummary.monthlyRecurring === 0 ? 'Modifiers / year' : 'Modifiers');
+            if (totalEl) {
+                if (pageSummary.monthlyRecurring > 0 && pageSummary.dueToday === 0) {
+                    totalEl.textContent = (hasCustom ? 'From ' : '') + formatMoney(pageSummary.monthlyRecurring);
+                } else {
+                    totalEl.textContent = (hasCustom ? 'From ' : '') + formatMoney(pageSummary.dueToday);
+                }
+            }
+            if (totalLabelEl) {
+                totalLabelEl.textContent = pageSummary.monthlyRecurring > 0 && pageSummary.dueToday === 0 ? 'Monthly Total' : 'Due Today';
+            }
+            if (pageSummary.monthlyRecurring > 0 && pageSummary.dueToday > 0) {
+                summaryLines.push('<div class="cart-summary-line"><span>Monthly recurring</span><strong>' + formatMoney(pageSummary.monthlyRecurring) + '/mo</strong></div>');
+            }
+            if (pageSummary.yearlyEquivalentMonthly > 0) {
+                summaryLines.push('<div class="cart-summary-line"><span>Equivalent monthly</span><strong>' + formatMoney(pageSummary.yearlyEquivalentMonthly) + '/mo</strong></div>');
+            }
+            if (pageSummary.yearlySavings > 0) {
+                summaryLines.push('<div class="cart-summary-line"><span>You save</span><strong>' + formatMoney(pageSummary.yearlySavings) + '/year</strong></div>');
+            }
+            if (summaryMetaEl) {
+                summaryMetaEl.innerHTML = summaryLines.join('');
+                summaryMetaEl.classList.toggle('hidden', summaryLines.length === 0);
+            }
 
             billingBadge = document.getElementById('cartBillingBadge');
             if (billingBadge) billingBadge.remove();
@@ -600,6 +784,7 @@
                 var card;
                 var billing;
                 var payment;
+                var itemType;
 
                 if (!titleEl || !priceEl) return;
 
@@ -608,11 +793,12 @@
                 slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
                 price = parseInt(priceEl.dataset.monthly) || parseInt(priceEl.textContent.replace(/[^0-9]/g, '')) || 0;
                 card = btn.closest('.pricing-simple-card');
-                billing = readBillingFromDataset(card, SERVICE_BILLING_DEFAULTS);
-                payment = billing.monthly ? _billingPeriod : 'one-time';
+                itemType = /^\/solutions\/[^/]+\/?$/.test(window.location.pathname) ? 'Solution' : 'Service';
+                billing = itemType === 'Service' ? readBillingFromDataset(card, SERVICE_BILLING_DEFAULTS) : cloneBilling(DEFAULT_BILLING);
+                payment = itemType === 'Service' && billing.monthly ? _billingPeriod : 'one-time';
 
                 cart.clearCurrentPage();
-                cart.add(slug, title, '', '', price, false, payment, billing, 'Solution');
+                cart.add(slug, title, '', '', price, false, payment, billing, itemType);
                 revealOrderTabForSelection();
 
                 if (window.innerWidth < 2200) {
@@ -739,9 +925,9 @@
                 var perCountry;
                 var itemType;
                 var basePriceStr;
-                var paymentLabel = '';
                 var tierStr;
                 var billing;
+                var pricingMeta;
                 var paymentCell = '<span class="cart-cell-main">One-time</span>';
 
                 normalizeCartBilling(item);
@@ -751,30 +937,38 @@
                 cc = item.countryCount || 0;
                 effectivePrice = cart.getEffectivePrice(item);
                 itemTotal = cart.getItemTotal(item);
-                perLang = Math.round(effectivePrice * config.langPct);
-                perCountry = Math.round(effectivePrice * config.countryPct);
+                perLang = cart.getModifierUnitPrice(item, config.langPct);
+                perCountry = cart.getModifierUnitPrice(item, config.countryPct);
                 itemType = normalizeCartItemType(item.itemType);
+                pricingMeta = cart.getItemPricingMeta(item);
 
                 grandTotal += itemTotal;
 
-                basePriceStr = effectivePrice > 0 ? '$' + effectivePrice.toLocaleString() : 'Custom';
-                if (item.payment === 'monthly') paymentLabel = ' (Monthly)';
-                else if (item.payment === 'yearly') paymentLabel = ' (Yearly)';
+                basePriceStr = pricingMeta.baseLabel;
                 tierStr = item.tierName ? item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' : '';
 
                 billing = item.billing || cloneBilling(DEFAULT_BILLING);
                 if (isServiceCartItem(itemType)) {
                     paymentCell = '<div class="cart-payment-tabs">';
-                    paymentCell += '<button class="cart-payment-opt' + (item.payment === 'one-time' ? ' active' : '') + (billing.oneTime ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="one-time"' + (billing.oneTime ? '' : ' disabled') + '>One-time</button>';
-                    paymentCell += '<button class="cart-payment-opt' + (item.payment === 'monthly' ? ' active' : '') + (billing.monthly ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="monthly"' + (billing.monthly ? '' : ' disabled') + '>Monthly</button>';
-                    paymentCell += '<button class="cart-payment-opt' + (item.payment === 'yearly' ? ' active' : '') + (billing.yearly ? '' : ' disabled') + '" data-slug="' + slug + '" data-val="yearly"' + (billing.yearly ? '' : ' disabled') + '>Yearly</button>';
+                    if (billing.oneTime && !billing.monthly && !billing.yearly) {
+                        paymentCell += '<button class="cart-payment-opt active" data-slug="' + slug + '" data-val="one-time">One-time</button>';
+                    }
+                    if (billing.monthly) {
+                        paymentCell += '<button class="cart-payment-opt' + (item.payment === 'monthly' ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>';
+                    }
+                    if (billing.yearly) {
+                        paymentCell += '<button class="cart-payment-opt' + (item.payment === 'yearly' ? ' active' : '') + '" data-slug="' + slug + '" data-val="yearly">Yearly</button>';
+                    }
                     paymentCell += '</div>';
                 }
 
                 html += '<tr>' +
                     '<td>' +
-                        '<span class="cart-item-name">' + item.title + paymentLabel + '</span>' +
+                        '<span class="cart-item-name">' + item.title + '</span>' +
                         '<span class="cart-item-tier">' + tierStr + basePriceStr + '</span>' +
+                        pricingMeta.detailLines.map(function(line) {
+                            return '<span class="cart-billing-note">' + line + '</span>';
+                        }).join('') +
                     '</td>' +
                     '<td class="cart-col-type"><span class="cart-cell-main">' + itemType + '</span></td>' +
                     '<td class="cart-col-payment">' + paymentCell + '</td>' +
@@ -784,7 +978,7 @@
                             '<span class="cart-inline-val">' + lc + '</span>' +
                             '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="langCount" data-action="plus">+</button>' +
                         '</div>' +
-                        (lc > 0 ? '<span class="cart-inline-fee">+$' + (perLang * lc).toLocaleString() + '</span>' : '') +
+                        (lc > 0 ? '<span class="cart-inline-fee">+' + formatMoney(perLang * lc) + '</span>' : '') +
                     '</td>' +
                     '<td>' +
                         '<div class="cart-inline-counter">' +
@@ -792,15 +986,22 @@
                             '<span class="cart-inline-val">' + cc + '</span>' +
                             '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="countryCount" data-action="plus">+</button>' +
                         '</div>' +
-                        (cc > 0 ? '<span class="cart-inline-fee">+$' + (perCountry * cc).toLocaleString() + '</span>' : '') +
+                        (cc > 0 ? '<span class="cart-inline-fee">+' + formatMoney(perCountry * cc) + '</span>' : '') +
                     '</td>' +
-                    '<td class="text-right"><span class="cart-item-price">' + (effectivePrice > 0 ? '$' + itemTotal.toLocaleString() : 'Custom') + '</span></td>' +
+                    '<td class="text-right"><span class="cart-item-price">' + pricingMeta.totalLabel + '</span></td>' +
                     '<td><button class="cart-item-remove-btn" data-slug="' + slug + '">&times;</button></td>' +
                 '</tr>';
             }
 
             html += '</tbody></table></div>';
-            return { html: html, grandTotal: grandTotal, hasCustom: hasCustom };
+            return {
+                html: html,
+                grandTotal: grandTotal,
+                hasCustom: hasCustom,
+                summary: cart.getSelectionSummary(keys.map(function(itemSlug) {
+                    return cart.items[itemSlug];
+                }))
+            };
         }
 
         function buildCartRequestForm() {
@@ -941,6 +1142,9 @@
             var keys = Object.keys(cart.items);
             var table;
             var html;
+            var primaryTotalLabel;
+            var primaryTotalValue;
+            var summaryLines = [];
 
             if (keys.length === 0) {
                 renderEmptyCartPage();
@@ -949,10 +1153,26 @@
 
             table = buildCartTable(keys);
             html = table.html;
+            if (table.summary.monthlyRecurring > 0) {
+                summaryLines.push('<div class="cart-summary-line"><span>Monthly recurring</span><strong>' + formatMoney(table.summary.monthlyRecurring) + '/mo</strong></div>');
+            }
+            if (table.summary.yearlyEquivalentMonthly > 0) {
+                summaryLines.push('<div class="cart-summary-line"><span>Equivalent monthly</span><strong>' + formatMoney(table.summary.yearlyEquivalentMonthly) + '/mo</strong></div>');
+            }
+            if (table.summary.yearlySavings > 0) {
+                summaryLines.push('<div class="cart-summary-line"><span>You save</span><strong>' + formatMoney(table.summary.yearlySavings) + '/year</strong></div>');
+            }
+            primaryTotalLabel = table.summary.monthlyRecurring > 0 && table.summary.dueToday === 0 ? 'Monthly Recurring' : 'Due Today';
+            primaryTotalValue = table.summary.monthlyRecurring > 0 && table.summary.dueToday === 0
+                ? formatMoney(table.summary.monthlyRecurring) + '/mo'
+                : formatMoney(table.summary.dueToday);
             html += '<div class="cart-totals">' +
-                '<div>' +
-                    '<div class="cart-total-amount">' + (table.hasCustom ? 'From ' : '') + '$' + table.grandTotal.toLocaleString() + '</div>' +
-                    '<div class="cart-total-label">Estimated Total</div>' +
+                '<div class="cart-totals-group">' +
+                    (summaryLines.length ? '<div class="cart-page-summary cart-summary-items">' + summaryLines.join('') + '</div>' : '') +
+                    '<div class="cart-total-panel">' +
+                        '<div class="cart-total-amount">' + (table.hasCustom ? 'From ' : '') + primaryTotalValue + '</div>' +
+                        '<div class="cart-total-label">' + primaryTotalLabel + '</div>' +
+                    '</div>' +
                 '</div>' +
             '</div>';
             html += buildCartRequestForm();

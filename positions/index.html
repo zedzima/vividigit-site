@@ -44,7 +44,12 @@
     <!-- Styles -->
     <link rel="preload" href="_assets/css/styles.css?v=41d1c6d5" as="style">
     <link rel="stylesheet" href="_assets/css/styles.css?v=41d1c6d5">
-    <script src="_assets/js/cards.js" defer></script>
+    <script>
+    window.VividigitAssetHashes = {
+        cart: '0924df2e'
+    };
+    </script>
+    <script src="_assets/js/cards.js?v=dc197852" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -565,10 +570,32 @@
     function pluralize(count, singular, plural) {
         return count + ' ' + (count === 1 ? singular : plural);
     }
+    function isFeatured(item) {
+        return !!(item && item.featured);
+    }
     function formatCurrency(value) {
         var n = Number(value);
         if (!isFinite(n) || n <= 0) return '';
-        return '$' + Math.round(n).toLocaleString();
+        return '$' + Math.round(n);
+    }
+    function compareFeatured(a, b) {
+        return Number(isFeatured(b)) - Number(isFeatured(a));
+    }
+    function compareOriginalOrder(a, b) {
+        return (a.__catalogIndex || 0) - (b.__catalogIndex || 0);
+    }
+    function compareNumbersDescending(a, b, key) {
+        return (Number(b[key]) || 0) - (Number(a[key]) || 0);
+    }
+    function compareNumbersAscending(a, b, key, fallbackValue) {
+        var aValue = Number(a[key]);
+        var bValue = Number(b[key]);
+        if (!isFinite(aValue)) aValue = fallbackValue;
+        if (!isFinite(bValue)) bValue = fallbackValue;
+        return aValue - bValue;
+    }
+    function compareText(a, b, key) {
+        return String(a[key] || '').localeCompare(String(b[key] || ''));
     }
 
     /* ===== Card renderers ===== */
@@ -814,18 +841,27 @@
 
     function sortItems(items, by) {
         var sorted = items.slice();
-        switch (by) {
-            case 'rating': sorted.sort(function(a,b){ return (b.rating||0)-(a.rating||0); }); break;
-            case 'projects': sorted.sort(function(a,b){ return (b.projects||0)-(a.projects||0); }); break;
-            case 'name': sorted.sort(function(a,b){ return (a.title||'').localeCompare(b.title||''); }); break;
-            case 'newest': sorted.sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); }); break;
-            case 'oldest': sorted.sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); }); break;
-            case 'popular': sorted.sort(function(a,b){ return (b.rating||0)-(a.rating||0); }); break;
-            case 'scopes': sorted.sort(function(a,b){ return (b.scope_count||0)-(a.scope_count||0); }); break;
-            case 'price': sorted.sort(function(a,b){ return (a.starting_price||9999)-(b.starting_price||9999); }); break;
-            case 'specialists': sorted.sort(function(a,b){ return (b.specialist_count||0)-(a.specialist_count||0); }); break;
-            default: break;
-        }
+        sorted.sort(function(a, b) {
+            var featuredCompare = compareFeatured(a, b);
+            if (featuredCompare !== 0) return featuredCompare;
+
+            var result = 0;
+            switch (by) {
+                case 'rating': result = compareNumbersDescending(a, b, 'rating'); break;
+                case 'projects': result = compareNumbersDescending(a, b, 'projects'); break;
+                case 'name': result = compareText(a, b, 'title'); break;
+                case 'newest': result = String(b.date || '').localeCompare(String(a.date || '')); break;
+                case 'oldest': result = String(a.date || '').localeCompare(String(b.date || '')); break;
+                case 'popular': result = compareNumbersDescending(a, b, 'rating'); break;
+                case 'scopes': result = compareNumbersDescending(a, b, 'scope_count'); break;
+                case 'price': result = compareNumbersAscending(a, b, 'starting_price', 999999999); break;
+                case 'specialists': result = compareNumbersDescending(a, b, 'specialist_count'); break;
+                default: result = 0; break;
+            }
+
+            if (result !== 0) return result;
+            return compareOriginalOrder(a, b);
+        });
         return sorted;
     }
 
@@ -836,6 +872,10 @@
             .then(function(data) {
                 LABELS = data.labels || {};
                 allItems = cfg.dataKey ? (data[cfg.dataKey] || []) : (Array.isArray(data) ? data : []);
+                allItems = allItems.map(function(item, index) {
+                    item.__catalogIndex = index;
+                    return item;
+                });
                 renderGrid(applyFilters());
             })
             .catch(function() {
@@ -1237,7 +1277,7 @@
     </div>
 
     <!-- Site JavaScript -->
-    <script src="_assets/js/app-core.js" defer></script>
+    <script src="_assets/js/app-core.js?v=04ceb676" defer></script>
     <!-- SVG templates for JS runtime use -->
     <div id="svg-templates" hidden>
         <span id="svg-theme-system"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
@@ -1246,8 +1286,8 @@
         <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
 
-    <script src="_assets/js/forms.js" defer></script>
-    <script src="_assets/js/ui.js" defer></script>
-    <script src="_assets/js/site.js" defer></script>
+    <script src="_assets/js/forms.js?v=d8e2f396" defer></script>
+    <script src="_assets/js/ui.js?v=6870a332" defer></script>
+    <script src="_assets/js/site.js?v=50182ee9" defer></script>
 </body>
 </html>

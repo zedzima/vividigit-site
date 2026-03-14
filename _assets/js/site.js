@@ -4,6 +4,7 @@
  */
 (function() {
     var app = window.VividigitApp = window.VividigitApp || {};
+    var assetHashes = window.VividigitAssetHashes || {};
     var cartLoadCallbacks = [];
     var cartScriptRequested = false;
 
@@ -52,7 +53,7 @@
         cartScriptRequested = true;
 
         var script = document.createElement('script');
-        script.src = '_assets/js/cart.js';
+        script.src = '_assets/js/cart.js' + (assetHashes.cart ? '?v=' + assetHashes.cart : '');
         script.defer = true;
         script.onload = function() {
             app.initCart?.();

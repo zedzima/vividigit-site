@@ -1037,6 +1037,13 @@ a:hover { color: var(--accent-hover); }
     color: var(--text-muted);
 }
 
+.cart-billing-note {
+    display: block;
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
 .cart-item-actions {
     display: flex;
     align-items: center;
@@ -1131,9 +1138,10 @@ a:hover { color: var(--accent-hover); }
 
 /* Cart Total Row */
 .cart-total-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: var(--space-lg);
     padding-top: var(--space-md);
     margin-top: var(--space-sm);
     border-top: 2px solid var(--border-color);
@@ -1143,12 +1151,19 @@ a:hover { color: var(--accent-hover); }
     font-size: var(--font-size-ui);
     font-weight: 600;
     color: var(--text-primary);
+    padding-right: var(--space-sm);
 }
 
 .cart-total-value {
     font-size: var(--font-size-h3);
     font-weight: 700;
     color: var(--accent-primary);
+    text-align: right;
+    white-space: nowrap;
+}
+
+.cart-summary-items.hidden {
+    display: none;
 }
 
 /* Language Dropdown with checkboxes */
@@ -3899,6 +3914,8 @@ a.cards-link:hover {
     font-weight: 400;
     font-size: var(--font-size-caption);
     color: var(--text-muted);
+    display: block;
+    margin-top: 2px;
 }
 .cart-billing-badge {
     text-align: center;
@@ -4000,9 +4017,22 @@ a.cards-link:hover {
 .cart-totals {
     display: flex;
     justify-content: flex-end;
-    align-items: center;
     padding: 1rem 0;
     border-top: 2px solid var(--border-color);
+}
+
+.cart-totals-group {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(2.5rem, 5vw, 5rem);
+}
+
+.cart-page-summary {
+    min-width: max-content;
+}
+
+.cart-total-panel {
+    min-width: 220px;
 }
 .cart-total-amount {
     font-size: 1.5rem;
@@ -4017,6 +4047,20 @@ a.cards-link:hover {
     font-size: var(--font-size-caption);
     color: var(--text-muted);
     text-align: right;
+    white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+    .cart-totals-group {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: var(--space-md);
+    }
+
+    .cart-page-summary {
+        min-width: 0;
+    }
 }
 
 /* Comment section */
@@ -6206,7 +6250,13 @@ a.cards-link:hover {
     }
 
     .package-price {
-        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+    }
+
+    .package-price-main {
         display: flex;
         align-items: baseline;
         gap: var(--space-xs);
@@ -6216,13 +6266,14 @@ a.cards-link:hover {
         font-size: var(--font-size-display);
     }
 
+    .package-billing-meta {
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
+    }
+
     .package-savings {
         display: none;
-        position: absolute;
-        top: 0;
-        right: 0;
-        transform: translateY(-50%);
-        padding: var(--space-xs) var(--space-sm);
+        padding: 0;
         white-space: nowrap;
     }
 
@@ -6308,6 +6359,14 @@ a.cards-link:hover {
 
     .pricing-simple-price .price-current {
         font-size: var(--font-size-display);
+    }
+
+    .pricing-simple-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        font-size: var(--font-size-caption);
+        color: var(--text-muted);
     }
 
     .pricing-simple-actions {
