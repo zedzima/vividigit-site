@@ -334,7 +334,7 @@
 .faq-header,
 .pricing-header,
 .sections-header {
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-xl);
 }
 
 .cards-subtitle,
@@ -396,6 +396,7 @@
     font-size: var(--font-size-body);
     font-weight: 600;
     color: var(--text-primary);
+    margin-top: 0;
     margin-bottom: var(--space-sm);
 }
 
@@ -490,14 +491,6 @@
     margin: 0 auto;
 }
 
-.benefits-intro {
-    font-size: var(--type-subtitle-size);
-    font-weight: var(--type-subtitle-weight);
-    line-height: var(--type-subtitle-line);
-    color: var(--type-subtitle-color);
-    margin-bottom: var(--space-xl);
-    text-align: center;
-}
 
 .benefits-grid {
     display: grid;
@@ -529,6 +522,7 @@
 
 .benefit-card h3 {
     font-size: var(--font-size-subtitle);
+    margin-top: 0;
     margin-bottom: var(--space-sm);
 }
 
@@ -1951,13 +1945,13 @@ a.cards-link:hover {
     .features-list {
         display: flex;
         flex-direction: column;
-        gap: var(--space-3xl);
+        gap: var(--space-xl);
     }
 
     .feature-item {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: var(--space-3xl);
+        gap: var(--space-2xl);
         align-items: center;
     }
 
@@ -2027,6 +2021,7 @@ a.cards-link:hover {
         align-items: center;
         justify-content: center;
         min-height: 200px;
+        max-height: calc(260px * var(--scale));
         align-self: stretch;
     }
 
@@ -3403,7 +3398,6 @@ a.cards-link:hover {
     align-items: center;
     justify-content: center;
     min-height: 220px;
-    max-height: 280px;
     padding: var(--space-sm);
 }
 
@@ -3431,8 +3425,20 @@ a.cards-link:hover {
     color: var(--accent-primary);
 }
 
+.process-sidebar .process-media {
+    align-items: stretch;
+}
+
+.process-sidebar .process-media .illustration {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+}
+
 .process-panel h3 {
     color: var(--text-primary);
+    margin-top: 0;
     margin-bottom: var(--type-heading-gap);
 }
 
@@ -3582,6 +3588,12 @@ a.cards-link:hover {
     white-space: nowrap;
 }
 
+.process-sidebar .process-content {
+    padding-top: var(--space-lg);
+    container-type: inline-size;
+    container-name: sidebar-panel;
+}
+
 .process-sidebar .process-panel-body {
     max-width: 66.666%;
     flex: 0 0 66.666%;
@@ -3619,20 +3631,19 @@ a.cards-link:hover {
     }
 }
 
-@media (max-width: 980px) {
-    .process-sidebar .process-panel-inner {
+@container sidebar-panel (max-width: 640px) {
+    .process-panel-inner {
         flex-direction: column;
-        align-items: center;
         gap: var(--space-xs);
     }
 
-    .process-sidebar .process-panel-body {
+    .process-panel-inner .process-panel-body {
         max-width: none;
         flex: 1 1 auto;
         width: 100%;
     }
 
-    .process-sidebar .process-media {
+    .process-panel-inner .process-media {
         order: -1;
         flex: 0 0 auto;
         width: 100%;
@@ -3643,8 +3654,8 @@ a.cards-link:hover {
         margin-inline: auto;
     }
 
-    .process-sidebar .process-media img,
-    .process-sidebar .process-media .illustration {
+    .process-panel-inner .process-media img,
+    .process-panel-inner .process-media .illustration {
         width: auto;
         max-width: 100%;
         max-height: clamp(120px, 30vw, 180px);
