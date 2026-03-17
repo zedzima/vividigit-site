@@ -3399,35 +3399,16 @@ main h2:first-child { margin-top: 0; }
 .benefits-header,
 .comparison-header,
 .faq-header,
-.pricing-header {
+.pricing-header,
+.sections-header {
     margin-bottom: var(--space-2xl);
 }
 
 .cards-subtitle,
-.columns-subtitle,
-.text-subtitle {
-    font-size: var(--font-size-body);
-    color: var(--text-secondary);
+.columns-subtitle {
     margin-bottom: var(--space-xl);
 }
 
-.sections-subtitle {
-    font-size: var(--font-size-subtitle);
-    color: var(--text-secondary);
-    margin-bottom: var(--space-xl);
-}
-
-.sections-header {
-    margin-bottom: var(--space-3xl);
-}
-
-.sections-header h2 {
-    margin-bottom: var(--space-md);
-}
-
-.sections-header .sections-subtitle {
-    margin-bottom: 0;
-}
 
 .cards-item,
 .columns-item,
@@ -3452,7 +3433,6 @@ main h2:first-child { margin-top: 0; }
 
 .sections-item h3 {
     margin-top: 0;
-    margin-bottom: var(--type-heading-gap);
 }
 
 .sections-item-symbol {
@@ -3572,20 +3552,16 @@ main h2:first-child { margin-top: 0; }
     color: var(--text-muted);
 }
 
-.benefits-header h2 {
-    margin-bottom: var(--space-md);
-}
-
 .benefits-header p {
-    font-size: var(--font-size-subtitle);
-    color: var(--text-secondary);
     max-width: calc(600px * var(--scale));
     margin: 0 auto;
 }
 
 .benefits-intro {
-    font-size: var(--font-size-subtitle);
-    color: var(--text-secondary);
+    font-size: var(--type-subtitle-size);
+    font-weight: var(--type-subtitle-weight);
+    line-height: var(--type-subtitle-line);
+    color: var(--type-subtitle-color);
     margin-bottom: var(--space-xl);
     text-align: center;
 }
@@ -4444,6 +4420,10 @@ a.cards-link:hover {
     margin-bottom: var(--space-xs);
 }
 
+.columns-text .btn {
+    margin-top: var(--space-lg);
+}
+
 .columns-note {
     margin-top: var(--space-xl);
     padding: var(--space-md);
@@ -5027,16 +5007,10 @@ a.cards-link:hover {
    ================================================================ */
 
     .features-header {
-        margin-bottom: var(--space-3xl);
-    }
-
-    .features-header h2 {
-        margin-bottom: var(--space-md);
+        margin-bottom: var(--space-xl);
     }
 
     .features-header p {
-        font-size: var(--font-size-subtitle);
-        color: var(--text-secondary);
         max-width: calc(600px * var(--scale));
         margin: 0 auto;
     }
@@ -5081,7 +5055,6 @@ a.cards-link:hover {
 
 .feature-content h3 {
     font-size: calc(var(--font-size-h3) + 2px);
-    margin: 0 0 var(--type-heading-gap);
 }
 
 .feature-content {
@@ -5096,7 +5069,7 @@ a.cards-link:hover {
     .feature-list {
         list-style: none;
         padding: 0;
-        margin: var(--space-md) 0;
+        margin: 0;
     }
 
     .feature-list li {
@@ -5879,14 +5852,6 @@ a.cards-link:hover {
     margin-bottom: var(--space-xl);
 }
 
-.pillars-header .tag {
-    margin-bottom: var(--space-sm);
-}
-
-.pillars-header h2 {
-    margin-top: var(--space-sm);
-}
-
 .pillars-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -6439,16 +6404,8 @@ a.cards-link:hover {
    Block: process
    ================================================================ */
 
-.process-block h2 {
-    margin-bottom: var(--space-sm);
-}
-
 .process-subtitle {
-    color: color-mix(in srgb, var(--text-primary) 72%, transparent);
-    font-size: var(--type-subtitle-size);
-    font-weight: var(--type-subtitle-weight);
-    line-height: var(--type-subtitle-line);
-    margin-bottom: var(--type-body-gap);
+    margin-bottom: var(--space-xl);
 }
 
 .process-container {
@@ -7823,7 +7780,12 @@ a.cards-link:hover {
 }
 
 .block :is(h2, h3, h4):not(.faq-question-title) {
-    margin-bottom: var(--type-heading-gap);
+    margin-bottom: var(--space-md);
+}
+
+/* In flex containers with gap, heading margin is redundant */
+.block .feature-content h3 {
+    margin-bottom: 0;
 }
 
 /* Keep body copy consistent across blocks */
@@ -7849,7 +7811,7 @@ a.cards-link:hover {
     color: var(--type-subtitle-color);
     font-weight: var(--type-subtitle-weight);
     line-height: var(--type-subtitle-line);
-    margin-bottom: var(--type-body-gap);
+    margin-bottom: var(--space-xl);
 }
 
 /* Unified technical text style */
