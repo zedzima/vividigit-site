@@ -45,17 +45,28 @@
 
     function resolveCountryFlag(countryFlagMap, slug) {
         var fallbackMap = {
-            usa: '🇺🇸',
-            uk: '🇬🇧',
-            germany: '🇩🇪',
-            austria: '🇦🇹',
-            france: '🇫🇷',
-            spain: '🇪🇸',
-            italy: '🇮🇹',
-            canada: '🇨🇦',
-            china: '🇨🇳',
-            japan: '🇯🇵',
-            russia: '🇷🇺'
+            // Europe
+            austria: '🇦🇹', belgium: '🇧🇪', bulgaria: '🇧🇬', croatia: '🇭🇷',
+            'czech-republic': '🇨🇿', czechia: '🇨🇿', denmark: '🇩🇰', estonia: '🇪🇪',
+            finland: '🇫🇮', france: '🇫🇷', germany: '🇩🇪', greece: '🇬🇷',
+            hungary: '🇭🇺', iceland: '🇮🇸', ireland: '🇮🇪', italy: '🇮🇹',
+            latvia: '🇱🇻', lithuania: '🇱🇹', luxembourg: '🇱🇺', netherlands: '🇳🇱',
+            norway: '🇳🇴', poland: '🇵🇱', portugal: '🇵🇹', romania: '🇷🇴',
+            serbia: '🇷🇸', slovakia: '🇸🇰', slovenia: '🇸🇮', spain: '🇪🇸',
+            sweden: '🇸🇪', switzerland: '🇨🇭', uk: '🇬🇧', ukraine: '🇺🇦',
+            // Americas
+            usa: '🇺🇸', canada: '🇨🇦', mexico: '🇲🇽', brazil: '🇧🇷',
+            argentina: '🇦🇷', chile: '🇨🇱', colombia: '🇨🇴', peru: '🇵🇪',
+            // Asia & Pacific
+            china: '🇨🇳', japan: '🇯🇵', 'south-korea': '🇰🇷', korea: '🇰🇷',
+            india: '🇮🇳', indonesia: '🇮🇩', singapore: '🇸🇬', thailand: '🇹🇭',
+            vietnam: '🇻🇳', philippines: '🇵🇭', malaysia: '🇲🇾', taiwan: '🇹🇼',
+            australia: '🇦🇺', 'new-zealand': '🇳🇿',
+            // Middle East & Africa
+            israel: '🇮🇱', turkey: '🇹🇷', uae: '🇦🇪', 'saudi-arabia': '🇸🇦',
+            'south-africa': '🇿🇦', egypt: '🇪🇬', nigeria: '🇳🇬', kenya: '🇰🇪',
+            // CIS
+            russia: '🇷🇺', kazakhstan: '🇰🇿', belarus: '🇧🇾', georgia: '🇬🇪'
         };
         if (!slug) return '';
         if (countryFlagMap && countryFlagMap[slug]) return countryFlagMap[slug];
