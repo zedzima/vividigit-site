@@ -4412,6 +4412,44 @@ a.cards-link:hover {
     gap: var(--space-lg);
 }
 
+.columns-item-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.columns-item-head h3 {
+    margin-bottom: 0;
+    flex: 1 1 auto;
+}
+
+.columns-item-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    flex: 0 0 56px;
+    margin-left: auto;
+    background: var(--bg-contrast);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    line-height: 1;
+}
+
+.columns-item-mark .icon {
+    width: 26px;
+    height: 26px;
+}
+
+.columns-variant-icon-cards .columns-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
 .columns-text ul, .columns-text ol {
     margin: var(--space-sm) 0;
     padding-left: var(--space-lg);
@@ -5898,12 +5936,13 @@ a.cards-link:hover {
     position: relative;
     padding: var(--space-lg);
     text-align: center;
-    transition: var(--transition);
+    transition: none;
 }
 
-.pillar-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+.pillars-grid .pillar-card:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--bg-card);
 }
 
 .pillar-icon {
