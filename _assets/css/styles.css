@@ -4426,15 +4426,32 @@ a.cards-link:hover {
 }
 
 .columns-note {
+    position: relative;
     margin-top: var(--space-xl);
-    padding: var(--space-md);
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
+    padding: var(--space-lg);
+    background: var(--bg-secondary);
+    border: none;
     border-radius: var(--radius-md);
-    font-size: var(--font-size-ui);
-    color: var(--text-muted);
+    font-size: var(--font-size-body);
+    color: var(--text-primary);
     display: flex;
     gap: var(--space-sm);
+    text-align: center;
+    justify-content: center;
+}
+
+.columns-note::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+    padding: 1.5px;
+    background: var(--accent-gradient);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
 }
 
 .columns-note-icon {
