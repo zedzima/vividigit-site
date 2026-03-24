@@ -48,14 +48,14 @@
     <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
 
     <!-- Styles -->
-    <link rel="preload" href="_assets/css/styles.css?v=d51a3e4e" as="style">
-    <link rel="stylesheet" href="_assets/css/styles.css?v=d51a3e4e">
+    <link rel="preload" href="_assets/css/styles.css?v=e7df95a1" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=e7df95a1">
     <script>
     window.VividigitAssetHashes = {
         cart: '0924df2e'
     };
     </script>
-    <script src="_assets/js/cards.js?v=c747d166" defer></script>
+    <script src="_assets/js/cards.js?v=0dd7cc99" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -461,17 +461,24 @@
 
 
 
+
+
+
 <a href="scopes/technical-seo" class="scope-card entity-card entity-card-padded">
-    <div class="scope-card-header">
-        <div class="scope-services">
+    <div class="service-card-header">
+        <div class="entity-card-title">Technical SEO</div>
+        <div class="service-card-icon" style="--icon-url: url(/_media/icons/search.svg)"></div>
+    </div>
+    <p class="entity-card-copy">A technical scope for crawling, indexing, and site health improvements.</p>
+    
+    <div class="entity-card-exact-chips">
+        <div class="entity-card-exact-row scope-chip-row scope-chip-row-services">
             
-            <span class="scope-service entity-chip entity-chip-label entity-chip-wide entity-chip-accent">SEO</span>
+            <span class="scope-service entity-chip entity-chip-label entity-chip-wide">SEO</span>
             
         </div>
-        
     </div>
-    <div class="entity-card-title">Technical SEO</div>
-    <p class="entity-card-copy">A technical scope for crawling, indexing, and site health improvements.</p>
+    
     
     <div class="scope-card-meta entity-card-meta-row">
         <span class="scope-metric entity-card-stat">1 industry</span>
@@ -515,17 +522,24 @@
 
 
 
+
+
+
 <a href="scopes/ai-optimisation" class="scope-card entity-card entity-card-padded">
-    <div class="scope-card-header">
-        <div class="scope-services">
+    <div class="service-card-header">
+        <div class="entity-card-title">AI Optimization</div>
+        <div class="service-card-icon" style="--icon-url: url(/_media/icons/lightning.svg)"></div>
+    </div>
+    <p class="entity-card-copy">An AI visibility scope covering citation analysis, extractability, and content adjustments.</p>
+    
+    <div class="entity-card-exact-chips">
+        <div class="entity-card-exact-row scope-chip-row scope-chip-row-services">
             
-            <span class="scope-service entity-chip entity-chip-label entity-chip-wide entity-chip-accent">AEO</span>
+            <span class="scope-service entity-chip entity-chip-label entity-chip-wide">AEO</span>
             
         </div>
-        
     </div>
-    <div class="entity-card-title">AI Optimization</div>
-    <p class="entity-card-copy">An AI visibility scope covering citation analysis, extractability, and content adjustments.</p>
+    
     
     <div class="scope-card-meta entity-card-meta-row">
         <span class="scope-metric entity-card-stat">1 industry</span>
@@ -558,6 +572,14 @@
         usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
         spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
     };
+    var serviceLabelMap = {
+        seo: 'SEO', aeo: 'AEO', aso: 'ASO', content: 'Content', ppc: 'PPC',
+        analytics: 'Analytics', 'social-media': 'Social Media', 'paid-social': 'Paid Social',
+        email: 'Email', cro: 'CRO', video: 'Video', pr: 'PR',
+        orm: 'Online Reputation Management', automation: 'Automation',
+        'marketplace-management': 'Marketplace Management', affiliate: 'Affiliate',
+        'app-marketing': 'App Marketing', 'web-development': 'Web Development'
+    };
     var countryLabelMap = {
         germany: 'Germany', austria: 'Austria', usa: 'USA',
         uk: 'UK', france: 'France', spain: 'Spain'
@@ -565,7 +587,8 @@
     var cardOptions = {
         langCodeMap: langCodeMap,
         countryFlagMap: countryFlagMap,
-        countryLabel: countryLabelMap
+        countryLabel: countryLabelMap,
+        serviceLabel: serviceLabelMap
     };
 
     function hydrateCards() {
@@ -590,6 +613,10 @@
                 node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
             } catch (e) { /* Keep placeholder */ }
         });
+
+        if (window.CMSCards && typeof window.CMSCards.fitExactChipRows === 'function') {
+            window.CMSCards.fitExactChipRows(root);
+        }
 
         return true;
     }

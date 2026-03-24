@@ -7,7 +7,7 @@
     
     
     <title>International Digital Marketing by Country — Market Entry and Growth | VIVIDIGIT</title>
-    <meta name="description" content="Country-specific digital marketing for international expansion. Market entry strategy, local SEO, compliant content, and native specialists for USA, UK, Germany, France, and more.">
+    <meta name="description" content="Country-specific digital marketing for international expansion. Market entry strategy, local SEO, compliant content, and in-market experts for the USA, UK, Germany, France, and more.">
     
 
     <!-- Canonical URL -->
@@ -19,7 +19,7 @@
     
     <meta property="og:site_name" content="Vividigit">
     <meta property="og:title" content="International Digital Marketing by Country — Market Entry and Growth | VIVIDIGIT">
-    <meta property="og:description" content="Country-specific digital marketing for international expansion. Market entry strategy, local SEO, compliant content, and native specialists for USA, UK, Germany, France, and more.">
+    <meta property="og:description" content="Country-specific digital marketing for international expansion. Market entry strategy, local SEO, compliant content, and in-market experts for the USA, UK, Germany, France, and more.">
     <meta property="og:url" content="https://vividigit.com/countries/">
     <meta property="og:image" content="https://vividigit.com/_media/images/site/og-default.png">
     <meta property="og:image:secure_url" content="https://vividigit.com/_media/images/site/og-default.png">
@@ -33,7 +33,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@vividigit">
     <meta name="twitter:title" content="International Digital Marketing by Country — Market Entry and Growth | VIVIDIGIT">
-    <meta name="twitter:description" content="Country-specific digital marketing for international expansion. Market entry strategy, local SEO, compliant content, and native specialists for USA, UK, Germany, France, and more.">
+    <meta name="twitter:description" content="Country-specific digital marketing for international expansion. Market entry strategy, local SEO, compliant content, and in-market experts for the USA, UK, Germany, France, and more.">
     <meta name="twitter:image" content="https://vividigit.com/_media/images/site/og-default.png">
 
     <!-- Favicon -->
@@ -46,14 +46,14 @@
     <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
 
     <!-- Styles -->
-    <link rel="preload" href="_assets/css/styles.css?v=d51a3e4e" as="style">
-    <link rel="stylesheet" href="_assets/css/styles.css?v=d51a3e4e">
+    <link rel="preload" href="_assets/css/styles.css?v=e7df95a1" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=e7df95a1">
     <script>
     window.VividigitAssetHashes = {
         cart: '0924df2e'
     };
     </script>
-    <script src="_assets/js/cards.js?v=c747d166" defer></script>
+    <script src="_assets/js/cards.js?v=0dd7cc99" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -194,7 +194,7 @@
                 "name": "Which countries do you cover?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "We have active specialist coverage in the USA, UK, Germany, France, Austria, Spain, Portugal, and Poland — with the ability to expand into additional European and global markets through our specialist network."
+                    "text": "We have active expert coverage in the USA, UK, Germany, France, Austria, Spain, Portugal, and Poland — with the ability to expand into additional European and global markets through our network of experts."
                 }
             },
             
@@ -212,7 +212,7 @@
                 "name": "How do you handle compliance across countries?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "We staff each market with specialists who understand local regulations. For regulated industries, compliance requirements are built into the content and campaign workflow from the start — not added as a review step at the end."
+                    "text": "We staff each market with experts who understand local regulations. For regulated industries, compliance requirements are built into the content and campaign workflow from the start — not added as a review step at the end."
                 }
             },
             
@@ -471,11 +471,11 @@
         </h1>
 
         
-        <p class="hero-subtitle">Market-specific strategy, local compliance, and native specialists for every country you expand into.</p>
+        <p class="hero-subtitle">Market-specific strategy, local compliance, and in-market experts for every country you expand into.</p>
         
 
         
-        <div class="hero-text">Expanding into a new country is not a translation project. It requires local keyword research, market-specific compliance, cultural adaptation, and specialists who operate in that market every day. Each country page shows the services, languages, and team members most relevant to that market.</div>
+        <div class="hero-text">Expanding into a new country is not a translation project. It requires local keyword research, market-specific compliance, cultural adaptation, and experts who operate in that market every day. Each country page shows the services, languages, and team members most relevant to that market.</div>
         
 
         
@@ -516,7 +516,7 @@
     <div class="catalog-header">
         <span class="tag tag-accent">MARKETS WE SERVE</span>
         <h2>Browse countries</h2>
-        <p class="catalog-subtitle">Each country page shows market-specific services, native-language specialists, and relevant case studies.</p>
+        <p class="catalog-subtitle">Each country page shows market-specific services, native-language experts, and relevant case studies.</p>
     </div>
     
 
@@ -602,7 +602,7 @@
         positions: {
             url: '_data/positions-index.json',
             dataKey: 'positions',
-            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['specialists', 'Most Specialists']]
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['specialists', 'Most Experts']]
         }
     };
 
@@ -671,26 +671,10 @@
 
     /* ===== Card renderers ===== */
     function renderScopeCard(s) {
-        var f = s.facets || {};
-        var svcs = (f.services || []).map(function(c){ return '<span class="scope-service entity-chip entity-chip-label entity-chip-wide entity-chip-accent">' + esc(label('services', c)) + '</span>'; }).join('');
-        var industryCount = Number(s.industry_count || (f.industries || []).length || 0);
-        var countryCount = Number(s.country_count || (f.countries || []).length || 0);
-        var languageCount = Number(s.language_count || (f.languages || []).length || 0);
-        var taskCount = Number(s.task_count || 0);
-        var metrics = [];
-        if (industryCount > 0) metrics.push('<span class="scope-metric entity-card-stat">' + esc(pluralize(industryCount, 'industry', 'industries')) + '</span>');
-        if (countryCount > 0) metrics.push('<span class="scope-metric entity-card-stat">' + esc(pluralize(countryCount, 'country', 'countries')) + '</span>');
-        if (languageCount > 0) metrics.push('<span class="scope-metric entity-card-stat">' + esc(pluralize(languageCount, 'language', 'languages')) + '</span>');
-        if (taskCount > 0) metrics.push('<span class="scope-metric entity-card-stat">' + esc(pluralize(taskCount, 'task', 'tasks')) + '</span>');
-        var delivery = s.delivery ? toTitleCase(String(s.delivery).replace('-', ' ')) : '';
-        var price = formatCurrency(s.price || s.from_price);
-        var url = (s.url || '/scopes/' + s.slug).replace(/^\//, '');
-        return '<a href="' + url + '" class="scope-card entity-card entity-card-padded">' +
-            '<div class="scope-card-header"><div class="scope-services">' + svcs + '</div>' +
-            (delivery ? '<span class="scope-spec-count type-meta">' + esc(delivery) + '</span>' : '') + '</div>' +
-            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div><p class="entity-card-copy">' + esc(s.description) + '</p>' +
-            (metrics.length ? '<div class="scope-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
-            '<div class="scope-card-footer entity-card-footer">' + (price ? '<span class="scope-price entity-card-price">From ' + price + '</span>' : '<span></span>') + '<span class="scope-cta entity-card-cta">View Scope →</span></div></a>';
+        return window.CMSCards.renderScopeCard(s, {
+            serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); },
+            serviceIconMap: serviceIconMap
+        });
     }
 
     function renderSpecialistCard(s) {
@@ -698,47 +682,33 @@
             langCodeMap: langCodeMap,
             countryFlagMap: countryFlagMap,
             countryLabel: function(slug) { return label('countries', slug); },
-            industryLabel: function(slug) { return label('industries', slug); }
+            languageLabel: function(slug) { return label('languages', slug); },
+            industryLabel: function(slug) { return label('industries', slug); },
+            serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); }
         });
     }
 
     function renderCaseCard(s) {
-        var url = (s.url || '/cases/' + s.slug).replace(/^\//, '');
-        var title = s.menu || s.title;
-        var letter = (s.client || title || 'C').charAt(0).toUpperCase();
-        var imageHtml = s.image
-            ? '<div class="case-image"><img src="' + esc(s.image) + '" alt="' + esc(title) + '" loading="lazy"></div>'
-            : '<div class="case-image"><div class="case-image-placeholder"><span>' + letter + '</span></div></div>';
-        var tags = [];
-        if (s.industry) tags.push('<span class="case-tag entity-chip entity-chip-label entity-chip-compact">' + esc(label('industries', s.industry)) + '</span>');
-        if (s.country) tags.push('<span class="case-tag entity-chip entity-chip-soft entity-chip-flag" title="' + esc(label('countries', s.country)) + '">' + esc(countryFlagMap[s.country] || label('countries', s.country)) + '</span>');
-        if (s.language) tags.push('<span class="case-tag entity-chip entity-chip-label entity-chip-compact">' + esc(langCodeMap[s.language] || (label('languages', s.language) || s.language).slice(0, 2).toUpperCase()) + '</span>');
-        var tagsHtml = tags.length ? '<div class="case-tags">' + tags.join('') + '</div>' : '';
-        var clientHtml = s.client ? '<div class="case-meta"><span class="case-tag case-client-chip entity-chip entity-chip-count">' + esc(s.client) + '</span></div>' : '';
-        var primary = s.primary_result || ((s.results || [])[0] || null);
-        var footerClass = 'case-card-footer entity-card-footer' + (primary ? '' : ' entity-card-footer-end');
-        var footerHtml = '<div class="' + footerClass + '">' +
-            (primary ? '<div class="case-result"><span class="result-value">' + esc(primary.value) + '</span><span class="result-label">' + esc(primary.label) + '</span></div>' : '') +
-            '<span class="case-cta entity-card-cta">View Case →</span></div>';
-        return '<a href="' + url + '" class="case-card entity-card">' + imageHtml +
-            '<div class="case-content">' +
-            '<div class="entity-card-title">' + esc(title) + '</div>' + clientHtml + '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
-            tagsHtml + footerHtml + '</div></a>';
+        return window.CMSCards.renderCaseCard(s, {
+            serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); },
+            industryLabel: function(slug) { return label('industries', slug) || toTitleCase(slug); },
+            countryLabel: function(slug) { return label('countries', slug) || toTitleCase(slug); },
+            countryFlagMap: countryFlagMap,
+            languageLabel: function(slug) { return label('languages', slug) || toTitleCase(slug); },
+            langCodeMap: langCodeMap
+        });
     }
 
     function renderBlogCard(s) {
-        var url = (s.url || '/blog/' + s.slug).replace(/^\//, '');
-        if (url && url.slice(-1) !== '/') url += '/';
-        var chips = [];
-        if (s.type) chips.push('<span class="blog-chip entity-chip entity-chip-blog">' + esc(toTitleCase(s.type)) + '</span>');
-        if (s.service) chips.push('<span class="blog-chip entity-chip entity-chip-blog">' + esc(serviceLabelMap[s.service] || label('services', s.service) || toTitleCase(s.service)) + '</span>');
-        var dateLabel = formatDate(s.date);
-        var authorLabel = formatAuthorName(s.author);
-        return '<a href="' + url + '" class="blog-card entity-card entity-card-padded">' +
-            (chips.length ? '<div class="blog-card-tags">' + chips.join('') + '</div>' : '') +
-            '<div class="blog-card-title entity-card-title">' + esc(s.title) + '</div>' +
-            '<p class="blog-card-excerpt entity-card-copy">' + esc(s.description) + '</p>' +
-            '<div class="blog-card-meta type-meta">' + (dateLabel ? '<span>' + esc(dateLabel) + '</span>' : '') + (authorLabel ? '<span>By ' + esc(authorLabel) + '</span>' : '') + '</div></a>';
+        return window.CMSCards.renderBlogCard(s, {
+            serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); },
+            scopeLabel: function(slug) { return label('scopes', slug) || toTitleCase(slug); },
+            industryLabel: function(slug) { return label('industries', slug) || toTitleCase(slug); },
+            countryLabel: function(slug) { return label('countries', slug) || toTitleCase(slug); },
+            countryFlagMap: countryFlagMap,
+            languageLabel: function(slug) { return label('languages', slug) || toTitleCase(slug); },
+            langCodeMap: langCodeMap
+        });
     }
 
     function renderServiceCard(s) {
@@ -748,7 +718,7 @@
         var price = formatCurrency(s.starting_price || s.from_price || s.price);
         var metrics = [];
         if (s.scope_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
-        if (s.specialist_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.specialist_count, 'specialist', 'specialists')) + '</span>');
+        if (s.specialist_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.specialist_count, 'expert', 'experts')) + '</span>');
         if (s.industry_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.industry_count, 'industry', 'industries')) + '</span>');
         if (s.country_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.country_count, 'country', 'countries')) + '</span>');
         if (s.language_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.language_count, 'language', 'languages')) + '</span>');
@@ -771,7 +741,7 @@
         if (s.service_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.service_count, 'service', 'services')) + '</span>');
         if (s.scope_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
         if (s.solution_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.solution_count, 'solution', 'solutions')) + '</span>');
-        if (s.specialist_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.specialist_count, 'specialist', 'specialists')) + '</span>');
+        if (s.specialist_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.specialist_count, 'expert', 'experts')) + '</span>');
         return '<a href="' + url + '" class="service-card entity-card entity-card-padded">' +
             '<div class="service-card-header">' +
             '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
@@ -783,28 +753,12 @@
     }
 
     function renderSolutionCard(s) {
-        var url = (s.url || '/solutions/' + s.slug).replace(/^\//, '');
-        var f = s.facets || {};
-        var tags = '';
-        if (s.scope) tags += '<span class="solution-tag entity-chip entity-chip-label entity-chip-wide entity-chip-accent">' + esc(label('scopes', s.scope)) + '</span>';
-        if (s.industry) tags += '<span class="solution-tag industry entity-chip entity-chip-label entity-chip-wide">' + esc(label('industries', s.industry)) + '</span>';
-        var metrics = [];
-        var specialistCount = Number(s.specialist_count || (f.specialists || []).length || 0);
-        var caseCount = Number(s.case_count || (f.cases || []).length || 0);
-        var countryCount = (f.countries || []).length;
-        var languageCount = (f.languages || []).length;
-        if (specialistCount > 0) metrics.push('<span class="solution-meta-item entity-card-stat">' + esc(pluralize(specialistCount, 'specialist', 'specialists')) + '</span>');
-        if (caseCount > 0) metrics.push('<span class="solution-meta-item entity-card-stat">' + esc(pluralize(caseCount, 'case', 'cases')) + '</span>');
-        if (countryCount > 0) metrics.push('<span class="solution-meta-item entity-card-stat">' + esc(pluralize(countryCount, 'country', 'countries')) + '</span>');
-        if (languageCount > 0) metrics.push('<span class="solution-meta-item entity-card-stat">' + esc(pluralize(languageCount, 'language', 'languages')) + '</span>');
-        var price = formatCurrency(s.starting_price);
-        return '<a href="' + url + '" class="solution-card entity-card entity-card-padded">' +
-            (tags ? '<div class="solution-card-tags">' + tags + '</div>' : '') +
-            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div><p class="entity-card-copy">' + esc(s.description) + '</p>' +
-            (metrics.length ? '<div class="solution-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
-            '<div class="solution-card-footer entity-card-footer">' +
-            (price ? '<span class="solution-price entity-card-price">From ' + price + '</span>' : '<span></span>') +
-            '<span class="solution-cta entity-card-cta">Explore →</span></div></a>';
+        return window.CMSCards.renderSolutionCard(s, {
+            serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); },
+            scopeLabel: function(slug) { return label('scopes', slug) || toTitleCase(slug); },
+            industryLabel: function(slug) { return label('industries', slug) || toTitleCase(slug); },
+            serviceIconMap: serviceIconMap
+        });
     }
 
     function renderDimensionCard(s, collection) {
@@ -817,7 +771,12 @@
         } else if (s.code) {
             badgeHtml = '<div class="dimension-card-badge code">' + esc(s.code) + '</div>';
         }
-        var countText = s.scope_count ? s.scope_count + ' scopes' : '';
+        var metrics = [];
+        if (s.service_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.service_count, 'service', 'services')) + '</span>');
+        if (s.scope_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
+        if (s.specialist_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.specialist_count, 'expert', 'experts')) + '</span>');
+        if (s.case_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.case_count, 'case', 'cases')) + '</span>');
+        var metricsHtml = metrics.length ? '<div class="dimension-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '';
         var highlightValue = '';
         var highlightLabel = '';
         if (collection === 'languages' && s.native_speakers_l1) {
@@ -829,14 +788,14 @@
         }
         var footerClass = 'dimension-card-footer entity-card-footer' + (highlightValue ? ' dimension-card-footer-highlight' : '');
         var footerHtml = '<div class="' + footerClass + '">' +
-            (highlightValue ? '<div class="dimension-card-highlight case-result"><span class="result-value">' + esc(highlightValue) + '</span><span class="result-label">' + esc(highlightLabel) + '</span></div><span class="dimension-cta entity-card-cta">Explore →</span>' : (countText ? '<span class="dimension-count type-meta">' + countText + '</span>' : '<span></span>') + '<span class="dimension-cta entity-card-cta">Explore →</span>') +
+            (highlightValue ? '<div class="dimension-card-highlight case-result"><span class="result-value">' + esc(highlightValue) + '</span><span class="result-label">' + esc(highlightLabel) + '</span></div><span class="dimension-cta entity-card-cta">Explore →</span>' : '<span></span><span class="dimension-cta entity-card-cta">Explore →</span>') +
             '</div>';
         return '<a href="' + url + '" class="dimension-card entity-card entity-card-padded">' +
             '<div class="dimension-card-header">' +
             '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             badgeHtml + '</div>' +
             '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
-            footerHtml + '</a>';
+            metricsHtml + footerHtml + '</a>';
     }
 
     var RENDERERS = {
@@ -846,7 +805,12 @@
         industries: function(s) { return renderDimensionCard(s, 'industries'); },
         countries: function(s) { return renderDimensionCard(s, 'countries'); },
         languages: function(s) { return renderDimensionCard(s, 'languages'); },
-        positions: function(s) { return window.CMSCards.renderPositionCard(s, { countryFlagMap: countryFlagMap, countryLabel: function(slug) { return label('countries', slug); } }); }
+        positions: function(s) { return window.CMSCards.renderPositionCard(s, {
+            countryFlagMap: countryFlagMap,
+            countryLabel: function(slug) { return label('countries', slug); },
+            languageLabel: function(slug) { return label('languages', slug); },
+            serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); }
+        }); }
     };
 
     /* ===== Init sort dropdown ===== */
@@ -858,28 +822,9 @@
 
     /* ===== Overflow trim for single-line tag rows ===== */
     function trimOverflowTags() {
-        grid.querySelectorAll('.scope-countries, .scope-languages').forEach(function(row) {
-            var children = Array.from(row.children);
-            if (children.length <= 1 || row.scrollWidth <= row.clientWidth) return;
-            var tagClass = children[0].className;
-            var removed = 0;
-            while (children.length > 0 && row.scrollWidth > row.clientWidth) {
-                children.pop().remove();
-                removed++;
-            }
-            if (removed > 0) {
-                var more = document.createElement('span');
-                more.className = tagClass;
-                more.textContent = '+' + removed;
-                more.style.flexShrink = '0';
-                row.appendChild(more);
-                while (row.children.length > 1 && row.scrollWidth > row.clientWidth) {
-                    row.removeChild(row.children[row.children.length - 2]);
-                    removed++;
-                    more.textContent = '+' + removed;
-                }
-            }
-        });
+        if (window.CMSCards && typeof window.CMSCards.fitExactChipRows === 'function') {
+            window.CMSCards.fitExactChipRows(grid);
+        }
     }
 
     /* ===== Shared logic ===== */
@@ -1274,7 +1219,7 @@
         <div class="sections-item">
             <div class="sections-item-content">
                 
-                <h3>Local presence requires local specialists</h3>
+                <h3>Local presence requires local experts</h3>
                 
                 
                 <p class="sections-text">Effective international digital marketing is staffed by people who work in the target market, speak the language natively, and understand the competitive landscape from the inside — not from a briefing document.</p>
@@ -1682,7 +1627,7 @@
             
             <ul class="pillar-items">
                 
-                <li>Native specialists in every target country</li>
+                <li>Native experts in every target country</li>
                 
                 <li>Market-specific competitive and demand data</li>
                 
@@ -1866,7 +1811,7 @@
                 
                 <li>Proven onboarding for new markets</li>
                 
-                <li>Specialist recruitment from the local talent pool</li>
+                <li>Expert recruitment from the local talent pool</li>
                 
                 <li>Expansion decisions tied to market data</li>
                 
@@ -1895,7 +1840,7 @@
     <div class="testimonials-header">
         <div class="testimonials-header-text">
             <span class="tag tag-accent">PROOF</span>
-            <h2>International results from local specialists</h2>
+            <h2>International results from local experts</h2>
             <p class="block-subtitle">Every country engagement is staffed by people who operate in that market natively.</p>
         </div>
         
@@ -2089,7 +2034,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="faq-question-title">Which countries do you cover?</span>
             </summary>
             <div class="faq-answer">
-                <p>We have active specialist coverage in the USA, UK, Germany, France, Austria, Spain, Portugal, and Poland — with the ability to expand into additional European and global markets through our specialist network.</p>
+                <p>We have active expert coverage in the USA, UK, Germany, France, Austria, Spain, Portugal, and Poland — with the ability to expand into additional European and global markets through our network of experts.</p>
             </div>
         </details>
         
@@ -2107,7 +2052,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="faq-question-title">How do you handle compliance across countries?</span>
             </summary>
             <div class="faq-answer">
-                <p>We staff each market with specialists who understand local regulations. For regulated industries, compliance requirements are built into the content and campaign workflow from the start — not added as a review step at the end.</p>
+                <p>We staff each market with experts who understand local regulations. For regulated industries, compliance requirements are built into the content and campaign workflow from the start — not added as a review step at the end.</p>
             </div>
         </details>
         
@@ -2146,7 +2091,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <h2>Expand into new markets with local expertise, not guesswork</h2>
 
         
-        <p class="cta-subtitle">Choose your target country to see the services, languages, and specialists available for that market. Or book a consultation to plan a multi-country expansion.</p>
+        <p class="cta-subtitle">Choose your target country to see the services, languages, and experts available for that market. Or book a consultation to plan a multi-country expansion.</p>
         
 
         
