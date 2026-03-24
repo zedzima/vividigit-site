@@ -373,13 +373,17 @@
     margin-top: 0;
 }
 
-.sections-item-symbol {
+.sections-item-symbol,
+.sections-item-icon {
     position: absolute;
     right: clamp(20px, 3vw, 36px);
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
     user-select: none;
+}
+
+.sections-item-symbol {
     font-size: clamp(4.5rem, 13.5vw, 9rem);
     font-weight: 700;
     line-height: 0.9;
@@ -393,6 +397,11 @@
     -webkit-text-fill-color: transparent;
     opacity: 1;
     filter: none;
+}
+
+.sections-item-icon svg {
+    width: clamp(3rem, 9vw, 5rem);
+    height: clamp(3rem, 9vw, 5rem);
 }
 
 .cards-item h3,
@@ -428,12 +437,21 @@
         padding-right: var(--space-lg);
     }
 
-    .sections-item-symbol {
+    .sections-item-symbol,
+    .sections-item-icon {
         left: 50%;
         right: auto;
         top: var(--space-lg);
         transform: translateX(-50%);
+    }
+
+    .sections-item-symbol {
         font-size: clamp(3.6rem, 21vw, 6rem);
+    }
+
+    .sections-item-icon svg {
+        width: clamp(3.6rem, 21vw, 6rem);
+        height: clamp(3.6rem, 21vw, 6rem);
     }
 }
 
