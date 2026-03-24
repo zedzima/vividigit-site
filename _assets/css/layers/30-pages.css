@@ -1159,7 +1159,7 @@ a.cards-link:hover {
 .specialist-info { min-width: 0; flex: 1; }
 .specialist-role { margin-top: 2px; margin-bottom: var(--space-sm); }
 .specialist-summary {
-    margin: 0;
+    margin: 0 0 var(--type-body-gap);
     display: block;
     overflow: visible;
 }
@@ -1172,8 +1172,8 @@ a.cards-link:hover {
 
 /* === Position Card === */
 .position-summary {
-    margin: 0;
-    display: -webkit-box; -webkit-line-clamp: 2;
+    margin: 0 0 var(--type-body-gap);
+    display: -webkit-box; -webkit-line-clamp: 4;
     -webkit-box-orient: vertical; overflow: hidden;
 }
 .position-hiring-badge {
@@ -1808,12 +1808,13 @@ a.cards-link:hover {
         padding: var(--space-3xl);
         border-radius: var(--radius-xl);
         text-align: center;
+        position: relative;
+        overflow: hidden;
     }
 
     .cta-default {
         background: var(--bg-secondary);
         border: none;
-        position: relative;
     }
 
     .cta-default::before {
@@ -1850,6 +1851,8 @@ a.cards-link:hover {
     .cta-inner {
         max-width: calc(700px * var(--scale));
         margin: 0 auto;
+        position: relative;
+        z-index: 1;
     }
 
     .cta-icon {
@@ -2336,12 +2339,15 @@ a.cards-link:hover {
     /* Style 1: Clean (centered) */
     .hero-clean {
         text-align: center;
+        overflow: hidden;
     }
 
     .hero-clean .hero-content {
         display: flex;
         flex-direction: column;
         align-items: center;
+        position: relative;
+        z-index: 1;
     }
 
     .hero-clean .hero-actions {
@@ -2363,6 +2369,96 @@ a.cards-link:hover {
         color: var(--text-inverse);
         padding: var(--space-3xl);
         border-radius: var(--radius-xl);
+        overflow: hidden;
+    }
+
+    /* Scattered decorative icons on gradient hero */
+    .hero-scatter-icons {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .hero-gradient .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-scatter-icon {
+        position: absolute;
+        color: white;
+        opacity: 0.5;
+        display: flex;
+        line-height: 0;
+    }
+
+    /* On clean hero and default CTA: bright purple icons */
+    .hero-clean .hero-scatter-icon,
+    .cta-default .hero-scatter-icon {
+        color: var(--brand-purple);
+        opacity: 0.7;
+    }
+
+    .hero-scatter-icon .icon {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* Left side — 7 icons, growing toward edge */
+    .hero-scatter-icon-0  { left: 2%;  top: 18%; width: 38px; height: 38px; transform: rotate(-15deg); }
+    .hero-scatter-icon-1  { left: 5%;  top: 65%; width: 48px; height: 48px; transform: rotate(20deg); }
+    .hero-scatter-icon-2  { left: 10%; top: 35%; width: 40px; height: 40px; transform: rotate(-8deg); }
+    .hero-scatter-icon-3  { left: 1%;  top: 45%; width: 58px; height: 58px; transform: rotate(12deg); }
+    .hero-scatter-icon-4  { left: 7%;  top: 82%; width: 50px; height: 50px; transform: rotate(-25deg); }
+    .hero-scatter-icon-5  { left: 3%;  top: 8%;  width: 64px; height: 64px; transform: rotate(30deg); }
+    .hero-scatter-icon-6  { left: 12%; top: 55%; width: 32px; height: 32px; transform: rotate(-5deg); }
+
+    /* Right side — 7 icons, growing toward edge */
+    .hero-scatter-icon-7  { right: 2%;  top: 22%; width: 40px; height: 40px; transform: rotate(10deg); }
+    .hero-scatter-icon-8  { right: 6%;  top: 70%; width: 50px; height: 50px; transform: rotate(-18deg); }
+    .hero-scatter-icon-9  { right: 10%; top: 40%; width: 38px; height: 38px; transform: rotate(22deg); }
+    .hero-scatter-icon-10 { right: 1%;  top: 50%; width: 60px; height: 60px; transform: rotate(-12deg); }
+    .hero-scatter-icon-11 { right: 8%;  top: 85%; width: 48px; height: 48px; transform: rotate(15deg); }
+    .hero-scatter-icon-12 { right: 4%;  top: 5%;  width: 66px; height: 66px; transform: rotate(-30deg); }
+    .hero-scatter-icon-13 { right: 12%; top: 60%; width: 30px; height: 30px; transform: rotate(8deg); }
+
+    /* Gentle floating animation */
+    @keyframes hero-icon-float {
+        0%, 100% { transform: var(--scatter-rotate) translateY(0); }
+        50%      { transform: var(--scatter-rotate) translateY(-6px); }
+    }
+
+    .hero-scatter-icon-0  { --scatter-rotate: rotate(-15deg); animation: hero-icon-float 4.0s ease-in-out infinite; }
+    .hero-scatter-icon-1  { --scatter-rotate: rotate(20deg);  animation: hero-icon-float 4.5s ease-in-out 0.3s infinite; }
+    .hero-scatter-icon-2  { --scatter-rotate: rotate(-8deg);  animation: hero-icon-float 5.0s ease-in-out 0.7s infinite; }
+    .hero-scatter-icon-3  { --scatter-rotate: rotate(12deg);  animation: hero-icon-float 3.8s ease-in-out 1.0s infinite; }
+    .hero-scatter-icon-4  { --scatter-rotate: rotate(-25deg); animation: hero-icon-float 4.2s ease-in-out 0.5s infinite; }
+    .hero-scatter-icon-5  { --scatter-rotate: rotate(30deg);  animation: hero-icon-float 5.5s ease-in-out 1.2s infinite; }
+    .hero-scatter-icon-6  { --scatter-rotate: rotate(-5deg);  animation: hero-icon-float 4.8s ease-in-out 0.2s infinite; }
+    .hero-scatter-icon-7  { --scatter-rotate: rotate(10deg);  animation: hero-icon-float 4.3s ease-in-out 0.8s infinite; }
+    .hero-scatter-icon-8  { --scatter-rotate: rotate(-18deg); animation: hero-icon-float 4.7s ease-in-out 0.4s infinite; }
+    .hero-scatter-icon-9  { --scatter-rotate: rotate(22deg);  animation: hero-icon-float 5.2s ease-in-out 1.1s infinite; }
+    .hero-scatter-icon-10 { --scatter-rotate: rotate(-12deg); animation: hero-icon-float 3.6s ease-in-out 0.6s infinite; }
+    .hero-scatter-icon-11 { --scatter-rotate: rotate(15deg);  animation: hero-icon-float 4.9s ease-in-out 0.9s infinite; }
+    .hero-scatter-icon-12 { --scatter-rotate: rotate(-30deg); animation: hero-icon-float 5.8s ease-in-out 1.5s infinite; }
+    .hero-scatter-icon-13 { --scatter-rotate: rotate(8deg);   animation: hero-icon-float 4.1s ease-in-out 0.1s infinite; }
+
+    /* Respect reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+        .hero-scatter-icon { animation: none; }
+    }
+
+    /* On mobile: show 1 left + 2 right near tag/heading area */
+    @media (max-width: 768px) {
+        .hero-scatter-icon { display: none; }
+
+        /* Left: 1 icon near tag */
+        .hero-scatter-icon-5  { display: flex; left: 2%; top: 10%; width: 32px; height: 32px; }
+
+        /* Right: 2 icons near tag + heading */
+        .hero-scatter-icon-12 { display: flex; right: 2%; top: 5%;  width: 34px; height: 34px; }
+        .hero-scatter-icon-7  { display: flex; right: 4%; top: 35%; width: 28px; height: 28px; }
     }
 
     .hero-gradient .hero-content {
