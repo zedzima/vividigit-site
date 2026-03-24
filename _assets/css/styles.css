@@ -4332,7 +4332,8 @@ a.cards-link:hover {
 .case-image-placeholder span { font-size: 4rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; opacity: 0.5; }
 .case-content { display: flex; flex-direction: column; gap: var(--space-sm); padding: var(--space-md) var(--space-lg) var(--space-lg); }
 .case-content .entity-card-title,
-.case-content .entity-card-copy { margin: 0; }
+.case-content .entity-card-copy { margin: 0 0 calc(var(--type-body-gap) - var(--space-sm)); }
+.case-content .entity-card-title { margin: 0; }
 .case-meta,
 .case-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .case-meta { margin-bottom: var(--space-sm); }
@@ -4505,11 +4506,17 @@ a.cards-link:hover {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     line-height: 1;
+    color: var(--accent);
 }
 
 .columns-item-mark .icon {
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
+}
+
+.columns-variant-icon-cards .columns-item-mark .icon *,
+.columns-variant-icon-cards .columns-item-mark .icon {
+    stroke-width: 1.85;
 }
 
 .columns-variant-icon-cards .columns-item {

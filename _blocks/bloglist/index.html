@@ -48,14 +48,14 @@
     <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
 
     <!-- Styles -->
-    <link rel="preload" href="_assets/css/styles.css?v=70c27abd" as="style">
-    <link rel="stylesheet" href="_assets/css/styles.css?v=70c27abd">
+    <link rel="preload" href="_assets/css/styles.css?v=a9bc3845" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=a9bc3845">
     <script>
     window.VividigitAssetHashes = {
         cart: '0924df2e'
     };
     </script>
-    <script src="_assets/js/cards.js?v=0dd7cc99" defer></script>
+    <script src="_assets/js/cards.js?v=43f571b1" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -494,6 +494,7 @@
     function renderScopeCard(s) {
         return window.CMSCards.renderScopeCard(s, {
             serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); },
+            domainLabel: function(slug) { return label('domains', slug) || toTitleCase(slug); },
             serviceIconMap: serviceIconMap
         });
     }
@@ -536,6 +537,10 @@
         var url = (s.url || '/services/' + s.slug).replace(/^\//, '');
         var iconName = serviceIconMap[s.slug] || 'settings';
         var iconHtml = '<div class="service-card-icon" style="--icon-url: url(/_media/icons/' + iconName + '.svg)"></div>';
+        var domains = Array.isArray(s.domains) ? s.domains : ((s.facets && Array.isArray(s.facets.domains)) ? s.facets.domains : []);
+        var domainRow = domains.length ? '<div class="entity-card-exact-chips"><div class="entity-card-exact-row service-chip-row service-chip-row-domains">' + domains.map(function(domain) {
+            return '<span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domain) || toTitleCase(domain)) + '</span>';
+        }).join('') + '</div></div>' : '';
         var price = formatCurrency(s.starting_price || s.from_price || s.price);
         var metrics = [];
         if (s.scope_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
@@ -548,6 +553,7 @@
             '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             iconHtml + '</div>' +
             '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            domainRow +
             (metrics.length ? '<div class="service-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
             '<div class="service-card-footer entity-card-footer">' +
             (price ? '<span class="service-price entity-card-price">From ' + price + '</span>' : '<span></span>') +
@@ -576,6 +582,7 @@
     function renderSolutionCard(s) {
         return window.CMSCards.renderSolutionCard(s, {
             serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); },
+            domainLabel: function(slug) { return label('domains', slug) || toTitleCase(slug); },
             scopeLabel: function(slug) { return label('scopes', slug) || toTitleCase(slug); },
             industryLabel: function(slug) { return label('industries', slug) || toTitleCase(slug); },
             serviceIconMap: serviceIconMap
@@ -584,6 +591,8 @@
 
     function renderDimensionCard(s, collection) {
         var url = (s.url || '/' + collection + '/' + s.slug).replace(/^\//, '');
+        var facets = s.facets || {};
+        var domains = Array.isArray(s.domains) ? s.domains : (Array.isArray(facets.domains) ? facets.domains : []);
         var badgeHtml = '';
         if (s.icon) {
             badgeHtml = '<div class="dimension-card-badge icon" style="--icon-url: url(/_media/icons/' + s.icon + '.svg)"></div>';
@@ -592,6 +601,9 @@
         } else if (s.code) {
             badgeHtml = '<div class="dimension-card-badge code">' + esc(s.code) + '</div>';
         }
+        var domainRow = domains.length ? '<div class="entity-card-exact-chips"><div class="entity-card-exact-row dimension-chip-row dimension-chip-row-domains">' + domains.map(function(domain) {
+            return '<span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domain) || toTitleCase(domain)) + '</span>';
+        }).join('') + '</div></div>' : '';
         var metrics = [];
         if (s.service_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.service_count, 'service', 'services')) + '</span>');
         if (s.scope_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
@@ -616,7 +628,7 @@
             '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             badgeHtml + '</div>' +
             '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
-            metricsHtml + footerHtml + '</a>';
+            domainRow + metricsHtml + footerHtml + '</a>';
     }
 
     var RENDERERS = {

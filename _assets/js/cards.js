@@ -268,6 +268,7 @@
         var opts = options || {};
         var facets = s.facets || {};
         var services = toArray(s.services || facets.services || (s.relationships && s.relationships.services) || []);
+        var domains = toArray(s.domains || facets.domains || (s.relationships && s.relationships.domains) || []);
         var industryCount = normalizeCount(s.industry_count, toArray(s.industries || facets.industries).length);
         var countryCount = normalizeCount(s.country_count, toArray(s.countries || facets.countries).length);
         var languageCount = normalizeCount(s.language_count, toArray(s.languages || facets.languages).length);
@@ -275,6 +276,9 @@
         var price = normalizeCount(s.price || s.from_price, 0);
         var url = (s.url || ('/scopes/' + (s.slug || ''))).replace(/^\//, '');
         var iconName = s.icon || (opts.serviceIconMap && opts.serviceIconMap[services[0]]) || 'settings';
+        var domainTags = domains.map(function(domain) {
+            return buildLabelChip(resolveLabel(opts.domainLabel, domain), 'entity-chip-wide');
+        }).filter(Boolean);
         var serviceTags = services.map(function(service) {
             return buildLabelChip(resolveLabel(opts.serviceLabel, service), 'entity-chip-wide');
         }).filter(Boolean);
@@ -288,7 +292,10 @@
             '<div class="service-card-header"><div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             '<div class="service-card-icon" style="--icon-url: url(/_media/icons/' + iconName + '.svg)"></div></div>' +
             '<p class="entity-card-copy">' + esc(s.description || '') + '</p>' +
-            buildExactRows([buildExactRow(serviceTags, 'scope-chip-row scope-chip-row-services')]) +
+            buildExactRows([
+                buildExactRow(domainTags, 'scope-chip-row scope-chip-row-domains'),
+                buildExactRow(serviceTags, 'scope-chip-row scope-chip-row-services')
+            ]) +
             buildCountRow(metricTags, 'scope-card-meta') +
             '<div class="scope-card-footer entity-card-footer">' +
             (price > 0 ? '<span class="scope-price entity-card-price">From $' + Math.round(price) + '</span>' : '<span></span>') +
@@ -399,6 +406,7 @@
     function renderSolutionCard(s, options) {
         var opts = options || {};
         var facets = s.facets || {};
+        var domains = toArray(s.domains || facets.domains || (s.relationships && s.relationships.domains) || []);
         var firstService = s.service || toArray(facets.services)[0] || '';
         var scope = s.scope || toArray(facets.scopes)[0] || '';
         var industry = s.industry || toArray(facets.industries)[0] || '';
@@ -414,16 +422,22 @@
         if (caseCount > 0) metricTags.push(buildCountChip(pluralize(caseCount, 'case', 'cases')));
         if (countryCount > 0) metricTags.push(buildCountChip(pluralize(countryCount, 'country', 'countries')));
         if (languageCount > 0) metricTags.push(buildCountChip(pluralize(languageCount, 'language', 'languages')));
+        var domainTags = domains.map(function(domain) {
+            return buildLabelChip(resolveLabel(opts.domainLabel, domain), 'entity-chip-wide');
+        }).filter(Boolean);
 
         return '<a href="' + url + '" class="solution-card entity-card entity-card-padded">' +
             '<div class="service-card-header"><div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             '<div class="service-card-icon" style="--icon-url: url(/_media/icons/' + iconName + '.svg)"></div></div>' +
             '<p class="entity-card-copy">' + esc(s.description || '') + '</p>' +
-            buildExactRows([buildExactRow([
-                firstService ? buildLabelChip(resolveLabel(opts.serviceLabel, firstService), 'entity-chip-wide') : '',
-                scope ? buildLabelChip(resolveLabel(opts.scopeLabel, scope), 'entity-chip-wide') : '',
-                industry ? buildLabelChip(resolveLabel(opts.industryLabel, industry), 'entity-chip-compact') : ''
-            ], 'solution-chip-row solution-chip-row-primary')]) +
+            buildExactRows([
+                buildExactRow(domainTags, 'solution-chip-row solution-chip-row-domains'),
+                buildExactRow([
+                    firstService ? buildLabelChip(resolveLabel(opts.serviceLabel, firstService), 'entity-chip-wide') : '',
+                    scope ? buildLabelChip(resolveLabel(opts.scopeLabel, scope), 'entity-chip-wide') : '',
+                    industry ? buildLabelChip(resolveLabel(opts.industryLabel, industry), 'entity-chip-compact') : ''
+                ], 'solution-chip-row solution-chip-row-primary')
+            ]) +
             buildCountRow(metricTags, 'solution-card-meta') +
             '<div class="solution-card-footer entity-card-footer">' +
             (price > 0 ? '<span class="solution-price entity-card-price">From $' + Math.round(price) + '</span>' : '<span></span>') +
