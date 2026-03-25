@@ -6456,9 +6456,10 @@ a.cards-link:hover {
 
     .package-price {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-xs);
+        align-items: flex-end;
+        gap: calc(var(--space-xs) * 1.25);
+        position: relative;
+        width: 100%;
     }
 
     .package-price-main {
@@ -6478,8 +6479,12 @@ a.cards-link:hover {
 
     .package-savings {
         display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
         padding: var(--space-xs) var(--space-md);
         white-space: nowrap;
+        z-index: 2;
     }
 
     .package-features {
@@ -6557,8 +6562,14 @@ a.cards-link:hover {
 
     .pricing-simple-price {
         display: flex;
-        align-items: baseline;
+        align-items: flex-end;
         justify-content: center;
+        gap: var(--space-sm);
+    }
+
+    .pricing-simple-price-main {
+        display: flex;
+        align-items: baseline;
         gap: var(--space-sm);
     }
 
@@ -6569,9 +6580,13 @@ a.cards-link:hover {
     .pricing-simple-meta {
         display: flex;
         flex-direction: column;
+        align-items: flex-start;
         gap: 2px;
         font-size: var(--font-size-caption);
         color: var(--text-muted);
+        text-align: left;
+        transform: translateY(calc(var(--space-xs) * -1));
+        white-space: nowrap;
     }
 
     .pricing-simple-actions {
