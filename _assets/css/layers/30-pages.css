@@ -459,6 +459,7 @@
 .catalog-mini-block,
 .logos-block {
     padding: var(--space-xl) 0;
+    --logos-slot-height: 64px;
 }
 
 .cases-header,
@@ -2728,22 +2729,22 @@ a.cards-link:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: var(--logo-box-width, auto);
+    max-width: 100%;
+    height: var(--logos-slot-height);
+    min-height: var(--logos-slot-height);
 }
 
 .logos-item img {
     display: block;
-    height: 32px;
-    max-height: 32px;
-    width: auto;
+    width: var(--logo-render-width, auto);
+    height: var(--logo-render-height, auto);
     max-width: 100%;
-    opacity: 0.92;
-    transition: var(--transition);
-}
-
-.logos-item-alconost img {
-    height: 22px;
-    max-height: 22px;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
     opacity: 1;
+    transition: var(--transition);
 }
 
 .logos-item:hover img {
@@ -2754,6 +2755,8 @@ a.cards-link:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .logos-text {
@@ -2808,16 +2811,6 @@ a.cards-link:hover {
 @media (max-width: 768px) {
     .logos-static .logos-grid {
         gap: var(--space-lg) var(--space-xl);
-    }
-
-    .logos-item img {
-        height: 24px;
-        max-height: 24px;
-    }
-
-    .logos-item-alconost img {
-        height: 17px;
-        max-height: 17px;
     }
 
     .logos-text {
@@ -3698,7 +3691,7 @@ a.cards-link:hover {
     margin-bottom: var(--type-heading-gap);
 }
 
-.process-panel p {
+.process-panel .process-description {
     color: var(--text-primary);
     font-size: var(--type-body-size);
     line-height: var(--type-body-line);
