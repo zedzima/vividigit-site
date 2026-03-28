@@ -3779,8 +3779,15 @@ a.cards-link:hover {
 
     .carousel-track {
         display: flex;
+        width: max-content;
+        min-width: 100%;
         gap: var(--space-lg);
-        padding: 0 var(--space-xl) var(--space-md) 0;
+        padding-bottom: var(--space-md);
+    }
+
+    .carousel-track::after {
+        content: "";
+        flex: 0 0 var(--space-xl);
     }
 
     .carousel-item {
