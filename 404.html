@@ -43,9 +43,12 @@
 
     
     
+    
+    
 
     <!-- Fonts -->
-    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
+    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+    
 
     <!-- Styles -->
     <link rel="preload" href="_assets/css/styles.css?v=46b47cde" as="style">
@@ -55,7 +58,7 @@
         cart: '0924df2e'
     };
     </script>
-    <script src="_assets/js/cards.js?v=43f571b1" defer></script>
+    <script src="_assets/js/cards.js?v=7efff30d" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -65,18 +68,45 @@
     (function(w, d, l, i) {
         var loaded = false;
         var idleHandle = null;
+        var timeoutHandle = null;
+        var loadListenerAttached = false;
         var triggers = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
 
         function cleanup() {
             triggers.forEach(function(type) {
                 w.removeEventListener(type, loadGtm, { passive: true });
             });
+            if (loadListenerAttached) {
+                w.removeEventListener('load', scheduleDeferredLoad);
+                loadListenerAttached = false;
+            }
+            d.removeEventListener('visibilitychange', handleVisibilityChange);
+            w.removeEventListener('pagehide', loadGtm);
             if (idleHandle) {
                 if ('cancelIdleCallback' in w) {
                     w.cancelIdleCallback(idleHandle);
                 } else {
                     w.clearTimeout(idleHandle);
                 }
+            }
+            if (timeoutHandle) {
+                w.clearTimeout(timeoutHandle);
+            }
+        }
+
+        function scheduleDeferredLoad() {
+            if (loaded) return;
+
+            if ('requestIdleCallback' in w) {
+                idleHandle = w.requestIdleCallback(loadGtm, { timeout: 2500 });
+            } else {
+                timeoutHandle = w.setTimeout(loadGtm, 2500);
+            }
+        }
+
+        function handleVisibilityChange() {
+            if (d.visibilityState === 'hidden') {
+                loadGtm();
             }
         }
 
@@ -94,6 +124,8 @@
             script = d.createElement('script');
             layerQuery = l !== 'dataLayer' ? '&l=' + l : '';
             script.async = true;
+            script.fetchPriority = 'low';
+            script.setAttribute('fetchpriority', 'low');
             script.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + layerQuery;
             firstScript.parentNode.insertBefore(script, firstScript);
         }
@@ -102,11 +134,14 @@
             w.addEventListener(type, loadGtm, { once: true, passive: true });
         });
 
-        if ('requestIdleCallback' in w) {
-            idleHandle = w.requestIdleCallback(loadGtm, { timeout: 3500 });
+        if (d.readyState === 'complete') {
+            scheduleDeferredLoad();
         } else {
-            idleHandle = w.setTimeout(loadGtm, 3500);
+            loadListenerAttached = true;
+            w.addEventListener('load', scheduleDeferredLoad, { once: true });
         }
+        d.addEventListener('visibilitychange', handleVisibilityChange);
+        w.addEventListener('pagehide', loadGtm, { once: true });
     })(window, document, 'dataLayer', 'GTM-WXWHHQXN');
     </script>
     

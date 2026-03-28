@@ -41,9 +41,36 @@
 
     
     
+    
+    
+        
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
 
     <!-- Fonts -->
-    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
+    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <link rel="preload" href="_media/illustrations/layers.svg" as="image">
+    
 
     <!-- Styles -->
     <link rel="preload" href="_assets/css/styles.css?v=46b47cde" as="style">
@@ -53,7 +80,7 @@
         cart: '0924df2e'
     };
     </script>
-    <script src="_assets/js/cards.js?v=43f571b1" defer></script>
+    <script src="_assets/js/cards.js?v=7efff30d" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -63,18 +90,45 @@
     (function(w, d, l, i) {
         var loaded = false;
         var idleHandle = null;
+        var timeoutHandle = null;
+        var loadListenerAttached = false;
         var triggers = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
 
         function cleanup() {
             triggers.forEach(function(type) {
                 w.removeEventListener(type, loadGtm, { passive: true });
             });
+            if (loadListenerAttached) {
+                w.removeEventListener('load', scheduleDeferredLoad);
+                loadListenerAttached = false;
+            }
+            d.removeEventListener('visibilitychange', handleVisibilityChange);
+            w.removeEventListener('pagehide', loadGtm);
             if (idleHandle) {
                 if ('cancelIdleCallback' in w) {
                     w.cancelIdleCallback(idleHandle);
                 } else {
                     w.clearTimeout(idleHandle);
                 }
+            }
+            if (timeoutHandle) {
+                w.clearTimeout(timeoutHandle);
+            }
+        }
+
+        function scheduleDeferredLoad() {
+            if (loaded) return;
+
+            if ('requestIdleCallback' in w) {
+                idleHandle = w.requestIdleCallback(loadGtm, { timeout: 2500 });
+            } else {
+                timeoutHandle = w.setTimeout(loadGtm, 2500);
+            }
+        }
+
+        function handleVisibilityChange() {
+            if (d.visibilityState === 'hidden') {
+                loadGtm();
             }
         }
 
@@ -92,6 +146,8 @@
             script = d.createElement('script');
             layerQuery = l !== 'dataLayer' ? '&l=' + l : '';
             script.async = true;
+            script.fetchPriority = 'low';
+            script.setAttribute('fetchpriority', 'low');
             script.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + layerQuery;
             firstScript.parentNode.insertBefore(script, firstScript);
         }
@@ -100,11 +156,14 @@
             w.addEventListener(type, loadGtm, { once: true, passive: true });
         });
 
-        if ('requestIdleCallback' in w) {
-            idleHandle = w.requestIdleCallback(loadGtm, { timeout: 3500 });
+        if (d.readyState === 'complete') {
+            scheduleDeferredLoad();
         } else {
-            idleHandle = w.setTimeout(loadGtm, 3500);
+            loadListenerAttached = true;
+            w.addEventListener('load', scheduleDeferredLoad, { once: true });
         }
+        d.addEventListener('visibilitychange', handleVisibilityChange);
+        w.addEventListener('pagehide', loadGtm, { once: true });
     })(window, document, 'dataLayer', 'GTM-WXWHHQXN');
     </script>
     
@@ -532,6 +591,12 @@
 
     
     <div class="hero-visual">
+        
+        
+        
+            
+            
+        
         <img
             src="_media/illustrations/layers.svg"
             alt="Paid Social illustration"
@@ -539,8 +604,8 @@
             fetchpriority="high"
             decoding="async"
             sizes="(max-width: 900px) 100vw, 50vw"
-            
-            >
+            width="400"
+            height="400">
     </div>
     
 </section>
@@ -2389,12 +2454,194 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
             
-                <div class="js-specialist-card" data-specialist='{&#34;article_count&#34;: 0, &#34;avatar&#34;: &#34;_media/images/team/Grakovich.jpg&#34;, &#34;case_count&#34;: 0, &#34;collection&#34;: &#34;team&#34;, &#34;config&#34;: {&#34;collection&#34;: &#34;team&#34;, &#34;edited&#34;: &#34;2026-03-19&#34;, &#34;featured&#34;: false, &#34;lang&#34;: &#34;en&#34;, &#34;menu&#34;: &#34;Elena Grakovich&#34;, &#34;slug&#34;: &#34;elena-grakovich&#34;, &#34;type&#34;: &#34;specialist&#34;, &#34;url&#34;: &#34;/team/elena-grakovich&#34;}, &#34;description&#34;: &#34;6+ years leading marketing teams and driving growth across crypto, SaaS, and B2B. Multi-channel strategy, lead generation, and cross-functional team coordination.&#34;, &#34;experience_value&#34;: &#34;6+&#34;, &#34;featured&#34;: false, &#34;menu&#34;: &#34;Elena Grakovich&#34;, &#34;projects&#34;: null, &#34;relationships&#34;: {&#34;cases&#34;: [], &#34;countries&#34;: [&#34;poland&#34;, &#34;usa&#34;, &#34;uk&#34;, &#34;germany&#34;], &#34;industries&#34;: [&#34;saas&#34;, &#34;fintech&#34;, &#34;ecommerce&#34;], &#34;languages&#34;: [&#34;english&#34;, &#34;russian&#34;, &#34;polish&#34;, &#34;french&#34;], &#34;positions&#34;: [], &#34;scopes&#34;: [], &#34;services&#34;: [&#34;ppc&#34;, &#34;content&#34;, &#34;analytics&#34;, &#34;cro&#34;, &#34;email&#34;], &#34;solutions&#34;: [], &#34;specialists&#34;: []}, &#34;role&#34;: &#34;Marketing Team Lead \u0026 Growth Strategist&#34;, &#34;scope_count&#34;: 0, &#34;service_count&#34;: 6, &#34;sidebar&#34;: {&#34;button_label&#34;: &#34;Book Consultation&#34;, &#34;button_url&#34;: &#34;contact?specialist=elena-grakovich&#34;, &#34;text&#34;: &#34;Let\u0027s discuss your marketing strategy, team structure, or growth objectives.&#34;, &#34;title&#34;: &#34;Work with Elena&#34;, &#34;type&#34;: &#34;cta-contact&#34;}, &#34;slug&#34;: &#34;elena-grakovich&#34;, &#34;title&#34;: &#34;Elena Grakovich&#34;, &#34;type&#34;: &#34;specialist&#34;, &#34;url&#34;: &#34;/team/elena-grakovich&#34;}'></div>
+                
+
+
+
+
+
+
+
+
+
+
+    
+
+
+<a href="team/elena-grakovich" class="specialist-card entity-card entity-card-padded">
+    <div class="specialist-card-top">
+        <div class="specialist-info">
+            <div class="entity-card-title">Elena Grakovich</div>
+            <div class="specialist-role type-meta">Marketing Team Lead &amp; Growth Strategist</div>
+        </div>
+        
+        <div class="specialist-avatar">
+            <img src="_media/images/team/cards/Grakovich.jpg"
+                 alt="Elena Grakovich"
+                 loading="lazy"
+                 fetchpriority="low"
+                 decoding="async"
+                 width="56"
+                 height="56"
+                 onerror="this.onerror=null;this.src='_media/images/team/Grakovich.jpg'">
+        </div>
+        
+    </div>
+    <p class="specialist-summary entity-card-copy">6+ years leading marketing teams and driving growth across crypto, SaaS, and B2B. Multi-channel strategy, lead generation, and cross-functional team coordination.</p>
+    
+    <div class="entity-card-exact-chips">
+        
+        <div class="entity-card-exact-row specialist-tag-row specialist-tag-row-services">
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">PPC</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">Content</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">Analytics</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">CRO</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">Email</span>
+            
+        </div>
+        
+        
+        <div class="entity-card-exact-row specialist-tag-row specialist-tag-row-countries">
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="Poland">🇵🇱</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="USA">🇺🇸</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="UK">🇬🇧</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="Germany">🇩🇪</span>
+            
+        </div>
+        
+        
+        <div class="entity-card-exact-row specialist-tag-row specialist-tag-row-languages">
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="English">EN</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="Russian">RU</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="Polish">PO</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="French">FR</span>
+            
+        </div>
+        
+    </div>
+    
+    
+    <div class="specialist-tag-row specialist-tag-row-metrics entity-card-meta-row">
+        <span class="entity-card-stat">3 industries</span>
+        
+        
+    </div>
+    
+    <div class="specialist-card-footer entity-card-footer">
+        
+        <div class="specialist-experience case-result">
+            <span class="result-value">6+</span>
+            <span class="result-label">Years experience</span>
+        </div>
+        
+        <span class="specialist-cta entity-card-cta">View Profile →</span>
+    </div>
+</a>
             
             
             
             
-                <div class="js-specialist-card" data-specialist='{&#34;article_count&#34;: 0, &#34;avatar&#34;: &#34;_media/images/team/vitali-bakun.jpg&#34;, &#34;case_count&#34;: 0, &#34;collection&#34;: &#34;team&#34;, &#34;config&#34;: {&#34;collection&#34;: &#34;team&#34;, &#34;edited&#34;: &#34;2026-03-19&#34;, &#34;featured&#34;: false, &#34;lang&#34;: &#34;en&#34;, &#34;menu&#34;: &#34;Vitali Bakun&#34;, &#34;slug&#34;: &#34;vitali-bakun&#34;, &#34;type&#34;: &#34;specialist&#34;, &#34;url&#34;: &#34;/team/vitali-bakun&#34;}, &#34;description&#34;: &#34;10+ years managing paid advertising campaigns across Google Ads, Meta, LinkedIn, Bing, and more. Cross-platform PPC strategy, analytics, and mobile app marketing.&#34;, &#34;experience_value&#34;: &#34;10+&#34;, &#34;featured&#34;: false, &#34;menu&#34;: &#34;Vitali Bakun&#34;, &#34;projects&#34;: null, &#34;relationships&#34;: {&#34;cases&#34;: [], &#34;countries&#34;: [&#34;germany&#34;, &#34;usa&#34;, &#34;portugal&#34;, &#34;poland&#34;], &#34;industries&#34;: [&#34;saas&#34;, &#34;ecommerce&#34;], &#34;languages&#34;: [&#34;english&#34;, &#34;russian&#34;], &#34;positions&#34;: [], &#34;scopes&#34;: [], &#34;services&#34;: [&#34;ppc&#34;, &#34;analytics&#34;, &#34;marketplace-management&#34;], &#34;solutions&#34;: [], &#34;specialists&#34;: []}, &#34;role&#34;: &#34;PPC \u0026 Paid Media Expert&#34;, &#34;scope_count&#34;: 0, &#34;service_count&#34;: 4, &#34;sidebar&#34;: {&#34;button_label&#34;: &#34;Book Consultation&#34;, &#34;button_url&#34;: &#34;contact?specialist=vitali-bakun&#34;, &#34;text&#34;: &#34;Let\u0027s discuss your paid media strategy and campaign performance.&#34;, &#34;title&#34;: &#34;Work with Vitali&#34;, &#34;type&#34;: &#34;cta-contact&#34;}, &#34;slug&#34;: &#34;vitali-bakun&#34;, &#34;title&#34;: &#34;Vitali Bakun&#34;, &#34;type&#34;: &#34;specialist&#34;, &#34;url&#34;: &#34;/team/vitali-bakun&#34;}'></div>
+                
+
+
+
+
+
+
+
+
+
+
+    
+
+
+<a href="team/vitali-bakun" class="specialist-card entity-card entity-card-padded">
+    <div class="specialist-card-top">
+        <div class="specialist-info">
+            <div class="entity-card-title">Vitali Bakun</div>
+            <div class="specialist-role type-meta">PPC &amp; Paid Media Expert</div>
+        </div>
+        
+        <div class="specialist-avatar">
+            <img src="_media/images/team/cards/vitali-bakun.jpg"
+                 alt="Vitali Bakun"
+                 loading="lazy"
+                 fetchpriority="low"
+                 decoding="async"
+                 width="56"
+                 height="56"
+                 onerror="this.onerror=null;this.src='_media/images/team/vitali-bakun.jpg'">
+        </div>
+        
+    </div>
+    <p class="specialist-summary entity-card-copy">10+ years managing paid advertising campaigns across Google Ads, Meta, LinkedIn, Bing, and more. Cross-platform PPC strategy, analytics, and mobile app marketing.</p>
+    
+    <div class="entity-card-exact-chips">
+        
+        <div class="entity-card-exact-row specialist-tag-row specialist-tag-row-services">
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">PPC</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">Analytics</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">Marketplace Management</span>
+            
+        </div>
+        
+        
+        <div class="entity-card-exact-row specialist-tag-row specialist-tag-row-countries">
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="Germany">🇩🇪</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="USA">🇺🇸</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="Portugal">🇵🇹</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="Poland">🇵🇱</span>
+            
+        </div>
+        
+        
+        <div class="entity-card-exact-row specialist-tag-row specialist-tag-row-languages">
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="English">EN</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="Russian">RU</span>
+            
+        </div>
+        
+    </div>
+    
+    
+    <div class="specialist-tag-row specialist-tag-row-metrics entity-card-meta-row">
+        <span class="entity-card-stat">2 industries</span>
+        
+        
+    </div>
+    
+    <div class="specialist-card-footer entity-card-footer">
+        
+        <div class="specialist-experience case-result">
+            <span class="result-value">10+</span>
+            <span class="result-label">Years experience</span>
+        </div>
+        
+        <span class="specialist-cta entity-card-cta">View Profile →</span>
+    </div>
+</a>
             
             
         </div>
@@ -2984,66 +3231,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 (function() {
     var root = document.currentScript.previousElementSibling;
-    var langCodeMap = {
-        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
-        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
-    };
-    var countryFlagMap = {
-        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
-        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
-    };
-    var serviceLabelMap = {
-        seo: 'SEO', aeo: 'AEO', aso: 'ASO', content: 'Content', ppc: 'PPC',
-        analytics: 'Analytics', 'social-media': 'Social Media', 'paid-social': 'Paid Social',
-        email: 'Email', cro: 'CRO', video: 'Video', pr: 'PR',
-        orm: 'Online Reputation Management', automation: 'Automation',
-        'marketplace-management': 'Marketplace Management', affiliate: 'Affiliate',
-        'app-marketing': 'App Marketing', 'web-development': 'Web Development'
-    };
-    var countryLabelMap = {
-        germany: 'Germany', austria: 'Austria', usa: 'USA',
-        uk: 'UK', france: 'France', spain: 'Spain'
-    };
-    var cardOptions = {
-        langCodeMap: langCodeMap,
-        countryFlagMap: countryFlagMap,
-        countryLabel: countryLabelMap,
-        serviceLabel: serviceLabelMap
-    };
-
-    function hydrateCards() {
-        if (!window.CMSCards) return false;
-
-        root.querySelectorAll('.js-specialist-card').forEach(function(node) {
-            var raw = node.getAttribute('data-specialist');
-            if (!raw) return;
-            try {
-                var specialist = JSON.parse(raw);
-                node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
-            } catch (e) {
-                /* Keep placeholder unchanged if parsing fails */
-            }
-        });
-
-        root.querySelectorAll('.js-position-card').forEach(function(node) {
-            var raw = node.getAttribute('data-position');
-            if (!raw) return;
-            try {
-                var position = JSON.parse(raw);
-                node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
-            } catch (e) { /* Keep placeholder */ }
-        });
-
-        if (window.CMSCards && typeof window.CMSCards.fitExactChipRows === 'function') {
-            window.CMSCards.fitExactChipRows(root);
-        }
-
-        return true;
-    }
-
-    if (!hydrateCards()) {
-        document.addEventListener('cmscards:ready', hydrateCards, { once: true });
-    }
 
     root.querySelectorAll('.related-section').forEach(function(section) {
         var grid = section.querySelector('.related-grid');
@@ -3104,85 +3291,85 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3770)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3770" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4119)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-4119" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6748)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6748" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1362)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1362" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6032)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6032" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2402)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2402" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8747)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8747" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1189)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1189" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2784)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2784" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2621)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2621" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8730)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8730" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7769)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7769" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6239)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6239" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5104)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5104" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5518)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5518" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6931)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6931" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1951)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1951" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4871)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-4871" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6097)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6097" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7816)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7816" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5072)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5072" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8556)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8556" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9136)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-9136" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4587)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-4587" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3564)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3564" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3424)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3424" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6734)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6734" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3165)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3165" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>

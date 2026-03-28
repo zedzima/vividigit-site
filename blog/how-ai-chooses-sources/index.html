@@ -45,9 +45,18 @@
 
     
     
+    
+    
+        
+    
+        
+    
+        
+    
 
     <!-- Fonts -->
-    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
+    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+    
 
     <!-- Styles -->
     <link rel="preload" href="_assets/css/styles.css?v=46b47cde" as="style">
@@ -57,7 +66,7 @@
         cart: '0924df2e'
     };
     </script>
-    <script src="_assets/js/cards.js?v=43f571b1" defer></script>
+    <script src="_assets/js/cards.js?v=7efff30d" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -67,18 +76,45 @@
     (function(w, d, l, i) {
         var loaded = false;
         var idleHandle = null;
+        var timeoutHandle = null;
+        var loadListenerAttached = false;
         var triggers = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
 
         function cleanup() {
             triggers.forEach(function(type) {
                 w.removeEventListener(type, loadGtm, { passive: true });
             });
+            if (loadListenerAttached) {
+                w.removeEventListener('load', scheduleDeferredLoad);
+                loadListenerAttached = false;
+            }
+            d.removeEventListener('visibilitychange', handleVisibilityChange);
+            w.removeEventListener('pagehide', loadGtm);
             if (idleHandle) {
                 if ('cancelIdleCallback' in w) {
                     w.cancelIdleCallback(idleHandle);
                 } else {
                     w.clearTimeout(idleHandle);
                 }
+            }
+            if (timeoutHandle) {
+                w.clearTimeout(timeoutHandle);
+            }
+        }
+
+        function scheduleDeferredLoad() {
+            if (loaded) return;
+
+            if ('requestIdleCallback' in w) {
+                idleHandle = w.requestIdleCallback(loadGtm, { timeout: 2500 });
+            } else {
+                timeoutHandle = w.setTimeout(loadGtm, 2500);
+            }
+        }
+
+        function handleVisibilityChange() {
+            if (d.visibilityState === 'hidden') {
+                loadGtm();
             }
         }
 
@@ -96,6 +132,8 @@
             script = d.createElement('script');
             layerQuery = l !== 'dataLayer' ? '&l=' + l : '';
             script.async = true;
+            script.fetchPriority = 'low';
+            script.setAttribute('fetchpriority', 'low');
             script.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + layerQuery;
             firstScript.parentNode.insertBefore(script, firstScript);
         }
@@ -104,11 +142,14 @@
             w.addEventListener(type, loadGtm, { once: true, passive: true });
         });
 
-        if ('requestIdleCallback' in w) {
-            idleHandle = w.requestIdleCallback(loadGtm, { timeout: 3500 });
+        if (d.readyState === 'complete') {
+            scheduleDeferredLoad();
         } else {
-            idleHandle = w.setTimeout(loadGtm, 3500);
+            loadListenerAttached = true;
+            w.addEventListener('load', scheduleDeferredLoad, { once: true });
         }
+        d.addEventListener('visibilitychange', handleVisibilityChange);
+        w.addEventListener('pagehide', loadGtm, { once: true });
     })(window, document, 'dataLayer', 'GTM-WXWHHQXN');
     </script>
     
@@ -675,7 +716,106 @@ Maintenance      → Is it current?
             
             
             
-                <div class="js-specialist-card" data-specialist='{&#34;article_count&#34;: 1, &#34;avatar&#34;: &#34;_media/images/team/Gerko.jpg&#34;, &#34;case_count&#34;: 1, &#34;collection&#34;: &#34;team&#34;, &#34;config&#34;: {&#34;collection&#34;: &#34;team&#34;, &#34;edited&#34;: &#34;2026-03-19&#34;, &#34;featured&#34;: true, &#34;lang&#34;: &#34;en&#34;, &#34;menu&#34;: &#34;Dima Gerko&#34;, &#34;slug&#34;: &#34;dima-gerko&#34;, &#34;type&#34;: &#34;specialist&#34;, &#34;url&#34;: &#34;/team/dima-gerko&#34;}, &#34;description&#34;: &#34;15+ years in digital marketing, SEO, and localization. Designs scalable multilingual growth systems for international brands. Certified Google Partner.&#34;, &#34;experience_value&#34;: &#34;15+&#34;, &#34;featured&#34;: true, &#34;menu&#34;: &#34;Dima Gerko&#34;, &#34;projects&#34;: null, &#34;relationships&#34;: {&#34;cases&#34;: [&#34;ecommerce-migration-2025&#34;], &#34;countries&#34;: [&#34;germany&#34;, &#34;austria&#34;, &#34;usa&#34;, &#34;uk&#34;, &#34;france&#34;], &#34;industries&#34;: [&#34;ecommerce&#34;, &#34;saas&#34;, &#34;fintech&#34;, &#34;healthcare&#34;], &#34;languages&#34;: [&#34;english&#34;, &#34;german&#34;, &#34;russian&#34;, &#34;spanish&#34;, &#34;portuges&#34;], &#34;positions&#34;: [], &#34;scopes&#34;: [&#34;technical-seo&#34;, &#34;ai-optimisation&#34;], &#34;services&#34;: [&#34;seo&#34;, &#34;aeo&#34;, &#34;analytics&#34;, &#34;automation&#34;, &#34;content&#34;], &#34;solutions&#34;: [&#34;ai-visibility&#34;, &#34;seo-ecommerce&#34;], &#34;specialists&#34;: []}, &#34;role&#34;: &#34;Global Growth Architect&#34;, &#34;scope_count&#34;: 3, &#34;service_count&#34;: 5, &#34;sidebar&#34;: {&#34;button_label&#34;: &#34;Book Consultation&#34;, &#34;button_url&#34;: &#34;contact?specialist=dima-gerko&#34;, &#34;text&#34;: &#34;Let\u0027s discuss your multilingual growth strategy, AI-SEO architecture, or global scaling project.&#34;, &#34;title&#34;: &#34;Work with Dima&#34;, &#34;type&#34;: &#34;cta-contact&#34;}, &#34;slug&#34;: &#34;dima-gerko&#34;, &#34;title&#34;: &#34;Dima Gerko&#34;, &#34;type&#34;: &#34;specialist&#34;, &#34;url&#34;: &#34;/team/dima-gerko&#34;}'></div>
+                
+
+
+
+
+
+
+
+
+
+
+    
+
+
+<a href="team/dima-gerko" class="specialist-card entity-card entity-card-padded">
+    <div class="specialist-card-top">
+        <div class="specialist-info">
+            <div class="entity-card-title">Dima Gerko</div>
+            <div class="specialist-role type-meta">Global Growth Architect</div>
+        </div>
+        
+        <div class="specialist-avatar">
+            <img src="_media/images/team/cards/Gerko.jpg"
+                 alt="Dima Gerko"
+                 loading="lazy"
+                 fetchpriority="low"
+                 decoding="async"
+                 width="56"
+                 height="56"
+                 onerror="this.onerror=null;this.src='_media/images/team/Gerko.jpg'">
+        </div>
+        
+    </div>
+    <p class="specialist-summary entity-card-copy">15+ years in digital marketing, SEO, and localization. Designs scalable multilingual growth systems for international brands. Certified Google Partner.</p>
+    
+    <div class="entity-card-exact-chips">
+        
+        <div class="entity-card-exact-row specialist-tag-row specialist-tag-row-services">
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">SEO</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">AEO</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">Analytics</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">Automation</span>
+            
+            <span class="entity-chip entity-chip-label entity-chip-wide">Content</span>
+            
+        </div>
+        
+        
+        <div class="entity-card-exact-row specialist-tag-row specialist-tag-row-countries">
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="Germany">🇩🇪</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="Austria">🇦🇹</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="USA">🇺🇸</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="UK">🇬🇧</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="France">🇫🇷</span>
+            
+        </div>
+        
+        
+        <div class="entity-card-exact-row specialist-tag-row specialist-tag-row-languages">
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="English">EN</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="German">DE</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="Russian">RU</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="Spanish">ES</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="Portuguese">PT</span>
+            
+        </div>
+        
+    </div>
+    
+    
+    <div class="specialist-tag-row specialist-tag-row-metrics entity-card-meta-row">
+        <span class="entity-card-stat">4 industries</span>
+        <span class="entity-card-stat">1 case</span>
+        <span class="entity-card-stat">1 article</span>
+    </div>
+    
+    <div class="specialist-card-footer entity-card-footer">
+        
+        <div class="specialist-experience case-result">
+            <span class="result-value">15+</span>
+            <span class="result-label">Years experience</span>
+        </div>
+        
+        <span class="specialist-cta entity-card-cta">View Profile →</span>
+    </div>
+</a>
             
             
         </div>
@@ -1288,66 +1428,6 @@ Maintenance      → Is it current?
 <script>
 (function() {
     var root = document.currentScript.previousElementSibling;
-    var langCodeMap = {
-        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
-        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
-    };
-    var countryFlagMap = {
-        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
-        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
-    };
-    var serviceLabelMap = {
-        seo: 'SEO', aeo: 'AEO', aso: 'ASO', content: 'Content', ppc: 'PPC',
-        analytics: 'Analytics', 'social-media': 'Social Media', 'paid-social': 'Paid Social',
-        email: 'Email', cro: 'CRO', video: 'Video', pr: 'PR',
-        orm: 'Online Reputation Management', automation: 'Automation',
-        'marketplace-management': 'Marketplace Management', affiliate: 'Affiliate',
-        'app-marketing': 'App Marketing', 'web-development': 'Web Development'
-    };
-    var countryLabelMap = {
-        germany: 'Germany', austria: 'Austria', usa: 'USA',
-        uk: 'UK', france: 'France', spain: 'Spain'
-    };
-    var cardOptions = {
-        langCodeMap: langCodeMap,
-        countryFlagMap: countryFlagMap,
-        countryLabel: countryLabelMap,
-        serviceLabel: serviceLabelMap
-    };
-
-    function hydrateCards() {
-        if (!window.CMSCards) return false;
-
-        root.querySelectorAll('.js-specialist-card').forEach(function(node) {
-            var raw = node.getAttribute('data-specialist');
-            if (!raw) return;
-            try {
-                var specialist = JSON.parse(raw);
-                node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
-            } catch (e) {
-                /* Keep placeholder unchanged if parsing fails */
-            }
-        });
-
-        root.querySelectorAll('.js-position-card').forEach(function(node) {
-            var raw = node.getAttribute('data-position');
-            if (!raw) return;
-            try {
-                var position = JSON.parse(raw);
-                node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
-            } catch (e) { /* Keep placeholder */ }
-        });
-
-        if (window.CMSCards && typeof window.CMSCards.fitExactChipRows === 'function') {
-            window.CMSCards.fitExactChipRows(root);
-        }
-
-        return true;
-    }
-
-    if (!hydrateCards()) {
-        document.addEventListener('cmscards:ready', hydrateCards, { once: true });
-    }
 
     root.querySelectorAll('.related-section').forEach(function(section) {
         var grid = section.querySelector('.related-grid');

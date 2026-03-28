@@ -43,9 +43,14 @@
 
     
     
+    
+    
+        
+    
 
     <!-- Fonts -->
-    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2">
+    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+    
 
     <!-- Styles -->
     <link rel="preload" href="_assets/css/styles.css?v=46b47cde" as="style">
@@ -55,7 +60,7 @@
         cart: '0924df2e'
     };
     </script>
-    <script src="_assets/js/cards.js?v=43f571b1" defer></script>
+    <script src="_assets/js/cards.js?v=7efff30d" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -580,66 +585,6 @@
 <script>
 (function() {
     var root = document.currentScript.previousElementSibling;
-    var langCodeMap = {
-        english: 'EN', german: 'DE', french: 'FR', spanish: 'ES',
-        russian: 'RU', chinese: 'ZH', japanese: 'JA', italian: 'IT', portuguese: 'PT'
-    };
-    var countryFlagMap = {
-        usa: '🇺🇸', uk: '🇬🇧', germany: '🇩🇪', austria: '🇦🇹', france: '🇫🇷',
-        spain: '🇪🇸', italy: '🇮🇹', canada: '🇨🇦', china: '🇨🇳', japan: '🇯🇵', russia: '🇷🇺'
-    };
-    var serviceLabelMap = {
-        seo: 'SEO', aeo: 'AEO', aso: 'ASO', content: 'Content', ppc: 'PPC',
-        analytics: 'Analytics', 'social-media': 'Social Media', 'paid-social': 'Paid Social',
-        email: 'Email', cro: 'CRO', video: 'Video', pr: 'PR',
-        orm: 'Online Reputation Management', automation: 'Automation',
-        'marketplace-management': 'Marketplace Management', affiliate: 'Affiliate',
-        'app-marketing': 'App Marketing', 'web-development': 'Web Development'
-    };
-    var countryLabelMap = {
-        germany: 'Germany', austria: 'Austria', usa: 'USA',
-        uk: 'UK', france: 'France', spain: 'Spain'
-    };
-    var cardOptions = {
-        langCodeMap: langCodeMap,
-        countryFlagMap: countryFlagMap,
-        countryLabel: countryLabelMap,
-        serviceLabel: serviceLabelMap
-    };
-
-    function hydrateCards() {
-        if (!window.CMSCards) return false;
-
-        root.querySelectorAll('.js-specialist-card').forEach(function(node) {
-            var raw = node.getAttribute('data-specialist');
-            if (!raw) return;
-            try {
-                var specialist = JSON.parse(raw);
-                node.outerHTML = window.CMSCards.renderSpecialistCard(specialist, cardOptions);
-            } catch (e) {
-                /* Keep placeholder unchanged if parsing fails */
-            }
-        });
-
-        root.querySelectorAll('.js-position-card').forEach(function(node) {
-            var raw = node.getAttribute('data-position');
-            if (!raw) return;
-            try {
-                var position = JSON.parse(raw);
-                node.outerHTML = window.CMSCards.renderPositionCard(position, cardOptions);
-            } catch (e) { /* Keep placeholder */ }
-        });
-
-        if (window.CMSCards && typeof window.CMSCards.fitExactChipRows === 'function') {
-            window.CMSCards.fitExactChipRows(root);
-        }
-
-        return true;
-    }
-
-    if (!hydrateCards()) {
-        document.addEventListener('cmscards:ready', hydrateCards, { once: true });
-    }
 
     root.querySelectorAll('.related-section').forEach(function(section) {
         var grid = section.querySelector('.related-grid');

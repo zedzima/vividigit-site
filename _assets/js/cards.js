@@ -127,6 +127,14 @@
         return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     }
 
+    function getCardAvatarSrc(path) {
+        var value = String(path || '');
+        if (!value || value.indexOf('/team/') === -1) return value;
+        return value
+            .replace('/team/', '/team/cards/')
+            .replace(/\.[a-z0-9]+$/i, '.jpg');
+    }
+
     function buildExactRow(chips, extraClass) {
         var items = (chips || []).filter(Boolean);
         if (!items.length) return '';
@@ -147,8 +155,19 @@
 
     function fitExactChipRows(root) {
         var scope = root && root.querySelectorAll ? root : document;
-        scope.querySelectorAll('.entity-card-exact-row').forEach(function(row) {
+        var rows = scope.querySelectorAll('.entity-card-exact-row');
+
+        if (!rows.length) return;
+
+        rows.forEach(function(row) {
             var more = row.querySelector('.entity-chip-more');
+            var availableWidth;
+            var chipWidths;
+            var hiddenCount = 0;
+            var visibleWidth;
+            var moreChip;
+            var rowStyle;
+            var gap;
             if (more) more.remove();
 
             var chips = Array.from(row.children).filter(function(node) {
@@ -156,22 +175,41 @@
             });
             chips.forEach(function(chip) { chip.hidden = false; });
 
-            if (chips.length <= 1 || row.scrollWidth <= row.clientWidth + 1) return;
+            if (chips.length <= 1) return;
 
-            var hiddenCount = 0;
-            var moreChip = document.createElement('span');
+            availableWidth = row.clientWidth;
+            if (!availableWidth) return;
+
+            rowStyle = window.getComputedStyle(row);
+            gap = parseFloat(rowStyle.columnGap || rowStyle.gap || '0') || 0;
+            chipWidths = chips.map(function(chip) {
+                return chip.getBoundingClientRect().width;
+            });
+            visibleWidth = chipWidths.reduce(function(sum, width) {
+                return sum + width;
+            }, 0) + (Math.max(0, chips.length - 1) * gap);
+
+            if (visibleWidth <= availableWidth + 1) return;
+
+            moreChip = document.createElement('span');
             moreChip.className = 'entity-chip entity-chip-more';
             row.appendChild(moreChip);
 
             for (var i = chips.length - 1; i > 0; i--) {
                 hiddenCount += 1;
-                chips[i].hidden = true;
+                visibleWidth -= chipWidths[i];
+                visibleWidth -= gap;
                 moreChip.textContent = '+' + hiddenCount + ' more';
-                if (row.scrollWidth <= row.clientWidth + 1) break;
+                if (visibleWidth + gap + moreChip.getBoundingClientRect().width <= availableWidth + 1) break;
             }
 
             if (hiddenCount === 0) {
                 moreChip.remove();
+                return;
+            }
+
+            for (var j = chips.length - hiddenCount; j < chips.length; j++) {
+                chips[j].hidden = true;
             }
         });
     }
@@ -214,8 +252,9 @@
         var opts = options || {};
         var d = normalizeSpecialistCardData(s || {});
         var initials = getInitials(d.title || d.slug);
+        var avatarSrc = getCardAvatarSrc(d.avatar);
         var avatarHtml = d.avatar
-            ? '<div class="specialist-avatar"><img src="' + esc(d.avatar) + '" alt="' + esc(d.title) + '"></div>'
+            ? '<div class="specialist-avatar"><img src="' + esc(avatarSrc) + '" alt="' + esc(d.title) + '" loading="lazy" fetchpriority="low" decoding="async" width="56" height="56" onerror="this.onerror=null;this.src=\'' + esc(d.avatar) + '\'"></div>'
             : '<div class="specialist-avatar"><div class="specialist-avatar-initials">' + esc(initials) + '</div></div>';
         var summary = d.description
             ? '<p class="specialist-summary entity-card-copy">' + esc(d.description) + '</p>'
