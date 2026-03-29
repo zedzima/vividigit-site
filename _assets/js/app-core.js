@@ -67,6 +67,7 @@
         app.btnMenuSelectors = document.getElementById('btnMenuSelectors');
         app.cartHeaderBtn = document.getElementById('cartHeaderBtn');
         app.btnAction = document.getElementById('btnAction');
+        app.btnBackToTop = document.getElementById('btnBackToTop');
         app.sidebarNav = document.getElementById('sidebarNav');
         app.sidebarAction = document.getElementById('sidebarAction');
         app.overlay = document.getElementById('overlay');
@@ -181,6 +182,11 @@
             app.setHeaderButtonState(app.btnAction, contactShown);
         };
 
+        app.updateBackToTop = function() {
+            if (!app.btnBackToTop) return;
+            app.btnBackToTop.classList.toggle('visible', window.scrollY > 640);
+        };
+
         app.openNavPanel = function(panel) {
             if (!app.sidebarNav) return;
             var leftState = app.getLeftSidebarState();
@@ -257,6 +263,13 @@
 
             app.openNavPanel(panel);
         };
+
+        app.btnBackToTop?.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.addEventListener('scroll', app.updateBackToTop, { passive: true });
+        app.updateBackToTop();
 
         app.updateNavSelectorSplit = function() {
             if (!app.sidebarNav || !app.iconBar || !app.iconBarNav || !app.iconBarBottom) return;

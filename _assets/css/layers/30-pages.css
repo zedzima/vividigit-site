@@ -567,6 +567,10 @@
     gap: var(--space-lg);
 }
 
+.cards-grid > * {
+    min-width: 0;
+}
+
 .cards-icon {
     display: flex;
     align-items: center;
@@ -631,11 +635,23 @@ a.cards-link:hover {
 }
 
 /* Column variations */
-.cards-cols-2 { grid-template-columns: repeat(2, 1fr); }
-.cards-cols-3 { grid-template-columns: repeat(3, 1fr); }
-.cards-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.cards-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cards-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cards-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-@media (max-width: 768px) {
+@media (max-width: 1360px) {
+    .cards-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1100px) {
+    .cards-cols-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
     .cards-cols-2, .cards-cols-3, .cards-cols-4 {
         grid-template-columns: 1fr;
     }
@@ -693,6 +709,7 @@ a.cards-link:hover {
         padding: 0 var(--space-xl);
         overscroll-behavior-x: contain;
         -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x proximity;
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
@@ -712,6 +729,12 @@ a.cards-link:hover {
     .carousel-item {
         flex: 0 0 320px;
         min-width: 320px;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
+    .carousel-item:last-child {
+        scroll-snap-align: end;
     }
 
     .carousel-item-image {
@@ -1436,6 +1459,8 @@ a.cards-link:hover {
         margin-inline: calc(var(--mobile-carousel-bleed) * -1);
         padding-inline-start: var(--mobile-carousel-bleed);
         padding-inline-end: 0;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-x: none;
     }
 }
 
@@ -2195,9 +2220,9 @@ a.cards-link:hover {
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 200px;
-        max-height: calc(260px * var(--scale));
-        align-self: stretch;
+        min-height: 220px;
+        max-height: calc(320px * var(--scale));
+        align-self: center;
     }
 
     .feature-visual-media {
@@ -2213,8 +2238,8 @@ a.cards-link:hover {
     .feature-visual-media .illustration {
         width: auto;
         max-width: 100%;
-        height: 100%;
-        max-height: 100%;
+        height: auto;
+        max-height: calc(320px * var(--scale));
         object-fit: contain;
         margin-inline: auto;
     }
@@ -2270,11 +2295,16 @@ a.cards-link:hover {
             align-items: stretch;
         }
 
+        .feature-visual {
+            max-height: calc(360px * var(--scale));
+        }
+
         .feature-visual-media img,
         .feature-visual-media .illustration {
             width: auto;
-            height: 100%;
+            height: auto;
             max-width: 100%;
+            max-height: calc(360px * var(--scale));
         }
     }
 
@@ -2291,13 +2321,20 @@ a.cards-link:hover {
             width: 100%;
             max-width: clamp(240px, 52vw, 420px);
             min-height: 0;
-            height: clamp(120px, 30vw, 180px);
+            height: auto;
+            max-height: none;
             margin-inline: auto;
             align-self: center;
         }
 
         .feature-visual-media {
             padding: 0;
+            height: auto;
+        }
+
+        .feature-visual-media img,
+        .feature-visual-media .illustration {
+            max-height: clamp(160px, 42vw, 240px);
         }
     }
 
@@ -3043,7 +3080,7 @@ a.cards-link:hover {
 
 .pillars-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-lg);
 }
 
@@ -3055,6 +3092,7 @@ a.cards-link:hover {
 
 .pillar-card {
     position: relative;
+    min-width: 0;
     padding: var(--space-lg);
     text-align: center;
     transition: none;
@@ -3127,6 +3165,14 @@ a.cards-link:hover {
     margin-bottom: var(--type-body-gap);
     position: relative;
     z-index: 1;
+}
+
+.pillar-chip-group {
+    margin-bottom: 0;
+}
+
+.pillar-chip-row {
+    justify-content: center;
 }
 
 .pillar-items {
