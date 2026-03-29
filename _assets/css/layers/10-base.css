@@ -470,6 +470,49 @@ a:hover { color: var(--accent-hover); }
     height: 16px;
 }
 
+@media (min-width: 801px) and (max-width: 1599px) {
+    :root {
+        --icon-bar-width: 102px;
+    }
+
+    .icon-bar-nav {
+        padding: 0 var(--space-xs);
+    }
+
+    .icon-bar-link {
+        width: 78px;
+        height: 54px;
+    }
+
+    .icon-bar-link.active::after {
+        right: calc(-1 * ((var(--icon-bar-width) - 78px) / 2));
+    }
+
+    .icon-bar-link svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .icon-bar-label {
+        font-size: var(--font-size-caption);
+    }
+
+    .icon-bar-bottom {
+        gap: var(--space-xs);
+        padding: var(--space-sm) var(--space-xs);
+    }
+
+    .icon-bar-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .icon-bar-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
 /* Desktop: show icon bar, hide menu button */
 @media (min-width: 801px) {
     .btn-menu { display: none; }
@@ -1056,7 +1099,7 @@ main {
 }
 
 /* Wide screens: account for right sidebar too */
-@media (min-width: 1400px) {
+@media (min-width: 1600px) {
     main {
         margin-right: var(--action-width);
         padding: var(--space-2xl) calc(var(--content-gutter-wide) + var(--content-gutter-extra)) 0;

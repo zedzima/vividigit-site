@@ -270,6 +270,16 @@
     }
 }
 
+/* Pre-sidebar desktop range: keep density tighter before the right rail appears */
+@media (min-width: 801px) and (max-width: 1599px) {
+    :root {
+        --font-size-subtitle: 16px;
+        --font-size-h4: 15px;
+        --font-size-body: 14px;
+        --font-size-ui: 13px;
+    }
+}
+
 /* Brand Colors (from logo) */
 :root {
     --brand-purple: #5A24F2;
@@ -924,6 +934,49 @@ a:hover { color: var(--accent-hover); }
     height: 16px;
 }
 
+@media (min-width: 801px) and (max-width: 1599px) {
+    :root {
+        --icon-bar-width: 102px;
+    }
+
+    .icon-bar-nav {
+        padding: 0 var(--space-xs);
+    }
+
+    .icon-bar-link {
+        width: 78px;
+        height: 54px;
+    }
+
+    .icon-bar-link.active::after {
+        right: calc(-1 * ((var(--icon-bar-width) - 78px) / 2));
+    }
+
+    .icon-bar-link svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .icon-bar-label {
+        font-size: var(--font-size-caption);
+    }
+
+    .icon-bar-bottom {
+        gap: var(--space-xs);
+        padding: var(--space-sm) var(--space-xs);
+    }
+
+    .icon-bar-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .icon-bar-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
 /* Desktop: show icon bar, hide menu button */
 @media (min-width: 801px) {
     .btn-menu { display: none; }
@@ -1510,7 +1563,7 @@ main {
 }
 
 /* Wide screens: account for right sidebar too */
-@media (min-width: 1400px) {
+@media (min-width: 1600px) {
     main {
         margin-right: var(--action-width);
         padding: var(--space-2xl) calc(var(--content-gutter-wide) + var(--content-gutter-extra)) 0;
@@ -2704,7 +2757,7 @@ main h2:first-child { margin-top: 0; }
 }
 
 /* Right sidebar responsive - show on wide screens */
-@media (min-width: 1400px) {
+@media (min-width: 1600px) {
     .sidebar-action {
         transform: translateX(0);
     }
@@ -2714,7 +2767,7 @@ main h2:first-child { margin-top: 0; }
 }
 
 /* Mobile: show action button */
-@media (max-width: 1399px) {
+@media (max-width: 1599px) {
     .btn-action {
         display: flex;
     }
@@ -3066,7 +3119,7 @@ main h2:first-child { margin-top: 0; }
     }
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1600px) {
     .global-footer {
         --footer-bleed: calc((var(--content-gutter-wide) + var(--content-gutter-extra)) * 2);
     }
