@@ -39,9 +39,53 @@
 
     function positionDropdown(dropdown, trigger) {
         if (!dropdown || !trigger) return;
+        var viewportGap = 8;
+        var offset = 8;
         var rect = trigger.getBoundingClientRect();
-        dropdown.style.left = rect.left + 'px';
-        dropdown.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+        var maxViewportHeight = window.innerHeight - (viewportGap * 2);
+        var naturalHeight;
+        var naturalWidth;
+        var spaceAbove;
+        var spaceBelow;
+        var openAbove;
+        var availableHeight;
+        var dropdownRect;
+        var top;
+        var left;
+
+        dropdown.style.top = '0px';
+        dropdown.style.left = '0px';
+        dropdown.style.bottom = 'auto';
+        dropdown.style.maxHeight = maxViewportHeight + 'px';
+
+        dropdownRect = dropdown.getBoundingClientRect();
+        naturalHeight = dropdownRect.height;
+        naturalWidth = dropdownRect.width;
+        spaceAbove = rect.top - viewportGap;
+        spaceBelow = window.innerHeight - rect.bottom - viewportGap;
+        openAbove = spaceAbove > spaceBelow && spaceAbove > 120;
+        availableHeight = openAbove ? (spaceAbove - offset) : (spaceBelow - offset);
+
+        dropdown.style.maxHeight = Math.max(96, Math.min(maxViewportHeight, availableHeight)) + 'px';
+        dropdownRect = dropdown.getBoundingClientRect();
+
+        if (naturalHeight <= spaceBelow - offset) {
+            openAbove = false;
+        } else if (naturalHeight <= spaceAbove - offset) {
+            openAbove = true;
+        }
+
+        if (openAbove) {
+            top = rect.top - dropdownRect.height - offset;
+        } else {
+            top = rect.bottom + offset;
+        }
+
+        top = Math.max(viewportGap, Math.min(top, window.innerHeight - dropdownRect.height - viewportGap));
+        left = Math.max(viewportGap, Math.min(rect.left, window.innerWidth - naturalWidth - viewportGap));
+
+        dropdown.style.left = left + 'px';
+        dropdown.style.top = top + 'px';
     }
 
     function initThemeSystem() {
@@ -135,6 +179,21 @@
         initThemeSystem();
         initLanguageDropdown();
         initRelatedShowAll();
+
+        window.addEventListener('resize', function() {
+            var themeDropdown = document.getElementById('themeDropdown');
+            var langDropdownMenu = document.getElementById('langDropdownMenu');
+            var themeToggleBtn = document.getElementById('themeToggleBtn');
+            var langToggleBtn = document.getElementById('langToggleBtn');
+
+            if (themeDropdown?.classList.contains('open')) {
+                positionDropdown(themeDropdown, themeToggleBtn);
+            }
+
+            if (langDropdownMenu?.classList.contains('open')) {
+                positionDropdown(langDropdownMenu, langToggleBtn);
+            }
+        });
     }
 
     app.applyTheme = applyTheme;

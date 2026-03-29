@@ -191,7 +191,7 @@
 
             normalizeCartBilling(this.items[slug]);
             this.save();
-            this.renderSidebar();
+            syncCartViews();
         },
 
         remove: function(slug) {
@@ -204,7 +204,7 @@
             }
 
             this.save();
-            this.renderSidebar();
+            syncCartViews();
         },
 
         updateTier: function(slug, tierName, tierLabel, price, custom, billing) {
@@ -218,7 +218,7 @@
 
             normalizeCartBilling(this.items[slug]);
             this.save();
-            this.renderSidebar();
+            syncCartViews();
         },
 
         _backup: null,
@@ -227,7 +227,7 @@
             this._backup = JSON.parse(JSON.stringify(this.items));
             this.items = {};
             this.save();
-            this.renderSidebar();
+            syncCartViews();
 
             document.querySelectorAll('.task-select-cb:checked').forEach(function(cb) {
                 cb.checked = false;
@@ -247,7 +247,7 @@
             this.items = this._backup;
             this._backup = null;
             this.save();
-            this.renderSidebar();
+            syncCartViews();
             return true;
         },
 
@@ -455,8 +455,8 @@
             var container = document.getElementById('cartItems');
             var modifiers = document.getElementById('cartModifiers');
             var totalsEl = document.getElementById('cartTotals');
-            var currentPage;
-            var pageItems = {};
+            var scope;
+            var scopedItems = {};
             var keys;
             var html;
             var subtotal;
@@ -471,58 +471,53 @@
             var totalLabelEl;
             var summaryMetaEl;
             var billingBadge;
+            var emptyMessage;
 
             if (!container) return;
 
-            currentPage = window.location.pathname;
+            scope = container.dataset.cartScope || 'all';
+            emptyMessage = container.dataset.emptyMsg || 'Your cart is empty.';
+
             for (var slug of Object.keys(this.items)) {
-                if (this.items[slug].page === currentPage) pageItems[slug] = this.items[slug];
+                if (scope === 'current' && this.items[slug].page !== window.location.pathname) continue;
+                scopedItems[slug] = this.items[slug];
             }
-            keys = Object.keys(pageItems);
+            keys = Object.keys(scopedItems);
 
             if (keys.length === 0) {
-                container.innerHTML = '<p class="cart-empty-msg">Select a package or tasks to build your order.</p>';
+                container.innerHTML = '<p class="cart-empty-msg">' + emptyMessage + '</p>';
                 if (modifiers) modifiers.classList.add('hidden');
                 if (totalsEl) totalsEl.classList.add('hidden');
                 return;
             }
 
-            if (modifiers) modifiers.classList.remove('hidden');
+            if (modifiers) modifiers.classList.add('hidden');
             if (totalsEl) totalsEl.classList.remove('hidden');
-
-            var langCount = parseInt(document.getElementById('langCount')?.textContent) || 0;
-            var countryCount = parseInt(document.getElementById('countryCount')?.textContent) || 0;
-
-            for (var pageSlug of keys) {
-                pageItems[pageSlug].langCount = langCount;
-                pageItems[pageSlug].countryCount = countryCount;
-            }
 
             html = '';
             subtotal = 0;
             hasCustom = false;
 
             for (var itemSlug of keys) {
-                var item = pageItems[itemSlug];
+                var item = scopedItems[itemSlug];
                 var effectivePrice;
                 var pricingMeta;
-                var sidebarBaseLabel;
-                var sidebarTotalLabel;
                 var tierLine;
+                var perLang;
+                var perCountry;
+                var paymentControl;
 
                 if (item.custom) hasCustom = true;
+                normalizeCartBilling(item);
                 effectivePrice = cart.getEffectivePrice(item);
                 pricingMeta = cart.getItemPricingMeta(item);
-                sidebarBaseLabel = (item.payment === 'yearly' || item.payment === 'monthly')
-                    ? pricingMeta.baseLabel.replace(/\/(?:mo|year)$/, '')
-                    : pricingMeta.baseLabel;
-                sidebarTotalLabel = (item.payment === 'yearly' || item.payment === 'monthly')
-                    ? pricingMeta.totalLabel.replace(/\/(?:mo|year)$/, '')
-                    : pricingMeta.totalLabel;
                 subtotal += effectivePrice;
+                perLang = cart.getModifierUnitPrice(item, getConfig().langPct);
+                perCountry = cart.getModifierUnitPrice(item, getConfig().countryPct);
+                paymentControl = buildCartPaymentControl(item, itemSlug);
                 tierLine = item.tierName
-                    ? item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + sidebarBaseLabel
-                    : sidebarBaseLabel;
+                    ? item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + pricingMeta.baseLabel
+                    : pricingMeta.baseLabel;
 
                 html += '<div class="cart-line-item">' +
                     '<div class="cart-item-info">' +
@@ -531,9 +526,17 @@
                         pricingMeta.detailLines.map(function(line) {
                             return '<span class="cart-billing-note">' + line + '</span>';
                         }).join('') +
+                        '<div class="cart-line-controls">' +
+                            '<div class="cart-line-row">' +
+                                '<span class="cart-line-label">Payment</span>' +
+                                '<div class="cart-line-row-actions">' + paymentControl + '</div>' +
+                            '</div>' +
+                            buildSidebarModifierControl(item, itemSlug, 'langCount', 'Languages', perLang) +
+                            buildSidebarModifierControl(item, itemSlug, 'countryCount', 'Countries', perCountry) +
+                        '</div>' +
                     '</div>' +
                     '<div class="cart-item-actions">' +
-                        '<span class="cart-item-price">' + sidebarTotalLabel + '</span>' +
+                        '<span class="cart-item-price">' + pricingMeta.totalLabel + '</span>' +
                         '<button class="cart-item-remove" data-slug="' + itemSlug + '" title="Remove">&times;</button>' +
                     '</div>' +
                 '</div>';
@@ -545,11 +548,21 @@
                     cart.remove(btn.dataset.slug);
                 });
             });
+            container.querySelectorAll('.cart-payment-opt').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    updateSidebarItemPayment(btn.dataset.slug, btn.dataset.val);
+                });
+            });
+            container.querySelectorAll('.cart-inline-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    updateSidebarItemModifier(btn.dataset.slug, btn.dataset.field, btn.dataset.action);
+                });
+            });
             cart.save();
 
             grandTotal = 0;
             for (var totalSlug of keys) {
-                grandTotal += cart.getItemTotal(pageItems[totalSlug]);
+                grandTotal += cart.getItemTotal(scopedItems[totalSlug]);
             }
             modifierTotal = grandTotal - subtotal;
 
@@ -561,7 +574,7 @@
             totalLabelEl = document.getElementById('cartTotalLabel');
             summaryMetaEl = document.getElementById('cartSummaryMeta');
 
-            var pageSummary = cart.getSelectionSummary(pageItems);
+            var pageSummary = cart.getSelectionSummary(scopedItems);
             var summaryLines = [];
 
             if (subtotalEl) subtotalEl.textContent = (hasCustom ? 'From ' : '') + formatMoney(subtotal);
@@ -597,6 +610,121 @@
         }
     };
 
+    function syncCurrentPageTaskPickerState() {
+        var currentPage = window.location.pathname;
+
+        document.querySelectorAll('.task-picker-item').forEach(function(itemEl) {
+            var cb = itemEl.querySelector('.task-select-cb');
+            var slug;
+            var cartItem;
+            var isSelected;
+            var tierButtons;
+            var matchedTier = null;
+
+            if (!cb) return;
+
+            slug = cb.dataset.slug || itemEl.dataset.taskSlug;
+            cartItem = slug ? cart.items[slug] : null;
+            isSelected = !!(cartItem && cartItem.page === currentPage);
+            tierButtons = itemEl.querySelectorAll('.tier-btn');
+
+            cb.checked = isSelected;
+            itemEl.classList.toggle('selected', isSelected);
+            itemEl.classList.toggle('expanded', isSelected || itemEl.classList.contains('expanded'));
+
+            tierButtons.forEach(function(btn) {
+                btn.disabled = !isSelected;
+                btn.setAttribute('aria-disabled', isSelected ? 'false' : 'true');
+                btn.classList.remove('active');
+
+                if (!isSelected || !cartItem) return;
+                if (btn.dataset.tierName === cartItem.tierName && (btn.dataset.tierLabel || '') === (cartItem.tierLabel || '')) {
+                    matchedTier = btn;
+                }
+            });
+
+            if (isSelected) {
+                (matchedTier || tierButtons[0])?.classList.add('active');
+            } else if (tierButtons[0]) {
+                tierButtons[0].classList.add('active');
+            }
+        });
+    }
+
+    function syncCartViews() {
+        syncCurrentPageTaskPickerState();
+        cart.renderSidebar();
+        if (typeof app.renderCartPage === 'function') {
+            app.renderCartPage();
+        }
+    }
+
+    function buildCartPaymentControl(item, slug) {
+        var billing = item.billing || cloneBilling(DEFAULT_BILLING);
+        var html = '';
+
+        if (!isServiceCartItem(item)) {
+            return '<span class="cart-payment-label">One-time</span>';
+        }
+
+        if (billing.oneTime && !billing.monthly && !billing.yearly) {
+            return '<span class="cart-payment-label">One-time</span>';
+        }
+
+        html += '<div class="cart-payment-tabs">';
+        if (billing.monthly) {
+            html += '<button class="cart-payment-opt' + (item.payment === 'monthly' ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>';
+        }
+        if (billing.yearly) {
+            html += '<button class="cart-payment-opt' + (item.payment === 'yearly' ? ' active' : '') + '" data-slug="' + slug + '" data-val="yearly">Yearly</button>';
+        }
+        html += '</div>';
+        return html;
+    }
+
+    function buildSidebarModifierControl(item, slug, field, label, unitPrice) {
+        var value = item[field] || 0;
+        var fee = unitPrice * value;
+
+        return '<div class="cart-line-row cart-line-row-modifier">' +
+            '<span class="cart-line-label">' + label + '</span>' +
+            '<div class="cart-line-row-actions">' +
+                '<div class="cart-inline-counter">' +
+                    '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="' + field + '" data-action="minus">−</button>' +
+                    '<span class="cart-inline-val">' + value + '</span>' +
+                    '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="' + field + '" data-action="plus">+</button>' +
+                '</div>' +
+                (value > 0 ? '<span class="cart-inline-fee">+' + formatMoney(fee) + '</span>' : '') +
+            '</div>' +
+        '</div>';
+    }
+
+    function updateSidebarItemPayment(slug, val) {
+        var item = cart.items[slug];
+
+        if (!item || item.payment === val) return;
+        if (!isServiceCartItem(item)) return;
+
+        item.payment = val;
+        normalizeCartBilling(item);
+        cart.save();
+        syncCartViews();
+    }
+
+    function updateSidebarItemModifier(slug, field, action) {
+        var item = cart.items[slug];
+        var value;
+
+        if (!item) return;
+
+        value = item[field] || 0;
+        if (action === 'plus') value++;
+        else value = Math.max(0, value - 1);
+        item[field] = value;
+        cart.save();
+        syncCartViews();
+    }
+
     function initBillingState() {
         var el = document.querySelector('[data-discount]');
         if (el) _billingDiscount = parseInt(el.dataset.discount) || 0;
@@ -606,11 +734,6 @@
         if (typeof app.openOrderSidebar === 'function') {
             app.openOrderSidebar({ openSidebar: false, scroll: false });
             return;
-        }
-
-        var orderTab = document.querySelector('.sidebar-tabs .sidebar-tab[data-tab="order"]');
-        if (orderTab && !orderTab.classList.contains('active')) {
-            orderTab.click();
         }
     }
 
@@ -682,6 +805,7 @@
         }
 
         cart.renderSidebar();
+        syncCurrentPageTaskPickerState();
 
         currentPage = window.location.pathname;
         for (var slug of Object.keys(cart.items)) {
@@ -802,7 +926,7 @@
                 revealOrderTabForSelection();
 
                 if (window.innerWidth < 2200) {
-                    app.btnAction?.click();
+                    app.openActionPanel?.('order');
                 }
             });
         });
@@ -897,7 +1021,6 @@
 
             document.getElementById('cartRestore')?.addEventListener('click', function() {
                 cart.restore();
-                renderCartPage();
             });
         }
 
@@ -948,19 +1071,7 @@
                 tierStr = item.tierName ? item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' : '';
 
                 billing = item.billing || cloneBilling(DEFAULT_BILLING);
-                if (isServiceCartItem(itemType)) {
-                    paymentCell = '<div class="cart-payment-tabs">';
-                    if (billing.oneTime && !billing.monthly && !billing.yearly) {
-                        paymentCell += '<button class="cart-payment-opt active" data-slug="' + slug + '" data-val="one-time">One-time</button>';
-                    }
-                    if (billing.monthly) {
-                        paymentCell += '<button class="cart-payment-opt' + (item.payment === 'monthly' ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>';
-                    }
-                    if (billing.yearly) {
-                        paymentCell += '<button class="cart-payment-opt' + (item.payment === 'yearly' ? ' active' : '') + '" data-slug="' + slug + '" data-val="yearly">Yearly</button>';
-                    }
-                    paymentCell += '</div>';
-                }
+                paymentCell = buildCartPaymentControl(item, slug);
 
                 html += '<tr>' +
                     '<td>' +
@@ -1048,7 +1159,6 @@
 
             document.getElementById('cartSuccessClear')?.addEventListener('click', function() {
                 cart.clear();
-                renderCartPage();
             });
         }
 
@@ -1088,7 +1198,6 @@
             cartPage.querySelectorAll('.cart-item-remove-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     cart.remove(btn.dataset.slug);
-                    renderCartPage();
                 });
             });
 
@@ -1104,7 +1213,7 @@
                     item.payment = val;
                     normalizeCartBilling(item);
                     cart.save();
-                    renderCartPage();
+                    syncCartViews();
                 });
             });
 
@@ -1123,13 +1232,12 @@
                     else val = Math.max(0, val - 1);
                     item[field] = val;
                     cart.save();
-                    renderCartPage();
+                    syncCartViews();
                 });
             });
 
             document.getElementById('cartPageClear')?.addEventListener('click', function() {
                 cart.clear();
-                renderCartPage();
             });
 
             document.getElementById('cartSendRequest')?.addEventListener('click', function() {
@@ -1182,6 +1290,7 @@
             bindCartPageEvents(keys, table.grandTotal);
         }
 
+        app.renderCartPage = renderCartPage;
         renderCartPage();
     }
 

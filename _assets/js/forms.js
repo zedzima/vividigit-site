@@ -57,26 +57,18 @@
     }
 
     function openContactSidebar() {
-        app.sidebarNav?.classList.remove('open');
-        app.sidebarAction?.classList.add('open');
-        app.syncSidebarOverlay?.();
-
-        var contactTab = document.querySelector('.sidebar-tabs .sidebar-tab[data-tab="contact"]');
-        if (contactTab && !contactTab.classList.contains('active')) {
-            contactTab.click();
-        }
-
-        var sidebarContent = document.querySelector('.sidebar-action .sidebar-content');
-        if (!sidebarContent) return;
-
         var contactWidget = null;
-        var contactPanel = sidebarContent.querySelector('.sidebar-tab-content[data-tab-content="contact"]:not(.hidden)');
-        if (contactPanel) {
-            contactWidget = contactPanel.querySelector('.widget');
-        }
+        var contactPanel;
+
+        app.openActionPanel?.('contact');
+
+        contactPanel = document.querySelector('.sidebar-action-panel[data-action-panel="contact"]:not(.hidden)');
+        if (!contactPanel) return;
+
+        contactWidget = contactPanel.querySelector('.widget');
 
         if (!contactWidget) {
-            sidebarContent.querySelectorAll('.widget').forEach(function(widget) {
+            contactPanel.querySelectorAll('.widget').forEach(function(widget) {
                 if (contactWidget) return;
                 var title = widget.querySelector('.widget-title');
                 if (title && title.textContent.trim().toLowerCase() === 'contact us') {
@@ -149,18 +141,13 @@
 
     function openOrderSidebar(options) {
         var opts = options || {};
-        var shouldOpenSidebar = opts.openSidebar !== false;
         var shouldScroll = opts.scroll !== false;
+        var shouldOpenSidebar = opts.openSidebar !== false;
 
-        if (shouldOpenSidebar) {
-            app.sidebarNav?.classList.remove('open');
-            app.sidebarAction?.classList.add('open');
+        if (shouldOpenSidebar) app.openActionPanel?.('order');
+        else {
+            app.sidebarAction?.setAttribute('data-panel', 'order');
             app.syncSidebarOverlay?.();
-        }
-
-        var orderTab = document.querySelector('.sidebar-tabs .sidebar-tab[data-tab="order"]');
-        if (orderTab && !orderTab.classList.contains('active')) {
-            orderTab.click();
         }
 
         if (shouldScroll) {
@@ -297,7 +284,7 @@
 
     function initSidebarShare() {
         var shareWidget = document.getElementById('sidebarShare');
-        var contactPanel = document.querySelector('.sidebar-tab-content[data-tab-content="contact"]');
+        var contactPanel = document.querySelector('.sidebar-action-panel[data-action-panel="contact"]');
         var canonicalHref;
         var pageUrl;
         var pageTitle;
