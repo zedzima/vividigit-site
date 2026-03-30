@@ -84,33 +84,9 @@
 
         app.getLeftSidebarState = function() {
             var widthHidden = window.innerWidth <= 800;
-            var split = widthHidden;
-            var hadSplit = document.body.classList.contains('sidebar-nav-split');
-            var currentPanel = app.sidebarNav?.dataset.panel || 'menu';
-
-            if (app.sidebarNav && app.iconBar && app.iconBarNav && app.iconBarBottom) {
-                if (hadSplit) {
-                    document.body.classList.remove('sidebar-nav-split');
-                    app.sidebarNav.dataset.panel = 'menu';
-                }
-
-                var iconBarStyle = window.getComputedStyle(app.iconBar);
-                var paddingTop = parseFloat(iconBarStyle.paddingTop) || 0;
-                var paddingBottom = parseFloat(iconBarStyle.paddingBottom) || 0;
-                var totalNeeded = paddingTop + paddingBottom + app.iconBarNav.scrollHeight + app.iconBarBottom.scrollHeight;
-                if (totalNeeded > app.sidebarNav.offsetHeight) {
-                    split = true;
-                }
-
-                if (hadSplit) {
-                    document.body.classList.add('sidebar-nav-split');
-                    app.sidebarNav.dataset.panel = currentPanel;
-                }
-            }
-
             return {
                 widthHidden: widthHidden,
-                split: split
+                split: true
             };
         };
 

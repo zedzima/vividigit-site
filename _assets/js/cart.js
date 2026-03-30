@@ -103,13 +103,18 @@
     function updateCartCtaState() {
         var cta = document.getElementById('cartCta');
         var hasItems;
+        var isCartPage;
+        var isEnabled;
 
         if (!cta) return;
 
         hasItems = Object.keys(cart.items).length > 0;
-        cta.classList.toggle('btn-disabled', !hasItems);
-        cta.setAttribute('aria-disabled', hasItems ? 'false' : 'true');
-        cta.tabIndex = hasItems ? 0 : -1;
+        isCartPage = !!document.getElementById('cartPage');
+        isEnabled = hasItems && !isCartPage;
+
+        cta.classList.toggle('btn-disabled', !isEnabled);
+        cta.setAttribute('aria-disabled', isEnabled ? 'false' : 'true');
+        cta.tabIndex = isEnabled ? 0 : -1;
     }
 
     function updateCartBadge() {
@@ -978,9 +983,13 @@
         if (!cartCta) return;
 
         cartCta.addEventListener('click', function(e) {
-            if (Object.keys(cart.items).length > 0) return;
+            var isDisabled = cartCta.classList.contains('btn-disabled') || cartCta.getAttribute('aria-disabled') === 'true';
+
+            if (!isDisabled) return;
             e.preventDefault();
-            alert('Please select services to build your order.');
+            if (!document.getElementById('cartPage')) {
+                alert('Please select services to build your order.');
+            }
         });
     }
 

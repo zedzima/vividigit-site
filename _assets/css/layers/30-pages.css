@@ -515,10 +515,58 @@
     margin: 0 auto;
 }
 
+.grid-balanced {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-balanced > * {
+    min-width: 0;
+}
+
+.grid-balanced.grid-balanced-count-1 {
+    grid-template-columns: 1fr;
+}
+
+.grid-balanced.grid-balanced-count-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-balanced.grid-balanced-count-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-balanced.grid-balanced-count-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid-balanced.grid-balanced-count-5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1360px) {
+    .grid-balanced.grid-balanced-count-4,
+    .grid-balanced.grid-balanced-count-5 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1100px) {
+    .grid-balanced.grid-balanced-count-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .grid-balanced.grid-balanced-count-2,
+    .grid-balanced.grid-balanced-count-3,
+    .grid-balanced.grid-balanced-count-4,
+    .grid-balanced.grid-balanced-count-5 {
+        grid-template-columns: 1fr;
+    }
+}
 
 .benefits-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
     gap: var(--space-lg);
 }
 
@@ -563,7 +611,6 @@
 
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--space-lg);
 }
 
@@ -652,7 +699,9 @@ a.cards-link:hover {
 }
 
 @media (max-width: 640px) {
-    .cards-cols-2, .cards-cols-3, .cards-cols-4 {
+    .cards-cols-2,
+    .cards-cols-3,
+    .cards-cols-4 {
         grid-template-columns: 1fr;
     }
 }
@@ -770,7 +819,7 @@ a.cards-link:hover {
 
     .carousel-item-subtitle {
         display: block;
-        font-size: var(--font-size-small);
+        font-size: var(--font-size-caption);
         font-weight: 500;
         color: var(--text-tertiary);
         margin-bottom: var(--space-sm);
@@ -1135,6 +1184,45 @@ a.cards-link:hover {
 .catalog-count { font-size: var(--font-size-ui); color: var(--text-muted); }
 .catalog-sort select { min-width: 180px; }
 
+.catalog-grid {
+    justify-content: start;
+}
+
+@media (min-width: 1100px) {
+    .catalog-grid:not(.catalog-count-1):not(.catalog-count-2) {
+        grid-template-columns: repeat(auto-fit, minmax(288px, 1fr));
+    }
+
+    .catalog-grid.catalog-count-1 {
+        grid-template-columns: minmax(300px, 360px);
+    }
+
+    .catalog-grid.catalog-count-2 {
+        grid-template-columns: repeat(2, minmax(300px, 360px));
+    }
+}
+
+.catalog-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+}
+
+.catalog-page-btn.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--text-inverse);
+}
+
+.catalog-page-btn.active:hover {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--text-inverse);
+}
+
 .catalog-loading, .catalog-empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -1454,7 +1542,6 @@ a.cards-link:hover {
 
 .columns-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
     gap: var(--space-lg);
 }
 
@@ -3064,14 +3151,7 @@ a.cards-link:hover {
 
 .pillars-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-lg);
-}
-
-@media (max-width: 900px) {
-    .pillars-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 .pillar-card {
@@ -3379,7 +3459,6 @@ a.cards-link:hover {
 
     .pricing-packages-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: var(--space-lg);
         align-items: stretch;
     }
@@ -3619,22 +3698,6 @@ a.cards-link:hover {
 
         .package-header h3 {
             font-size: var(--font-size-h4);
-        }
-    }
-
-    @media (min-width: 1400px) and (max-width: 1500px) {
-        .pricing-packages-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            max-width: none;
-            margin: 0;
-        }
-    }
-
-    @media (max-width: 1000px) {
-        .pricing-packages-grid {
-            grid-template-columns: 1fr;
-            max-width: none;
-            margin: 0;
         }
     }
 
