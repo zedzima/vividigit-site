@@ -73,11 +73,11 @@
     
 
     <!-- Styles -->
-    <link rel="preload" href="_assets/css/styles.css?v=ad3de163" as="style">
-    <link rel="stylesheet" href="_assets/css/styles.css?v=ad3de163">
+    <link rel="preload" href="_assets/css/styles.css?v=ae4f7b8b" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=ae4f7b8b">
     <script>
     window.VividigitAssetHashes = {
-        cart: '4028ff82',
+        cart: 'c30436e0',
         media: '528c8a03'
     };
     </script>
@@ -1109,6 +1109,9 @@
 
 <script>
 (function() {
+    if (window.__vividigitPricingSyncInitialized) return;
+    window.__vividigitPricingSyncInitialized = true;
+
     function formatPrice(value) {
         return '$' + Math.round(value || 0);
     }
@@ -1118,6 +1121,90 @@
         const annualTotal = monthlyEquivalent * 12;
         const annualSavings = (monthlyPrice * 12) - annualTotal;
         return { monthlyEquivalent, annualTotal, annualSavings };
+    }
+
+    function applyButtonState(buttons, period) {
+        buttons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.period === period);
+        });
+    }
+
+    function applySimplePricing(toggle, period, discount) {
+        const section = toggle.closest('.pricing-block');
+        const buttons = toggle.querySelectorAll('.pricing-toggle-btn');
+        const priceEl = section ? section.querySelector('.price-current') : null;
+        const periodEl = section ? section.querySelector('.price-period') : null;
+        const metaEl = section ? section.querySelector('.pricing-simple-meta') : null;
+        const savingsEl = metaEl ? metaEl.querySelector('.savings-amount') : null;
+        const isYearly = period === 'yearly';
+
+        applyButtonState(buttons, period);
+
+        if (!priceEl || !priceEl.dataset.monthly) return;
+
+        const monthlyPrice = parseInt(priceEl.dataset.monthly, 10);
+        if (isYearly) {
+            const yearly = getYearlyPricing(monthlyPrice, discount);
+            priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
+            if (periodEl) periodEl.textContent = periodEl.dataset.monthlyLabel || '/month';
+            if (savingsEl) savingsEl.textContent = String(yearly.annualSavings);
+            if (metaEl) metaEl.hidden = false;
+        } else {
+            priceEl.textContent = formatPrice(monthlyPrice);
+            if (periodEl) periodEl.textContent = periodEl.dataset.monthlyLabel || '/month';
+            if (metaEl) metaEl.hidden = true;
+        }
+    }
+
+    function applyPackagesPricing(toggle, period, discount) {
+        const buttons = toggle.querySelectorAll('.pricing-toggle-btn');
+        const grid = toggle.nextElementSibling;
+        const isYearly = period === 'yearly';
+
+        if (!grid || !grid.classList.contains('pricing-packages-grid')) return;
+
+        applyButtonState(buttons, period);
+
+        grid.querySelectorAll('.pricing-package').forEach(pkg => {
+            const priceEl = pkg.querySelector('.price-current');
+            const periodEl = pkg.querySelector('.price-period');
+            const savingsEl = pkg.querySelector('.package-savings');
+            const savingsAmount = pkg.querySelector('.savings-amount');
+
+            if (!priceEl || !priceEl.dataset.monthly) return;
+
+            const monthlyPrice = parseInt(priceEl.dataset.monthly, 10);
+
+            if (isYearly) {
+                const yearly = getYearlyPricing(monthlyPrice, discount);
+                priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
+                if (periodEl) periodEl.textContent = '/month';
+                if (savingsEl) {
+                    savingsEl.style.display = 'block';
+                    if (savingsAmount) savingsAmount.textContent = String(yearly.annualSavings);
+                }
+            } else {
+                priceEl.textContent = formatPrice(monthlyPrice);
+                if (periodEl) periodEl.textContent = '/month';
+                if (savingsEl) {
+                    savingsEl.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    function syncPricingBlocks(period) {
+        document.querySelectorAll('.pricing-simple-toggle').forEach(toggle => {
+            const discount = parseInt(toggle.dataset.discount, 10) || 20;
+            applySimplePricing(toggle, period, discount);
+        });
+
+        document.querySelectorAll('.pricing-toggle').forEach(toggle => {
+            if (toggle.classList.contains('pricing-simple-toggle')) return;
+            const grid = toggle.nextElementSibling;
+            const discount = grid ? (parseInt(grid.dataset.discount, 10) || 20) : 20;
+            applyPackagesPricing(toggle, period, discount);
+        });
     }
 
     // Sidebar toggle for CTA buttons
@@ -1136,39 +1223,12 @@
     // Monthly/Yearly toggle for simple pricing
     document.querySelectorAll('.pricing-simple-toggle').forEach(toggle => {
         const buttons = toggle.querySelectorAll('.pricing-toggle-btn');
-        const discount = parseInt(toggle.dataset.discount) || 20;
-        const section = toggle.closest('.pricing-block');
-        const priceEl = section ? section.querySelector('.price-current') : null;
-        const periodEl = section ? section.querySelector('.price-period') : null;
-        const metaEl = section ? section.querySelector('.pricing-simple-meta') : null;
-        const savingsEl = metaEl ? metaEl.querySelector('.savings-amount') : null;
 
         buttons.forEach(btn => {
             btn.addEventListener('click', () => {
-                buttons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const isYearly = btn.dataset.period === 'yearly';
-
-                /* Dispatch billingPeriodChanged so site.js updates sidebar/cart */
                 document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
-                    detail: { period: btn.dataset.period, discount: discount }
+                    detail: { period: btn.dataset.period, discount: parseInt(toggle.dataset.discount, 10) || 20, source: 'pricing-simple' }
                 }));
-
-                if (priceEl && priceEl.dataset.monthly) {
-                    const monthlyPrice = parseInt(priceEl.dataset.monthly);
-                    if (isYearly) {
-                        const yearly = getYearlyPricing(monthlyPrice, discount);
-                        priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
-                        if (periodEl) periodEl.textContent = periodEl.dataset.monthlyLabel || '/month';
-                        if (savingsEl) savingsEl.textContent = String(yearly.annualSavings);
-                        if (metaEl) metaEl.hidden = false;
-                    } else {
-                        priceEl.textContent = formatPrice(monthlyPrice);
-                        if (periodEl) periodEl.textContent = periodEl.dataset.monthlyLabel || '/month';
-                        if (metaEl) metaEl.hidden = true;
-                    }
-                }
             });
         });
     });
@@ -1179,51 +1239,32 @@
         const grid = toggle.nextElementSibling;
         if (!grid || !grid.classList.contains('pricing-packages-grid')) return;
 
-        const discount = parseInt(grid.dataset.discount) || 20;
-        const packages = grid.querySelectorAll('.pricing-package');
-
         buttons.forEach(btn => {
             btn.addEventListener('click', () => {
-                buttons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const isYearly = btn.dataset.period === 'yearly';
-
-                /* Dispatch billingPeriodChanged so site.js updates sidebar/cart */
                 document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
-                    detail: { period: btn.dataset.period, discount: discount }
+                    detail: { period: btn.dataset.period, discount: parseInt(grid.dataset.discount, 10) || 20, source: 'pricing-packages' }
                 }));
-
-                packages.forEach(pkg => {
-                    const priceEl = pkg.querySelector('.price-current');
-                    const periodEl = pkg.querySelector('.price-period');
-                    const savingsEl = pkg.querySelector('.package-savings');
-                    const savingsAmount = pkg.querySelector('.savings-amount');
-
-                    const monthlyPrice = parseInt(priceEl.dataset.monthly);
-
-                    if (isYearly) {
-                        const yearly = getYearlyPricing(monthlyPrice, discount);
-                        priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
-                        if (periodEl) periodEl.textContent = '/month';
-                        if (savingsEl) {
-                            savingsEl.style.display = 'block';
-                            savingsAmount.textContent = String(yearly.annualSavings);
-                        }
-                    } else {
-                        priceEl.textContent = formatPrice(monthlyPrice);
-                        if (periodEl) periodEl.textContent = '/month';
-                        if (savingsEl) {
-                            savingsEl.style.display = 'none';
-                        }
-                    }
-                });
-
-                /* Re-trigger selected package so cart gets the updated price */
-                var selectedBtn = grid.querySelector('.pricing-package-selected .btn');
-                if (selectedBtn) selectedBtn.click();
-
             });
+        });
+    });
+
+    document.addEventListener('billingPeriodChanged', function(e) {
+        const detail = e && e.detail ? e.detail : {};
+        const period = detail.period === 'yearly' ? 'yearly' : 'monthly';
+        const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+        const itemPath = (detail.itemPage || '').replace(/\/$/, '') || '/';
+
+        if (detail.scope === 'single' && itemPath && itemPath !== currentPath) {
+            return;
+        }
+
+        syncPricingBlocks(period);
+
+        document.querySelectorAll('.pricing-packages-grid').forEach(grid => {
+            const selectedBtn = grid.querySelector('.pricing-package-selected .btn');
+            if (selectedBtn && detail.source !== 'pricing-packages') {
+                selectedBtn.click();
+            }
         });
     });
 })();
@@ -1233,6 +1274,23 @@
             <div class="block">
                 <!-- Sections Block: Structured titled sections with anchors -->
 <section class="sections-block" >
+    
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+    
+    
     <div class="sections-header">
         <span class="tag tag-accent">WHY MARKETING WEB DEVELOPMENT</span>
 
@@ -1248,6 +1306,13 @@
     
     <div class="sections-list">
         
+        
+        
+        
+        
+        
+            
+        
         <div class="sections-item">
             <div class="sections-item-content">
                 
@@ -1257,10 +1322,15 @@
                 <p class="sections-text">A page that takes over 3 seconds to load loses nearly half its visitors. Core Web Vitals affect search rankings, ad quality scores, and bounce rates simultaneously. Performance is not a technical nice-to-have — it is a revenue lever.</p>
                 
             </div>
-            
             <span class="sections-item-symbol" aria-hidden="true">1</span>
-            
         </div>
+        
+        
+        
+        
+        
+        
+            
         
         <div class="sections-item">
             <div class="sections-item-content">
@@ -1271,10 +1341,15 @@
                 <p class="sections-text">Every layout decision, page structure, and user flow should be informed by what users actually do — not what looks good in Figma. Web development for marketing means building pages that convert based on data, then testing them to convert better.</p>
                 
             </div>
-            
             <span class="sections-item-symbol" aria-hidden="true">2</span>
-            
         </div>
+        
+        
+        
+        
+        
+        
+            
         
         <div class="sections-item">
             <div class="sections-item-content">
@@ -1285,9 +1360,7 @@
                 <p class="sections-text">Crawl structure, rendering architecture, structured data, internal linking, and multilingual URL patterns are all development decisions that directly affect search visibility. SEO and web development are not separate workstreams — they are the same foundation.</p>
                 
             </div>
-            
             <span class="sections-item-symbol" aria-hidden="true">3</span>
-            
         </div>
         
     </div>
@@ -3401,85 +3474,85 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7714)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7714" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8415)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8415" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9277)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-9277" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1934)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1934" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7271)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7271" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2897)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2897" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5347)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5347" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8686)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8686" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9181)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-9181" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6101)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6101" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3834)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3834" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7655)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7655" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8812)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8812" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1695)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1695" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8126)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8126" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1951)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1951" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3278)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3278" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8152)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8152" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5844)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5844" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7837)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7837" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2588)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2588" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4701)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-4701" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9069)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-9069" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5408)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5408" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6593)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6593" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8337)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8337" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1925)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1925" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4218)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-4218" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>

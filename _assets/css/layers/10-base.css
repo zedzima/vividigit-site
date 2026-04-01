@@ -790,6 +790,13 @@ body.sidebar-nav-split .sidebar-nav[data-panel="selectors"] .icon-bar-btn-label 
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.cart-item-link {
+    text-decoration: none;
+}
+.cart-item-link:hover,
+.cart-item-link:focus-visible {
+    color: var(--accent);
+}
 
 .cart-item-tier {
     font-size: var(--font-size-caption);
@@ -811,31 +818,64 @@ body.sidebar-nav-split .sidebar-nav[data-panel="selectors"] .icon-bar-btn-label 
 }
 
 .cart-line-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-sm);
+    display: grid;
+    align-items: center;
+    column-gap: var(--space-sm);
+}
+
+.cart-line-row-payment {
+    grid-template-columns: minmax(4.5rem, 1fr) auto;
+}
+
+.cart-line-row-modifier {
+    grid-template-columns: minmax(4.5rem, 1fr) auto 3.5rem;
 }
 
 .cart-line-label {
     font-size: var(--font-size-caption);
     color: var(--text-muted);
-    min-width: 4.5rem;
-    padding-top: 4px;
+    min-width: 0;
+    padding-top: 0;
 }
 
 .cart-line-row-actions {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     gap: var(--space-xs);
     flex-wrap: nowrap;
+}
+
+.cart-line-row-payment .cart-line-row-actions {
+    justify-content: flex-start;
+    justify-self: start;
+}
+
+.cart-line-row-modifier .cart-line-row-actions {
+    justify-content: center;
+    justify-self: center;
+}
+
+.cart-line-row-value {
+    font-size: var(--font-size-caption);
+    color: var(--text-muted);
+    white-space: nowrap;
+    text-align: right;
+    justify-self: end;
 }
 
 .sidebar-action .cart-inline-fee {
     display: inline-block;
     margin-top: 0;
     white-space: nowrap;
+}
+
+.sidebar-action .cart-payment-opt {
+    padding: 3px 8px;
+    font-size: 0.75rem;
+}
+
+.sidebar-action .cart-payment-tabs {
+    flex-shrink: 0;
 }
 
 .cart-item-actions {
@@ -947,6 +987,7 @@ body.sidebar-nav-split .sidebar-nav[data-panel="selectors"] .icon-bar-btn-label 
     font-weight: 600;
     color: var(--text-primary);
     padding-right: var(--space-sm);
+    text-align: left;
 }
 
 .cart-total-value {

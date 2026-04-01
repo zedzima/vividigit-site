@@ -51,6 +51,62 @@
         return '$' + Math.round(value || 0);
     }
 
+    function escapeHtml(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function parseDiscountValue(value) {
+        var num = parseInt(value, 10);
+        return isNaN(num) ? null : num;
+    }
+
+    function inferItemDiscount(item) {
+        var itemPath = String(item && item.page || '').replace(/\/$/, '') || '/';
+        var currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+        var domDiscountEl;
+        var domDiscount;
+
+        if (itemPath && itemPath === currentPath) {
+            domDiscountEl = document.querySelector('[data-discount]');
+            domDiscount = parseDiscountValue(domDiscountEl && domDiscountEl.dataset ? domDiscountEl.dataset.discount : null);
+            if (domDiscount !== null) return domDiscount;
+        }
+
+        if (/^\/services\/web-development$/.test(itemPath)) return 0;
+        if (/^\/services\/[^/]+$/.test(itemPath)) return 20;
+        if (/^\/scopes\/[^/]+$/.test(itemPath)) return 20;
+        if (/^\/solutions\/(ai-visibility|seo-ecommerce)$/.test(itemPath)) return 0;
+
+        return null;
+    }
+
+    function resolveItemDiscount(item, explicitDiscount) {
+        var explicitValue = parseDiscountValue(explicitDiscount);
+        var itemValue;
+        var inferredValue;
+        var globalValue;
+
+        if (explicitValue !== null) return explicitValue;
+
+        itemValue = parseDiscountValue(item && item.discount);
+        inferredValue = inferItemDiscount(item);
+
+        if (itemValue !== null) {
+            if (itemValue > 0) return itemValue;
+            if (inferredValue === null || inferredValue === 0) return itemValue;
+        }
+
+        if (inferredValue !== null) return inferredValue;
+
+        globalValue = parseDiscountValue(_billingDiscount);
+        return globalValue !== null ? globalValue : 0;
+    }
+
     function readBillingFromDataset(el, defaults) {
         var billing = cloneBilling(defaults);
         var dataset = el && el.dataset ? el.dataset : {};
@@ -128,6 +184,39 @@
         badge.classList.toggle('hidden', count === 0);
     }
 
+    function getCurrentPageBillingItem() {
+        var currentPage = window.location.pathname;
+
+        for (var slug of Object.keys(cart.items)) {
+            var item = cart.items[slug];
+            if (!item || item.page !== currentPage) continue;
+            if (!isServiceCartItem(item)) continue;
+            if (item.payment !== 'monthly' && item.payment !== 'yearly') continue;
+            return item;
+        }
+
+        return null;
+    }
+
+    function syncCurrentPageBillingStateFromCart() {
+        var item = getCurrentPageBillingItem();
+
+        if (!item) return;
+
+        _billingPeriod = item.payment === 'yearly' ? 'yearly' : 'monthly';
+        _billingDiscount = resolveItemDiscount(item);
+
+        document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
+            detail: {
+                period: _billingPeriod,
+                discount: _billingDiscount,
+                source: 'cart-init',
+                scope: 'page',
+                itemPage: item.page || ''
+            }
+        }));
+    }
+
     var cart = {
         items: {},
 
@@ -157,6 +246,7 @@
                             delete item.billingDiscount;
                         }
                         normalizeCartBilling(item);
+                        item.discount = resolveItemDiscount(item, item.discount);
                     }
                 }
             } catch (e) {
@@ -176,7 +266,7 @@
             updateCartCtaState();
         },
 
-        add: function(slug, title, tierName, tierLabel, price, custom, payment, billing, itemType) {
+        add: function(slug, title, tierName, tierLabel, price, custom, payment, billing, itemType, discount) {
             var prev = this.items[slug];
 
             this.items[slug] = {
@@ -186,7 +276,7 @@
                 price: price,
                 custom: custom,
                 payment: payment || 'one-time',
-                discount: _billingDiscount,
+                discount: resolveItemDiscount(prev, discount),
                 billing: billing || cloneBilling(DEFAULT_BILLING),
                 itemType: normalizeCartItemType(itemType),
                 page: window.location.pathname,
@@ -526,13 +616,13 @@
 
                 html += '<div class="cart-line-item">' +
                     '<div class="cart-item-info">' +
-                        '<span class="cart-item-title">' + item.title + '</span>' +
+                        '<a class="cart-item-title cart-item-link" href="' + escapeHtml(item.page || '#') + '">' + escapeHtml(item.title) + '</a>' +
                         '<span class="cart-item-tier">' + tierLine + '</span>' +
                         pricingMeta.detailLines.map(function(line) {
                             return '<span class="cart-billing-note">' + line + '</span>';
                         }).join('') +
                         '<div class="cart-line-controls">' +
-                            '<div class="cart-line-row">' +
+                            '<div class="cart-line-row cart-line-row-payment">' +
                                 '<span class="cart-line-label">Payment</span>' +
                                 '<div class="cart-line-row-actions">' + paymentControl + '</div>' +
                             '</div>' +
@@ -699,8 +789,8 @@
                     '<span class="cart-inline-val">' + value + '</span>' +
                     '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="' + field + '" data-action="plus">+</button>' +
                 '</div>' +
-                (value > 0 ? '<span class="cart-inline-fee">+' + formatMoney(fee) + '</span>' : '') +
             '</div>' +
+            '<span class="cart-line-row-value">' + (value > 0 ? '+' + formatMoney(fee) : '$0') + '</span>' +
         '</div>';
     }
 
@@ -709,11 +799,11 @@
 
         if (!item || item.payment === val) return;
         if (!isServiceCartItem(item)) return;
+        if (val !== 'monthly' && val !== 'yearly') return;
 
-        item.payment = val;
-        normalizeCartBilling(item);
-        cart.save();
-        syncCartViews();
+        document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
+            detail: { period: val, discount: resolveItemDiscount(item), source: 'order-sidebar', scope: 'single', itemSlug: slug, itemPage: item.page || '' }
+        }));
     }
 
     function updateSidebarItemModifier(slug, field, action) {
@@ -768,18 +858,27 @@
 
         document.addEventListener('billingPeriodChanged', function(e) {
             var currentPage = window.location.pathname;
+            var detail = e && e.detail ? e.detail : {};
+            var targetSlug = detail.itemSlug || '';
+            var scope = detail.scope || 'page';
 
-            _billingPeriod = e.detail.period;
-            _billingDiscount = e.detail.discount;
+            _billingPeriod = detail.period;
+            if (parseDiscountValue(detail.discount) !== null) {
+                _billingDiscount = parseDiscountValue(detail.discount);
+            }
 
             for (var slug of Object.keys(cart.items)) {
                 var item = cart.items[slug];
-                if (item.page !== currentPage) continue;
+                if (scope === 'single') {
+                    if (slug !== targetSlug) continue;
+                } else if (item.page !== currentPage) {
+                    continue;
+                }
                 if (!isServiceCartItem(item)) {
                     normalizeCartBilling(item);
                     continue;
                 }
-                item.discount = _billingDiscount;
+                item.discount = resolveItemDiscount(item, detail.discount);
                 if (item.payment !== 'one-time') {
                     item.payment = _billingPeriod;
                 }
@@ -787,7 +886,7 @@
             }
 
             cart.save();
-            cart.renderSidebar();
+            syncCartViews();
         });
     }
 
@@ -878,6 +977,7 @@
                 var billing;
                 var payment;
                 var monthlyPrice;
+                var discount;
 
                 if (!nameEl || !priceEl) return;
 
@@ -895,9 +995,10 @@
                 billing = readBillingFromDataset(pkg, SERVICE_BILLING_DEFAULTS);
                 payment = billing.monthly ? _billingPeriod : 'one-time';
                 monthlyPrice = parseInt(priceEl.dataset.monthly) || price;
+                discount = grid ? (parseDiscountValue(grid.dataset.discount) || 0) : 0;
 
                 cart.clearCurrentPage();
-                cart.add(slug, serviceName || pkgName, pkgName, '', monthlyPrice, false, payment, billing, 'Service');
+                cart.add(slug, serviceName || pkgName, pkgName, '', monthlyPrice, false, payment, billing, 'Service', discount);
                 revealOrderTabForSelection();
             });
         });
@@ -914,6 +1015,8 @@
                 var billing;
                 var payment;
                 var itemType;
+                var discountSource;
+                var discount;
 
                 if (!titleEl || !priceEl) return;
 
@@ -925,9 +1028,11 @@
                 itemType = /^\/solutions\/[^/]+\/?$/.test(window.location.pathname) ? 'Solution' : 'Service';
                 billing = itemType === 'Service' ? readBillingFromDataset(card, SERVICE_BILLING_DEFAULTS) : cloneBilling(DEFAULT_BILLING);
                 payment = itemType === 'Service' && billing.monthly ? _billingPeriod : 'one-time';
+                discountSource = section ? section.querySelector('[data-discount]') : null;
+                discount = discountSource ? (parseDiscountValue(discountSource.dataset.discount) || 0) : 0;
 
                 cart.clearCurrentPage();
-                cart.add(slug, title, '', '', price, false, payment, billing, itemType);
+                cart.add(slug, title, '', '', price, false, payment, billing, itemType, discount);
                 revealOrderTabForSelection();
 
                 if (window.innerWidth < 2200) {
@@ -950,6 +1055,8 @@
                 var ctaCard;
                 var billing;
                 var payment;
+                var discountSource;
+                var discount;
 
                 if (!nameEl || !priceEl) return;
 
@@ -968,9 +1075,11 @@
                 ctaCard = section ? section.querySelector('.pricing-cta-card') : null;
                 billing = readBillingFromDataset(ctaCard, SERVICE_BILLING_DEFAULTS);
                 payment = billing.monthly ? _billingPeriod : 'one-time';
+                discountSource = section ? section.querySelector('[data-discount]') : null;
+                discount = discountSource ? (parseDiscountValue(discountSource.dataset.discount) || 0) : 0;
 
                 cart.clearCurrentPage();
-                cart.add(slug, serviceName || tierName, tierName, '', price, false, payment, billing, 'Service');
+                cart.add(slug, serviceName || tierName, tierName, '', price, false, payment, billing, 'Service', discount);
                 revealOrderTabForSelection();
             });
         });
@@ -1084,7 +1193,7 @@
 
                 html += '<tr>' +
                     '<td>' +
-                        '<span class="cart-item-name">' + item.title + '</span>' +
+                        '<a class="cart-item-name cart-item-link" href="' + escapeHtml(item.page || '#') + '">' + escapeHtml(item.title) + '</a>' +
                         '<span class="cart-item-tier">' + tierStr + basePriceStr + '</span>' +
                         pricingMeta.detailLines.map(function(line) {
                             return '<span class="cart-billing-note">' + line + '</span>';
@@ -1218,11 +1327,11 @@
 
                     if (!item || item.payment === val) return;
                     if (!isServiceCartItem(item)) return;
+                    if (val !== 'monthly' && val !== 'yearly') return;
 
-                    item.payment = val;
-                    normalizeCartBilling(item);
-                    cart.save();
-                    syncCartViews();
+                    document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
+                        detail: { period: val, discount: resolveItemDiscount(item), source: 'cart-page', scope: 'single', itemSlug: slug, itemPage: item.page || '' }
+                    }));
                 });
             });
 
@@ -1310,6 +1419,7 @@
         cart.load();
         initBillingState();
         bindTaskPickerEvents();
+        syncCurrentPageBillingStateFromCart();
         initSidebarCart();
         initModifierCounters();
         initPricingCartIntegration();
