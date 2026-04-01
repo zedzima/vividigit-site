@@ -21,8 +21,8 @@
     <meta property="og:title" content="Digital Marketing Blog — SEO, AI Visibility, and Growth Strategy | VIVIDIGIT">
     <meta property="og:description" content="Expert articles on SEO, AI visibility, content marketing, growth strategy, and digital marketing operations. Actionable insights from practitioners, not theory from observers.">
     <meta property="og:url" content="https://vividigit.com/blog/">
-    <meta property="og:image" content="https://vividigit.com/_media/images/site/og-default.png">
-    <meta property="og:image:secure_url" content="https://vividigit.com/_media/images/site/og-default.png">
+    <meta property="og:image" content="https://vividigit.com/_media/images/site/og-default.png?v=9f91b350">
+    <meta property="og:image:secure_url" content="https://vividigit.com/_media/images/site/og-default.png?v=9f91b350">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -34,10 +34,10 @@
     <meta name="twitter:site" content="@vividigit">
     <meta name="twitter:title" content="Digital Marketing Blog — SEO, AI Visibility, and Growth Strategy | VIVIDIGIT">
     <meta name="twitter:description" content="Expert articles on SEO, AI visibility, content marketing, growth strategy, and digital marketing operations. Actionable insights from practitioners, not theory from observers.">
-    <meta name="twitter:image" content="https://vividigit.com/_media/images/site/og-default.png">
+    <meta name="twitter:image" content="https://vividigit.com/_media/images/site/og-default.png?v=9f91b350">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="_media/images/site/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="_media/images/site/favicon.svg?v=9f91b350">
 
     
     
@@ -51,18 +51,19 @@
     
 
     <!-- Fonts -->
-    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2?v=9f91b350" as="font" type="font/woff2" crossorigin>
     
 
     <!-- Styles -->
-    <link rel="preload" href="_assets/css/styles.css?v=056351ad" as="style">
-    <link rel="stylesheet" href="_assets/css/styles.css?v=056351ad">
+    <link rel="preload" href="_assets/css/styles.css?v=ebf80700" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=ebf80700">
     <script>
     window.VividigitAssetHashes = {
-        cart: '4028ff82'
+        cart: '4028ff82',
+        media: '9f91b350'
     };
     </script>
-    <script src="_assets/js/cards.js?v=7efff30d" defer></script>
+    <script src="_assets/js/cards.js?v=8cf516e8" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -158,7 +159,7 @@
         "@type": "Organization",
         "name": "Vividigit",
         "url": "https://vividigit.com",
-        "logo": "https://vividigit.com/_media/images/site/favicon.svg",
+        "logo": "https://vividigit.com/_media/images/site/favicon.svg?v=9f91b350",
         "description": "Productized marketing services marketplace",
         "contactPoint": {
             "@type": "ContactPoint",
@@ -229,7 +230,7 @@
         </div>
 
         <a href="./" class="logo">
-            <img src="_media/images/site/logo-gradient.svg" alt="Vividigit" class="logo-text" width="156" height="30" decoding="async">
+            <img src="_media/images/site/logo-gradient.svg?v=9f91b350" alt="Vividigit" class="logo-text" width="156" height="30" decoding="async">
         </a>
 
         <div class="header-right">
@@ -657,11 +658,17 @@
     var paginationEl = section.querySelector('.catalog-pagination');
     var countEl = section.querySelector('.catalog-count-num');
     var sortEl = section.querySelector('.catalog-sort-select');
+    var mediaHash = '9f91b350';
 
     var allItems = [];
     var renderedItems = [];
     var currentPage = 1;
     var LABELS = {};
+
+    function mediaIconUrl(name) {
+        var url = '/_media/icons/' + name + '.svg';
+        return mediaHash ? url + '?v=' + mediaHash : url;
+    }
 
     /* ===== Source configs ===== */
     var SOURCES = {
@@ -831,7 +838,7 @@
     function renderServiceCard(s) {
         var url = (s.url || '/services/' + s.slug).replace(/^\//, '');
         var iconName = serviceIconMap[s.slug] || 'settings';
-        var iconHtml = '<div class="service-card-icon" style="--icon-url: url(/_media/icons/' + iconName + '.svg)"></div>';
+        var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
         var domains = Array.isArray(s.domains) ? s.domains : ((s.facets && Array.isArray(s.facets.domains)) ? s.facets.domains : []);
         var domainRow = domains.length ? '<div class="entity-card-exact-chips"><div class="entity-card-exact-row service-chip-row service-chip-row-domains">' + domains.map(function(domain) {
             return '<span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domain) || toTitleCase(domain)) + '</span>';
@@ -858,7 +865,7 @@
     function renderDomainCard(s) {
         var url = (s.url || '/domains/' + s.slug).replace(/^\//, '');
         var iconName = s.icon || 'compass';
-        var iconHtml = '<div class="service-card-icon" style="--icon-url: url(/_media/icons/' + iconName + '.svg)"></div>';
+        var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
         var metrics = [];
         if (s.service_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.service_count, 'service', 'services')) + '</span>');
         if (s.scope_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
@@ -890,7 +897,7 @@
         var domains = Array.isArray(s.domains) ? s.domains : (Array.isArray(facets.domains) ? facets.domains : []);
         var badgeHtml = '';
         if (s.icon) {
-            badgeHtml = '<div class="dimension-card-badge icon" style="--icon-url: url(/_media/icons/' + s.icon + '.svg)"></div>';
+            badgeHtml = '<div class="dimension-card-badge icon" style="--icon-url: url(' + mediaIconUrl(s.icon) + ')"></div>';
         } else if (s.flag) {
             badgeHtml = '<div class="dimension-card-badge">' + s.flag + '</div>';
         } else if (s.code) {
@@ -1253,85 +1260,85 @@
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8132)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-8132" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1335)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-1335" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3484)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-3484" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3424)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-3424" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4753)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-4753" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6798)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-6798" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9398)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-9398" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8182)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-8182" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6786)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-6786" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4377)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-4377" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2252)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-2252" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2166)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-2166" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5956)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-5956" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8534)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-8534" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4229)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-4229" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9774)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-9774" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4510)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-4510" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4496)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-4496" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4330)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-4330" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1070)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-1070" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6189)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-6189" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2124)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-2124" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9963)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-9963" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4637)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-4637" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9635)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-9635" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9118)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-9118" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3946)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-3946" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1461)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-document"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><defs><linearGradient id="icon-grad-1461" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -1508,7 +1515,7 @@
                     <div class="footer-top-section footer-heritage">
                         <p class="footer-column-title">Background</p>
                         <div class="footer-heritage-logo">
-                            <img src="/_media/images/site/alconost-logo.svg" alt="Alconost Digital logo" loading="lazy" decoding="async" width="258" height="45">
+                            <img src="/_media/images/site/alconost-logo.svg?v=9f91b350" alt="Alconost Digital logo" loading="lazy" decoding="async" width="258" height="45">
                         </div>
                         <p class="footer-brand-line">Former Alconost Digital team</p>
                         <p class="footer-brand-note">Working in multilingual digital services since 2008</p>
@@ -1535,7 +1542,7 @@
                             
                             <a href="https://clutch.co" class="footer-badge-item" target="_blank" rel="noopener">
                                 <span class="footer-badge-visual">
-                                    <img src="/_media/logos/clutch.svg" alt="Clutch logo" loading="lazy">
+                                    <img src="/_media/logos/clutch.svg?v=9f91b350" alt="Clutch logo" loading="lazy">
                                 </span>
                                 <span class="footer-badge-meta">
                                     <span class="footer-badge-name">Clutch</span>
@@ -1548,7 +1555,7 @@
                             
                             <a href="https://www.google.com/maps" class="footer-badge-item" target="_blank" rel="noopener">
                                 <span class="footer-badge-visual">
-                                    <img src="/_media/logos/google-reviews.svg" alt="Google Reviews logo" loading="lazy">
+                                    <img src="/_media/logos/google-reviews.svg?v=9f91b350" alt="Google Reviews logo" loading="lazy">
                                 </span>
                                 <span class="footer-badge-meta">
                                     <span class="footer-badge-name">Google Reviews</span>
@@ -1561,7 +1568,7 @@
                             
                             <a href="https://www.trustpilot.com" class="footer-badge-item" target="_blank" rel="noopener">
                                 <span class="footer-badge-visual">
-                                    <img src="/_media/logos/trustpilot.svg" alt="Trustpilot logo" loading="lazy">
+                                    <img src="/_media/logos/trustpilot.svg?v=9f91b350" alt="Trustpilot logo" loading="lazy">
                                 </span>
                                 <span class="footer-badge-meta">
                                     <span class="footer-badge-name">Trustpilot</span>
@@ -1574,7 +1581,7 @@
                             
                             <a href="https://www.g2.com" class="footer-badge-item" target="_blank" rel="noopener">
                                 <span class="footer-badge-visual">
-                                    <img src="/_media/logos/g2.svg" alt="G2 logo" loading="lazy">
+                                    <img src="/_media/logos/g2.svg?v=9f91b350" alt="G2 logo" loading="lazy">
                                 </span>
                                 <span class="footer-badge-meta">
                                     <span class="footer-badge-name">G2</span>

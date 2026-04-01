@@ -135,6 +135,24 @@
             .replace(/\.[a-z0-9]+$/i, '.jpg');
     }
 
+    function mediaVersion() {
+        return (window.VividigitAssetHashes && window.VividigitAssetHashes.media) || '';
+    }
+
+    function mediaUrl(path) {
+        var value = String(path || '');
+        var version = mediaVersion();
+        if (!value || !version || value.indexOf('_media/') === -1) return value;
+        if (/[?&]v=/.test(value)) {
+            return value.replace(/([?&])v=[^&#]*/g, '$1v=' + version);
+        }
+        return value + (value.indexOf('?') === -1 ? '?v=' : '&v=') + version;
+    }
+
+    function mediaIconUrl(name) {
+        return mediaUrl('/_media/icons/' + name + '.svg');
+    }
+
     function buildExactRow(chips, extraClass) {
         var items = (chips || []).filter(Boolean);
         if (!items.length) return '';
@@ -254,7 +272,7 @@
         var initials = getInitials(d.title || d.slug);
         var avatarSrc = getCardAvatarSrc(d.avatar);
         var avatarHtml = d.avatar
-            ? '<div class="specialist-avatar"><img src="' + esc(avatarSrc) + '" alt="' + esc(d.title) + '" loading="lazy" fetchpriority="low" decoding="async" width="56" height="56" onerror="this.onerror=null;this.src=\'' + esc(d.avatar) + '\'"></div>'
+            ? '<div class="specialist-avatar"><img src="' + esc(mediaUrl(avatarSrc)) + '" alt="' + esc(d.title) + '" loading="lazy" fetchpriority="low" decoding="async" width="56" height="56" onerror="this.onerror=null;this.src=\'' + esc(mediaUrl(d.avatar)) + '\'"></div>'
             : '<div class="specialist-avatar"><div class="specialist-avatar-initials">' + esc(initials) + '</div></div>';
         var summary = d.description
             ? '<p class="specialist-summary entity-card-copy">' + esc(d.description) + '</p>'
@@ -329,7 +347,7 @@
 
         return '<a href="' + url + '" class="scope-card entity-card entity-card-padded">' +
             '<div class="service-card-header"><div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
-            '<div class="service-card-icon" style="--icon-url: url(/_media/icons/' + iconName + '.svg)"></div></div>' +
+            '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div></div>' +
             '<p class="entity-card-copy">' + esc(s.description || '') + '</p>' +
             buildExactRows([
                 buildExactRow(domainTags, 'scope-chip-row scope-chip-row-domains'),
@@ -350,7 +368,7 @@
         var title = s.menu || s.title || 'Case';
         var letter = (s.client || title || 'C').charAt(0).toUpperCase();
         var imageHtml = s.image
-            ? '<div class="case-image"><img src="' + esc(s.image) + '" alt="' + esc(title) + '" loading="lazy"></div>'
+            ? '<div class="case-image"><img src="' + esc(mediaUrl(s.image)) + '" alt="' + esc(title) + '" loading="lazy"></div>'
             : '<div class="case-image"><div class="case-image-placeholder"><span>' + esc(letter) + '</span></div></div>';
         var service = s.service || toArray(facets.services)[0] || '';
         var industry = s.industry || toArray(facets.industries)[0] || '';
@@ -467,7 +485,7 @@
 
         return '<a href="' + url + '" class="solution-card entity-card entity-card-padded">' +
             '<div class="service-card-header"><div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
-            '<div class="service-card-icon" style="--icon-url: url(/_media/icons/' + iconName + '.svg)"></div></div>' +
+            '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div></div>' +
             '<p class="entity-card-copy">' + esc(s.description || '') + '</p>' +
             buildExactRows([
                 buildExactRow(domainTags, 'solution-chip-row solution-chip-row-domains'),
@@ -484,6 +502,8 @@
     }
 
     window.CMSCards.renderSolutionCard = renderSolutionCard;
+    window.CMSCards.mediaUrl = mediaUrl;
+    window.CMSCards.mediaIconUrl = mediaIconUrl;
 
     /* === Position Card === */
     function normalizePositionCardData(p) {
