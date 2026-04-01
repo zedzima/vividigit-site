@@ -61,7 +61,7 @@
         media: '528c8a03'
     };
     </script>
-    <script src="_assets/js/cards.js?v=8cf516e8" defer></script>
+    <script src="_assets/js/cards.js?v=a23fd553" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -457,6 +457,18 @@
         if (!isFinite(n) || n <= 0) return '';
         return '$' + Math.round(n);
     }
+    function normalizeCardUrl(value, fallback) {
+        var href = value === undefined || value === null || value === '' ? (fallback || '#') : String(value).trim();
+        if (!href) href = fallback || '#';
+        if (/^(https?:\/\/|mailto:|tel:|javascript:|#)/i.test(href)) return href;
+        var normalized = href.replace(/\\/g, '/');
+        var comparable = normalized.replace(/^\.\//, '').replace(/^\/+/, '').toLowerCase();
+        if (comparable === 'contact' || comparable.indexOf('contact/') === 0 || comparable.indexOf('contact?') === 0) {
+            return '#sidebar-contact';
+        }
+        var clean = normalized.replace(/^\.\//, '').replace(/^\/+/, '');
+        return clean ? ('/' + clean) : '/';
+    }
     function sortFeaturedFirst(items) {
         return items.slice().sort(function(a, b) {
             var featuredCompare = Number(isFeatured(b)) - Number(isFeatured(a));
@@ -513,7 +525,7 @@
     }
 
     function renderServiceCard(s) {
-        var url = (s.url || '/services/' + s.slug).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/services/' + s.slug), '#');
         var iconName = serviceIconMap[s.slug] || 'settings';
         var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
         var domains = Array.isArray(s.domains) ? s.domains : ((s.facets && Array.isArray(s.facets.domains)) ? s.facets.domains : []);
@@ -540,7 +552,7 @@
     }
 
     function renderDomainCard(s) {
-        var url = (s.url || '/domains/' + s.slug).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/domains/' + s.slug), '#');
         var iconName = s.icon || 'compass';
         var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
         var metrics = [];
@@ -567,7 +579,7 @@
     }
 
     function renderDimensionCard(s, collection) {
-        var url = (s.url || '/' + collection + '/' + s.slug).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/' + collection + '/' + s.slug), '#');
         var facets = s.facets || {};
         var domains = Array.isArray(s.domains) ? s.domains : (Array.isArray(facets.domains) ? facets.domains : []);
         var badgeHtml = '';

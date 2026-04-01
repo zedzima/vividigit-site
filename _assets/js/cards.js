@@ -30,6 +30,26 @@
             .replace(/\b\w/g, function(ch) { return ch.toUpperCase(); });
     }
 
+    function normalizeCardUrl(value, fallback) {
+        var href = value === undefined || value === null || value === '' ? (fallback || '#') : String(value).trim();
+        if (!href) href = fallback || '#';
+
+        if (/^(https?:\/\/|mailto:|tel:|javascript:|#)/i.test(href)) return href;
+
+        var normalized = href.replace(/\\/g, '/');
+        var comparable = normalized.replace(/^\.\//, '').replace(/^\/+/, '').toLowerCase();
+        if (
+            comparable === 'contact' ||
+            comparable.indexOf('contact/') === 0 ||
+            comparable.indexOf('contact?') === 0
+        ) {
+            return '#sidebar-contact';
+        }
+
+        var clean = normalized.replace(/^\.\//, '').replace(/^\/+/, '');
+        return clean ? ('/' + clean) : '/';
+    }
+
     function resolveLabel(resolver, slug) {
         if (!slug) return '';
         if (typeof resolver === 'function') return resolver(slug);
@@ -248,7 +268,7 @@
 
         return {
             slug: s.slug || '',
-            url: (s.url || ('/team/' + (s.slug || ''))).replace(/^\//, ''),
+            url: normalizeCardUrl(s.url || ('/team/' + (s.slug || '')), '#'),
             title: s.title || s.menu || s.name || s.slug || 'Expert',
             description: s.description || '',
             role: s.role || '',
@@ -331,7 +351,7 @@
         var languageCount = normalizeCount(s.language_count, toArray(s.languages || facets.languages).length);
         var taskCount = normalizeCount(s.task_count, 0);
         var price = normalizeCount(s.price || s.from_price, 0);
-        var url = (s.url || ('/scopes/' + (s.slug || ''))).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/scopes/' + (s.slug || '')), '#');
         var iconName = s.icon || (opts.serviceIconMap && opts.serviceIconMap[services[0]]) || 'settings';
         var domainTags = domains.map(function(domain) {
             return buildLabelChip(resolveLabel(opts.domainLabel, domain), 'entity-chip-wide');
@@ -364,7 +384,7 @@
     function renderCaseCard(s, options) {
         var opts = options || {};
         var facets = s.facets || {};
-        var url = (s.url || ('/cases/' + (s.slug || ''))).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/cases/' + (s.slug || '')), '#');
         var title = s.menu || s.title || 'Case';
         var letter = (s.client || title || 'C').charAt(0).toUpperCase();
         var imageHtml = s.image
@@ -402,7 +422,7 @@
 
     function renderBlogCard(s, options) {
         var opts = options || {};
-        var url = (s.url || ('/blog/' + (s.slug || ''))).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/blog/' + (s.slug || '')), '#');
         if (url && url.slice(-1) !== '/') url += '/';
         var services = toArray(s.services || s.service || []);
         if (!services.length && s.service) services = [s.service];
@@ -472,7 +492,7 @@
         var countryCount = normalizeCount(s.country_count, toArray(facets.countries).length);
         var languageCount = normalizeCount(s.language_count, toArray(facets.languages).length);
         var price = normalizeCount(s.starting_price || s.price, 0);
-        var url = (s.url || ('/solutions/' + (s.slug || ''))).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/solutions/' + (s.slug || '')), '#');
         var iconName = s.icon || (opts.serviceIconMap && opts.serviceIconMap[firstService]) || 'settings';
         var metricTags = [];
         if (specialistCount > 0) metricTags.push(buildCountChip(pluralize(specialistCount, 'expert', 'experts')));
@@ -504,6 +524,7 @@
     window.CMSCards.renderSolutionCard = renderSolutionCard;
     window.CMSCards.mediaUrl = mediaUrl;
     window.CMSCards.mediaIconUrl = mediaIconUrl;
+    window.CMSCards.cardUrl = normalizeCardUrl;
 
     /* === Position Card === */
     function normalizePositionCardData(p) {
@@ -531,7 +552,7 @@
 
         return {
             slug: p.slug || '',
-            url: (p.url || ('/positions/' + (p.slug || ''))).replace(/^\//, ''),
+            url: normalizeCardUrl(p.url || ('/positions/' + (p.slug || '')), '#'),
             title: p.title || p.menu || p.slug || 'Position',
             description: p.description || '',
             specialist_count: normalizeCount(p.specialist_count, specialistRefs.length),

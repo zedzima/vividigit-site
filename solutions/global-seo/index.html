@@ -87,7 +87,7 @@
         media: '528c8a03'
     };
     </script>
-    <script src="_assets/js/cards.js?v=8cf516e8" defer></script>
+    <script src="_assets/js/cards.js?v=a23fd553" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -1092,7 +1092,7 @@
             <div class="columns-item-head">
                 <h3>Fragmented vendor stack</h3>
                 <span class="columns-item-mark" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5928)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-x"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/><defs><linearGradient id="icon-grad-5928" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4201)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-x"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/><defs><linearGradient id="icon-grad-4201" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -1128,7 +1128,7 @@
             <div class="columns-item-head">
                 <h3>One global SEO system</h3>
                 <span class="columns-item-mark" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2641)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/><defs><linearGradient id="icon-grad-2641" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6222)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/><defs><linearGradient id="icon-grad-6222" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
@@ -3258,6 +3258,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isFinite(n) || n <= 0) return '';
         return '$' + Math.round(n);
     }
+    function normalizeCardUrl(value, fallback) {
+        var href = value === undefined || value === null || value === '' ? (fallback || '#') : String(value).trim();
+        if (!href) href = fallback || '#';
+        if (/^(https?:\/\/|mailto:|tel:|javascript:|#)/i.test(href)) return href;
+        var normalized = href.replace(/\\/g, '/');
+        var comparable = normalized.replace(/^\.\//, '').replace(/^\/+/, '').toLowerCase();
+        if (comparable === 'contact' || comparable.indexOf('contact/') === 0 || comparable.indexOf('contact?') === 0) {
+            return '#sidebar-contact';
+        }
+        var clean = normalized.replace(/^\.\//, '').replace(/^\/+/, '');
+        return clean ? ('/' + clean) : '/';
+    }
     function sortFeaturedFirst(items) {
         return items.slice().sort(function(a, b) {
             var featuredCompare = Number(isFeatured(b)) - Number(isFeatured(a));
@@ -3314,7 +3326,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderServiceCard(s) {
-        var url = (s.url || '/services/' + s.slug).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/services/' + s.slug), '#');
         var iconName = serviceIconMap[s.slug] || 'settings';
         var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
         var domains = Array.isArray(s.domains) ? s.domains : ((s.facets && Array.isArray(s.facets.domains)) ? s.facets.domains : []);
@@ -3341,7 +3353,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderDomainCard(s) {
-        var url = (s.url || '/domains/' + s.slug).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/domains/' + s.slug), '#');
         var iconName = s.icon || 'compass';
         var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
         var metrics = [];
@@ -3368,7 +3380,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderDimensionCard(s, collection) {
-        var url = (s.url || '/' + collection + '/' + s.slug).replace(/^\//, '');
+        var url = normalizeCardUrl(s.url || ('/' + collection + '/' + s.slug), '#');
         var facets = s.facets || {};
         var domains = Array.isArray(s.domains) ? s.domains : (Array.isArray(facets.domains) ? facets.domains : []);
         var badgeHtml = '';
@@ -3594,7 +3606,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<a href="domains/search-marketing" class="service-card entity-card entity-card-padded">
+<a href="/domains/search-marketing" class="service-card entity-card entity-card-padded">
     <div class="service-card-header">
         <div class="entity-card-title">Search Marketing</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/search-new.svg?v=528c8a03')"></div>
@@ -3666,7 +3678,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<a href="scopes/technical-seo" class="scope-card entity-card entity-card-padded">
+<a href="/scopes/technical-seo" class="scope-card entity-card entity-card-padded">
     <div class="service-card-header">
         <div class="entity-card-title">Technical SEO</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/search.svg?v=528c8a03')"></div>
@@ -3744,7 +3756,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<a href="scopes/cross-market-setup" class="scope-card entity-card entity-card-padded">
+<a href="/scopes/cross-market-setup" class="scope-card entity-card entity-card-padded">
     <div class="service-card-header">
         <div class="entity-card-title">International SEO Setup</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/search.svg?v=528c8a03')"></div>
@@ -3820,7 +3832,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<a href="scopes/seo-research" class="scope-card entity-card entity-card-padded">
+<a href="/scopes/seo-research" class="scope-card entity-card entity-card-padded">
     <div class="service-card-header">
         <div class="entity-card-title">SEO Research</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/search.svg?v=528c8a03')"></div>
@@ -3900,7 +3912,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<a href="scopes/on-page-seo" class="scope-card entity-card entity-card-padded">
+<a href="/scopes/on-page-seo" class="scope-card entity-card entity-card-padded">
     <div class="service-card-header">
         <div class="entity-card-title">On-Page SEO</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/search.svg?v=528c8a03')"></div>
@@ -3978,7 +3990,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<a href="scopes/link-building" class="scope-card entity-card entity-card-padded">
+<a href="/scopes/link-building" class="scope-card entity-card entity-card-padded">
     <div class="service-card-header">
         <div class="entity-card-title">Link Building</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/search.svg?v=528c8a03')"></div>
@@ -4048,7 +4060,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
 
-<a href="team/dmitriy-razakhatsky" class="specialist-card entity-card entity-card-padded">
+<a href="/team/dmitriy-razakhatsky" class="specialist-card entity-card entity-card-padded">
     <div class="specialist-card-top">
         <div class="specialist-info">
             <div class="entity-card-title">Dmitriy Razakhatsky</div>
@@ -5345,7 +5357,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<a href="positions/seo-expert" class="position-card entity-card entity-card-padded">
+<a href="/positions/seo-expert" class="position-card entity-card entity-card-padded">
     
     <div class="position-hiring-badge position-hiring-active">Actively Hiring</div>
     
