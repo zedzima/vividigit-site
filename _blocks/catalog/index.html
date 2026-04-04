@@ -23,8 +23,8 @@
     <meta property="og:title" content="Catalog Block — Blocks Library">
     <meta property="og:description" content="Display a filterable catalog of items.">
     <meta property="og:url" content="https://vividigit.com/_blocks/catalog/">
-    <meta property="og:image" content="https://vividigit.com/_media/images/site/og-default.png?v=79109f65">
-    <meta property="og:image:secure_url" content="https://vividigit.com/_media/images/site/og-default.png?v=79109f65">
+    <meta property="og:image" content="https://vividigit.com/_media/images/site/og-default.png?v=e9ca85b7">
+    <meta property="og:image:secure_url" content="https://vividigit.com/_media/images/site/og-default.png?v=e9ca85b7">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -36,10 +36,10 @@
     <meta name="twitter:site" content="@vividigit">
     <meta name="twitter:title" content="Catalog Block — Blocks Library">
     <meta name="twitter:description" content="Display a filterable catalog of items.">
-    <meta name="twitter:image" content="https://vividigit.com/_media/images/site/og-default.png?v=79109f65">
+    <meta name="twitter:image" content="https://vividigit.com/_media/images/site/og-default.png?v=e9ca85b7">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="_media/images/site/favicon.svg?v=79109f65">
+    <link rel="icon" type="image/svg+xml" href="_media/images/site/favicon.svg?v=e9ca85b7">
 
     
     
@@ -49,7 +49,7 @@
     
 
     <!-- Fonts -->
-    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2?v=79109f65" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2?v=e9ca85b7" as="font" type="font/woff2" crossorigin>
     
 
     <script>
@@ -67,15 +67,15 @@
     </script>
 
     <!-- Styles -->
-    <link rel="preload" href="_assets/css/styles.css?v=e49e0857" as="style">
-    <link rel="stylesheet" href="_assets/css/styles.css?v=e49e0857">
+    <link rel="preload" href="_assets/css/styles.css?v=77cd64ad" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=77cd64ad">
     <script>
     window.VividigitAssetHashes = {
         cart: 'c30436e0',
-        media: '79109f65'
+        media: 'e9ca85b7'
     };
     </script>
-    <script src="_assets/js/cards.js?v=a23fd553" defer></script>
+    <script src="_assets/js/cards.js?v=13e83db1" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -87,7 +87,7 @@
         "@type": "Organization",
         "name": "Vividigit",
         "url": "https://vividigit.com",
-        "logo": "https://vividigit.com/_media/images/site/favicon.svg?v=79109f65",
+        "logo": "https://vividigit.com/_media/images/site/favicon.svg?v=e9ca85b7",
         "description": "Productized marketing services marketplace",
         "contactPoint": {
             "@type": "ContactPoint",
@@ -160,7 +160,7 @@
         </div>
 
         <a href="./" class="logo">
-            <img src="_media/images/site/logo-gradient.svg?v=79109f65" alt="Vividigit" class="logo-text" width="156" height="30" decoding="async">
+            <img src="_media/images/site/logo-gradient.svg?v=e9ca85b7" alt="Vividigit" class="logo-text" width="156" height="30" decoding="async">
         </a>
 
         <div class="header-right">
@@ -433,7 +433,7 @@
     var paginationEl = section.querySelector('.catalog-pagination');
     var countEl = section.querySelector('.catalog-count-num');
     var sortEl = section.querySelector('.catalog-sort-select');
-    var mediaHash = '79109f65';
+    var mediaHash = 'e9ca85b7';
 
     var allItems = [];
     var renderedItems = [];
@@ -452,9 +452,14 @@
             dataKey: 'scopes',
             sortOptions: [['popular', 'Popular'], ['rating', 'Highest Rated'], ['name', 'A-Z']]
         },
+        experts: {
+            url: '_data/team.json',
+            dataKey: 'experts',
+            sortOptions: [['projects', 'Most Projects'], ['name', 'A-Z']]
+        },
         team: {
             url: '_data/team.json',
-            dataKey: 'specialists',
+            dataKey: 'experts',
             sortOptions: [['projects', 'Most Projects'], ['name', 'A-Z']]
         },
         cases: {
@@ -500,7 +505,7 @@
         positions: {
             url: '_data/positions-index.json',
             dataKey: 'positions',
-            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['specialists', 'Most Experts']]
+            sortOptions: [['default', 'Default'], ['name', 'A-Z'], ['experts', 'Most Experts']]
         }
     };
 
@@ -631,9 +636,10 @@
             return '<span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domain) || toTitleCase(domain)) + '</span>';
         }).join('') + '</div></div>' : '';
         var price = formatCurrency(s.starting_price || s.from_price || s.price);
+        var expertCount = s.expert_count || 0;
         var metrics = [];
         if (s.scope_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
-        if (s.specialist_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.specialist_count, 'expert', 'experts')) + '</span>');
+        if (expertCount) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
         if (s.industry_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.industry_count, 'industry', 'industries')) + '</span>');
         if (s.country_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.country_count, 'country', 'countries')) + '</span>');
         if (s.language_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.language_count, 'language', 'languages')) + '</span>');
@@ -653,11 +659,12 @@
         var url = normalizeCardUrl(s.url || ('/domains/' + s.slug), '#');
         var iconName = s.icon || 'compass';
         var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
+        var expertCount = s.expert_count || 0;
         var metrics = [];
         if (s.service_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.service_count, 'service', 'services')) + '</span>');
         if (s.scope_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
         if (s.solution_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.solution_count, 'solution', 'solutions')) + '</span>');
-        if (s.specialist_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.specialist_count, 'expert', 'experts')) + '</span>');
+        if (expertCount) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
         return '<a href="' + url + '" class="service-card entity-card entity-card-padded">' +
             '<div class="service-card-header">' +
             '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
@@ -693,10 +700,11 @@
         var domainRow = domains.length ? '<div class="entity-card-exact-chips"><div class="entity-card-exact-row dimension-chip-row dimension-chip-row-domains">' + domains.map(function(domain) {
             return '<span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domain) || toTitleCase(domain)) + '</span>';
         }).join('') + '</div></div>' : '';
+        var expertCount = s.expert_count || 0;
         var metrics = [];
         if (s.service_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.service_count, 'service', 'services')) + '</span>');
         if (s.scope_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
-        if (s.specialist_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.specialist_count, 'expert', 'experts')) + '</span>');
+        if (expertCount) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
         if (s.case_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.case_count, 'case', 'cases')) + '</span>');
         var metricsHtml = metrics.length ? '<div class="dimension-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '';
         var highlightValue = '';
@@ -721,7 +729,7 @@
     }
 
     var RENDERERS = {
-        scopes: renderScopeCard, team: renderSpecialistCard, cases: renderCaseCard, blog: renderBlogCard,
+        scopes: renderScopeCard, experts: renderSpecialistCard, team: renderSpecialistCard, cases: renderCaseCard, blog: renderBlogCard,
         domains: renderDomainCard,
         services: renderServiceCard, solutions: renderSolutionCard,
         industries: function(s) { return renderDimensionCard(s, 'industries'); },
@@ -896,7 +904,9 @@
                 case 'scopes': result = compareNumbersDescending(a, b, 'scope_count'); break;
                 case 'services': result = compareNumbersDescending(a, b, 'service_count'); break;
                 case 'price': result = compareNumbersAscending(a, b, 'starting_price', 999999999); break;
-                case 'specialists': result = compareNumbersDescending(a, b, 'specialist_count'); break;
+                case 'experts':
+                    result = compareNumbersDescending(a, b, 'expert_count');
+                    break;
                 default: result = 0; break;
             }
 
@@ -1172,7 +1182,7 @@
                     <div class="footer-top-section footer-heritage">
                         <p class="footer-column-title">Background</p>
                         <div class="footer-heritage-logo">
-                            <img src="/_media/images/site/alconost-logo.svg?v=79109f65" alt="Alconost Digital logo" loading="lazy" decoding="async" width="258" height="45">
+                            <img src="/_media/images/site/alconost-logo.svg?v=e9ca85b7" alt="Alconost Digital logo" loading="lazy" decoding="async" width="258" height="45">
                         </div>
                         <p class="footer-brand-line">Former <a href="https://alconost.digital/en/" target="_blank" rel="noopener" class="footer-inline-link">Alconost Digital</a> team</p>
                         <p class="footer-brand-note">Working in multilingual digital services since 2008</p>
@@ -1199,7 +1209,7 @@
                             
                             <a href="https://clutch.co/profile/vividigit" class="footer-badge-item" target="_blank" rel="noopener">
                                 <span class="footer-badge-visual">
-                                    <img src="/_media/logos/clutch.svg?v=79109f65" alt="Clutch logo" loading="lazy">
+                                    <img src="/_media/logos/clutch.svg?v=e9ca85b7" alt="Clutch logo" loading="lazy">
                                 </span>
                                 <span class="footer-badge-meta">
                                     <span class="footer-badge-name">Clutch</span>
@@ -1212,7 +1222,7 @@
                             
                             <a href="https://www.google.com/maps" class="footer-badge-item" target="_blank" rel="noopener">
                                 <span class="footer-badge-visual">
-                                    <img src="/_media/logos/google-reviews.svg?v=79109f65" alt="Google Reviews logo" loading="lazy">
+                                    <img src="/_media/logos/google-reviews.svg?v=e9ca85b7" alt="Google Reviews logo" loading="lazy">
                                 </span>
                                 <span class="footer-badge-meta">
                                     <span class="footer-badge-name">Google Reviews</span>

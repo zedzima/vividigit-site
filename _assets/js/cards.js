@@ -487,7 +487,7 @@
         var firstService = s.service || toArray(facets.services)[0] || '';
         var scope = s.scope || toArray(facets.scopes)[0] || '';
         var industry = s.industry || toArray(facets.industries)[0] || '';
-        var specialistCount = normalizeCount(s.specialist_count, toArray(facets.specialists).length);
+        var expertCount = normalizeCount(s.expert_count, toArray(facets.experts).length);
         var caseCount = normalizeCount(s.case_count, toArray(facets.cases).length);
         var countryCount = normalizeCount(s.country_count, toArray(facets.countries).length);
         var languageCount = normalizeCount(s.language_count, toArray(facets.languages).length);
@@ -495,7 +495,7 @@
         var url = normalizeCardUrl(s.url || ('/solutions/' + (s.slug || '')), '#');
         var iconName = s.icon || (opts.serviceIconMap && opts.serviceIconMap[firstService]) || 'settings';
         var metricTags = [];
-        if (specialistCount > 0) metricTags.push(buildCountChip(pluralize(specialistCount, 'expert', 'experts')));
+        if (expertCount > 0) metricTags.push(buildCountChip(pluralize(expertCount, 'expert', 'experts')));
         if (caseCount > 0) metricTags.push(buildCountChip(pluralize(caseCount, 'case', 'cases')));
         if (countryCount > 0) metricTags.push(buildCountChip(pluralize(countryCount, 'country', 'countries')));
         if (languageCount > 0) metricTags.push(buildCountChip(pluralize(languageCount, 'language', 'languages')));
@@ -545,9 +545,10 @@
             p.industries || facets.industries ||
             (p.relationships && p.relationships.industries) || []
         );
-        var specialistRefs = toArray(
-            facets.specialists || p.specialists ||
-            (p.relationships && p.relationships.specialists) || []
+        var expertRefs = toArray(
+            facets.experts ||
+            p.experts ||
+            (p.relationships && p.relationships.experts) || []
         );
 
         return {
@@ -555,7 +556,7 @@
             url: normalizeCardUrl(p.url || ('/positions/' + (p.slug || '')), '#'),
             title: p.title || p.menu || p.slug || 'Position',
             description: p.description || '',
-            specialist_count: normalizeCount(p.specialist_count, specialistRefs.length),
+            expert_count: normalizeCount(p.expert_count, expertRefs.length),
             service_count: normalizeCount(p.service_count, serviceRefs.length),
             industry_count: normalizeCount(p.industry_count, industryRefs.length),
             services: serviceRefs,
@@ -581,8 +582,8 @@
         }
 
         var metricTags = [];
-        if (d.specialist_count > 0) {
-            metricTags.push(buildCountChip(pluralize(d.specialist_count, 'expert', 'experts')));
+        if (d.expert_count > 0) {
+            metricTags.push(buildCountChip(pluralize(d.expert_count, 'expert', 'experts')));
         }
         if (d.industry_count > 0) {
             metricTags.push(buildCountChip(pluralize(d.industry_count, 'industry', 'industries')));
