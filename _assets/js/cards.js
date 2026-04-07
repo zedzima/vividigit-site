@@ -1,6 +1,6 @@
 /*
  * Shared card renderers.
- * Single source of truth for specialist card markup.
+ * Single source of truth for expert card markup.
  */
 (function() {
     function esc(str) {
@@ -252,7 +252,7 @@
         });
     }
 
-    function normalizeSpecialistCardData(s) {
+    function normalizeExpertCardData(s) {
         var facets = s.facets || {};
         var serviceRefs = toArray(
             s.services ||
@@ -286,16 +286,16 @@
         };
     }
 
-    function renderSpecialistCard(s, options) {
+    function renderExpertCard(s, options) {
         var opts = options || {};
-        var d = normalizeSpecialistCardData(s || {});
+        var d = normalizeExpertCardData(s || {});
         var initials = getInitials(d.title || d.slug);
         var avatarSrc = getCardAvatarSrc(d.avatar);
         var avatarHtml = d.avatar
-            ? '<div class="specialist-avatar"><img src="' + esc(mediaUrl(avatarSrc)) + '" alt="' + esc(d.title) + '" loading="lazy" fetchpriority="low" decoding="async" width="56" height="56" onerror="this.onerror=null;this.src=\'' + esc(mediaUrl(d.avatar)) + '\'"></div>'
-            : '<div class="specialist-avatar"><div class="specialist-avatar-initials">' + esc(initials) + '</div></div>';
+            ? '<div class="expert-avatar"><img src="' + esc(mediaUrl(avatarSrc)) + '" alt="' + esc(d.title) + '" loading="lazy" fetchpriority="low" decoding="async" width="56" height="56" onerror="this.onerror=null;this.src=\'' + esc(mediaUrl(d.avatar)) + '\'"></div>'
+            : '<div class="expert-avatar"><div class="expert-avatar-initials">' + esc(initials) + '</div></div>';
         var summary = d.description
-            ? '<p class="specialist-summary entity-card-copy">' + esc(d.description) + '</p>'
+            ? '<p class="expert-summary entity-card-copy">' + esc(d.description) + '</p>'
             : '';
         var serviceTags = d.services.map(function(service) {
             return buildLabelChip(resolveLabel(opts.serviceLabel, service), 'entity-chip-wide');
@@ -315,31 +315,31 @@
             return buildLanguageChip(l, opts);
         }).filter(Boolean);
         var exactRows = buildExactRows([
-            buildExactRow(serviceTags, 'specialist-tag-row specialist-tag-row-services'),
-            buildExactRow(countries, 'specialist-tag-row specialist-tag-row-countries'),
-            buildExactRow(languages, 'specialist-tag-row specialist-tag-row-languages')
+            buildExactRow(serviceTags, 'expert-tag-row expert-tag-row-services'),
+            buildExactRow(countries, 'expert-tag-row expert-tag-row-countries'),
+            buildExactRow(languages, 'expert-tag-row expert-tag-row-languages')
         ]);
-        var metricRow = buildCountRow(metricTags, 'specialist-tag-row specialist-tag-row-metrics');
+        var metricRow = buildCountRow(metricTags, 'expert-tag-row expert-tag-row-metrics');
 
-        return '<a href="' + d.url + '" class="specialist-card entity-card entity-card-padded">' +
-            '<div class="specialist-card-top">' +
-            '<div class="specialist-info"><div class="entity-card-title">' + esc(d.title) + '</div>' +
-            (d.role ? '<div class="specialist-role type-meta">' + esc(d.role) + '</div>' : '') +
+        return '<a href="' + d.url + '" class="expert-card entity-card entity-card-padded">' +
+            '<div class="expert-card-top">' +
+            '<div class="expert-info"><div class="entity-card-title">' + esc(d.title) + '</div>' +
+            (d.role ? '<div class="expert-role type-meta">' + esc(d.role) + '</div>' : '') +
             '</div>' +
             avatarHtml +
             '</div>' +
             summary +
             exactRows +
             metricRow +
-            '<div class="specialist-card-footer entity-card-footer">' +
-            (d.experienceValue ? '<div class="specialist-experience case-result"><span class="result-value">' + esc(d.experienceValue) + '</span><span class="result-label">Years experience</span></div>' : '<span></span>') +
-            '<span class="specialist-cta entity-card-cta">View Profile →</span>' +
+            '<div class="expert-card-footer entity-card-footer">' +
+            (d.experienceValue ? '<div class="expert-experience case-result"><span class="result-value">' + esc(d.experienceValue) + '</span><span class="result-label">Years experience</span></div>' : '<span></span>') +
+            '<span class="expert-cta entity-card-cta">View Profile →</span>' +
             '</div>' +
             '</a>';
     }
 
     window.CMSCards = window.CMSCards || {};
-    window.CMSCards.renderSpecialistCard = renderSpecialistCard;
+    window.CMSCards.renderExpertCard = renderExpertCard;
 
     function renderScopeCard(s, options) {
         var opts = options || {};

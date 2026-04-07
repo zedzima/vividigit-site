@@ -3,7 +3,7 @@
 
 .card {
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     transition: var(--transition);
@@ -58,13 +58,13 @@
 }
 
 .entity-card-title a:hover {
-    color: var(--accent-primary);
+    color: var(--accent);
 }
 
 .entity-card-copy {
     margin: 0 0 var(--type-body-gap);
     color: var(--text-primary);
-    font-size: var(--type-body-size);
+    font-size: var(--font-size-body);
     line-height: var(--type-body-line);
     flex: 1;
 }
@@ -106,7 +106,7 @@
 }
 
 .entity-card-cta {
-    color: color-mix(in srgb, var(--accent-primary) 72%, var(--text-primary));
+    color: color-mix(in srgb, var(--accent) 72%, var(--text-primary));
     font-weight: 600;
     font-size: var(--font-size-ui);
 }
@@ -130,7 +130,7 @@
 }
 
 .type-meta {
-    font-size: var(--type-meta-size);
+    font-size: var(--font-size-caption);
     line-height: var(--type-meta-line);
     color: var(--type-meta-color);
 }
@@ -202,29 +202,29 @@
 
 /* Secondary: Navigation, "learn more" */
 .btn-secondary {
-    background: var(--bg-contrast);
+    background: var(--bg-card);
     border: 1px solid var(--border-strong);
     color: var(--text-primary);
 }
 
 .btn-secondary:hover {
-    background: var(--bg-contrast-hover);
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-primary) 35%, transparent);
+    background: var(--bg-tertiary);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
     color: var(--text-primary);
 }
 
 /* Ghost: Tertiary actions, transparent with border */
 .btn-ghost {
-    background: var(--bg-contrast);
+    background: var(--bg-card);
     border: 1px solid var(--border-strong);
     color: var(--text-primary);
 }
 
 .btn-ghost:hover {
-    background: var(--bg-contrast-hover);
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-primary) 35%, transparent);
+    background: var(--bg-tertiary);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
     color: var(--text-primary);
 }
 
@@ -253,13 +253,13 @@
 .coverage-tab.active,
 .cart-delivery-opt.active,
 .cart-payment-opt.active {
-    background: var(--accent-primary);
+    background: var(--accent);
     color: var(--text-inverse);
 }
 
 .sidebar-tab.active,
 .coverage-tab.active {
-    border-color: var(--accent-primary);
+    border-color: var(--accent);
 }
 
 .tab-btn.active,
@@ -272,8 +272,8 @@
 .sidebar-tab.active:hover,
 .coverage-tab.active:hover {
     color: var(--text-inverse);
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-primary) 42%, transparent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 42%, transparent);
 }
 
 /* ==========================================================================
@@ -293,7 +293,7 @@
 .form-input {
     width: 100%;
     padding: var(--input-padding-y) var(--input-padding-x);
-    background: var(--bg-input);
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     font-size: var(--font-size-ui);
@@ -330,9 +330,9 @@ select.form-input {
     -moz-appearance: none;
     appearance: none;
     padding: var(--space-sm) calc(var(--space-lg) + 20px) var(--space-sm) var(--space-md);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    background-color: var(--bg-input);
+    background-color: var(--bg-card);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right var(--space-md) center;
@@ -347,12 +347,12 @@ select.form-input:hover {
 }
 
 select.form-input:focus {
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-primary) 35%, transparent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
 select.form-input option {
-    background: var(--bg-secondary);
+    background: var(--bg-card);
     color: var(--text-primary);
 }
 
@@ -378,7 +378,7 @@ select.form-input option {
     padding: var(--input-padding-y) calc(var(--input-padding-x) + 22px) var(--input-padding-y) var(--input-padding-x);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
-    background: var(--bg-input);
+    background: var(--bg-card);
     color: var(--text-primary);
     font-size: var(--font-size-ui);
     text-align: left;
@@ -388,7 +388,7 @@ select.form-input option {
 
 .source-select-toggle:hover {
     border-color: var(--border);
-    background: var(--bg-input);
+    background: var(--bg-card);
 }
 
 .source-select.open .source-select-toggle {
@@ -401,7 +401,7 @@ select.form-input option {
     top: calc(100% + 4px);
     left: 0;
     right: 0;
-    background: var(--bg-primary);
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: var(--space-xs);
@@ -453,7 +453,7 @@ select.form-input option {
     padding: 0.625rem calc(0.75rem + 22px) 0.625rem 0.75rem;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
-    background: var(--bg-input);
+    background: var(--bg-card);
     font-size: var(--font-size-ui);
     color: var(--text-primary);
     transition: var(--transition);
@@ -461,7 +461,7 @@ select.form-input option {
 
 .source-select-cart .source-select-toggle:hover {
     border-color: var(--border-light);
-    background: var(--bg-input);
+    background: var(--bg-card);
 }
 
 .source-select-cart.open .source-select-toggle {
@@ -499,11 +499,11 @@ select.form-input option {
 .tag {
     display: inline-block;
     padding: var(--space-xs) var(--space-sm);
-    font-size: var(--type-meta-size);
+    font-size: var(--font-size-caption);
     font-weight: 500;
     line-height: var(--type-meta-line);
-    background: var(--bg-contrast);
-    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-secondary);
 }
@@ -519,7 +519,7 @@ select.form-input option {
 .tag-accent {
     background: color-mix(in srgb, var(--accent-subtle-bg) 78%, var(--bg-card));
     border-color: color-mix(in srgb, var(--accent-subtle-border) 82%, var(--border));
-    color: color-mix(in srgb, var(--accent-primary) 68%, var(--text-primary));
+    color: color-mix(in srgb, var(--accent) 68%, var(--text-primary));
 }
 
 .entity-chip {
@@ -528,7 +528,7 @@ select.form-input option {
     justify-content: center;
     min-height: 24px;
     padding: 2px 8px;
-    font-size: var(--type-meta-size);
+    font-size: var(--font-size-caption);
     border: 1px solid var(--border);
     border-radius: 4px;
     background: var(--bg-tertiary);
@@ -600,7 +600,7 @@ select.form-input option {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--accent-primary);
+    color: var(--accent);
     background: var(--accent-chip-bg);
     border-color: var(--accent-chip-border);
     border-radius: 999px;
@@ -695,7 +695,7 @@ select.form-input option {
     width: calc(40px * var(--scale));
     height: calc(40px * var(--scale));
     padding: 0;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     background: var(--bg-card);
     color: var(--text-primary);
@@ -720,8 +720,8 @@ select.form-input option {
 }
 
 .sidebar-share-btn.copied {
-    background: var(--accent-primary);
-    border-color: var(--accent-primary);
+    background: var(--accent);
+    border-color: var(--accent);
     color: var(--text-inverse);
 }
 
@@ -752,7 +752,7 @@ select.form-input option {
 .price-display {
     text-align: center;
     padding: var(--space-md);
-    background: var(--bg-input);
+    background: var(--bg-card);
     border-radius: var(--radius-sm);
     margin-bottom: var(--space-md);
 }
@@ -818,7 +818,7 @@ h4 {
 }
 
 p {
-    font-size: var(--type-body-size);
+    font-size: var(--font-size-body);
     color: var(--text-primary);
     margin-bottom: var(--type-body-gap);
     line-height: var(--type-body-line);
@@ -1051,7 +1051,7 @@ main h2:first-child { margin-top: 0; }
     gap: var(--space-sm);
     width: 100%;
     padding: var(--space-sm) var(--space-md);
-    background: var(--bg-input);
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
@@ -1115,7 +1115,7 @@ main h2:first-child { margin-top: 0; }
 }
 
 .theme-option:hover {
-    background: var(--bg-input);
+    background: var(--bg-card);
     color: var(--text-primary);
 }
 
