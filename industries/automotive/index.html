@@ -61,6 +61,12 @@
     
         
     
+        
+    
+        
+    
+        
+    
 
     <!-- Fonts -->
     <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2?v=e9ca85b7" as="font" type="font/woff2" crossorigin>
@@ -1203,6 +1209,167 @@
             </div>
             
             <div class="block">
+                <!-- Carousel Block: Horizontal scrolling cards -->
+<section class="carousel-block">
+    
+    <div class="carousel-header">
+        <div>
+            <span class="tag tag-accent">BUSINESS VALUE BY ROLE</span>
+            <h2>What Working With an Automotive Marketing Agency Delivers</h2>
+            <p class="block-subtitle">Different stakeholders care about different outcomes. Here is what each role gets.</p>
+        </div>
+        <div class="carousel-nav">
+            <button class="carousel-btn carousel-prev" aria-label="Previous">&larr;</button>
+            <button class="carousel-btn carousel-next" aria-label="Next">&rarr;</button>
+        </div>
+    </div>
+    
+
+    <div class="carousel-container">
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For CMOs and Brand Directors</span>
+            
+            
+            <h3>Brand and dealer revenue</h3>
+            
+            
+            <p>A digital marketing strategy that connects brand campaigns to dealer-level sales and service revenue. Measurable ROI on automotive digital marketing.</p>
+            
+            
+            <a href="about/" class="carousel-item-link">
+                How the model works &rarr;
+            </a>
+            
+        </div>
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For Heads of Marketing</span>
+            
+            
+            <h3>Full-channel without vendor sprawl</h3>
+            
+            
+            <p>SEO, content, PPC, and analytics managed as one system. Automotive digital marketing services productized so you scale channels without coordinating five agencies.</p>
+            
+            
+            <a href="services/" class="carousel-item-link">
+                Browse services &rarr;
+            </a>
+            
+        </div>
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For Dealer Network Managers</span>
+            
+            
+            <h3>Dealer network visibility</h3>
+            
+            
+            <p>Local SEO, reputation management, and location-specific campaigns for every dealer. Digital marketing for car dealers that scales across the network.</p>
+            
+            
+            <a href="scopes/" class="carousel-item-link">
+                See defined scopes &rarr;
+            </a>
+            
+        </div>
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For International Teams</span>
+            
+            
+            <h3>New markets from day one</h3>
+            
+            
+            <p>Enter new countries with localized automotive marketing from day one. Content, campaigns, and competitive positioning adapted per market in 17+ languages.</p>
+            
+            
+            <a href="solutions/" class="carousel-item-link">
+                Explore solutions &rarr;
+            </a>
+            
+        </div>
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For Aftersales Directors</span>
+            
+            
+            <h3>Aftersales revenue growth</h3>
+            
+            
+            <p>Parts, service, and accessories marketing that drives revenue between vehicle purchases. Automotive digital marketing for the full ownership lifecycle.</p>
+            
+            
+            <a href="domains/" class="carousel-item-link">
+                Explore domains &rarr;
+            </a>
+            
+        </div>
+        
+    </div>
+</section>
+
+<script>
+(function() {
+    var root = document.currentScript.previousElementSibling;
+    var container = root && root.querySelector('.carousel-container');
+    var prev = root && root.querySelector('.carousel-prev');
+    var next = root && root.querySelector('.carousel-next');
+
+    function scrollToAdjacentCard(direction) {
+        if (!container) return;
+        var containerRect = container.getBoundingClientRect();
+        var containerStyle = window.getComputedStyle(container);
+        var paddingStart = parseFloat(containerStyle.paddingLeft) || 0;
+        var items = Array.from(container.querySelectorAll('.carousel-item')).map(function(item) {
+            return {
+                snap: Math.max(
+                    0,
+                    item.getBoundingClientRect().left - containerRect.left + container.scrollLeft - paddingStart
+                )
+            };
+        });
+        if (!items.length) return;
+
+        var current = container.scrollLeft;
+        var threshold = 4;
+        var target = null;
+
+        if (direction > 0) {
+            target = items.find(function(item) { return item.snap > current + threshold; });
+            if (!target) target = items[items.length - 1];
+        } else {
+            target = items.slice().reverse().find(function(item) { return item.snap < current - threshold; });
+            if (!target) target = items[0];
+        }
+
+        container.scrollTo({ left: target.snap, behavior: 'smooth' });
+    }
+
+    if (container && prev && next) {
+        prev.addEventListener('click', function() {
+            scrollToAdjacentCard(-1);
+        });
+        next.addEventListener('click', function() {
+            scrollToAdjacentCard(1);
+        });
+    }
+})();
+</script>
+            </div>
+            
+            <div class="block">
                 <!-- Pillars Block (3 columns) -->
 <section class="pillars-block">
     <div class="pillars-header">
@@ -1498,6 +1665,768 @@
                 <li>Cross-channel journey mapping</li>
                 
             </ul>
+            
+        </div>
+        
+    </div>
+    
+</section>
+            </div>
+            
+            <div class="block">
+                <!-- Comparison Block: Compare options side by side -->
+<section class="comparison-block">
+    
+    <div class="comparison-header text-center">
+        <span class="tag tag-accent">HOW WE COMPARE</span>
+        <h2>Automotive Digital Marketing Agency vs. Alternatives</h2>
+        <p class="block-subtitle">Three ways to handle automotive marketing. Only one is built for dealer-to-OEM scale.</p>
+    </div>
+    
+
+    <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th class="feature-col">
+                        <div class="comparison-option-head comparison-option-head-feature">
+                            <div class="comparison-option-badge-row">
+                                <span class="comparison-badge comparison-badge-placeholder" aria-hidden="true">placeholder</span>
+                            </div>
+                            <div class="comparison-option-name-row">
+                                <span class="option-name">Factor</span>
+                            </div>
+                            <div class="comparison-option-desc-row">
+                                <span class="option-desc option-desc-placeholder" aria-hidden="true">placeholder</span>
+                            </div>
+                        </div>
+                    </th>
+                    
+                    <th class="option-col " data-col="1">
+                        <div class="comparison-option-head">
+                            <div class="comparison-option-badge-row">
+                                
+                                <span class="comparison-badge comparison-badge-placeholder" aria-hidden="true">placeholder</span>
+                                
+                            </div>
+                            <div class="comparison-option-name-row">
+                                <span class="option-name">Generic Agency</span>
+                            </div>
+                            <div class="comparison-option-desc-row">
+                                
+                                <span class="option-desc">Standard digital agency without automotive expertise</span>
+                                
+                            </div>
+                        </div>
+                    </th>
+                    
+                    <th class="option-col " data-col="2">
+                        <div class="comparison-option-head">
+                            <div class="comparison-option-badge-row">
+                                
+                                <span class="comparison-badge comparison-badge-placeholder" aria-hidden="true">placeholder</span>
+                                
+                            </div>
+                            <div class="comparison-option-name-row">
+                                <span class="option-name">In-House Team</span>
+                            </div>
+                            <div class="comparison-option-desc-row">
+                                
+                                <span class="option-desc">Building marketing capability internally</span>
+                                
+                            </div>
+                        </div>
+                    </th>
+                    
+                    <th class="option-col option-highlighted" data-col="3">
+                        <div class="comparison-option-head">
+                            <div class="comparison-option-badge-row">
+                                
+                                <span class="comparison-badge comparison-badge-placeholder" aria-hidden="true">placeholder</span>
+                                
+                            </div>
+                            <div class="comparison-option-name-row">
+                                <span class="option-name">VIVIDIGIT</span>
+                            </div>
+                            <div class="comparison-option-desc-row">
+                                
+                                <span class="option-desc">Automotive digital marketing agency with multi-market capability</span>
+                                
+                            </div>
+                        </div>
+                    </th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Dealer network capability
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Single-location approach
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Depends on team size
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        Multi-location at scale
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        OEM + dealer coordination
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        One or the other
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Internal politics
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        Both in one system
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        International capability
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        One market at a time
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Hire per market
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        17+ languages from day one
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Automotive SEO expertise
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        <span class="check-no">-</span>
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Depends on hire
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        <span class="check-yes">+</span>
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Full-journey attribution
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Basic analytics
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Custom build required
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        Built into measurement
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Cost structure
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Retainer + rework
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Salaries + overhead
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        Productized packages
+                        
+                    </td>
+                    
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+
+    
+</section>
+            </div>
+            
+            <div class="block">
+                <!-- Benefits Block -->
+<section class="benefits-block">
+    <div class="benefits-header text-center">
+        <span class="tag tag-accent">WHAT AUTOMOTIVE MARKETING DELIVERS</span>
+        
+        <h2>Results from Automotive Digital Marketing Done Right</h2>
+        
+        
+        <p class="block-subtitle">When dealer scale and brand consistency work together.</p>
+        
+    </div>
+
+    
+    <div class="benefits-grid grid-balanced grid-balanced-count-6">
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-trending-up">
+  <!-- Stepping stones / stairs beneath the line -->
+  <!-- Step 1 -->
+  <rect x="48" y="305" width="55" height="20" rx="3" fill="#7C3AED" fill-opacity="0.1" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Step 2 -->
+  <rect x="98" y="275" width="55" height="20" rx="3" fill="#7C3AED" fill-opacity="0.12" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Step 3 -->
+  <rect x="148" y="240" width="55" height="20" rx="3" fill="#A855F7" fill-opacity="0.12" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Step 4 -->
+  <rect x="198" y="200" width="55" height="20" rx="3" fill="#A855F7" fill-opacity="0.14" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Step 5 -->
+  <rect x="248" y="155" width="55" height="20" rx="3" fill="#C026D3" fill-opacity="0.14" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Vertical fills connecting stairs -->
+  <rect x="98" y="295" width="55" height="10" rx="0" fill="#7C3AED" fill-opacity="0.05"/>
+  <rect x="148" y="260" width="55" height="15" rx="0" fill="#A855F7" fill-opacity="0.05"/>
+  <rect x="198" y="220" width="55" height="20" rx="0" fill="#A855F7" fill-opacity="0.05"/>
+  <rect x="248" y="175" width="55" height="25" rx="0" fill="#C026D3" fill-opacity="0.05"/>
+  <!-- Area fill under the line -->
+  <path d="M60 310 L120 275 L175 238 L225 198 L275 153 L325 95 L325 340 L60 340 Z" fill="#7C3AED" fill-opacity="0.06"/>
+  <!-- Shadow of the ascending line -->
+  <polyline points="63,313 123,278 178,241 228,201 278,156 328,98" stroke="#000" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.08"/>
+  <!-- Main ascending line -->
+  <polyline points="60,310 120,275 175,238 225,198 275,153 325,95" stroke="#2E2D2D" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Data points on the line -->
+  <circle cx="60" cy="310" r="5" fill="#7C3AED" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <circle cx="120" cy="275" r="5" fill="#7C3AED" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <circle cx="175" cy="238" r="5" fill="#A855F7" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <circle cx="225" cy="198" r="5" fill="#A855F7" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <circle cx="275" cy="153" r="5" fill="#C026D3" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <!-- Rocket at peak -->
+  <!-- Rocket body shadow -->
+  <path d="M328 98 L318 70 Q325 55 332 70 L342 98" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <!-- Rocket body -->
+  <path d="M318 95 Q315 72 325 48 Q335 72 332 95 Z" fill="#C026D3" fill-opacity="0.18" stroke="#2E2D2D" stroke-width="3"/>
+  <!-- Rocket window -->
+  <circle cx="325" cy="72" r="6" stroke="#2E2D2D" stroke-width="2" fill="#7C3AED" fill-opacity="0.2"/>
+  <!-- Rocket fins -->
+  <path d="M318 90 L308 100 L318 95" fill="#A855F7" fill-opacity="0.2" stroke="#2E2D2D" stroke-width="2"/>
+  <path d="M332 90 L342 100 L332 95" fill="#A855F7" fill-opacity="0.2" stroke="#2E2D2D" stroke-width="2"/>
+  <!-- Rocket flame -->
+  <path d="M320 95 Q325 110 330 95 Q325 105 320 95" fill="#C026D3" fill-opacity="0.3" stroke="#2E2D2D" stroke-width="1.5"/>
+  <!-- Sparkle at the top -->
+  <!-- Sparkle lines -->
+  <line x1="325" y1="30" x2="325" y2="20" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="315" y1="35" x2="310" y2="28" stroke="#A855F7" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <line x1="335" y1="35" x2="340" y2="28" stroke="#A855F7" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <line x1="345" y1="45" x2="352" y2="40" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+  <line x1="305" y1="45" x2="298" y2="40" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+  <!-- Sparkle star -->
+  <circle cx="325" cy="25" r="2.5" fill="#7C3AED" opacity="0.4"/>
+  <circle cx="348" cy="38" r="1.5" fill="#A855F7" opacity="0.3"/>
+  <circle cx="302" cy="38" r="1.5" fill="#A855F7" opacity="0.3"/>
+  <!-- Decorative dots -->
+  <circle cx="40" cy="350" r="3" fill="#7C3AED" opacity="0.2"/>
+  <circle cx="55" cy="360" r="2" fill="#A855F7" opacity="0.15"/>
+  <circle cx="370" cy="310" r="2.5" fill="#C026D3" opacity="0.2"/>
+  <!-- Small decorative lines -->
+  <line x1="355" y1="180" x2="375" y2="180" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+  <line x1="360" y1="188" x2="372" y2="188" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.1"/>
+  <line x1="25" y1="270" x2="38" y2="270" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+  <!-- Percentage badge -->
+  <rect x="345" y="110" width="40" height="20" rx="4" stroke="#2E2D2D" stroke-width="1.5" fill="#7C3AED" fill-opacity="0.12" opacity="0.5"/>
+  <line x1="352" y1="120" x2="377" y2="120" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+</svg>
+
+                
+            </span>
+            
+            
+            <h3>More Showroom Traffic</h3>
+            
+            
+            <p>Automotive SEO and PPC that drive test drives and showroom visits. Local campaigns per dealer location.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-map-pin">
+  <!-- Map surface shadow -->
+  <ellipse cx="203" cy="303" rx="150" ry="60" fill="#000" opacity="0.08"/>
+  <!-- Map surface -->
+  <ellipse cx="200" cy="300" rx="150" ry="60" stroke="#2E2D2D" stroke-width="2.5" fill="#A855F7" fill-opacity="0.08"/>
+  <!-- Map grid lines -->
+  <path d="M70,290 Q130,275 200,285 Q270,295 330,280" stroke="#2E2D2D" stroke-width="1" opacity="0.12"/>
+  <path d="M80,305 Q140,290 200,300 Q260,310 320,295" stroke="#2E2D2D" stroke-width="1" opacity="0.10"/>
+  <path d="M90,318 Q150,305 200,315 Q250,325 310,310" stroke="#2E2D2D" stroke-width="1" opacity="0.08"/>
+  <line x1="140" y1="260" x2="140" y2="340" stroke="#2E2D2D" stroke-width="1" opacity="0.08"/>
+  <line x1="200" y1="245" x2="200" y2="355" stroke="#2E2D2D" stroke-width="1" opacity="0.08"/>
+  <line x1="260" y1="260" x2="260" y2="340" stroke="#2E2D2D" stroke-width="1" opacity="0.08"/>
+  <!-- Ripple effect at landing point -->
+  <ellipse cx="200" cy="290" rx="55" ry="20" stroke="#7C3AED" stroke-width="2" fill="none" opacity="0.3"/>
+  <ellipse cx="200" cy="290" rx="38" ry="14" stroke="#A855F7" stroke-width="1.5" fill="none" opacity="0.2"/>
+  <ellipse cx="200" cy="290" rx="22" ry="8" stroke="#C026D3" stroke-width="1.5" fill="#C026D3" fill-opacity="0.08"/>
+  <!-- Pin shadow -->
+  <path d="M173,160 C173,118 183,78 203,78 C223,78 233,118 233,160 C233,200 203,248 203,248 C203,248 173,200 173,160 Z" fill="#000" opacity="0.08"/>
+  <!-- Large location pin -->
+  <path d="M170,155 C170,115 180,75 200,75 C220,75 230,115 230,155 C230,195 200,245 200,245 C200,245 170,195 170,155 Z" stroke="#2E2D2D" stroke-width="3.5" fill="#7C3AED" fill-opacity="0.15"/>
+  <!-- Pin inner circle -->
+  <circle cx="200" cy="140" r="30" stroke="#2E2D2D" stroke-width="3" fill="white" fill-opacity="0.5"/>
+  <!-- Pin highlight -->
+  <circle cx="200" cy="140" r="18" stroke="#2E2D2D" stroke-width="2" fill="#7C3AED" fill-opacity="0.2"/>
+  <circle cx="200" cy="140" r="8" fill="#7C3AED" opacity="0.5"/>
+  <!-- Pin shine -->
+  <path d="M183,120 Q188,110 198,108" stroke="white" stroke-width="2" fill="none" opacity="0.4" stroke-linecap="round"/>
+  <!-- Small building icons at pin location -->
+  <!-- Building 1 -->
+  <rect x="185" y="278" width="10" height="14" rx="1" stroke="#2E2D2D" stroke-width="1.5" fill="#C026D3" fill-opacity="0.15"/>
+  <rect x="187" y="280" width="2.5" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <rect x="191" y="280" width="2.5" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <rect x="187" y="285" width="2.5" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <rect x="191" y="285" width="2.5" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <!-- Building 2 -->
+  <rect x="198" y="274" width="12" height="18" rx="1" stroke="#2E2D2D" stroke-width="1.5" fill="#A855F7" fill-opacity="0.12"/>
+  <rect x="200" y="276" width="3" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <rect x="205" y="276" width="3" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <rect x="200" y="282" width="3" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <rect x="205" y="282" width="3" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <!-- Building 3 -->
+  <rect x="213" y="280" width="8" height="12" rx="1" stroke="#2E2D2D" stroke-width="1.5" fill="#7C3AED" fill-opacity="0.12"/>
+  <rect x="215" y="282" width="2" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <rect x="215" y="287" width="2" height="3" rx="0.5" fill="#2E2D2D" opacity="0.3"/>
+  <!-- Dotted circle area -->
+  <circle cx="200" cy="290" r="42" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.15" stroke-dasharray="4,4"/>
+  <!-- Motion lines showing pin dropping -->
+  <line x1="180" y1="50" x2="180" y2="70" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+  <line x1="220" y1="45" x2="220" y2="65" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+  <line x1="200" y1="38" x2="200" y2="58" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.15"/>
+  <!-- Small location pins on map -->
+  <path d="M100,275 C100,271 103,269 106,269 C109,269 112,271 112,275 C112,279 106,284 106,284 C106,284 100,279 100,275 Z" fill="#A855F7" fill-opacity="0.25" stroke="#2E2D2D" stroke-width="1.5"/>
+  <path d="M290,270 C290,266 293,264 296,264 C299,264 302,266 302,270 C302,274 296,279 296,279 C296,279 290,274 290,270 Z" fill="#C026D3" fill-opacity="0.25" stroke="#2E2D2D" stroke-width="1.5"/>
+  <!-- Decorative dots -->
+  <circle cx="50" cy="120" r="3" fill="#7C3AED" opacity="0.3"/>
+  <circle cx="360" cy="100" r="2.5" fill="#A855F7" opacity="0.25"/>
+  <circle cx="45" cy="350" r="2" fill="#C026D3" opacity="0.2"/>
+  <circle cx="355" cy="360" r="2.5" fill="#7C3AED" opacity="0.2"/>
+  <!-- Decorative lines -->
+  <line x1="320" y1="60" x2="340" y2="60" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.15"/>
+  <line x1="60" y1="55" x2="75" y2="55" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.15"/>
+</svg>
+                
+            </span>
+            
+            
+            <h3>Dealer Network Visibility</h3>
+            
+            
+            <p>Local SEO and reputation management across every dealer location. Consistent brand with local execution.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-globe">
+  <!-- Globe depth shadow -->
+  <circle cx="203" cy="203" r="130" fill="#000" opacity="0.08"/>
+  <!-- Globe body -->
+  <circle cx="200" cy="200" r="130" stroke="#2E2D2D" stroke-width="3.5" fill="#7C3AED" fill-opacity="0.10"/>
+  <!-- Equator -->
+  <ellipse cx="200" cy="200" rx="130" ry="30" stroke="#2E2D2D" stroke-width="2" fill="none"/>
+  <!-- Tropic upper -->
+  <ellipse cx="200" cy="155" rx="110" ry="22" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- Tropic lower -->
+  <ellipse cx="200" cy="245" rx="110" ry="22" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- Meridian center -->
+  <ellipse cx="200" cy="200" rx="30" ry="130" stroke="#2E2D2D" stroke-width="2" fill="none"/>
+  <!-- Meridian offset left -->
+  <ellipse cx="200" cy="200" rx="75" ry="130" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- Meridian offset right -->
+  <ellipse cx="200" cy="200" rx="110" ry="130" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <!-- Connection node 1 (Europe area) -->
+  <circle cx="220" cy="148" r="8" fill="#7C3AED" fill-opacity="0.20" stroke="#7C3AED" stroke-width="2"/>
+  <circle cx="220" cy="148" r="3" fill="#7C3AED"/>
+  <!-- Connection node 2 (Asia area) -->
+  <circle cx="280" cy="180" r="8" fill="#A855F7" fill-opacity="0.18" stroke="#A855F7" stroke-width="2"/>
+  <circle cx="280" cy="180" r="3" fill="#A855F7"/>
+  <!-- Connection node 3 (Americas area) -->
+  <circle cx="130" cy="190" r="8" fill="#C026D3" fill-opacity="0.18" stroke="#C026D3" stroke-width="2"/>
+  <circle cx="130" cy="190" r="3" fill="#C026D3"/>
+  <!-- Connection node 4 (South) -->
+  <circle cx="190" cy="260" r="7" fill="#7C3AED" fill-opacity="0.18" stroke="#7C3AED" stroke-width="2"/>
+  <circle cx="190" cy="260" r="3" fill="#7C3AED"/>
+  <!-- Connection node 5 (Africa area) -->
+  <circle cx="240" cy="220" r="7" fill="#A855F7" fill-opacity="0.18" stroke="#A855F7" stroke-width="2"/>
+  <circle cx="240" cy="220" r="3" fill="#A855F7"/>
+  <!-- Dotted connection lines between nodes -->
+  <line x1="220" y1="148" x2="280" y2="180" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="130" y1="190" x2="220" y2="148" stroke="#A855F7" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="280" y1="180" x2="240" y2="220" stroke="#C026D3" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="240" y1="220" x2="190" y2="260" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="130" y1="190" x2="190" y2="260" stroke="#A855F7" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <!-- Airplane path (curved arc outside globe) -->
+  <path d="M60,100 Q30,160 50,220" stroke="#2E2D2D" stroke-width="1.5" stroke-dasharray="6 3" fill="none" opacity="0.35"/>
+  <!-- Small airplane icon -->
+  <path d="M56,106 L66,100 L56,94 L58,100 Z" fill="#2E2D2D" opacity="0.5"/>
+  <!-- Location pin 1 -->
+  <path d="M340,120 C340,108 354,108 354,120 C354,130 347,140 347,140 C347,140 340,130 340,120 Z" stroke="#2E2D2D" stroke-width="2" fill="#C026D3" fill-opacity="0.18"/>
+  <circle cx="347" cy="120" r="3" fill="#2E2D2D" opacity="0.4"/>
+  <!-- Location pin 2 -->
+  <path d="M52,280 C52,270 64,270 64,280 C64,288 58,296 58,296 C58,296 52,288 52,280 Z" stroke="#2E2D2D" stroke-width="2" fill="#7C3AED" fill-opacity="0.18"/>
+  <circle cx="58" cy="280" r="2.5" fill="#2E2D2D" opacity="0.4"/>
+  <!-- Globe stand/base hint -->
+  <path d="M140,340 Q200,355 260,340" stroke="#2E2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <line x1="200" y1="330" x2="200" y2="345" stroke="#2E2D2D" stroke-width="2.5"/>
+  <!-- Decorative dots -->
+  <circle cx="365" cy="165" r="3" fill="#7C3AED" opacity="0.25"/>
+  <circle cx="375" cy="185" r="2" fill="#A855F7" opacity="0.2"/>
+  <circle cx="30" cy="320" r="2.5" fill="#C026D3" opacity="0.2"/>
+  <circle cx="370" cy="300" r="2" fill="#7C3AED" opacity="0.2"/>
+  <!-- Small decorative lines -->
+  <line x1="350" y1="250" x2="375" y2="250" stroke="#A855F7" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+  <line x1="355" y1="260" x2="370" y2="260" stroke="#7C3AED" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+</svg>
+                
+            </span>
+            
+            
+            <h3>Multi-Market Expansion</h3>
+            
+            
+            <p>Enter new countries with localized automotive marketing — content and campaigns adapted per market.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-shield">
+  <!-- Shield depth shadow -->
+  <path d="M203,47 C203,47 303,67 333,67 L333,207 C333,277 203,347 203,347 C203,347 73,277 73,207 L73,67 C103,67 203,47 203,47 Z" fill="#000" opacity="0.08" transform="translate(4,4)"/>
+  <!-- Shield main -->
+  <path d="M199,43 C199,43 299,63 329,63 L329,203 C329,273 199,343 199,343 C199,343 69,273 69,203 L69,63 C99,63 199,43 199,43 Z" stroke="#2E2D2D" stroke-width="3.5" fill="#7C3AED" fill-opacity="0.14" stroke-linejoin="round"/>
+  <!-- Shield inner area -->
+  <path d="M199,70 C199,70 280,86 306,86 L306,200 C306,256 199,316 199,316 C199,316 92,256 92,200 L92,86 C118,86 199,70 199,70 Z" stroke="#2E2D2D" stroke-width="2" fill="#A855F7" fill-opacity="0.08"/>
+  <!-- Large checkmark -->
+  <polyline points="155,195 185,230 250,155" stroke="#7C3AED" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Checkmark secondary thinner line for depth -->
+  <polyline points="155,195 185,230 250,155" stroke="#2E2D2D" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Person silhouette (behind shield, left side visible) -->
+  <!-- Head -->
+  <circle cx="50" cy="155" r="20" fill="#2E2D2D" opacity="0.15" stroke="#2E2D2D" stroke-width="2.5"/>
+  <!-- Body -->
+  <path d="M50,175 C50,175 30,190 25,220 L25,290 L40,290 L42,240 L50,225 L58,240 L60,290 L75,290 L75,220 C70,190 50,175 50,175 Z" fill="#2E2D2D" opacity="0.12" stroke="#2E2D2D" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Arms extended confidently -->
+  <path d="M35,200 L15,215" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M65,200 L70,185" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Person silhouette right side -->
+  <!-- Head -->
+  <circle cx="360" cy="165" r="18" fill="#2E2D2D" opacity="0.12" stroke="#2E2D2D" stroke-width="2"/>
+  <!-- Body -->
+  <path d="M360,183 C360,183 342,196 338,222 L338,280 L350,280 L352,238 L360,225 L368,238 L370,280 L382,280 L382,222 C378,196 360,183 360,183 Z" fill="#2E2D2D" opacity="0.10" stroke="#2E2D2D" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Arm reaching to shield -->
+  <path d="M345,205 L330,195" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round"/>
+  <!-- Lock icon -->
+  <rect x="330" y="80" width="30" height="24" rx="4" stroke="#2E2D2D" stroke-width="2.5" fill="#C026D3" fill-opacity="0.16"/>
+  <path d="M339,80 L339,70 C339,62 351,62 351,70 L351,80" stroke="#2E2D2D" stroke-width="2.5" fill="none"/>
+  <circle cx="345" cy="92" r="3" fill="#2E2D2D" opacity="0.4"/>
+  <!-- Dotted protection barrier arc -->
+  <path d="M30,110 Q35,50 100,30" stroke="#7C3AED" stroke-width="2" stroke-dasharray="5 4" fill="none" opacity="0.3"/>
+  <path d="M300,30 Q365,50 380,110" stroke="#7C3AED" stroke-width="2" stroke-dasharray="5 4" fill="none" opacity="0.3"/>
+  <!-- Bottom dotted barrier -->
+  <path d="M15,300 Q30,340 70,355" stroke="#A855F7" stroke-width="2" stroke-dasharray="5 4" fill="none" opacity="0.25"/>
+  <path d="M330,355 Q370,340 385,300" stroke="#A855F7" stroke-width="2" stroke-dasharray="5 4" fill="none" opacity="0.25"/>
+  <!-- Decorative dots -->
+  <circle cx="20" cy="60" r="3" fill="#7C3AED" opacity="0.25"/>
+  <circle cx="388" cy="55" r="2.5" fill="#A855F7" opacity="0.2"/>
+  <circle cx="15" cy="350" r="2" fill="#C026D3" opacity="0.2"/>
+  <circle cx="390" cy="340" r="2.5" fill="#7C3AED" opacity="0.2"/>
+  <circle cx="200" cy="20" r="2" fill="#A855F7" opacity="0.2"/>
+  <!-- Small decorative lines -->
+  <line x1="355" y1="380" x2="385" y2="380" stroke="#A855F7" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+  <line x1="15" y1="385" x2="40" y2="385" stroke="#7C3AED" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+</svg>
+                
+            </span>
+            
+            
+            <h3>Stronger Dealer Reputation</h3>
+            
+            
+            <p>Review management and dealer directory optimization across platforms. Reputation that drives walk-ins.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-analytics">
+  <!-- Dashboard screen shadow -->
+  <rect x="58" y="58" width="264" height="184" rx="12" fill="#000" opacity="0.08"/>
+  <!-- Dashboard screen -->
+  <rect x="55" y="55" width="264" height="184" rx="12" stroke="#2E2D2D" stroke-width="3.5" fill="#7C3AED" fill-opacity="0.08"/>
+  <!-- Top bar -->
+  <rect x="55" y="55" width="264" height="28" rx="12" fill="#2E2D2D" opacity="0.06"/>
+  <circle cx="74" cy="69" r="4" fill="#7C3AED" opacity="0.35"/>
+  <circle cx="88" cy="69" r="4" fill="#A855F7" opacity="0.28"/>
+  <circle cx="102" cy="69" r="4" fill="#C026D3" opacity="0.24"/>
+
+  <!-- Left chart block -->
+  <rect x="78" y="102" width="138" height="118" rx="8" stroke="#2E2D2D" stroke-width="2" fill="white" fill-opacity="0.3"/>
+  <rect x="95" y="172" width="18" height="30" rx="3" fill="#7C3AED" fill-opacity="0.22" stroke="#2E2D2D" stroke-width="1.8"/>
+  <rect x="123" y="152" width="18" height="50" rx="3" fill="#A855F7" fill-opacity="0.2" stroke="#2E2D2D" stroke-width="1.8"/>
+  <rect x="151" y="128" width="18" height="74" rx="3" fill="#7C3AED" fill-opacity="0.22" stroke="#2E2D2D" stroke-width="1.8"/>
+  <rect x="179" y="144" width="18" height="58" rx="3" fill="#C026D3" fill-opacity="0.18" stroke="#2E2D2D" stroke-width="1.8"/>
+  <polyline points="104,164 132,146 160,120 188,136" stroke="#2E2D2D" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="104" cy="164" r="4" fill="#7C3AED" fill-opacity="0.55" stroke="#2E2D2D" stroke-width="1.5"/>
+  <circle cx="132" cy="146" r="4" fill="#A855F7" fill-opacity="0.55" stroke="#2E2D2D" stroke-width="1.5"/>
+  <circle cx="160" cy="120" r="4" fill="#7C3AED" fill-opacity="0.55" stroke="#2E2D2D" stroke-width="1.5"/>
+  <circle cx="188" cy="136" r="4" fill="#C026D3" fill-opacity="0.55" stroke="#2E2D2D" stroke-width="1.5"/>
+
+  <!-- Right KPI panel -->
+  <rect x="232" y="102" width="66" height="48" rx="6" stroke="#2E2D2D" stroke-width="2" fill="#A855F7" fill-opacity="0.1"/>
+  <line x1="244" y1="118" x2="286" y2="118" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.24"/>
+  <line x1="244" y1="130" x2="278" y2="130" stroke="#2E2D2D" stroke-width="1.8" stroke-linecap="round" opacity="0.18"/>
+
+  <!-- Right trend card -->
+  <rect x="232" y="162" width="66" height="58" rx="6" stroke="#2E2D2D" stroke-width="2" fill="#C026D3" fill-opacity="0.1"/>
+  <polyline points="244,206 256,194 267,198 279,182 288,176" stroke="#2E2D2D" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M244 206 L256 194 L267 198 L279 182 L288 176 L288 210 L244 210 Z" fill="#7C3AED" fill-opacity="0.1"/>
+
+  <!-- Screen stand -->
+  <path d="M170 239 L160 258 L214 258 L204 239" stroke="#2E2D2D" stroke-width="2.5" fill="#2E2D2D" fill-opacity="0.08"/>
+  <rect x="156" y="258" width="62" height="7" rx="3.5" fill="#2E2D2D" opacity="0.15"/>
+
+  <!-- Analyst figure -->
+  <circle cx="320" cy="297" r="14" stroke="#2E2D2D" stroke-width="2.5" fill="#A855F7" fill-opacity="0.16"/>
+  <path d="M296 378 Q296 342 306 330 Q313 322 320 320 Q327 322 334 330 Q344 342 344 378" stroke="#2E2D2D" stroke-width="2.5" fill="#A855F7" fill-opacity="0.14" stroke-linejoin="round"/>
+  <path d="M306 332 Q286 310 268 288 Q262 282 258 274" stroke="#2E2D2D" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.4"/>
+  <path d="M334 334 Q344 350 348 362" stroke="#2E2D2D" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.32"/>
+  <path d="M258 274 L252 268 M258 274 L262 268" stroke="#2E2D2D" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.32"/>
+
+  <!-- Accent pie chart -->
+  <circle cx="92" cy="312" r="22" stroke="#2E2D2D" stroke-width="2" fill="#C026D3" fill-opacity="0.1"/>
+  <path d="M92 312 L92 290 A22 22 0 0 1 111 302 Z" fill="#7C3AED" fill-opacity="0.18" stroke="#2E2D2D" stroke-width="1.5"/>
+  <path d="M92 312 L111 302 A22 22 0 0 1 99 332 Z" fill="#A855F7" fill-opacity="0.15" stroke="#2E2D2D" stroke-width="1.5"/>
+
+  <!-- Decorative dots -->
+  <circle cx="40" cy="114" r="3" fill="#7C3AED" opacity="0.24"/>
+  <circle cx="360" cy="86" r="2.5" fill="#A855F7" opacity="0.22"/>
+  <circle cx="44" cy="340" r="2.5" fill="#C026D3" opacity="0.2"/>
+  <circle cx="366" cy="266" r="2" fill="#7C3AED" opacity="0.18"/>
+  <!-- Decorative lines -->
+  <line x1="26" y1="196" x2="42" y2="196" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+  <line x1="340" y1="356" x2="362" y2="356" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+</svg>
+
+                
+            </span>
+            
+            
+            <h3>Full-Journey Attribution</h3>
+            
+            
+            <p>Measurement from ad impression to showroom visit. Know which digital channels drive real sales.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-rocket">
+  <!-- Exhaust trail / flame shadow -->
+  <path d="M203 318 Q178 348 168 378 Q198 365 203 378 Q208 365 238 378 Q228 348 203 318 Z" fill="#000" opacity="0.08" transform="translate(4,4)"/>
+  <!-- Exhaust trail / flame -->
+  <path d="M200 315 Q175 345 165 375 Q195 362 200 375 Q205 362 235 375 Q225 345 200 315 Z" fill="#C026D3" fill-opacity="0.18" stroke="#2E2D2D" stroke-width="2.5"/>
+  <!-- Inner flame -->
+  <path d="M200 328 Q188 348 183 365 Q195 358 200 365 Q205 358 217 365 Q212 348 200 328 Z" fill="#A855F7" fill-opacity="0.15"/>
+  <!-- Rocket body shadow -->
+  <path d="M183 128 Q183 68 203 38 Q223 68 223 128 L223 308 Q203 320 183 308 Z" fill="#000" opacity="0.08" transform="translate(4,4)"/>
+  <!-- Rocket body -->
+  <path d="M180 125 Q180 65 200 35 Q220 65 220 125 L220 305 Q200 317 180 305 Z" stroke="#2E2D2D" stroke-width="3.5" fill="#7C3AED" fill-opacity="0.12"/>
+  <!-- Rocket nose cone accent -->
+  <path d="M190 85 Q190 60 200 42 Q210 60 210 85" fill="#A855F7" fill-opacity="0.10"/>
+  <!-- Rocket window shadow -->
+  <circle cx="203" cy="153" r="22" fill="#000" opacity="0.08"/>
+  <!-- Rocket window -->
+  <circle cx="200" cy="150" r="22" stroke="#2E2D2D" stroke-width="3" fill="#C026D3" fill-opacity="0.15"/>
+  <!-- Window shine -->
+  <circle cx="192" cy="142" r="6" fill="none" stroke="#2E2D2D" stroke-width="1.5" opacity="0.2"/>
+  <!-- Rocket body detail lines -->
+  <line x1="180" y1="200" x2="220" y2="200" stroke="#2E2D2D" stroke-width="2" opacity="0.2"/>
+  <line x1="180" y1="260" x2="220" y2="260" stroke="#2E2D2D" stroke-width="2" opacity="0.2"/>
+  <!-- Rocket fin left shadow -->
+  <path d="M180 258 L140 318 L140 295 L180 258 Z" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <!-- Rocket fin left -->
+  <path d="M178 255 L138 315 L138 292 L178 255 Z" stroke="#2E2D2D" stroke-width="2.5" fill="#A855F7" fill-opacity="0.14"/>
+  <!-- Rocket fin right shadow -->
+  <path d="M223 258 L263 318 L263 295 L223 258 Z" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <!-- Rocket fin right -->
+  <path d="M222 255 L262 315 L262 292 L222 255 Z" stroke="#2E2D2D" stroke-width="2.5" fill="#A855F7" fill-opacity="0.14"/>
+  <!-- Launch pad base -->
+  <rect x="110" y="360" width="180" height="12" rx="4" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <rect x="107" y="357" width="180" height="12" rx="4" stroke="#2E2D2D" stroke-width="2.5" fill="#2E2D2D" opacity="0.15"/>
+  <!-- Launch pad supports -->
+  <line x1="145" y1="357" x2="165" y2="340" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="255" y1="357" x2="235" y2="340" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Person standing near launch pad -->
+  <!-- Person head -->
+  <circle cx="68" cy="300" r="12" stroke="#2E2D2D" stroke-width="2.5" fill="#C026D3" fill-opacity="0.12"/>
+  <!-- Person body -->
+  <line x1="68" y1="312" x2="68" y2="345" stroke="#2E2D2D" stroke-width="3" stroke-linecap="round"/>
+  <!-- Person left arm (pointing up at rocket) -->
+  <path d="M68 322 L48 308 L42 298" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Person right arm -->
+  <line x1="68" y1="325" x2="88" y2="335" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Person left leg -->
+  <line x1="68" y1="345" x2="55" y2="370" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Person right leg -->
+  <line x1="68" y1="345" x2="82" y2="370" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Cloud left -->
+  <path d="M30 175 Q35 162 50 165 Q55 152 70 158 Q82 150 90 160 Q95 168 88 175 Z" stroke="#2E2D2D" stroke-width="2" fill="#7C3AED" fill-opacity="0.08"/>
+  <!-- Cloud right -->
+  <path d="M300 115 Q308 102 322 108 Q328 95 345 100 Q358 95 365 105 Q372 112 365 120 Z" stroke="#2E2D2D" stroke-width="2" fill="#A855F7" fill-opacity="0.08"/>
+  <!-- Small cloud -->
+  <path d="M310 205 Q315 195 325 198 Q330 192 340 196 Q345 200 340 205 Z" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.2"/>
+  <!-- Stars -->
+  <polygon points="330,55 332,61 338,61 333,65 335,71 330,67 325,71 327,65 322,61 328,61" fill="#2E2D2D" opacity="0.2"/>
+  <polygon points="55,90 57,95 62,95 58,98 59,103 55,100 51,103 52,98 48,95 53,95" fill="#2E2D2D" opacity="0.18"/>
+  <polygon points="105,55 106,58 109,58 107,60 108,63 105,61 102,63 103,60 101,58 104,58" fill="#2E2D2D" opacity="0.15"/>
+  <!-- Speedometer bottom-right -->
+  <path d="M335 280 Q360 280 360 305 Q360 330 335 330 Q310 330 310 305 Q310 280 335 280 Z" stroke="#2E2D2D" stroke-width="2" fill="#C026D3" fill-opacity="0.12"/>
+  <!-- Speedometer base -->
+  <line x1="310" y1="305" x2="360" y2="305" stroke="#2E2D2D" stroke-width="2"/>
+  <!-- Speedometer needle -->
+  <line x1="335" y1="305" x2="350" y2="285" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  <circle cx="335" cy="305" r="3" fill="#2E2D2D" opacity="0.4"/>
+  <!-- Speedometer tick marks -->
+  <line x1="320" y1="282" x2="322" y2="286" stroke="#2E2D2D" stroke-width="1.5" opacity="0.3"/>
+  <line x1="335" y1="280" x2="335" y2="284" stroke="#2E2D2D" stroke-width="1.5" opacity="0.3"/>
+  <line x1="350" y1="282" x2="348" y2="286" stroke="#2E2D2D" stroke-width="1.5" opacity="0.3"/>
+  <!-- Decorative dots -->
+  <circle cx="380" cy="170" r="2.5" fill="#7C3AED" opacity="0.28"/>
+  <circle cx="25" cy="240" r="2" fill="#A855F7" opacity="0.25"/>
+  <circle cx="370" cy="350" r="2" fill="#C026D3" opacity="0.22"/>
+  <!-- Decorative lines -->
+  <line x1="15" y1="130" x2="32" y2="130" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.15"/>
+  <line x1="18" y1="138" x2="38" y2="138" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+</svg>
+                
+            </span>
+            
+            
+            <h3>Faster Campaign Deployment</h3>
+            
+            
+            <p>Productized automotive digital marketing companies services that launch campaigns in days across dealer networks.</p>
             
         </div>
         
@@ -2331,7 +3260,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2411,7 +3340,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2497,7 +3426,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2581,7 +3510,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2659,7 +3588,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2739,7 +3668,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2817,7 +3746,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2947,7 +3876,7 @@
     
     
     <div class="expert-tag-row expert-tag-row-metrics entity-card-meta-row">
-        <span class="entity-card-stat">8 industries</span>
+        <span class="entity-card-stat">7 industries</span>
         <span class="entity-card-stat">1 case</span>
         <span class="entity-card-stat">2 articles</span>
     </div>
@@ -4143,7 +5072,7 @@
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">6 scopes</span>
         <span class="service-meta-item entity-card-stat">3 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
         <span class="service-meta-item entity-card-stat">7 languages</span>
     </div>
@@ -4192,7 +5121,7 @@
     <div class="service-card-meta entity-card-meta-row">
         
         
-        <span class="service-meta-item entity-card-stat">7 industries</span>
+        <span class="service-meta-item entity-card-stat">6 industries</span>
         <span class="service-meta-item entity-card-stat">3 countries</span>
         <span class="service-meta-item entity-card-stat">3 languages</span>
     </div>
@@ -4245,7 +5174,7 @@
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">2 scopes</span>
         <span class="service-meta-item entity-card-stat">3 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
         <span class="service-meta-item entity-card-stat">7 languages</span>
     </div>
@@ -4296,7 +5225,7 @@
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">1 scope</span>
         <span class="service-meta-item entity-card-stat">2 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
         <span class="service-meta-item entity-card-stat">7 languages</span>
     </div>
@@ -4347,7 +5276,7 @@
     <div class="service-card-meta entity-card-meta-row">
         
         <span class="service-meta-item entity-card-stat">2 experts</span>
-        <span class="service-meta-item entity-card-stat">7 industries</span>
+        <span class="service-meta-item entity-card-stat">6 industries</span>
         <span class="service-meta-item entity-card-stat">6 countries</span>
         <span class="service-meta-item entity-card-stat">3 languages</span>
     </div>
@@ -4404,7 +5333,7 @@
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">2 scopes</span>
         <span class="service-meta-item entity-card-stat">4 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
         <span class="service-meta-item entity-card-stat">7 languages</span>
     </div>
@@ -4459,7 +5388,7 @@
     <div class="service-card-meta entity-card-meta-row">
         
         <span class="service-meta-item entity-card-stat">3 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">3 countries</span>
         <span class="service-meta-item entity-card-stat">2 languages</span>
     </div>
@@ -5700,8 +6629,6 @@
             
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Healthcare</span>
             
-            <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Financial Services</span>
-            
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Legal</span>
             
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Automotive</span>
@@ -5830,8 +6757,6 @@
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Automotive</span>
             
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Manufacturing</span>
-            
-            <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Financial Services</span>
             
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Legal</span>
             
@@ -5973,7 +6898,7 @@
     
     <div class="position-tag-row position-tag-row-metrics entity-card-meta-row">
         <span class="entity-card-stat">1 expert</span>
-        <span class="entity-card-stat">8 industries</span>
+        <span class="entity-card-stat">7 industries</span>
     </div>
     
     <div class="position-card-footer entity-card-footer entity-card-footer-end">
@@ -6050,72 +6975,72 @@
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2779)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-2779" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7190)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7190" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3878)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3878" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2680)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-2680" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9338)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-9338" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6055)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-6055" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2518)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-2518" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7123)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7123" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7820)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7820" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4048)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4048" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2989)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-2989" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7030)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7030" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3197)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3197" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9861)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-9861" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3397)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3397" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4162)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4162" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7308)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7308" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1686)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-1686" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7632)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7632" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6509)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-6509" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3414)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3414" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6123)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-6123" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4140)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4140" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6709)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-6709" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6040)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-6040" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4464)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4464" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4611)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4611" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1737)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-1737" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>

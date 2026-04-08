@@ -61,6 +61,12 @@
     
         
     
+        
+    
+        
+    
+        
+    
 
     <!-- Fonts -->
     <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2?v=e9ca85b7" as="font" type="font/woff2" crossorigin>
@@ -1190,6 +1196,167 @@
             </div>
             
             <div class="block">
+                <!-- Carousel Block: Horizontal scrolling cards -->
+<section class="carousel-block">
+    
+    <div class="carousel-header">
+        <div>
+            <span class="tag tag-accent">BUSINESS VALUE BY ROLE</span>
+            <h2>What Working With a Legal Marketing Agency Delivers</h2>
+            <p class="block-subtitle">Different stakeholders care about different outcomes. Here is what each role gets.</p>
+        </div>
+        <div class="carousel-nav">
+            <button class="carousel-btn carousel-prev" aria-label="Previous">&larr;</button>
+            <button class="carousel-btn carousel-next" aria-label="Next">&rarr;</button>
+        </div>
+    </div>
+    
+
+    <div class="carousel-container">
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For Managing Partners</span>
+            
+            
+            <h3>Client acquisition pipeline</h3>
+            
+            
+            <p>A digital marketing strategy that connects marketing spend to client intake and case value — not just website traffic. Measurable ROI on law firm digital marketing.</p>
+            
+            
+            <a href="about/" class="carousel-item-link">
+                How the model works &rarr;
+            </a>
+            
+        </div>
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For Marketing Directors</span>
+            
+            
+            <h3>Full-channel without hiring</h3>
+            
+            
+            <p>SEO, content, PPC, and reputation managed as one system. Legal marketing services productized so you scale channels without scaling headcount.</p>
+            
+            
+            <a href="services/" class="carousel-item-link">
+                Browse services &rarr;
+            </a>
+            
+        </div>
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For Practice Group Leaders</span>
+            
+            
+            <h3>Practice area growth</h3>
+            
+            
+            <p>Specialty-specific content and keyword strategy that drives inquiries for your practice area. Digital marketing for lawyers tailored to your competitive landscape.</p>
+            
+            
+            <a href="domains/" class="carousel-item-link">
+                Explore domains &rarr;
+            </a>
+            
+        </div>
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For International Teams</span>
+            
+            
+            <h3>New jurisdictions from day one</h3>
+            
+            
+            <p>Enter new markets with localized legal marketing from day one. Compliance, content, and campaigns adapted per jurisdiction in 17+ languages.</p>
+            
+            
+            <a href="solutions/" class="carousel-item-link">
+                Explore solutions &rarr;
+            </a>
+            
+        </div>
+        
+        <div class="carousel-item card ">
+            
+            
+            <span class="tag tag-accent">For Compliance Teams</span>
+            
+            
+            <h3>Compliant marketing at speed</h3>
+            
+            
+            <p>Marketing produced with bar advertising rules built into the workflow. No compliance surprises, no pulled campaigns, no regulatory risk.</p>
+            
+            
+            <a href="scopes/" class="carousel-item-link">
+                See defined scopes &rarr;
+            </a>
+            
+        </div>
+        
+    </div>
+</section>
+
+<script>
+(function() {
+    var root = document.currentScript.previousElementSibling;
+    var container = root && root.querySelector('.carousel-container');
+    var prev = root && root.querySelector('.carousel-prev');
+    var next = root && root.querySelector('.carousel-next');
+
+    function scrollToAdjacentCard(direction) {
+        if (!container) return;
+        var containerRect = container.getBoundingClientRect();
+        var containerStyle = window.getComputedStyle(container);
+        var paddingStart = parseFloat(containerStyle.paddingLeft) || 0;
+        var items = Array.from(container.querySelectorAll('.carousel-item')).map(function(item) {
+            return {
+                snap: Math.max(
+                    0,
+                    item.getBoundingClientRect().left - containerRect.left + container.scrollLeft - paddingStart
+                )
+            };
+        });
+        if (!items.length) return;
+
+        var current = container.scrollLeft;
+        var threshold = 4;
+        var target = null;
+
+        if (direction > 0) {
+            target = items.find(function(item) { return item.snap > current + threshold; });
+            if (!target) target = items[items.length - 1];
+        } else {
+            target = items.slice().reverse().find(function(item) { return item.snap < current - threshold; });
+            if (!target) target = items[0];
+        }
+
+        container.scrollTo({ left: target.snap, behavior: 'smooth' });
+    }
+
+    if (container && prev && next) {
+        prev.addEventListener('click', function() {
+            scrollToAdjacentCard(-1);
+        });
+        next.addEventListener('click', function() {
+            scrollToAdjacentCard(1);
+        });
+    }
+})();
+</script>
+            </div>
+            
+            <div class="block">
                 <!-- Pillars Block (3 columns) -->
 <section class="pillars-block">
     <div class="pillars-header">
@@ -1505,6 +1672,796 @@
                 <li>Multi-touch attribution for long cycles</li>
                 
             </ul>
+            
+        </div>
+        
+    </div>
+    
+</section>
+            </div>
+            
+            <div class="block">
+                <!-- Comparison Block: Compare options side by side -->
+<section class="comparison-block">
+    
+    <div class="comparison-header text-center">
+        <span class="tag tag-accent">HOW WE COMPARE</span>
+        <h2>Legal Marketing Agency vs. Alternatives</h2>
+        <p class="block-subtitle">Three ways to handle law firm digital marketing. Only one is built for compliance at speed.</p>
+    </div>
+    
+
+    <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th class="feature-col">
+                        <div class="comparison-option-head comparison-option-head-feature">
+                            <div class="comparison-option-badge-row">
+                                <span class="comparison-badge comparison-badge-placeholder" aria-hidden="true">placeholder</span>
+                            </div>
+                            <div class="comparison-option-name-row">
+                                <span class="option-name">Factor</span>
+                            </div>
+                            <div class="comparison-option-desc-row">
+                                <span class="option-desc option-desc-placeholder" aria-hidden="true">placeholder</span>
+                            </div>
+                        </div>
+                    </th>
+                    
+                    <th class="option-col " data-col="1">
+                        <div class="comparison-option-head">
+                            <div class="comparison-option-badge-row">
+                                
+                                <span class="comparison-badge comparison-badge-placeholder" aria-hidden="true">placeholder</span>
+                                
+                            </div>
+                            <div class="comparison-option-name-row">
+                                <span class="option-name">Generic Agency</span>
+                            </div>
+                            <div class="comparison-option-desc-row">
+                                
+                                <span class="option-desc">Standard digital agency without legal expertise</span>
+                                
+                            </div>
+                        </div>
+                    </th>
+                    
+                    <th class="option-col " data-col="2">
+                        <div class="comparison-option-head">
+                            <div class="comparison-option-badge-row">
+                                
+                                <span class="comparison-badge comparison-badge-placeholder" aria-hidden="true">placeholder</span>
+                                
+                            </div>
+                            <div class="comparison-option-name-row">
+                                <span class="option-name">In-House Team</span>
+                            </div>
+                            <div class="comparison-option-desc-row">
+                                
+                                <span class="option-desc">Building marketing capability internally</span>
+                                
+                            </div>
+                        </div>
+                    </th>
+                    
+                    <th class="option-col option-highlighted" data-col="3">
+                        <div class="comparison-option-head">
+                            <div class="comparison-option-badge-row">
+                                
+                                <span class="comparison-badge comparison-badge-placeholder" aria-hidden="true">placeholder</span>
+                                
+                            </div>
+                            <div class="comparison-option-name-row">
+                                <span class="option-name">VIVIDIGIT</span>
+                            </div>
+                            <div class="comparison-option-desc-row">
+                                
+                                <span class="option-desc">Legal marketing agency with compliance-first workflows</span>
+                                
+                            </div>
+                        </div>
+                    </th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Bar advertising awareness
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        <span class="check-no">-</span>
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Depends on hire
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        Built into workflow
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Time to launch
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Weeks of rework
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Months to hire
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        Days with productized services
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Multi-jurisdiction capability
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        One market at a time
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Hire per market
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        17+ languages from day one
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Practice area expertise
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Generic content
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Depends on hire
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        Structured per practice area
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Intake attribution
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Basic analytics
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Custom build required
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        Built into measurement
+                        
+                    </td>
+                    
+                </tr>
+                
+                <tr >
+                    <td class="feature-cell">
+                        Cost structure
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Retainer + rework
+                        
+                    </td>
+                    
+                    <td class="value-cell ">
+                        
+                        Salaries + overhead
+                        
+                    </td>
+                    
+                    <td class="value-cell cell-highlighted">
+                        
+                        Productized packages
+                        
+                    </td>
+                    
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+
+    
+</section>
+            </div>
+            
+            <div class="block">
+                <!-- Benefits Block -->
+<section class="benefits-block">
+    <div class="benefits-header text-center">
+        <span class="tag tag-accent">WHAT LEGAL MARKETING DELIVERS</span>
+        
+        <h2>Results from Law Firm Digital Marketing Done Right</h2>
+        
+        
+        <p class="block-subtitle">When compliance and performance work together.</p>
+        
+    </div>
+
+    
+    <div class="benefits-grid grid-balanced grid-balanced-count-6">
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-users">
+  <!-- === USERS: Three people in group/team formation === -->
+
+  <!-- Shadow of center person (depth) -->
+  <ellipse cx="203" cy="178" rx="38" ry="38" fill="#000" opacity="0.08"/>
+  <!-- Center person head -->
+  <circle cx="200" cy="175" r="38" stroke="#2E2D2D" stroke-width="4" fill="#7C3AED" fill-opacity="0.15"/>
+  <!-- Center person face features -->
+  <circle cx="190" cy="168" r="3" fill="#2E2D2D" opacity="0.6"/>
+  <circle cx="210" cy="168" r="3" fill="#2E2D2D" opacity="0.6"/>
+  <path d="M192 182 Q200 190 208 182" stroke="#2E2D2D" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- Shadow of center body -->
+  <path d="M153 253 Q153 218 200 218 Q247 218 247 253 L247 290 L153 290 Z" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <!-- Center person body (larger) -->
+  <path d="M150 250 Q150 215 200 215 Q250 215 250 250 L250 290 L150 290 Z" stroke="#2E2D2D" stroke-width="3.5" fill="#7C3AED" fill-opacity="0.12"/>
+  <!-- Center person collar -->
+  <path d="M185 215 L200 235 L215 215" stroke="#2E2D2D" stroke-width="2" fill="none" opacity="0.4"/>
+
+  <!-- Shadow of left person -->
+  <ellipse cx="93" cy="198" rx="32" ry="32" fill="#000" opacity="0.08"/>
+  <!-- Left person head -->
+  <circle cx="90" cy="195" r="32" stroke="#2E2D2D" stroke-width="3.5" fill="#A855F7" fill-opacity="0.14"/>
+  <!-- Left person face -->
+  <circle cx="82" cy="190" r="2.5" fill="#2E2D2D" opacity="0.55"/>
+  <circle cx="98" cy="190" r="2.5" fill="#2E2D2D" opacity="0.55"/>
+  <path d="M84 202 Q90 208 96 202" stroke="#2E2D2D" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.45"/>
+
+  <!-- Left person body -->
+  <path d="M53 273 Q53 242 90 242 Q127 242 127 273 L127 310 L53 310 Z" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <path d="M50 270 Q50 240 90 240 Q130 240 130 270 L130 310 L50 310 Z" stroke="#2E2D2D" stroke-width="3" fill="#A855F7" fill-opacity="0.12"/>
+
+  <!-- Shadow of right person -->
+  <ellipse cx="313" cy="198" rx="32" ry="32" fill="#000" opacity="0.08"/>
+  <!-- Right person head -->
+  <circle cx="310" cy="195" r="32" stroke="#2E2D2D" stroke-width="3.5" fill="#C026D3" fill-opacity="0.14"/>
+  <!-- Right person face -->
+  <circle cx="302" cy="190" r="2.5" fill="#2E2D2D" opacity="0.55"/>
+  <circle cx="318" cy="190" r="2.5" fill="#2E2D2D" opacity="0.55"/>
+  <path d="M304 202 Q310 208 316 202" stroke="#2E2D2D" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.45"/>
+
+  <!-- Right person body -->
+  <path d="M273 273 Q273 242 310 242 Q347 242 347 273 L347 310 L273 310 Z" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <path d="M270 270 Q270 240 310 240 Q350 240 350 270 L350 310 L270 310 Z" stroke="#2E2D2D" stroke-width="3" fill="#C026D3" fill-opacity="0.12"/>
+
+  <!-- Connection line: left to center -->
+  <line x1="122" y1="230" x2="158" y2="222" stroke="#2E2D2D" stroke-width="2" stroke-dasharray="4,4" opacity="0.25"/>
+  <!-- Connection line: right to center -->
+  <line x1="278" y1="230" x2="242" y2="222" stroke="#2E2D2D" stroke-width="2" stroke-dasharray="4,4" opacity="0.25"/>
+  <!-- Connection line: left to right (arc) -->
+  <path d="M125 265 Q200 340 275 265" stroke="#2E2D2D" stroke-width="1.5" stroke-dasharray="5,4" fill="none" opacity="0.15"/>
+
+  <!-- Speech bubble above center person -->
+  <rect x="218" y="108" width="52" height="30" rx="8" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <rect x="218" y="108" width="52" height="30" rx="8" stroke="#2E2D2D" stroke-width="2.5" fill="#7C3AED" fill-opacity="0.12"/>
+  <path d="M235 138 L230 148 L242 138" fill="#7C3AED" fill-opacity="0.12" stroke="#2E2D2D" stroke-width="2"/>
+  <line x1="226" y1="120" x2="260" y2="120" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <line x1="226" y1="128" x2="252" y2="128" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Small speech bubble near left person -->
+  <rect x="48" y="138" width="38" height="24" rx="6" stroke="#2E2D2D" stroke-width="2" fill="#A855F7" fill-opacity="0.10"/>
+  <path d="M70 162 L74 170 L78 162" stroke="#2E2D2D" stroke-width="1.5" fill="none"/>
+  <line x1="55" y1="148" x2="78" y2="148" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+
+  <!-- Badge icon near right person -->
+  <rect x="340" y="148" width="28" height="32" rx="4" fill="#000" opacity="0.08" transform="translate(2,2)"/>
+  <rect x="340" y="148" width="28" height="32" rx="4" stroke="#2E2D2D" stroke-width="2" fill="#C026D3" fill-opacity="0.12"/>
+  <circle cx="354" cy="160" r="6" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <line x1="348" y1="170" x2="360" y2="170" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Badge icon near left person -->
+  <rect x="28" y="260" width="24" height="28" rx="3" stroke="#2E2D2D" stroke-width="1.5" fill="#7C3AED" fill-opacity="0.10"/>
+  <circle cx="40" cy="270" r="5" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <line x1="34" y1="280" x2="46" y2="280" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.25"/>
+
+  <!-- Decorative dots -->
+  <circle cx="175" cy="100" r="3" fill="#7C3AED" opacity="0.3"/>
+  <circle cx="320" cy="128" r="2" fill="#A855F7" opacity="0.25"/>
+  <circle cx="55" cy="120" r="2.5" fill="#C026D3" opacity="0.28"/>
+  <circle cx="345" cy="300" r="2" fill="#7C3AED" opacity="0.2"/>
+  <circle cx="200" cy="330" r="2.5" fill="#A855F7" opacity="0.22"/>
+
+  <!-- Decorative small lines -->
+  <line x1="155" y1="85" x2="168" y2="85" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.15"/>
+  <line x1="340" y1="115" x2="358" y2="115" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.15"/>
+  <line x1="30" y1="310" x2="48" y2="310" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+</svg>
+                
+            </span>
+            
+            
+            <h3>More Qualified Client Inquiries</h3>
+            
+            
+            <p>Practice-area SEO that ranks for high-intent legal keywords. Sustainable client acquisition from organic search.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-shield">
+  <!-- Shield depth shadow -->
+  <path d="M203,47 C203,47 303,67 333,67 L333,207 C333,277 203,347 203,347 C203,347 73,277 73,207 L73,67 C103,67 203,47 203,47 Z" fill="#000" opacity="0.08" transform="translate(4,4)"/>
+  <!-- Shield main -->
+  <path d="M199,43 C199,43 299,63 329,63 L329,203 C329,273 199,343 199,343 C199,343 69,273 69,203 L69,63 C99,63 199,43 199,43 Z" stroke="#2E2D2D" stroke-width="3.5" fill="#7C3AED" fill-opacity="0.14" stroke-linejoin="round"/>
+  <!-- Shield inner area -->
+  <path d="M199,70 C199,70 280,86 306,86 L306,200 C306,256 199,316 199,316 C199,316 92,256 92,200 L92,86 C118,86 199,70 199,70 Z" stroke="#2E2D2D" stroke-width="2" fill="#A855F7" fill-opacity="0.08"/>
+  <!-- Large checkmark -->
+  <polyline points="155,195 185,230 250,155" stroke="#7C3AED" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Checkmark secondary thinner line for depth -->
+  <polyline points="155,195 185,230 250,155" stroke="#2E2D2D" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Person silhouette (behind shield, left side visible) -->
+  <!-- Head -->
+  <circle cx="50" cy="155" r="20" fill="#2E2D2D" opacity="0.15" stroke="#2E2D2D" stroke-width="2.5"/>
+  <!-- Body -->
+  <path d="M50,175 C50,175 30,190 25,220 L25,290 L40,290 L42,240 L50,225 L58,240 L60,290 L75,290 L75,220 C70,190 50,175 50,175 Z" fill="#2E2D2D" opacity="0.12" stroke="#2E2D2D" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Arms extended confidently -->
+  <path d="M35,200 L15,215" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M65,200 L70,185" stroke="#2E2D2D" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Person silhouette right side -->
+  <!-- Head -->
+  <circle cx="360" cy="165" r="18" fill="#2E2D2D" opacity="0.12" stroke="#2E2D2D" stroke-width="2"/>
+  <!-- Body -->
+  <path d="M360,183 C360,183 342,196 338,222 L338,280 L350,280 L352,238 L360,225 L368,238 L370,280 L382,280 L382,222 C378,196 360,183 360,183 Z" fill="#2E2D2D" opacity="0.10" stroke="#2E2D2D" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Arm reaching to shield -->
+  <path d="M345,205 L330,195" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round"/>
+  <!-- Lock icon -->
+  <rect x="330" y="80" width="30" height="24" rx="4" stroke="#2E2D2D" stroke-width="2.5" fill="#C026D3" fill-opacity="0.16"/>
+  <path d="M339,80 L339,70 C339,62 351,62 351,70 L351,80" stroke="#2E2D2D" stroke-width="2.5" fill="none"/>
+  <circle cx="345" cy="92" r="3" fill="#2E2D2D" opacity="0.4"/>
+  <!-- Dotted protection barrier arc -->
+  <path d="M30,110 Q35,50 100,30" stroke="#7C3AED" stroke-width="2" stroke-dasharray="5 4" fill="none" opacity="0.3"/>
+  <path d="M300,30 Q365,50 380,110" stroke="#7C3AED" stroke-width="2" stroke-dasharray="5 4" fill="none" opacity="0.3"/>
+  <!-- Bottom dotted barrier -->
+  <path d="M15,300 Q30,340 70,355" stroke="#A855F7" stroke-width="2" stroke-dasharray="5 4" fill="none" opacity="0.25"/>
+  <path d="M330,355 Q370,340 385,300" stroke="#A855F7" stroke-width="2" stroke-dasharray="5 4" fill="none" opacity="0.25"/>
+  <!-- Decorative dots -->
+  <circle cx="20" cy="60" r="3" fill="#7C3AED" opacity="0.25"/>
+  <circle cx="388" cy="55" r="2.5" fill="#A855F7" opacity="0.2"/>
+  <circle cx="15" cy="350" r="2" fill="#C026D3" opacity="0.2"/>
+  <circle cx="390" cy="340" r="2.5" fill="#7C3AED" opacity="0.2"/>
+  <circle cx="200" cy="20" r="2" fill="#A855F7" opacity="0.2"/>
+  <!-- Small decorative lines -->
+  <line x1="355" y1="380" x2="385" y2="380" stroke="#A855F7" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+  <line x1="15" y1="385" x2="40" y2="385" stroke="#7C3AED" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+</svg>
+                
+            </span>
+            
+            
+            <h3>Zero Compliance Incidents</h3>
+            
+            
+            <p>Legal advertising produced within bar rules per jurisdiction. No pulled campaigns, no regulatory letters.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-trending-up">
+  <!-- Stepping stones / stairs beneath the line -->
+  <!-- Step 1 -->
+  <rect x="48" y="305" width="55" height="20" rx="3" fill="#7C3AED" fill-opacity="0.1" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Step 2 -->
+  <rect x="98" y="275" width="55" height="20" rx="3" fill="#7C3AED" fill-opacity="0.12" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Step 3 -->
+  <rect x="148" y="240" width="55" height="20" rx="3" fill="#A855F7" fill-opacity="0.12" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Step 4 -->
+  <rect x="198" y="200" width="55" height="20" rx="3" fill="#A855F7" fill-opacity="0.14" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Step 5 -->
+  <rect x="248" y="155" width="55" height="20" rx="3" fill="#C026D3" fill-opacity="0.14" stroke="#2E2D2D" stroke-width="2" opacity="0.5"/>
+  <!-- Vertical fills connecting stairs -->
+  <rect x="98" y="295" width="55" height="10" rx="0" fill="#7C3AED" fill-opacity="0.05"/>
+  <rect x="148" y="260" width="55" height="15" rx="0" fill="#A855F7" fill-opacity="0.05"/>
+  <rect x="198" y="220" width="55" height="20" rx="0" fill="#A855F7" fill-opacity="0.05"/>
+  <rect x="248" y="175" width="55" height="25" rx="0" fill="#C026D3" fill-opacity="0.05"/>
+  <!-- Area fill under the line -->
+  <path d="M60 310 L120 275 L175 238 L225 198 L275 153 L325 95 L325 340 L60 340 Z" fill="#7C3AED" fill-opacity="0.06"/>
+  <!-- Shadow of the ascending line -->
+  <polyline points="63,313 123,278 178,241 228,201 278,156 328,98" stroke="#000" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.08"/>
+  <!-- Main ascending line -->
+  <polyline points="60,310 120,275 175,238 225,198 275,153 325,95" stroke="#2E2D2D" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Data points on the line -->
+  <circle cx="60" cy="310" r="5" fill="#7C3AED" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <circle cx="120" cy="275" r="5" fill="#7C3AED" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <circle cx="175" cy="238" r="5" fill="#A855F7" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <circle cx="225" cy="198" r="5" fill="#A855F7" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <circle cx="275" cy="153" r="5" fill="#C026D3" fill-opacity="0.5" stroke="#2E2D2D" stroke-width="2"/>
+  <!-- Rocket at peak -->
+  <!-- Rocket body shadow -->
+  <path d="M328 98 L318 70 Q325 55 332 70 L342 98" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <!-- Rocket body -->
+  <path d="M318 95 Q315 72 325 48 Q335 72 332 95 Z" fill="#C026D3" fill-opacity="0.18" stroke="#2E2D2D" stroke-width="3"/>
+  <!-- Rocket window -->
+  <circle cx="325" cy="72" r="6" stroke="#2E2D2D" stroke-width="2" fill="#7C3AED" fill-opacity="0.2"/>
+  <!-- Rocket fins -->
+  <path d="M318 90 L308 100 L318 95" fill="#A855F7" fill-opacity="0.2" stroke="#2E2D2D" stroke-width="2"/>
+  <path d="M332 90 L342 100 L332 95" fill="#A855F7" fill-opacity="0.2" stroke="#2E2D2D" stroke-width="2"/>
+  <!-- Rocket flame -->
+  <path d="M320 95 Q325 110 330 95 Q325 105 320 95" fill="#C026D3" fill-opacity="0.3" stroke="#2E2D2D" stroke-width="1.5"/>
+  <!-- Sparkle at the top -->
+  <!-- Sparkle lines -->
+  <line x1="325" y1="30" x2="325" y2="20" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="315" y1="35" x2="310" y2="28" stroke="#A855F7" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <line x1="335" y1="35" x2="340" y2="28" stroke="#A855F7" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <line x1="345" y1="45" x2="352" y2="40" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+  <line x1="305" y1="45" x2="298" y2="40" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+  <!-- Sparkle star -->
+  <circle cx="325" cy="25" r="2.5" fill="#7C3AED" opacity="0.4"/>
+  <circle cx="348" cy="38" r="1.5" fill="#A855F7" opacity="0.3"/>
+  <circle cx="302" cy="38" r="1.5" fill="#A855F7" opacity="0.3"/>
+  <!-- Decorative dots -->
+  <circle cx="40" cy="350" r="3" fill="#7C3AED" opacity="0.2"/>
+  <circle cx="55" cy="360" r="2" fill="#A855F7" opacity="0.15"/>
+  <circle cx="370" cy="310" r="2.5" fill="#C026D3" opacity="0.2"/>
+  <!-- Small decorative lines -->
+  <line x1="355" y1="180" x2="375" y2="180" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+  <line x1="360" y1="188" x2="372" y2="188" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.1"/>
+  <line x1="25" y1="270" x2="38" y2="270" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+  <!-- Percentage badge -->
+  <rect x="345" y="110" width="40" height="20" rx="4" stroke="#2E2D2D" stroke-width="1.5" fill="#7C3AED" fill-opacity="0.12" opacity="0.5"/>
+  <line x1="352" y1="120" x2="377" y2="120" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+</svg>
+
+                
+            </span>
+            
+            
+            <h3>Lower Cost per Intake</h3>
+            
+            
+            <p>Legal PPC optimized for consultation bookings, not just clicks. Every campaign targets clients who convert.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-search-new">
+  <!-- Browser card shadow -->
+  <rect x="73" y="53" width="238" height="266" rx="12" fill="#000" opacity="0.08"/>
+  <!-- Browser card -->
+  <rect x="70" y="50" width="238" height="266" rx="12" stroke="#2E2D2D" stroke-width="3.5" fill="white" fill-opacity="0.55"/>
+  <!-- Browser top bar -->
+  <rect x="70" y="50" width="238" height="30" rx="12" fill="#2E2D2D" fill-opacity="0.06"/>
+  <line x1="70" y1="80" x2="308" y2="80" stroke="#2E2D2D" stroke-width="1.5" opacity="0.2"/>
+  <circle cx="88" cy="65" r="4" fill="#C026D3" fill-opacity="0.3"/>
+  <circle cx="100" cy="65" r="4" fill="#A855F7" fill-opacity="0.3"/>
+  <circle cx="112" cy="65" r="4" fill="#7C3AED" fill-opacity="0.3"/>
+  <!-- Search field -->
+  <rect x="128" y="58" width="160" height="14" rx="7" stroke="#2E2D2D" stroke-width="1.5" fill="#7C3AED" fill-opacity="0.08"/>
+  <circle cx="140" cy="65" r="3.5" stroke="#2E2D2D" stroke-width="1.2" opacity="0.35"/>
+  <line x1="142.5" y1="67.5" x2="145.5" y2="70.5" stroke="#2E2D2D" stroke-width="1.2" stroke-linecap="round" opacity="0.35"/>
+  <line x1="151" y1="65" x2="193" y2="65" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.24"/>
+
+  <!-- Highlighted result -->
+  <rect x="92" y="98" width="194" height="64" rx="8" fill="#7C3AED" fill-opacity="0.16" stroke="#2E2D2D" stroke-width="2.5"/>
+  <rect x="106" y="110" width="74" height="8" rx="4" fill="#7C3AED" fill-opacity="0.38"/>
+  <line x1="106" y1="129" x2="246" y2="129" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.34"/>
+  <line x1="106" y1="140" x2="232" y2="140" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.24"/>
+  <line x1="106" y1="150" x2="214" y2="150" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.18"/>
+  <!-- Signal markers -->
+  <circle cx="258" cy="116" r="8" fill="#A855F7" fill-opacity="0.16" stroke="#2E2D2D" stroke-width="1.5"/>
+  <path d="M258 112V120" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M254 116H262" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Secondary results -->
+  <rect x="92" y="176" width="194" height="42" rx="6" fill="#2E2D2D" fill-opacity="0.04" stroke="#2E2D2D" stroke-width="1.5" opacity="0.42"/>
+  <line x1="106" y1="190" x2="226" y2="190" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.24"/>
+  <line x1="106" y1="201" x2="246" y2="201" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.16"/>
+  <rect x="92" y="230" width="194" height="42" rx="6" fill="#2E2D2D" fill-opacity="0.03" stroke="#2E2D2D" stroke-width="1.5" opacity="0.34"/>
+  <line x1="106" y1="244" x2="218" y2="244" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.18"/>
+  <line x1="106" y1="255" x2="232" y2="255" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+
+  <!-- Magnifier shadow -->
+  <circle cx="283" cy="251" r="71" fill="#000" opacity="0.08"/>
+  <!-- Magnifier lens -->
+  <circle cx="280" cy="248" r="71" stroke="#2E2D2D" stroke-width="4" fill="#A855F7" fill-opacity="0.10"/>
+  <circle cx="280" cy="248" r="50" stroke="#2E2D2D" stroke-width="2" fill="white" fill-opacity="0.32"/>
+  <!-- Handle -->
+  <line x1="330" y1="298" x2="372" y2="340" stroke="#2E2D2D" stroke-width="16" stroke-linecap="round"/>
+  <line x1="331" y1="299" x2="369" y2="337" stroke="#7C3AED" stroke-width="6" stroke-linecap="round" opacity="0.16"/>
+
+  <!-- Focus target inside lens -->
+  <rect x="246" y="216" width="68" height="44" rx="6" stroke="#2E2D2D" stroke-width="2.5" fill="#C026D3" fill-opacity="0.12"/>
+  <line x1="258" y1="228" x2="302" y2="228" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.34"/>
+  <line x1="258" y1="239" x2="292" y2="239" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.24"/>
+  <line x1="258" y1="249" x2="286" y2="249" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.18"/>
+  <circle cx="280" cy="238" r="23" stroke="#7C3AED" stroke-width="2.5" opacity="0.52"/>
+  <path d="M280 229V247" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.52"/>
+  <path d="M271 238H289" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.52"/>
+
+  <!-- Orbiting audit chips -->
+  <rect x="302" y="98" width="56" height="30" rx="6" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <rect x="302" y="98" width="56" height="30" rx="6" stroke="#2E2D2D" stroke-width="2" fill="#A855F7" fill-opacity="0.12"/>
+  <line x1="313" y1="110" x2="348" y2="110" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.28"/>
+  <line x1="313" y1="118" x2="338" y2="118" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.18"/>
+
+  <rect x="26" y="282" width="62" height="34" rx="6" fill="#000" opacity="0.08" transform="translate(3,3)"/>
+  <rect x="26" y="282" width="62" height="34" rx="6" stroke="#2E2D2D" stroke-width="2" fill="#7C3AED" fill-opacity="0.12"/>
+  <line x1="38" y1="296" x2="74" y2="296" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+  <line x1="38" y1="305" x2="66" y2="305" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.18"/>
+
+  <!-- Search rays -->
+  <path d="M236 171 Q244 163 255 162" stroke="#2E2D2D" stroke-width="2" fill="none" opacity="0.18" stroke-linecap="round"/>
+  <path d="M315 180 Q327 178 336 184" stroke="#2E2D2D" stroke-width="2" fill="none" opacity="0.18" stroke-linecap="round"/>
+  <path d="M246 311 Q252 320 252 331" stroke="#2E2D2D" stroke-width="2" fill="none" opacity="0.14" stroke-linecap="round"/>
+
+  <!-- Top-right sparkle -->
+  <path d="M334 48L338 60L350 64L338 68L334 80L330 68L318 64L330 60Z" fill="#C026D3" fill-opacity="0.18" stroke="#2E2D2D" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Decorative dots -->
+  <circle cx="48" cy="118" r="3" fill="#7C3AED" opacity="0.26"/>
+  <circle cx="38" cy="144" r="2" fill="#A855F7" opacity="0.2"/>
+  <circle cx="364" cy="214" r="2.5" fill="#7C3AED" opacity="0.24"/>
+  <circle cx="332" cy="364" r="3" fill="#C026D3" opacity="0.18"/>
+  <!-- Decorative line -->
+  <line x1="30" y1="224" x2="48" y2="224" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+</svg>
+
+                
+            </span>
+            
+            
+            <h3>Practice Area Authority</h3>
+            
+            
+            <p>Content that establishes thought leadership per practice area. Digital marketing for legal firms that builds long-term authority.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-globe">
+  <!-- Globe depth shadow -->
+  <circle cx="203" cy="203" r="130" fill="#000" opacity="0.08"/>
+  <!-- Globe body -->
+  <circle cx="200" cy="200" r="130" stroke="#2E2D2D" stroke-width="3.5" fill="#7C3AED" fill-opacity="0.10"/>
+  <!-- Equator -->
+  <ellipse cx="200" cy="200" rx="130" ry="30" stroke="#2E2D2D" stroke-width="2" fill="none"/>
+  <!-- Tropic upper -->
+  <ellipse cx="200" cy="155" rx="110" ry="22" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- Tropic lower -->
+  <ellipse cx="200" cy="245" rx="110" ry="22" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- Meridian center -->
+  <ellipse cx="200" cy="200" rx="30" ry="130" stroke="#2E2D2D" stroke-width="2" fill="none"/>
+  <!-- Meridian offset left -->
+  <ellipse cx="200" cy="200" rx="75" ry="130" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- Meridian offset right -->
+  <ellipse cx="200" cy="200" rx="110" ry="130" stroke="#2E2D2D" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <!-- Connection node 1 (Europe area) -->
+  <circle cx="220" cy="148" r="8" fill="#7C3AED" fill-opacity="0.20" stroke="#7C3AED" stroke-width="2"/>
+  <circle cx="220" cy="148" r="3" fill="#7C3AED"/>
+  <!-- Connection node 2 (Asia area) -->
+  <circle cx="280" cy="180" r="8" fill="#A855F7" fill-opacity="0.18" stroke="#A855F7" stroke-width="2"/>
+  <circle cx="280" cy="180" r="3" fill="#A855F7"/>
+  <!-- Connection node 3 (Americas area) -->
+  <circle cx="130" cy="190" r="8" fill="#C026D3" fill-opacity="0.18" stroke="#C026D3" stroke-width="2"/>
+  <circle cx="130" cy="190" r="3" fill="#C026D3"/>
+  <!-- Connection node 4 (South) -->
+  <circle cx="190" cy="260" r="7" fill="#7C3AED" fill-opacity="0.18" stroke="#7C3AED" stroke-width="2"/>
+  <circle cx="190" cy="260" r="3" fill="#7C3AED"/>
+  <!-- Connection node 5 (Africa area) -->
+  <circle cx="240" cy="220" r="7" fill="#A855F7" fill-opacity="0.18" stroke="#A855F7" stroke-width="2"/>
+  <circle cx="240" cy="220" r="3" fill="#A855F7"/>
+  <!-- Dotted connection lines between nodes -->
+  <line x1="220" y1="148" x2="280" y2="180" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="130" y1="190" x2="220" y2="148" stroke="#A855F7" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="280" y1="180" x2="240" y2="220" stroke="#C026D3" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="240" y1="220" x2="190" y2="260" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="130" y1="190" x2="190" y2="260" stroke="#A855F7" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <!-- Airplane path (curved arc outside globe) -->
+  <path d="M60,100 Q30,160 50,220" stroke="#2E2D2D" stroke-width="1.5" stroke-dasharray="6 3" fill="none" opacity="0.35"/>
+  <!-- Small airplane icon -->
+  <path d="M56,106 L66,100 L56,94 L58,100 Z" fill="#2E2D2D" opacity="0.5"/>
+  <!-- Location pin 1 -->
+  <path d="M340,120 C340,108 354,108 354,120 C354,130 347,140 347,140 C347,140 340,130 340,120 Z" stroke="#2E2D2D" stroke-width="2" fill="#C026D3" fill-opacity="0.18"/>
+  <circle cx="347" cy="120" r="3" fill="#2E2D2D" opacity="0.4"/>
+  <!-- Location pin 2 -->
+  <path d="M52,280 C52,270 64,270 64,280 C64,288 58,296 58,296 C58,296 52,288 52,280 Z" stroke="#2E2D2D" stroke-width="2" fill="#7C3AED" fill-opacity="0.18"/>
+  <circle cx="58" cy="280" r="2.5" fill="#2E2D2D" opacity="0.4"/>
+  <!-- Globe stand/base hint -->
+  <path d="M140,340 Q200,355 260,340" stroke="#2E2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <line x1="200" y1="330" x2="200" y2="345" stroke="#2E2D2D" stroke-width="2.5"/>
+  <!-- Decorative dots -->
+  <circle cx="365" cy="165" r="3" fill="#7C3AED" opacity="0.25"/>
+  <circle cx="375" cy="185" r="2" fill="#A855F7" opacity="0.2"/>
+  <circle cx="30" cy="320" r="2.5" fill="#C026D3" opacity="0.2"/>
+  <circle cx="370" cy="300" r="2" fill="#7C3AED" opacity="0.2"/>
+  <!-- Small decorative lines -->
+  <line x1="350" y1="250" x2="375" y2="250" stroke="#A855F7" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+  <line x1="355" y1="260" x2="370" y2="260" stroke="#7C3AED" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+</svg>
+                
+            </span>
+            
+            
+            <h3>Multi-Jurisdiction Reach</h3>
+            
+            
+            <p>Enter new markets with localized legal marketing — compliance, content, and campaigns adapted per jurisdiction.</p>
+            
+        </div>
+        
+        
+        
+            
+        
+        
+        <div class="benefit-card">
+            
+            <span class="benefit-icon">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" width="80" height="80" class="illustration illustration-analytics">
+  <!-- Dashboard screen shadow -->
+  <rect x="58" y="58" width="264" height="184" rx="12" fill="#000" opacity="0.08"/>
+  <!-- Dashboard screen -->
+  <rect x="55" y="55" width="264" height="184" rx="12" stroke="#2E2D2D" stroke-width="3.5" fill="#7C3AED" fill-opacity="0.08"/>
+  <!-- Top bar -->
+  <rect x="55" y="55" width="264" height="28" rx="12" fill="#2E2D2D" opacity="0.06"/>
+  <circle cx="74" cy="69" r="4" fill="#7C3AED" opacity="0.35"/>
+  <circle cx="88" cy="69" r="4" fill="#A855F7" opacity="0.28"/>
+  <circle cx="102" cy="69" r="4" fill="#C026D3" opacity="0.24"/>
+
+  <!-- Left chart block -->
+  <rect x="78" y="102" width="138" height="118" rx="8" stroke="#2E2D2D" stroke-width="2" fill="white" fill-opacity="0.3"/>
+  <rect x="95" y="172" width="18" height="30" rx="3" fill="#7C3AED" fill-opacity="0.22" stroke="#2E2D2D" stroke-width="1.8"/>
+  <rect x="123" y="152" width="18" height="50" rx="3" fill="#A855F7" fill-opacity="0.2" stroke="#2E2D2D" stroke-width="1.8"/>
+  <rect x="151" y="128" width="18" height="74" rx="3" fill="#7C3AED" fill-opacity="0.22" stroke="#2E2D2D" stroke-width="1.8"/>
+  <rect x="179" y="144" width="18" height="58" rx="3" fill="#C026D3" fill-opacity="0.18" stroke="#2E2D2D" stroke-width="1.8"/>
+  <polyline points="104,164 132,146 160,120 188,136" stroke="#2E2D2D" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="104" cy="164" r="4" fill="#7C3AED" fill-opacity="0.55" stroke="#2E2D2D" stroke-width="1.5"/>
+  <circle cx="132" cy="146" r="4" fill="#A855F7" fill-opacity="0.55" stroke="#2E2D2D" stroke-width="1.5"/>
+  <circle cx="160" cy="120" r="4" fill="#7C3AED" fill-opacity="0.55" stroke="#2E2D2D" stroke-width="1.5"/>
+  <circle cx="188" cy="136" r="4" fill="#C026D3" fill-opacity="0.55" stroke="#2E2D2D" stroke-width="1.5"/>
+
+  <!-- Right KPI panel -->
+  <rect x="232" y="102" width="66" height="48" rx="6" stroke="#2E2D2D" stroke-width="2" fill="#A855F7" fill-opacity="0.1"/>
+  <line x1="244" y1="118" x2="286" y2="118" stroke="#2E2D2D" stroke-width="2" stroke-linecap="round" opacity="0.24"/>
+  <line x1="244" y1="130" x2="278" y2="130" stroke="#2E2D2D" stroke-width="1.8" stroke-linecap="round" opacity="0.18"/>
+
+  <!-- Right trend card -->
+  <rect x="232" y="162" width="66" height="58" rx="6" stroke="#2E2D2D" stroke-width="2" fill="#C026D3" fill-opacity="0.1"/>
+  <polyline points="244,206 256,194 267,198 279,182 288,176" stroke="#2E2D2D" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M244 206 L256 194 L267 198 L279 182 L288 176 L288 210 L244 210 Z" fill="#7C3AED" fill-opacity="0.1"/>
+
+  <!-- Screen stand -->
+  <path d="M170 239 L160 258 L214 258 L204 239" stroke="#2E2D2D" stroke-width="2.5" fill="#2E2D2D" fill-opacity="0.08"/>
+  <rect x="156" y="258" width="62" height="7" rx="3.5" fill="#2E2D2D" opacity="0.15"/>
+
+  <!-- Analyst figure -->
+  <circle cx="320" cy="297" r="14" stroke="#2E2D2D" stroke-width="2.5" fill="#A855F7" fill-opacity="0.16"/>
+  <path d="M296 378 Q296 342 306 330 Q313 322 320 320 Q327 322 334 330 Q344 342 344 378" stroke="#2E2D2D" stroke-width="2.5" fill="#A855F7" fill-opacity="0.14" stroke-linejoin="round"/>
+  <path d="M306 332 Q286 310 268 288 Q262 282 258 274" stroke="#2E2D2D" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.4"/>
+  <path d="M334 334 Q344 350 348 362" stroke="#2E2D2D" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.32"/>
+  <path d="M258 274 L252 268 M258 274 L262 268" stroke="#2E2D2D" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.32"/>
+
+  <!-- Accent pie chart -->
+  <circle cx="92" cy="312" r="22" stroke="#2E2D2D" stroke-width="2" fill="#C026D3" fill-opacity="0.1"/>
+  <path d="M92 312 L92 290 A22 22 0 0 1 111 302 Z" fill="#7C3AED" fill-opacity="0.18" stroke="#2E2D2D" stroke-width="1.5"/>
+  <path d="M92 312 L111 302 A22 22 0 0 1 99 332 Z" fill="#A855F7" fill-opacity="0.15" stroke="#2E2D2D" stroke-width="1.5"/>
+
+  <!-- Decorative dots -->
+  <circle cx="40" cy="114" r="3" fill="#7C3AED" opacity="0.24"/>
+  <circle cx="360" cy="86" r="2.5" fill="#A855F7" opacity="0.22"/>
+  <circle cx="44" cy="340" r="2.5" fill="#C026D3" opacity="0.2"/>
+  <circle cx="366" cy="266" r="2" fill="#7C3AED" opacity="0.18"/>
+  <!-- Decorative lines -->
+  <line x1="26" y1="196" x2="42" y2="196" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+  <line x1="340" y1="356" x2="362" y2="356" stroke="#2E2D2D" stroke-width="1.5" stroke-linecap="round" opacity="0.12"/>
+</svg>
+
+                
+            </span>
+            
+            
+            <h3>Intake-to-Revenue Attribution</h3>
+            
+            
+            <p>Measurement that connects marketing to retained clients and case value. Know which channels drive real revenue.</p>
             
         </div>
         
@@ -2338,7 +3295,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2418,7 +3375,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2504,7 +3461,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2588,7 +3545,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2666,7 +3623,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2746,7 +3703,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2824,7 +3781,7 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">8 industries</span>
+        <span class="scope-metric entity-card-stat">7 industries</span>
         <span class="scope-metric entity-card-stat">8 countries</span>
         <span class="scope-metric entity-card-stat">7 languages</span>
         
@@ -2954,7 +3911,7 @@
     
     
     <div class="expert-tag-row expert-tag-row-metrics entity-card-meta-row">
-        <span class="entity-card-stat">8 industries</span>
+        <span class="entity-card-stat">7 industries</span>
         <span class="entity-card-stat">1 case</span>
         <span class="entity-card-stat">2 articles</span>
     </div>
@@ -4150,7 +5107,7 @@
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">6 scopes</span>
         <span class="service-meta-item entity-card-stat">3 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
         <span class="service-meta-item entity-card-stat">7 languages</span>
     </div>
@@ -4199,7 +5156,7 @@
     <div class="service-card-meta entity-card-meta-row">
         
         
-        <span class="service-meta-item entity-card-stat">7 industries</span>
+        <span class="service-meta-item entity-card-stat">6 industries</span>
         <span class="service-meta-item entity-card-stat">3 countries</span>
         <span class="service-meta-item entity-card-stat">3 languages</span>
     </div>
@@ -4252,7 +5209,7 @@
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">2 scopes</span>
         <span class="service-meta-item entity-card-stat">3 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
         <span class="service-meta-item entity-card-stat">7 languages</span>
     </div>
@@ -4303,7 +5260,7 @@
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">1 scope</span>
         <span class="service-meta-item entity-card-stat">2 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
         <span class="service-meta-item entity-card-stat">7 languages</span>
     </div>
@@ -4354,7 +5311,7 @@
     <div class="service-card-meta entity-card-meta-row">
         
         <span class="service-meta-item entity-card-stat">2 experts</span>
-        <span class="service-meta-item entity-card-stat">7 industries</span>
+        <span class="service-meta-item entity-card-stat">6 industries</span>
         <span class="service-meta-item entity-card-stat">6 countries</span>
         <span class="service-meta-item entity-card-stat">3 languages</span>
     </div>
@@ -4411,7 +5368,7 @@
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">2 scopes</span>
         <span class="service-meta-item entity-card-stat">4 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
         <span class="service-meta-item entity-card-stat">7 languages</span>
     </div>
@@ -4466,7 +5423,7 @@
     <div class="service-card-meta entity-card-meta-row">
         
         <span class="service-meta-item entity-card-stat">3 experts</span>
-        <span class="service-meta-item entity-card-stat">8 industries</span>
+        <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">3 countries</span>
         <span class="service-meta-item entity-card-stat">2 languages</span>
     </div>
@@ -4517,7 +5474,7 @@
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">1 scope</span>
         
-        <span class="service-meta-item entity-card-stat">6 industries</span>
+        <span class="service-meta-item entity-card-stat">5 industries</span>
         <span class="service-meta-item entity-card-stat">3 countries</span>
         <span class="service-meta-item entity-card-stat">2 languages</span>
     </div>
@@ -5707,8 +6664,6 @@
             
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Healthcare</span>
             
-            <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Financial Services</span>
-            
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Legal</span>
             
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Automotive</span>
@@ -5837,8 +6792,6 @@
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Automotive</span>
             
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Manufacturing</span>
-            
-            <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Financial Services</span>
             
             <span class="blog-chip entity-chip entity-chip-label entity-chip-compact">Legal</span>
             
@@ -5980,7 +6933,7 @@
     
     <div class="position-tag-row position-tag-row-metrics entity-card-meta-row">
         <span class="entity-card-stat">1 expert</span>
-        <span class="entity-card-stat">8 industries</span>
+        <span class="entity-card-stat">7 industries</span>
     </div>
     
     <div class="position-card-footer entity-card-footer entity-card-footer-end">
@@ -6057,72 +7010,72 @@
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5417)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-5417" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9351)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-9351" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7530)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7530" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5559)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-5559" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8029)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-8029" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4028)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4028" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6431)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-6431" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7664)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7664" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4463)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4463" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9792)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-9792" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5510)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-5510" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3146)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3146" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4216)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4216" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4830)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4830" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8405)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-8405" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1501)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-1501" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5783)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-5783" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7860)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7860" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8657)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-8657" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3067)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3067" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2276)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-2276" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5987)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-5987" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4946)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4946" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1537)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-1537" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3491)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3491" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7614)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7614" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4670)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4670" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8618)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-8618" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
