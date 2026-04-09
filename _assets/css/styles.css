@@ -738,6 +738,15 @@ a:hover { color: var(--accent-hover); }
 
 :root {
     --icon-bar-width: 112px;
+    --icon-bar-link-width: 84px;
+    --icon-bar-link-height: 58px;
+    --icon-bar-link-gap: 0;
+    --icon-bar-icon-size: 28px;
+    --icon-bar-nav-gap: var(--space-xs);
+    --icon-bar-nav-padding-inline: var(--space-sm);
+    --icon-bar-bottom-gap: var(--space-sm);
+    --icon-bar-bottom-padding-block: var(--space-md);
+    --icon-bar-button-size: var(--btn-height);
 }
 
 .sidebar-nav {
@@ -768,8 +777,8 @@ a:hover { color: var(--accent-hover); }
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-xs);
-    padding: 0 var(--space-sm);
+    gap: var(--icon-bar-nav-gap);
+    padding: 0 var(--icon-bar-nav-padding-inline);
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
@@ -781,9 +790,10 @@ a:hover { color: var(--accent-hover); }
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: var(--icon-bar-link-gap);
     position: relative;
-    width: 84px;
-    height: 58px;
+    width: var(--icon-bar-link-width);
+    height: var(--icon-bar-link-height);
     border: 1px solid transparent;
     border-radius: var(--radius-md);
     color: var(--text-secondary);
@@ -805,7 +815,7 @@ a:hover { color: var(--accent-hover); }
 .icon-bar-link.active::after {
     content: "";
     position: absolute;
-    right: calc(-1 * ((var(--icon-bar-width) - 84px) / 2));
+    right: calc(-1 * ((var(--icon-bar-width) - var(--icon-bar-link-width)) / 2));
     top: 4px;
     bottom: 4px;
     width: 4px;
@@ -819,24 +829,25 @@ a:hover { color: var(--accent-hover); }
 }
 
 .icon-bar-link svg {
-    width: 28px;
-    height: 28px;
+    width: var(--icon-bar-icon-size);
+    height: var(--icon-bar-icon-size);
 }
 
 .icon-bar-label {
     font-family: var(--font-mono);
     color: var(--text-muted);
-    margin-top: 2px;
+    margin-top: 0;
     opacity: 1;
     white-space: nowrap;
+    text-align: center;
 }
 
 .icon-bar-bottom {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-md) var(--space-sm);
+    gap: var(--icon-bar-bottom-gap);
+    padding: var(--icon-bar-bottom-padding-block) var(--space-sm);
     border-top: 1px solid var(--border);
 }
 
@@ -846,8 +857,8 @@ a:hover { color: var(--accent-hover); }
     justify-content: center;
     flex-direction: column;
     gap: var(--space-xs);
-    width: var(--btn-height);
-    height: var(--btn-height);
+    width: var(--icon-bar-button-size);
+    height: var(--icon-bar-button-size);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-md);
     background: var(--bg-card);
@@ -874,6 +885,75 @@ a:hover { color: var(--accent-hover); }
 
 .icon-bar-btn-label {
     display: none;
+}
+
+@media (min-width: 801px) and (max-height: 920px) {
+    :root {
+        --icon-bar-width: 104px;
+        --icon-bar-link-width: 76px;
+        --icon-bar-link-height: 50px;
+        --icon-bar-icon-size: 24px;
+        --icon-bar-nav-gap: 0.18rem;
+        --icon-bar-nav-padding-inline: 0.42rem;
+        --icon-bar-bottom-gap: 0.42rem;
+        --icon-bar-bottom-padding-block: 0.6rem;
+        --icon-bar-button-size: 44px;
+    }
+
+    .icon-bar {
+        padding: 0.55rem 0;
+    }
+
+    .icon-bar-label {
+        font-size: 0.58rem;
+        letter-spacing: 0.04em;
+    }
+}
+
+@media (min-width: 801px) and (max-height: 760px) {
+    :root {
+        --icon-bar-width: 138px;
+        --icon-bar-link-width: 118px;
+        --icon-bar-link-height: 42px;
+        --icon-bar-icon-size: 18px;
+        --icon-bar-nav-gap: 0.16rem;
+        --icon-bar-nav-padding-inline: 0.45rem;
+        --icon-bar-bottom-gap: 0.35rem;
+        --icon-bar-bottom-padding-block: 0.45rem;
+        --icon-bar-button-size: 50px;
+    }
+
+    .icon-bar-link,
+    .icon-bar-btn {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 0.45rem;
+        padding: 0 0.55rem;
+    }
+
+    .icon-bar-link {
+        align-items: center;
+    }
+
+    .icon-bar-label,
+    .icon-bar-btn-label {
+        display: block;
+        font-size: 0.58rem;
+        line-height: 1.05;
+        text-align: left;
+        white-space: normal;
+        max-width: 82px;
+        overflow: hidden;
+    }
+
+    .icon-bar-btn-label {
+        color: var(--text-muted);
+    }
+
+    .icon-bar-link svg,
+    .icon-bar-btn svg {
+        flex-shrink: 0;
+    }
 }
 
 /* Header Cart Button */
@@ -1098,6 +1178,40 @@ body.sidebar-nav-split .sidebar-nav[data-panel="selectors"] .icon-bar-btn-label 
     .icon-bar-btn svg {
         width: 18px;
         height: 18px;
+    }
+}
+
+@media (min-width: 801px) and (max-width: 1599px) and (max-height: 760px) {
+    :root {
+        --icon-bar-width: 134px;
+        --icon-bar-link-width: 114px;
+        --icon-bar-link-height: 42px;
+        --icon-bar-icon-size: 18px;
+        --icon-bar-nav-gap: 0.16rem;
+        --icon-bar-nav-padding-inline: 0.4rem;
+        --icon-bar-bottom-gap: 0.32rem;
+        --icon-bar-bottom-padding-block: 0.4rem;
+        --icon-bar-button-size: 46px;
+    }
+
+    .icon-bar-link,
+    .icon-bar-btn {
+        width: var(--icon-bar-link-width);
+    }
+
+    .icon-bar-link.active::after {
+        right: calc(-1 * ((var(--icon-bar-width) - var(--icon-bar-link-width)) / 2));
+    }
+
+    .icon-bar-label,
+    .icon-bar-btn-label {
+        display: block;
+        font-size: 0.56rem;
+        line-height: 1.05;
+        text-align: left;
+        white-space: normal;
+        max-width: 78px;
+        overflow: hidden;
     }
 }
 
