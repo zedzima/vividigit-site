@@ -1258,6 +1258,10 @@
                         '<option value="other">Other</option>' +
                     '</select>' +
                 '</div>' +
+                '<label class="widget-checkbox legal-checkbox cart-legal-checkbox">' +
+                    '<input type="checkbox" id="cartLegalAck" data-error="Please confirm the Terms and Privacy Policy before sending your request." />' +
+                    '<span class="legal-consent-copy">I have read and agree to the <a href="terms/" class="legal-consent-link">Terms of Service</a> and <a href="privacy/" class="legal-consent-link">Privacy Policy</a>.</span>' +
+                '</label>' +
                 '<div class="cart-actions">' +
                     '<button class="btn btn-primary" id="cartSendRequest">Request Quote</button>' +
                     '<button class="btn btn-secondary" id="cartPageClear">Clear Cart</button>' +
@@ -1286,10 +1290,17 @@
             var phone = document.getElementById('cartPhone')?.value.trim() || '';
             var comment = document.getElementById('cartComment')?.value.trim();
             var source = document.getElementById('cartSource')?.value || '';
+            var legalAck = document.getElementById('cartLegalAck');
             var btn = document.getElementById('cartSendRequest');
 
             if (!email || !email.includes('@')) {
                 alert('Please enter a valid email address.');
+                return;
+            }
+
+            if (!legalAck || !legalAck.checked) {
+                alert((legalAck && legalAck.dataset.error) || 'Please confirm the required legal notice.');
+                legalAck?.focus();
                 return;
             }
 
@@ -1301,7 +1312,8 @@
                 email: email,
                 phone: phone,
                 message: cart.buildOrderEmail(comment),
-                source: source
+                source: source,
+                legal_ack: 'yes'
             }, btn, function() {
                 app.pushDL?.('generate_lead', {
                     cart_items: keys.length,

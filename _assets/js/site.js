@@ -63,9 +63,94 @@
         document.body.appendChild(script);
     }
 
+    function initConsentControls() {
+        var consent = window.VividigitConsent;
+        var banner = document.getElementById('cookieConsent');
+        var prefs = document.getElementById('cookiePreferences');
+        var settingsButtons = document.querySelectorAll('[data-cookie-open]');
+        var analyticsToggle = document.getElementById('cookieAnalyticsToggle');
+        var acceptBtn = document.getElementById('cookieAcceptBtn');
+        var rejectBtn = document.getElementById('cookieRejectBtn');
+        var manageBtn = document.getElementById('cookieManageBtn');
+        var prefsSaveBtn = document.getElementById('cookiePrefsSaveBtn');
+        var prefsRejectBtn = document.getElementById('cookiePrefsRejectBtn');
+        var prefsCloseBtn = document.getElementById('cookiePrefsClose');
+
+        if (!consent || !banner || !prefs) return;
+
+        function openPrefs() {
+            app.closeSidebars?.();
+            prefs.classList.remove('hidden');
+            prefs.setAttribute('aria-hidden', 'false');
+        }
+
+        function closePrefs() {
+            prefs.classList.add('hidden');
+            prefs.setAttribute('aria-hidden', 'true');
+        }
+
+        function syncConsentUi() {
+            var state = consent.getState();
+            var hasChoice = consent.hasChoice();
+
+            if (analyticsToggle) {
+                analyticsToggle.checked = !!(state && state.analytics);
+            }
+
+            banner.classList.toggle('hidden', hasChoice);
+        }
+
+        acceptBtn?.addEventListener('click', function() {
+            consent.acceptAll();
+            closePrefs();
+            syncConsentUi();
+        });
+
+        rejectBtn?.addEventListener('click', function() {
+            consent.rejectNonEssential();
+            closePrefs();
+            syncConsentUi();
+        });
+
+        manageBtn?.addEventListener('click', function() {
+            openPrefs();
+        });
+
+        settingsButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                openPrefs();
+            });
+        });
+
+        prefsCloseBtn?.addEventListener('click', function() {
+            closePrefs();
+        });
+
+        prefsRejectBtn?.addEventListener('click', function() {
+            consent.rejectNonEssential();
+            closePrefs();
+            syncConsentUi();
+        });
+
+        prefsSaveBtn?.addEventListener('click', function() {
+            consent.save({
+                analytics: !!analyticsToggle?.checked
+            });
+            closePrefs();
+            syncConsentUi();
+        });
+
+        consent.onChange(function() {
+            syncConsentUi();
+        });
+
+        syncConsentUi();
+    }
+
     app.initCore?.();
     app.initForms?.();
     app.initUi?.();
+    initConsentControls();
     updateCartBadgeFromStorage();
 
     if (pageNeedsCartImmediately()) {

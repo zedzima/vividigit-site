@@ -535,12 +535,20 @@
 
     function submitWeb3Form(payload, submitBtn, onSuccess) {
         var originalText;
+        var queryParams;
+        var consent;
+        var analyticsConsentState;
 
         if (!submitBtn) return Promise.resolve(false);
 
         originalText = submitBtn.textContent;
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
+        queryParams = new URLSearchParams(window.location.search);
+        consent = window.VividigitConsent;
+        analyticsConsentState = consent && consent.hasChoice
+            ? (consent.hasChoice() ? (consent.has('analytics') ? 'granted' : 'denied') : 'unset')
+            : 'unavailable';
 
         return fetch('https://api.web3forms.com/submit', {
             method: 'POST',
@@ -549,6 +557,17 @@
                 access_key: app.config ? app.config.web3formsKey : '',
                 traffic_source: app.trafficSource || 'direct',
                 page_url: window.location.href,
+                page_path: window.location.pathname,
+                page_referrer: document.referrer || '',
+                utm_source: queryParams.get('utm_source') || '',
+                utm_medium: queryParams.get('utm_medium') || '',
+                utm_campaign: queryParams.get('utm_campaign') || '',
+                utm_term: queryParams.get('utm_term') || '',
+                utm_content: queryParams.get('utm_content') || '',
+                gclid: queryParams.get('gclid') || '',
+                fbclid: queryParams.get('fbclid') || '',
+                msclkid: queryParams.get('msclkid') || '',
+                analytics_consent: analyticsConsentState,
                 botcheck: ''
             }, payload))
         })
@@ -587,6 +606,7 @@
     function initSidebarWidgetForms() {
         document.querySelectorAll('.sidebar-content .widget').forEach(function(widget) {
             var inputs = widget.querySelectorAll('input.form-input, textarea.form-input, select.form-input');
+            var legalChecks = widget.querySelectorAll('.legal-consent-input[required]');
             var submitBtn = widget.querySelector('button.btn-primary.btn-full');
 
             if (inputs.length === 0 || !submitBtn) return;
@@ -598,8 +618,15 @@
                 var page;
                 var isQuickContact;
                 var subject;
+                var uncheckedLegal = Array.from(legalChecks).find(function(input) { return !input.checked; });
 
                 e.preventDefault();
+
+                if (uncheckedLegal) {
+                    alert(uncheckedLegal.dataset.error || 'Please confirm the required legal notice.');
+                    uncheckedLegal.focus();
+                    return;
+                }
 
                 inputs.forEach(function(input) {
                     var name = input.name || input.type || input.tagName.toLowerCase();
@@ -638,7 +665,8 @@
                     email: formData.email,
                     message: formData.message || '(no message)',
                     phone: formData.phone || '',
-                    source: formData.source || ''
+                    source: formData.source || '',
+                    privacy_ack: legalChecks.length ? 'yes' : ''
                 }, submitBtn, function(state) {
                     app.pushDL?.('contact', {
                         form_type: isQuickContact ? 'quick_contact' : 'full_form',
@@ -653,6 +681,9 @@
                         }
 
                         input.value = '';
+                    });
+                    legalChecks.forEach(function(input) {
+                        input.checked = false;
                     });
 
                     submitBtn.textContent = 'Sent!';

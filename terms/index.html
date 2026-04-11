@@ -7,7 +7,7 @@
     
     
     <title>Terms of Service — Vividigit</title>
-    <meta name="description" content="Terms and conditions for using Vividigit services. Covers ordering, pricing, delivery, intellectual property, and liability.">
+    <meta name="description" content="Terms and conditions for Vividigit services. Covers ordering, prepayment, client cooperation, third-party costs, delivery, termination, and liability.">
     
 
     <!-- Canonical URL -->
@@ -19,7 +19,7 @@
     
     <meta property="og:site_name" content="Vividigit">
     <meta property="og:title" content="Terms of Service — Vividigit">
-    <meta property="og:description" content="Terms and conditions for using Vividigit services. Covers ordering, pricing, delivery, intellectual property, and liability.">
+    <meta property="og:description" content="Terms and conditions for Vividigit services. Covers ordering, prepayment, client cooperation, third-party costs, delivery, termination, and liability.">
     <meta property="og:url" content="https://vividigit.com/terms/">
     <meta property="og:image" content="https://vividigit.com/_media/images/site/og-default.png?v=cea1ceca">
     <meta property="og:image:secure_url" content="https://vividigit.com/_media/images/site/og-default.png?v=cea1ceca">
@@ -33,7 +33,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@vividigit">
     <meta name="twitter:title" content="Terms of Service — Vividigit">
-    <meta name="twitter:description" content="Terms and conditions for using Vividigit services. Covers ordering, pricing, delivery, intellectual property, and liability.">
+    <meta name="twitter:description" content="Terms and conditions for Vividigit services. Covers ordering, prepayment, client cooperation, third-party costs, delivery, termination, and liability.">
     <meta name="twitter:image" content="https://vividigit.com/_media/images/site/og-default.png?v=cea1ceca">
 
     <!-- Favicon -->
@@ -65,11 +65,11 @@
     </script>
 
     <!-- Styles -->
-    <link rel="preload" href="_assets/css/styles.css?v=f296ad2c" as="style">
-    <link rel="stylesheet" href="_assets/css/styles.css?v=f296ad2c">
+    <link rel="preload" href="_assets/css/styles.css?v=fbec72eb" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=fbec72eb">
     <script>
     window.VividigitAssetHashes = {
-        cart: 'c30436e0',
+        cart: 'c1760380',
         media: 'cea1ceca'
     };
     </script>
@@ -77,53 +77,81 @@
 
     <!-- Analytics (skip on block demo pages) -->
     
-    
     <script>
     window.dataLayer = window.dataLayer || [];
-    (function(w, d, l, i) {
-        var loaded = false;
-        var idleHandle = null;
-        var timeoutHandle = null;
-        var loadListenerAttached = false;
-        var triggers = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
+    window.VividigitConsent = (function(w) {
+        var storageKey = 'vividigit_cookie_consent_v1';
+        var listeners = [];
+        var state = null;
 
-        function cleanup() {
-            triggers.forEach(function(type) {
-                w.removeEventListener(type, loadGtm, { passive: true });
+        function normalize(payload) {
+            return {
+                version: 1,
+                essential: true,
+                analytics: !!(payload && payload.analytics),
+                updated_at: new Date().toISOString()
+            };
+        }
+
+        function read() {
+            try {
+                var raw = w.localStorage.getItem(storageKey);
+                if (!raw) return null;
+                var parsed = JSON.parse(raw);
+                if (!parsed || typeof parsed !== 'object') return null;
+                return normalize(parsed);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function persist(nextState) {
+            state = normalize(nextState);
+            try {
+                w.localStorage.setItem(storageKey, JSON.stringify(state));
+            } catch (e) {}
+            listeners.slice().forEach(function(listener) {
+                try {
+                    listener(state);
+                } catch (err) {}
             });
-            if (loadListenerAttached) {
-                w.removeEventListener('load', scheduleDeferredLoad);
-                loadListenerAttached = false;
-            }
-            d.removeEventListener('visibilitychange', handleVisibilityChange);
-            w.removeEventListener('pagehide', loadGtm);
-            if (idleHandle) {
-                if ('cancelIdleCallback' in w) {
-                    w.cancelIdleCallback(idleHandle);
-                } else {
-                    w.clearTimeout(idleHandle);
-                }
-            }
-            if (timeoutHandle) {
-                w.clearTimeout(timeoutHandle);
-            }
+            return state;
         }
 
-        function scheduleDeferredLoad() {
-            if (loaded) return;
+        state = read();
 
-            if ('requestIdleCallback' in w) {
-                idleHandle = w.requestIdleCallback(loadGtm, { timeout: 2500 });
-            } else {
-                timeoutHandle = w.setTimeout(loadGtm, 2500);
+        return {
+            storageKey: storageKey,
+            getState: function() { return state; },
+            hasChoice: function() { return !!state; },
+            has: function(category) {
+                if (category === 'essential') return true;
+                return !!(state && state[category]);
+            },
+            save: function(nextState) { return persist(nextState); },
+            acceptAll: function() { return persist({ analytics: true }); },
+            rejectNonEssential: function() { return persist({ analytics: false }); },
+            clear: function() {
+                state = null;
+                try {
+                    w.localStorage.removeItem(storageKey);
+                } catch (e) {}
+                listeners.slice().forEach(function(listener) {
+                    try {
+                        listener(state);
+                    } catch (err) {}
+                });
+            },
+            onChange: function(listener) {
+                if (typeof listener === 'function') listeners.push(listener);
             }
-        }
-
-        function handleVisibilityChange() {
-            if (d.visibilityState === 'hidden') {
-                loadGtm();
-            }
-        }
+        };
+    })(window);
+    </script>
+    
+    <script>
+    (function(w, d, l, i, consent) {
+        var loaded = false;
 
         function loadGtm() {
             var firstScript;
@@ -145,19 +173,16 @@
             firstScript.parentNode.insertBefore(script, firstScript);
         }
 
-        triggers.forEach(function(type) {
-            w.addEventListener(type, loadGtm, { once: true, passive: true });
-        });
-
-        if (d.readyState === 'complete') {
-            scheduleDeferredLoad();
-        } else {
-            loadListenerAttached = true;
-            w.addEventListener('load', scheduleDeferredLoad, { once: true });
+        if (consent && consent.has('analytics')) {
+            loadGtm();
         }
-        d.addEventListener('visibilitychange', handleVisibilityChange);
-        w.addEventListener('pagehide', loadGtm, { once: true });
-    })(window, document, 'dataLayer', 'GTM-WXWHHQXN');
+
+        if (consent) {
+            consent.onChange(function(state) {
+                if (state && state.analytics) loadGtm();
+            });
+        }
+    })(window, document, 'dataLayer', 'GTM-WXWHHQXN', window.VividigitConsent);
     </script>
     
     
@@ -218,9 +243,6 @@
 </head>
 <body class="collection-terms">
     
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WXWHHQXN" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    
-    
 
     <!-- Header -->
     <header class="header">
@@ -266,6 +288,7 @@
     </button>
 
     <!-- Layout -->
+    
     
     
     
@@ -428,14 +451,19 @@
 
                 <div class="icon-bar-bottom">
                     <!-- Theme Toggle -->
-                    <button class="icon-bar-btn" id="themeToggleBtn" title="Theme">
+                    <button class="icon-bar-btn" id="themeToggleBtn" title="Theme" type="button">
                         <span class="icon-bar-btn-glyph" id="themeIcon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
                         <span class="icon-bar-btn-label type-label-caps">Theme</span>
                     </button>
                     <!-- Language Toggle -->
-                    <button class="icon-bar-btn" id="langToggleBtn" title="Language">
+                    <button class="icon-bar-btn" id="langToggleBtn" title="Language" type="button">
                         <span class="icon-bar-btn-glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
                         <span class="icon-bar-btn-label type-label-caps">Language</span>
+                    </button>
+                    <!-- Cookie Settings -->
+                    <button class="icon-bar-btn" id="cookiePrefsBtn" title="Cookie Settings" type="button" data-cookie-open>
+                        <span class="icon-bar-btn-glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="icon icon-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                        <span class="icon-bar-btn-label type-label-caps">Cookies</span>
                     </button>
                 </div>
             </div>
@@ -495,92 +523,136 @@
 
     
     
-    <div class="text-body"><p><strong>Last updated:</strong> April 10, 2026</p>
-<h3 id="1-acceptance-of-terms">1. Acceptance of Terms</h3>
-<p>By accessing or using the Vividigit website (vividigit.com) and our services, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use our website or services.</p>
-<p>These Terms constitute a legally binding agreement between you ("Client", "you") and Vividigit ("we", "us", "our"). Vividigit is a trade name and website operated by Dmitriy Gerko, Sole Trader (Portugal), NIF: 299863727.</p>
+    <div class="text-body"><p><strong>Last updated:</strong> April 11, 2026</p>
+<h3 id="1-scope-and-acceptance">1. Scope and Acceptance</h3>
+<p>These Terms of Service ("Terms") govern the use of the Vividigit website at vividigit.com and the purchase and delivery of Vividigit services.</p>
+<p>By placing an order, requesting work to begin, accepting a quote, or paying an invoice or checkout amount for our services, you agree to these Terms. If you do not agree, do not order or use our services.</p>
+<p>These Terms form a legally binding agreement between you ("Client", "you") and Vividigit ("we", "us", "our"), subject to any separate written agreement that expressly overrides them, such as a signed proposal, master services agreement, or statement of work.</p>
 <h3 id="2-legal-operator">2. Legal Operator</h3>
-<p>Vividigit is operated by:</p>
+<p>Vividigit is a trade name and website operated by:</p>
 <ul>
 <li>Dmitriy Gerko, Sole Trader (Portugal)</li>
 <li>NIF: 299863727</li>
 <li>Website: <a href="https://vividigit.com">vividigit.com</a></li>
 </ul>
 <p>References to "Vividigit", "we", "us", or "our" in these Terms mean the Vividigit trade name and services operated by Dmitriy Gerko as a sole trader, unless stated otherwise.</p>
-<h3 id="3-description-of-services">3. Description of Services</h3>
-<p>Vividigit provides productized digital marketing services including, but not limited to, technical SEO, AI optimization, content marketing, PPC management, social media marketing, analytics, and related consulting services. Our services are offered as defined tasks with fixed pricing, clear deliverables, and specified delivery timelines.</p>
-<p>Each service is described on its respective service page, including available tasks, volume tiers (S, M, L, XL), pricing, and deliverables. The scope of work for each engagement is determined by the tasks and tiers selected at the time of ordering.</p>
-<h3 id="4-ordering-and-engagement">4. Ordering and Engagement</h3>
-<p>To engage our services:</p>
+<h3 id="3-business-customers-and-contract-formation">3. Business Customers and Contract Formation</h3>
+<p>Our services are designed primarily for business customers, including companies, founders, operators, and in-house teams. If mandatory consumer protection law applies to your order, it will apply only to the extent required by law and will otherwise not affect the remaining Terms.</p>
+<p>A service contract is formed at the earliest of the following:</p>
 <ol>
-<li>Browse available services and select the tasks and tiers that fit your needs using our order cart</li>
-<li>Submit a quote request through our contact form with your selected services</li>
-<li>We will review your request and provide a final quote within 2 business days</li>
-<li>The engagement begins upon your written acceptance of the quote by email or another agreed written channel</li>
+<li>You complete a checkout or make a payment for a listed service</li>
+<li>You accept a quote or proposal in writing</li>
+<li>You instruct us to begin work and we accept that instruction</li>
 </ol>
-<p>Prices shown on the website are estimated starting prices. The final quote may vary based on project complexity, specific requirements, and any customizations discussed during the briefing phase. All prices are in US Dollars (USD) unless otherwise stated.</p>
-<h3 id="5-pricing-and-payment">5. Pricing and Payment</h3>
-<p><strong>Pricing model:</strong> Our services use task-based pricing with predefined volume tiers. Each task has a fixed price per tier, ensuring transparent and predictable costs.</p>
-<p><strong>Additional fees:</strong></p>
+<p>Website prices may be described as starting prices, estimated prices, or scope-based prices. Final commercial terms may be confirmed in a quote, invoice, or order summary where complexity, add-ons, custom scope, additional markets, or extra languages require adjustment.</p>
+<h3 id="4-services-and-scope">4. Services and Scope</h3>
+<p>Vividigit provides productized digital marketing and related strategic services, including, without limitation, SEO, AI optimization, content, PPC, paid social, analytics, localization-related execution, automation, and consulting.</p>
+<p>Each service page, scope page, quote, invoice, or written order summary describes the applicable scope, deliverables, assumptions, pricing logic, and any defined volume tier. Work outside the agreed scope, including extra rounds, extra deliverables, new channels, new markets, additional languages, emergency work, or materially changed requirements, is out of scope and may be quoted separately.</p>
+<h3 id="5-pricing-taxes-and-third-party-costs">5. Pricing, Taxes, and Third-Party Costs</h3>
+<p>Unless stated otherwise in writing, our fees cover only Vividigit's professional services and internal delivery capacity.</p>
+<p>The following are not included in our service fees unless expressly stated otherwise:</p>
 <ul>
-<li>Additional languages beyond the base scope incur a per-language fee as specified on the service page</li>
-<li>Additional target countries beyond the base scope incur a per-country fee as specified on the service page</li>
-<li>Custom scope (XL tier) is quoted individually after a briefing call</li>
+<li>Advertising media spend</li>
+<li>Third-party software, data, SaaS, subscriptions, or API fees</li>
+<li>External production vendors, translators, designers, developers, or other subcontracted costs specifically approved for your project</li>
+<li>Payment processor charges, bank charges, currency conversion charges, or similar transaction costs where applicable</li>
 </ul>
-<p><strong>Payment terms:</strong> Payment is due according to the terms specified in your quote. For one-time projects, we typically require 50% upfront and 50% upon delivery. For ongoing engagements, payment is due monthly in advance unless otherwise agreed in writing.</p>
-<p><strong>Late payment:</strong> Overdue invoices may incur a late fee of 1.5% per month. We reserve the right to suspend work on any project with outstanding payments exceeding 30 days.</p>
-<h3 id="6-delivery-and-timelines">6. Delivery and Timelines</h3>
-<p>Estimated delivery timelines are specified for each task tier on our service pages. These timelines begin after:</p>
+<p>All such third-party costs require your prior approval and are payable by you separately. We may require pre-funding before launch, procurement, or activation.</p>
+<p>Unless explicitly stated otherwise, taxes, VAT, duties, and similar charges are excluded from listed prices and may be added where legally required.</p>
+<h3 id="6-payment-and-start-of-work">6. Payment and Start of Work</h3>
+<p>All services are billed in advance unless we explicitly agree otherwise in writing.</p>
+<p>Unless a quote or invoice states a different schedule:</p>
 <ul>
-<li>Receipt of payment or first installment</li>
-<li>Completion of the briefing phase</li>
-<li>Receipt of all necessary access and materials from the Client</li>
+<li>fixed-scope work requires upfront payment before work starts</li>
+<li>recurring or retained services are billed monthly in advance</li>
+<li>custom or expanded scopes may require a separate deposit, milestone payment, or prepaid reserve</li>
 </ul>
-<p>We make every reasonable effort to meet stated timelines. However, delivery dates are estimates and not guaranteed. Delays caused by incomplete information, late feedback, or scope changes from the Client may extend delivery timelines. We will communicate any significant delays promptly.</p>
-<h3 id="7-client-responsibilities">7. Client Responsibilities</h3>
-<p>To ensure successful delivery, you agree to:</p>
+<p>We are not required to start or continue work until the applicable upfront payment is received in cleared funds.</p>
+<p>Late payments may result in suspension of work, rescheduling, or cancellation of reserved delivery capacity. We may also charge reasonable late fees or default interest where permitted by law.</p>
+<h3 id="7-client-cooperation-access-and-dependencies">7. Client Cooperation, Access, and Dependencies</h3>
+<p>You are responsible for timely cooperation and for providing everything reasonably required for delivery, including:</p>
 <ul>
-<li>Provide timely access to necessary accounts, tools, and platforms, such as Google Search Console, analytics, or CMS access</li>
-<li>Respond to requests for information and feedback within 5 business days</li>
-<li>Designate a primary point of contact for the project</li>
-<li>Ensure that all content and materials you provide do not infringe on third-party intellectual property rights</li>
-<li>Review and approve deliverables within 10 business days of submission</li>
+<li>access to accounts, analytics, ad platforms, CMS, repositories, feeds, assets, or internal stakeholders</li>
+<li>accurate background information, approvals, constraints, and decision-makers</li>
+<li>prompt responses to requests, clarifications, and deliverable reviews</li>
+<li>lawful authority to grant access, share data, and instruct us on your behalf</li>
 </ul>
-<p>Failure to meet these responsibilities may result in project delays, additional costs, or scope adjustments.</p>
-<h3 id="8-intellectual-property">8. Intellectual Property</h3>
-<p><strong>Deliverables:</strong> Upon full payment, all deliverables created specifically for your project, including reports, strategies, content, and recommendations, are owned by you. We retain no ownership rights over custom deliverables once payment is complete.</p>
-<p><strong>Our tools and methods:</strong> We retain ownership of our proprietary tools, methodologies, templates, and processes used in delivering services. These are not transferred to the Client.</p>
-<p><strong>Portfolio rights:</strong> Unless you request otherwise in writing, we may reference the engagement, including your brand or business name and general project description, in our portfolio, case studies, and marketing materials. We will not disclose confidential data or results without your explicit consent.</p>
-<h3 id="9-confidentiality">9. Confidentiality</h3>
-<p>Both parties agree to keep confidential any proprietary or sensitive information shared during the engagement, including business strategies, analytics data, login credentials, and internal processes. This obligation survives the termination of the engagement for a period of 2 years.</p>
-<h3 id="10-limitation-of-liability">10. Limitation of Liability</h3>
-<p>Our services involve recommendations and strategies for improving your digital marketing performance. Results depend on many factors beyond our control, including search engine algorithms, market conditions, competitor actions, and your implementation of our recommendations.</p>
-<p><strong>We do not guarantee</strong> specific rankings, traffic volumes, conversion rates, or revenue outcomes. Past performance and case studies represent actual results for specific clients under specific conditions and are not guarantees of future results.</p>
-<p>To the maximum extent permitted by law, Vividigit's total liability for any claim arising from or related to our services shall not exceed the total fees paid by you for the specific service giving rise to the claim. We shall not be liable for any indirect, incidental, consequential, or punitive damages.</p>
-<h3 id="11-cancellation-and-refunds">11. Cancellation and Refunds</h3>
-<p><strong>Before work begins:</strong> You may cancel an order before work commences for a full refund of any payments made.</p>
-<p><strong>After work begins:</strong> If you cancel after work has started, you will be billed for work completed up to the cancellation date. Any unused prepaid amounts will be refunded within 14 business days.</p>
-<p><strong>Dissatisfaction:</strong> If you are unsatisfied with a deliverable, we offer one round of revisions within the original scope at no additional cost. Revision requests must be submitted within 10 business days of delivery.</p>
-<p><strong>Our right to cancel:</strong> We reserve the right to cancel an engagement if the Client fails to meet their responsibilities, engages in abusive behavior, or requests work that is unethical, illegal, or violates search engine guidelines, including black-hat SEO tactics.</p>
-<h3 id="12-acceptable-use">12. Acceptable Use</h3>
-<p>You agree not to use our services or website to:</p>
+<p>Delivery timelines begin only after the necessary payment, approvals, access, and materials are received.</p>
+<p>If access, data, feedback, or approvals are delayed or incomplete, we may pause the engagement, re-sequence delivery, revise the timeline, or reduce responsibility for outcomes affected by those missing inputs.</p>
+<h3 id="8-measurement-access-and-performance-responsibility">8. Measurement Access and Performance Responsibility</h3>
+<p>For strategy, optimization, growth, and performance-related services, meaningful measurement depends on access to outcome data. Where relevant, you agree to provide or make available the performance data reasonably needed to assess the impact of our work, including, where applicable:</p>
 <ul>
-<li>Engage in any illegal activity or violate applicable laws</li>
-<li>Request services that violate search engine terms of service or advertising platform policies</li>
-<li>Provide false or misleading information in orders or communications</li>
-<li>Attempt to gain unauthorized access to our systems or data</li>
+<li>analytics and attribution data</li>
+<li>ecommerce, CRM, or lead tracking data</li>
+<li>sales, revenue, conversion, or retention data</li>
+<li>campaign performance and cost data</li>
 </ul>
-<h3 id="13-third-party-services">13. Third-Party Services</h3>
-<p>Our work may involve third-party platforms and tools, including Google, Ahrefs, Semrush, social media platforms, and similar services. We are not responsible for changes to third-party services, APIs, algorithms, or policies that may affect the results or scope of our work. We will adapt our strategies to significant third-party changes where reasonably possible.</p>
-<h3 id="14-governing-law-and-disputes">14. Governing Law and Disputes</h3>
-<p>These Terms shall be governed by and construed in accordance with applicable law. For clients based in the European Union, EU consumer protection regulations apply. Any disputes that cannot be resolved amicably shall be submitted to the competent courts.</p>
-<p>Before initiating any legal proceedings, both parties agree to attempt to resolve disputes through good-faith negotiation for a minimum period of 30 days.</p>
-<h3 id="15-changes-to-these-terms">15. Changes to These Terms</h3>
-<p>We may update these Terms from time to time. Changes will be posted on this page with a revised "Last updated" date. Continued use of our website or services after changes are posted constitutes acceptance of the updated Terms. Material changes will be communicated via email to active clients.</p>
-<h3 id="16-severability">16. Severability</h3>
-<p>If any provision of these Terms is found to be unenforceable or invalid, that provision shall be limited or eliminated to the minimum extent necessary, and the remaining provisions shall remain in full force and effect.</p>
-<h3 id="17-contact-us">17. Contact Us</h3>
-<p>If you have questions about these Terms of Service, please contact us:</p>
+<p>If you do not provide sufficient access to relevant outcome data, or if that data is inaccurate, incomplete, delayed, or materially restricted, we cannot fully measure, validate, or optimize business outcomes. In that case, we do not accept full responsibility for revenue, sales, conversion, ROAS, CAC, MER, pipeline, or similar performance claims, and responsibility for those unverified outcomes remains with you.</p>
+<h3 id="9-delivery-revisions-and-acceptance">9. Delivery, Revisions, and Acceptance</h3>
+<p>We will use commercially reasonable efforts to deliver the agreed services within the estimated timeline. Any date or timeline stated on the site or in a quote is an estimate unless expressly stated as binding in writing.</p>
+<p>Unless otherwise agreed:</p>
+<ul>
+<li>one reasonable revision round within the original scope is included for fixed deliverables</li>
+<li>revision requests must stay within the approved scope and assumptions</li>
+<li>additional rounds or changed direction may be billed separately</li>
+</ul>
+<p>You must review deliverables promptly. If you do not provide material objections within 5 business days after delivery, milestone completion, or submission for review, the relevant deliverable may be treated as accepted.</p>
+<h3 id="10-suspension-changes-and-refusal-of-work">10. Suspension, Changes, and Refusal of Work</h3>
+<p>We may suspend, defer, or refuse work if:</p>
+<ul>
+<li>payment is overdue</li>
+<li>required access or cooperation is missing</li>
+<li>the requested work is unlawful, deceptive, abusive, unethical, or contrary to platform policies</li>
+<li>the engagement depends on third-party budgets or approvals that are not funded or confirmed</li>
+</ul>
+<p>We may also refuse requests that, in our reasonable judgment, would require black-hat SEO, policy evasion, manipulative practices, false claims, or other conduct likely to expose either party to platform, legal, or reputational risk.</p>
+<h3 id="11-term-cancellation-and-termination">11. Term, Cancellation, and Termination</h3>
+<p>You may stop future work or choose not to renew a recurring service at any time, subject to any minimum term or prepaid period already agreed.</p>
+<p>Either party may terminate an engagement for material breach if the breach is not cured within a reasonable period after notice, or immediately for unlawful or abusive conduct.</p>
+<p>Termination stops future obligations only. It does not undo fees already earned, delivery capacity already reserved for the current paid period, or third-party costs already approved or incurred for your engagement.</p>
+<h3 id="12-refunds">12. Refunds</h3>
+<p>Unless mandatory law requires otherwise:</p>
+<ul>
+<li>fees for services already delivered, partially delivered, or actively in progress are non-refundable</li>
+<li>prepaid recurring periods already started are non-refundable</li>
+<li>approved third-party costs, pass-through costs, and committed external expenses are non-refundable</li>
+</ul>
+<p>If you are dissatisfied, your primary remedy is to stop future work or ask us to correct a deliverable within the agreed scope. Dissatisfaction does not create a right to claw back payment for services already performed.</p>
+<h3 id="13-intellectual-property">13. Intellectual Property</h3>
+<p>Upon full payment of the applicable fees, you own the final client-specific deliverables expressly created for your engagement, excluding our background materials.</p>
+<p>We retain ownership of our pre-existing know-how, methods, frameworks, prompts, templates, SOPs, automation logic, internal tools, reusable components, and general working methods, even if they are used in delivering your project.</p>
+<p>You remain responsible for ensuring that materials, claims, assets, and instructions you provide do not infringe third-party rights or violate applicable law.</p>
+<h3 id="14-confidentiality-and-use-of-experts">14. Confidentiality and Use of Experts</h3>
+<p>Each party must keep the other party's confidential information secret and use it only for the purpose of the engagement.</p>
+<p>We may involve employees, specialists, experts, and subcontractors under our direction where reasonably required for delivery, provided they are bound by confidentiality and used only as necessary to perform the services.</p>
+<h3 id="15-portfolio-references-and-case-studies">15. Portfolio References and Case Studies</h3>
+<p>Unless you prohibit it in writing before or during the engagement, we may identify you as a client in a factual manner, such as by naming your brand or displaying your logo in credentials, client lists, or general portfolio references.</p>
+<p>However, we will not publish a detailed public case study that reveals non-public strategy, screenshots, commercial terms, or performance data attributable to your business without your prior written consent.</p>
+<h3 id="16-no-guarantee-and-limitation-of-liability">16. No Guarantee and Limitation of Liability</h3>
+<p>We provide professional services, not guaranteed business outcomes.</p>
+<p>We do not guarantee rankings, traffic, leads, installs, conversions, revenue, market share, or similar outcomes. Results depend on many factors outside our control, including platform algorithms, product quality, sales execution, pricing, competition, approvals, market conditions, technical implementation, and the completeness of data and access provided by you.</p>
+<p>To the maximum extent permitted by law, our total aggregate liability arising out of or related to any engagement will not exceed the fees actually paid to us for the specific service giving rise to the claim during the 3 months preceding that claim.</p>
+<p>We will not be liable for indirect, incidental, consequential, special, exemplary, or punitive damages, or for lost profits, lost revenue, lost data, or loss of business opportunity.</p>
+<h3 id="17-third-party-platforms-and-external-dependencies">17. Third-Party Platforms and External Dependencies</h3>
+<p>Our services may depend on third-party platforms, tools, hosting, APIs, analytics systems, advertising systems, or marketplaces. We are not responsible for changes, outages, suspensions, API limits, algorithm updates, policy changes, account restrictions, or enforcement actions by those third parties.</p>
+<p>Where reasonably possible, we will adapt delivery to material third-party changes, but such changes may require scope, budget, timeline, or strategy adjustments.</p>
+<h3 id="18-consumer-rights">18. Consumer Rights</h3>
+<p>If you purchase our services as a consumer under mandatory applicable law, certain statutory rights may apply, including possible withdrawal rights for distance contracts.</p>
+<p>If you ask us to begin performing services before any applicable withdrawal period expires, you expressly request immediate performance. Where permitted by law, you acknowledge that:</p>
+<ul>
+<li>you may lose any right of withdrawal once the services have been fully performed</li>
+<li>if you withdraw after performance has begun, you may be required to pay for the portion already performed up to the withdrawal date</li>
+</ul>
+<p>Nothing in these Terms limits any non-waivable consumer rights that apply to you under mandatory law.</p>
+<h3 id="19-governing-law-and-disputes">19. Governing Law and Disputes</h3>
+<p>These Terms are governed by the laws of Portugal, excluding conflict-of-law rules.</p>
+<p>Before starting formal proceedings, the parties agree to try to resolve any dispute through good-faith discussion. If that fails, disputes shall be submitted to the competent courts of Portugal, unless mandatory law requires a different forum.</p>
+<h3 id="20-changes-to-these-terms">20. Changes to These Terms</h3>
+<p>We may update these Terms from time to time. The latest version will be published on this page with an updated effective date. Continued use of the website or continued ordering of services after an update constitutes acceptance of the revised Terms, except where mandatory law requires additional notice or consent.</p>
+<h3 id="21-severability">21. Severability</h3>
+<p>If any provision of these Terms is held invalid or unenforceable, the remaining provisions will remain in full force and effect to the extent permitted by law.</p>
+<h3 id="22-contact">22. Contact</h3>
+<p>If you have questions about these Terms of Service, contact us at:</p>
 <ul>
 <li>Email: <a href="mailto:mail@vividigit.com">mail@vividigit.com</a></li>
 <li>Contact form: <a href="#sidebar-contact">Open contact form</a></li>
@@ -645,15 +717,25 @@
                             <li><a href="">Home</a></li>
                             
                             
+                            
                             <li><a href="domains/">Domains</a></li>
+                            
+                            
                             
                             <li><a href="services/">Services</a></li>
                             
+                            
+                            
                             <li><a href="scopes/">Scopes</a></li>
+                            
+                            
                             
                             <li><a href="solutions/">Solutions</a></li>
                             
+                            
+                            
                             <li><a href="industries/">Industries</a></li>
+                            
                             
                         </ul>
                     </div>
@@ -662,16 +744,27 @@
                         <ul>
                             
                             
+                            
                             <li><a href="countries/">Countries</a></li>
+                            
+                            
                             
                             <li><a href="languages/">Languages</a></li>
                             
+                            
+                            
                             <li><a href="cases/">Cases</a></li>
+                            
+                            
                             
                             <li><a href="blog/">Blog</a></li>
                             
+                            
+                            
                             <li><a href="team/">Team</a></li>
                             
+                            
+                            <li><a href="positions/">Careers</a></li>
                         </ul>
                     </div>
                     <div class="footer-column">
@@ -791,6 +884,50 @@
             </footer>
         </main>
 
+        
+        <div class="cookie-consent hidden" id="cookieConsent" aria-live="polite">
+            <div class="cookie-consent-card">
+                <div class="cookie-consent-copy">
+                    <p class="cookie-consent-title">Cookie settings</p>
+                    <p class="cookie-consent-text">
+                        We use essential storage for cart and site functionality. Analytics loads only if you consent.
+                        See our <a href="privacy/" class="legal-consent-link">Privacy Policy</a>.
+                    </p>
+                </div>
+                <div class="cookie-consent-actions">
+                    <button type="button" class="btn btn-secondary" id="cookieManageBtn">Manage</button>
+                    <button type="button" class="btn btn-primary" id="cookieAcceptBtn">Accept Analytics</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="cookie-preferences hidden" id="cookiePreferences" aria-hidden="true">
+            <div class="cookie-preferences-card">
+                <div class="cookie-preferences-head">
+                    <p class="cookie-consent-title">Privacy preferences</p>
+                    <button type="button" class="cookie-preferences-close" id="cookiePrefsClose" aria-label="Close cookie settings">&times;</button>
+                </div>
+                <p class="cookie-consent-text">
+                    Essential storage stays on because the site and order cart depend on it. Analytics is optional and can be turned on or off here.
+                </p>
+                <div class="cookie-pref-list">
+                    <label class="widget-checkbox legal-checkbox cookie-pref-row">
+                        <input type="checkbox" checked disabled>
+                        <span class="legal-consent-copy"><strong>Essential</strong> — theme choice, cart state, and required site behavior.</span>
+                    </label>
+                    <label class="widget-checkbox legal-checkbox cookie-pref-row">
+                        <input type="checkbox" id="cookieAnalyticsToggle">
+                        <span class="legal-consent-copy"><strong>Analytics</strong> — Google Tag Manager and analytics tags for usage measurement.</span>
+                    </label>
+                </div>
+                <div class="cookie-consent-actions">
+                    <button type="button" class="btn btn-secondary" id="cookiePrefsRejectBtn">Reject Analytics</button>
+                    <button type="button" class="btn btn-primary" id="cookiePrefsSaveBtn">Save Preferences</button>
+                </div>
+            </div>
+        </div>
+        
+
         <!-- Right Sidebar: Order + Context -->
         <aside class="sidebar-action" id="sidebarAction" data-panel="order">
             <div class="sidebar-content">
@@ -898,6 +1035,21 @@
                 
             </select>
         </div>
+        <div class="form-group form-group-consent">
+            <label class="widget-checkbox legal-checkbox">
+                <input
+                    type="checkbox"
+                    class="legal-consent-input"
+                    name="privacy_ack"
+                    value="yes"
+                    required
+                    data-error="Please confirm the privacy notice before sending your message."
+                >
+                <span class="legal-consent-copy">
+                    I have read the <a href="privacy/" class="legal-consent-link">Privacy Policy</a> and agree that Vividigit may process my details to respond to my request.
+                </span>
+            </label>
+        </div>
         <button class="btn btn-primary btn-full">Send Message</button>
     </div>
     
@@ -940,8 +1092,8 @@
         <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
 
-    <script src="_assets/js/forms.js?v=dcfd2d82" defer></script>
+    <script src="_assets/js/forms.js?v=17646487" defer></script>
     <script src="_assets/js/ui.js?v=10ccdf89" defer></script>
-    <script src="_assets/js/site.js?v=b4e48118" defer></script>
+    <script src="_assets/js/site.js?v=1721672e" defer></script>
 </body>
 </html>
