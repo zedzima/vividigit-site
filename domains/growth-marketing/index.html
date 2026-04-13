@@ -89,8 +89,8 @@
     </script>
 
     <!-- Styles -->
-    <link rel="preload" href="_assets/css/styles.css?v=fbec72eb" as="style">
-    <link rel="stylesheet" href="_assets/css/styles.css?v=fbec72eb">
+    <link rel="preload" href="_assets/css/styles.css?v=36162369" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=36162369">
     <script>
     window.VividigitAssetHashes = {
         cart: 'c1760380',
@@ -1900,6 +1900,9 @@
         var url = normalizeCardUrl(s.url || ('/' + collection + '/' + s.slug), '#');
         var facets = s.facets || {};
         var domains = Array.isArray(s.domains) ? s.domains : (Array.isArray(facets.domains) ? facets.domains : []);
+        var marketSpeakersDisplay = s.market_speakers_display || s.native_speakers_l1 || '';
+        var marketCountryCount = Number(s.market_country_count || s.official_countries_count || 0);
+        var significantLanguagesCount = Number(s.significant_languages_count || s.official_languages_count || 0);
         var badgeHtml = '';
         if (s.icon) {
             badgeHtml = '<div class="dimension-card-badge icon" style="--icon-url: url(' + mediaIconUrl(s.icon) + ')"></div>';
@@ -1917,12 +1920,14 @@
         var expertCount = s.expert_count || 0;
         if (expertCount) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
         if (s.case_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.case_count, 'case', 'cases')) + '</span>');
+        if (collection === 'languages' && marketCountryCount) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(marketCountryCount, 'market', 'markets')) + '</span>');
+        if (collection === 'countries' && significantLanguagesCount) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(significantLanguagesCount, 'language', 'languages')) + ' over 1%</span>');
         var metricsHtml = metrics.length ? '<div class="dimension-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '';
         var highlightValue = '';
         var highlightLabel = '';
-        if (collection === 'languages' && s.native_speakers_l1) {
-            highlightValue = s.native_speakers_l1;
-            highlightLabel = 'Global speakers';
+        if (collection === 'languages' && marketSpeakersDisplay) {
+            highlightValue = marketSpeakersDisplay;
+            highlightLabel = 'Tracked speakers';
         } else if (collection === 'countries' && s.population_total) {
             highlightValue = s.population_total;
             highlightLabel = 'Market population';
@@ -4710,6 +4715,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+
+
 <a href="/industries/manufacturing" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
         <div class="entity-card-title">Manufacturing</div>
@@ -4747,6 +4755,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">12 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -4761,6 +4771,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -4816,6 +4829,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">20 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         <span class="dimension-meta-item entity-card-stat">1 case</span>
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -4830,6 +4845,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -4885,6 +4903,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">19 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -4899,6 +4919,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -4954,6 +4977,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">19 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -4968,6 +4993,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5023,6 +5051,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">17 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -5037,6 +5067,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5090,6 +5123,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -5104,6 +5139,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5157,6 +5195,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">12 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -5171,6 +5211,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5226,6 +5269,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -5240,6 +5285,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5295,6 +5343,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -5309,6 +5359,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5364,6 +5417,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">13 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer">
@@ -5394,6 +5449,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5452,12 +5510,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         
+        
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">340.1M</span>
+            <span class="result-value">342M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
@@ -5469,6 +5529,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5527,12 +5590,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         
+        
+        <span class="dimension-meta-item entity-card-stat">9 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">69.2M</span>
+            <span class="result-value">68.5M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
@@ -5544,6 +5609,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5602,12 +5670,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         <span class="dimension-meta-item entity-card-stat">1 case</span>
+        
+        <span class="dimension-meta-item entity-card-stat">9 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">83.5M</span>
+            <span class="result-value">84.1M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
@@ -5619,6 +5689,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5673,12 +5746,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">4 experts</span>
         
+        
+        <span class="dimension-meta-item entity-card-stat">5 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">9.2M</span>
+            <span class="result-value">8.97M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
@@ -5690,6 +5765,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5746,12 +5824,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        <span class="dimension-meta-item entity-card-stat">6 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">68.6M</span>
+            <span class="result-value">68.4M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
@@ -5763,6 +5843,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5819,12 +5902,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">20 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        <span class="dimension-meta-item entity-card-stat">4 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">37.7M</span>
+            <span class="result-value">38.7M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
@@ -5836,6 +5921,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5890,12 +5978,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        <span class="dimension-meta-item entity-card-stat">4 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">10.3M</span>
+            <span class="result-value">10.2M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
@@ -5907,6 +5997,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -5963,12 +6056,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">20 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        
+        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">47.8M</span>
+            <span class="result-value">47.3M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
@@ -5996,6 +6091,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -6054,13 +6152,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         
+        <span class="dimension-meta-item entity-card-stat">67 markets</span>
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">634.2M</span>
-            <span class="result-label">Global speakers</span>
+            <span class="result-value">1.67B</span>
+            <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
         
@@ -6071,6 +6171,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -6129,13 +6232,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         <span class="dimension-meta-item entity-card-stat">1 case</span>
+        <span class="dimension-meta-item entity-card-stat">22 markets</span>
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">96.7M</span>
-            <span class="result-label">Global speakers</span>
+            <span class="result-value">138M</span>
+            <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
         
@@ -6146,6 +6251,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -6202,13 +6310,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">20 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        <span class="dimension-meta-item entity-card-stat">24 markets</span>
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">464M</span>
-            <span class="result-label">Global speakers</span>
+            <span class="result-value">486M</span>
+            <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
         
@@ -6219,6 +6329,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -6275,13 +6388,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
+        <span class="dimension-meta-item entity-card-stat">23 markets</span>
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">112.3M</span>
-            <span class="result-label">Global speakers</span>
+            <span class="result-value">267M</span>
+            <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
         
@@ -6292,6 +6407,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -6346,13 +6464,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         
+        <span class="dimension-meta-item entity-card-stat">13 markets</span>
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">154.5M</span>
-            <span class="result-label">Global speakers</span>
+            <span class="result-value">194M</span>
+            <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
         
@@ -6379,6 +6499,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+
+
     
     
 
@@ -6386,7 +6509,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="dimension-card-header">
         <div class="entity-card-title">Polish</div>
         
-        <div class="dimension-card-badge code">PO</div>
+        <div class="dimension-card-badge code">PL</div>
         
     </div>
     <p class="entity-card-copy">Marketing services delivered in Polish: native content creation, SEO for the Polish market, copywriting, and campaigns for Polish-speaking audiences.</p>
@@ -6417,13 +6540,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">4 experts</span>
         
+        <span class="dimension-meta-item entity-card-stat">4 markets</span>
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">40M</span>
-            <span class="result-label">Global speakers</span>
+            <span class="result-value">40.9M</span>
+            <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
         
@@ -6434,6 +6559,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
                 
+
+
+
 
 
 
@@ -6488,13 +6616,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">4 experts</span>
         
+        <span class="dimension-meta-item entity-card-stat">6 markets</span>
+        
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">264M</span>
-            <span class="result-label">Global speakers</span>
+            <span class="result-value">236M</span>
+            <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore →</span>
         
@@ -6569,85 +6699,85 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4449)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-4449" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3755)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-3755" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1512)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-1512" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6978)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-6978" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7191)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-7191" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8149)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-8149" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7931)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-7931" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7487)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-7487" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8886)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-8886" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7378)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-7378" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1838)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-1838" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4333)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-4333" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1865)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-1865" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8852)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-8852" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2082)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-2082" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4194)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-4194" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4676)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-4676" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2930)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-2930" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4266)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-4266" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7486)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-7486" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3171)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-3171" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6227)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-6227" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5458)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-5458" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3165)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-3165" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4966)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-4966" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8189)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-8189" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
 </span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4045)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-4045" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4165)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/><defs><linearGradient id="icon-grad-4165" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg>
