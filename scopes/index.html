@@ -81,13 +81,200 @@
     </script>
 
     <!-- Styles -->
-    <link rel="preload" href="_assets/css/styles.css?v=fd15ce59" as="style">
-    <link rel="stylesheet" href="_assets/css/styles.css?v=fd15ce59">
+    <link rel="preload" href="_assets/css/styles.css?v=6c5f7a6c" as="style">
+    <link rel="stylesheet" href="_assets/css/styles.css?v=6c5f7a6c">
     <script>
     window.VividigitAssetHashes = {
         cart: 'c1760380',
         media: 'ed890622'
     };
+    </script>
+    <script>
+    window.VividigitDomainContext = (function(w) {
+        var storageKey = 'vividigit_selected_domain_v1';
+        var ttlMs = 12 * 60 * 60 * 1000;
+
+        function parse(raw) {
+            if (!raw) return null;
+            try {
+                var parsed = JSON.parse(raw);
+                if (!parsed || typeof parsed !== 'object') return null;
+                if (!parsed.slug) return null;
+                return {
+                    slug: String(parsed.slug),
+                    updatedAt: Number(parsed.updatedAt) || 0
+                };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function read() {
+            var parsed;
+            try {
+                parsed = parse(w.localStorage.getItem(storageKey));
+            } catch (e) {
+                return null;
+            }
+            if (!parsed) return null;
+            if (!parsed.updatedAt || (Date.now() - parsed.updatedAt) > ttlMs) {
+                try {
+                    w.localStorage.removeItem(storageKey);
+                } catch (err) {}
+                return null;
+            }
+            return parsed;
+        }
+
+        function write(slug) {
+            if (!slug) {
+                try {
+                    w.localStorage.removeItem(storageKey);
+                } catch (e) {}
+                return '';
+            }
+            try {
+                w.localStorage.setItem(storageKey, JSON.stringify({
+                    slug: String(slug),
+                    updatedAt: Date.now()
+                }));
+            } catch (e) {}
+            return String(slug);
+        }
+
+        function getFromUrl() {
+            try {
+                var url = new URL(w.location.href);
+                return String(url.searchParams.get('domain') || '').trim();
+            } catch (e) {
+                return '';
+            }
+        }
+
+        function syncUrl(slug) {
+            if (!w.history || !w.history.replaceState) return;
+            try {
+                var url = new URL(w.location.href);
+                if (slug) url.searchParams.set('domain', slug);
+                else url.searchParams.delete('domain');
+                w.history.replaceState({}, '', url.pathname + url.search + url.hash);
+            } catch (e) {}
+        }
+
+        return {
+            storageKey: storageKey,
+            get: function() {
+                var current = read();
+                return current ? current.slug : '';
+            },
+            set: function(slug) {
+                return write(slug);
+            },
+            clear: function() {
+                write('');
+            },
+            getFromUrl: getFromUrl,
+            syncUrl: syncUrl
+        };
+    })(window);
+    window.VividigitFilterContext = (function(w) {
+        var storageKey = 'vividigit_selected_filters_v1';
+        var ttlMs = 12 * 60 * 60 * 1000;
+
+        function parse(raw) {
+            if (!raw) return null;
+            try {
+                var parsed = JSON.parse(raw);
+                if (!parsed || typeof parsed !== 'object') return null;
+                return {
+                    filters: parsed.filters && typeof parsed.filters === 'object' ? parsed.filters : {},
+                    updatedAt: Number(parsed.updatedAt) || 0
+                };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function sanitizeFilters(filters) {
+            var next = {};
+            Object.keys(filters || {}).forEach(function(key) {
+                var values = filters[key];
+                if (!Array.isArray(values) || !values.length) return;
+                next[key] = values
+                    .map(function(value) { return String(value || '').trim(); })
+                    .filter(Boolean);
+                if (!next[key].length) delete next[key];
+            });
+            return next;
+        }
+
+        function read() {
+            var parsed;
+            try {
+                parsed = parse(w.localStorage.getItem(storageKey));
+            } catch (e) {
+                return { filters: {}, updatedAt: 0 };
+            }
+            if (!parsed) return { filters: {}, updatedAt: 0 };
+            if (!parsed.updatedAt || (Date.now() - parsed.updatedAt) > ttlMs) {
+                try {
+                    w.localStorage.removeItem(storageKey);
+                } catch (err) {}
+                return { filters: {}, updatedAt: 0 };
+            }
+            return parsed;
+        }
+
+        function write(filters) {
+            var payload = {
+                filters: sanitizeFilters(filters),
+                updatedAt: Date.now()
+            };
+            try {
+                if (!Object.keys(payload.filters).length) {
+                    w.localStorage.removeItem(storageKey);
+                } else {
+                    w.localStorage.setItem(storageKey, JSON.stringify(payload));
+                }
+            } catch (e) {}
+            return payload.filters;
+        }
+
+        return {
+            storageKey: storageKey,
+            getAll: function() {
+                return read().filters;
+            },
+            get: function(name) {
+                return read().filters[name] || [];
+            },
+            set: function(name, values) {
+                var current = read().filters;
+                if (!Array.isArray(values) || !values.length) delete current[name];
+                else current[name] = values;
+                return write(current);
+            },
+            clear: function(name) {
+                var current = read().filters;
+                delete current[name];
+                return write(current);
+            },
+            clearMany: function(names) {
+                var current = read().filters;
+                (names || []).forEach(function(name) {
+                    delete current[name];
+                });
+                return write(current);
+            },
+            clearAll: function() {
+                return write({});
+            }
+        };
+    })(window);
+    
+    
+    
+    
     </script>
     <script src="_assets/js/cards.js?v=c4e6fde2" defer></script>
 
@@ -715,7 +902,27 @@
 
 
 
-<section class="catalog-block" data-source="scopes">
+
+
+    
+        
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+
+
+
+<section class="catalog-block" data-source="scopes" data-guided-domain="true">
     
     <div class="catalog-header">
         <span class="tag tag-accent">ALL PACKAGES</span>
@@ -725,107 +932,50 @@
     
 
     
-    <div class="catalog-filters">
+    <div class="catalog-filters catalog-filters-guided">
         
-        <div class="filter-dropdown" data-filter="domains">
-            <button class="filter-dropdown-toggle" type="button">
-                <span class="filter-selected-text" data-all="All Domains">All Domains</span>
-                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="filter-dropdown-menu">
-                
-                <label class="filter-option"><input type="checkbox" value="app-marketing"><span class="filter-option-label">App Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="brand-marketing"><span class="filter-option-label">Brand Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="community-marketing"><span class="filter-option-label">Community Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="growth-marketing"><span class="filter-option-label">Growth Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="performance-marketing"><span class="filter-option-label">Performance Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="product-marketing"><span class="filter-option-label">Product Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="search-marketing"><span class="filter-option-label">Search Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="web-marketing"><span class="filter-option-label">Web Marketing</span></label>
-                
+        <div class="catalog-domain-shell">
+            <div class="catalog-domain-context hidden" data-domain-context>
+                <span class="catalog-domain-context-label">Domain</span>
+                <span class="catalog-domain-context-value" data-domain-label></span>
+                <button type="button" class="btn btn-secondary btn-sm" data-domain-change>Change</button>
+                <button type="button" class="btn btn-ghost btn-sm" data-domain-clear>Clear</button>
+            </div>
+
+            <div class="catalog-domain-chooser hidden" data-domain-chooser>
+                <div class="catalog-domain-chooser-copy">
+                    <p class="catalog-domain-chooser-title">Choose a domain first</p>
+                    <p class="catalog-domain-chooser-text">Start with the strategic direction so the scope list becomes easier to scan.</p>
+                </div>
+                <div class="catalog-domain-chip-grid">
+                    
+                    <button type="button" class="catalog-domain-chip" data-domain-value="app-marketing">App Marketing</button>
+                    
+                    <button type="button" class="catalog-domain-chip" data-domain-value="brand-marketing">Brand Marketing</button>
+                    
+                    <button type="button" class="catalog-domain-chip" data-domain-value="community-marketing">Community Marketing</button>
+                    
+                    <button type="button" class="catalog-domain-chip" data-domain-value="growth-marketing">Growth Marketing</button>
+                    
+                    <button type="button" class="catalog-domain-chip" data-domain-value="marketing-operations">Marketing Operations</button>
+                    
+                    <button type="button" class="catalog-domain-chip" data-domain-value="performance-marketing">Performance Marketing</button>
+                    
+                    <button type="button" class="catalog-domain-chip" data-domain-value="product-marketing">Product Marketing</button>
+                    
+                    <button type="button" class="catalog-domain-chip" data-domain-value="search-marketing">Search Marketing</button>
+                    
+                    <button type="button" class="catalog-domain-chip" data-domain-value="web-marketing">Web Marketing</button>
+                    
+                </div>
             </div>
         </div>
         
-        <div class="filter-dropdown" data-filter="experts">
-            <button class="filter-dropdown-toggle" type="button">
-                <span class="filter-selected-text" data-all="All Experts">All Experts</span>
-                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="filter-dropdown-menu">
-                
-                <label class="filter-option"><input type="checkbox" value="anastasiya-antoniuk"><span class="filter-option-label">Anastasiya Antoniuk</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="dima-gerko"><span class="filter-option-label">Dima Gerko</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="dmitriy-razakhatsky"><span class="filter-option-label">Dmitry Rasakhatsky</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="elena-grakovich"><span class="filter-option-label">Elena Grakovich</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="mariia-nedbaievska"><span class="filter-option-label">Mariia Nedbaievska</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="valentina-soldatkina"><span class="filter-option-label">Valentina Soldatkina</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="vitali-bakun"><span class="filter-option-label">Vitali Bakun</span></label>
-                
-            </div>
-        </div>
+
+        <div class="catalog-filter-controls hidden" data-filter-controls>
         
-        <div class="filter-dropdown" data-filter="cases">
-            <button class="filter-dropdown-toggle" type="button">
-                <span class="filter-selected-text" data-all="All Cases">All Cases</span>
-                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="filter-dropdown-menu">
-                
-                <label class="filter-option"><input type="checkbox" value="ecommerce-migration-2025"><span class="filter-option-label">E-commerce Migration</span></label>
-                
-            </div>
-        </div>
         
-        <div class="filter-dropdown" data-filter="solutions">
-            <button class="filter-dropdown-toggle" type="button">
-                <span class="filter-selected-text" data-all="All Solutions">All Solutions</span>
-                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="filter-dropdown-menu">
-                
-                <label class="filter-option"><input type="checkbox" value="ai-visibility"><span class="filter-option-label">AI Visibility</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="b2b-digital-marketing"><span class="filter-option-label">B2B Digital Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="digital-marketing-consulting"><span class="filter-option-label">Digital Marketing Consulting</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="digital-marketing-strategy"><span class="filter-option-label">Digital Marketing Strategy</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="global-seo"><span class="filter-option-label">Global SEO</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="international-marketing"><span class="filter-option-label">International Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="international-seo"><span class="filter-option-label">International SEO</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="multilingual-seo"><span class="filter-option-label">Multilingual SEO</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="outsource-digital-marketing"><span class="filter-option-label">Outsource Digital Marketing</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="seo-ecommerce"><span class="filter-option-label">SEO for E-commerce</span></label>
-                
-            </div>
-        </div>
+        
         
         <div class="filter-dropdown" data-filter="services">
             <button class="filter-dropdown-toggle" type="button">
@@ -856,6 +1006,8 @@
                 
             </div>
         </div>
+        
+        
         
         <div class="filter-dropdown" data-filter="industries">
             <button class="filter-dropdown-toggle" type="button">
@@ -889,6 +1041,36 @@
             </div>
         </div>
         
+        
+        
+        <div class="filter-dropdown" data-filter="languages">
+            <button class="filter-dropdown-toggle" type="button">
+                <span class="filter-selected-text" data-all="All Languages">All Languages</span>
+                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div class="filter-dropdown-menu">
+                
+                <label class="filter-option"><input type="checkbox" value="english"><span class="filter-option-label">English</span></label>
+                
+                <label class="filter-option"><input type="checkbox" value="french"><span class="filter-option-label">French</span></label>
+                
+                <label class="filter-option"><input type="checkbox" value="german"><span class="filter-option-label">German</span></label>
+                
+                <label class="filter-option"><input type="checkbox" value="polish"><span class="filter-option-label">Polish</span></label>
+                
+                <label class="filter-option"><input type="checkbox" value="portuguese"><span class="filter-option-label">Portuguese</span></label>
+                
+                <label class="filter-option"><input type="checkbox" value="russian"><span class="filter-option-label">Russian</span></label>
+                
+                <label class="filter-option"><input type="checkbox" value="spanish"><span class="filter-option-label">Spanish</span></label>
+                
+            </div>
+        </div>
+        
+        
+        
         <div class="filter-dropdown" data-filter="countries">
             <button class="filter-dropdown-toggle" type="button">
                 <span class="filter-selected-text" data-all="All Countries">All Countries</span>
@@ -917,67 +1099,9 @@
             </div>
         </div>
         
-        <div class="filter-dropdown" data-filter="languages">
-            <button class="filter-dropdown-toggle" type="button">
-                <span class="filter-selected-text" data-all="All Languages">All Languages</span>
-                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="filter-dropdown-menu">
-                
-                <label class="filter-option"><input type="checkbox" value="english"><span class="filter-option-label">English</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="french"><span class="filter-option-label">French</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="german"><span class="filter-option-label">German</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="polish"><span class="filter-option-label">Polish</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="portuguese"><span class="filter-option-label">Portuguese</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="russian"><span class="filter-option-label">Russian</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="spanish"><span class="filter-option-label">Spanish</span></label>
-                
-            </div>
-        </div>
         
-        <div class="filter-dropdown" data-filter="blog-posts">
-            <button class="filter-dropdown-toggle" type="button">
-                <span class="filter-selected-text" data-all="All Articles">All Articles</span>
-                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="filter-dropdown-menu">
-                
-                <label class="filter-option"><input type="checkbox" value="how-ai-chooses-sources"><span class="filter-option-label">How AI Chooses Sources</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="why-seo-matters-in-2026"><span class="filter-option-label">Why SEO Matters In 2026</span></label>
-                
-            </div>
+        <button class="btn btn-secondary btn-sm btn-reset-filters hidden">Reset Filters</button>
         </div>
-        
-        <div class="filter-dropdown" data-filter="positions">
-            <button class="filter-dropdown-toggle" type="button">
-                <span class="filter-selected-text" data-all="All Positions">All Positions</span>
-                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="filter-dropdown-menu">
-                
-                <label class="filter-option"><input type="checkbox" value="aso-specialist"><span class="filter-option-label">ASO Specialist</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="ppc-specialist"><span class="filter-option-label">PPC Specialist</span></label>
-                
-                <label class="filter-option"><input type="checkbox" value="seo-expert"><span class="filter-option-label">SEO Expert</span></label>
-                
-            </div>
-        </div>
-        
-        <button class="btn btn-primary btn-sm btn-apply-filters hidden">Apply Filters</button>
     </div>
     
 
@@ -1013,6 +1137,21 @@
     var renderedItems = [];
     var currentPage = 1;
     var LABELS = {};
+    var guidedDomainCatalog = section.dataset.guidedDomain === 'true';
+    var filterControls = section.querySelector('[data-filter-controls]');
+    var domainContext = section.querySelector('[data-domain-context]');
+    var domainChooser = section.querySelector('[data-domain-chooser]');
+    var domainLabel = section.querySelector('[data-domain-label]');
+    var domainChangeBtn = section.querySelector('[data-domain-change]');
+    var domainClearBtn = section.querySelector('[data-domain-clear]');
+    var domainChipEls = Array.from(section.querySelectorAll('[data-domain-value]'));
+    var availableDomains = {};
+    var selectedDomain = '';
+    var domainChooserExpanded = false;
+
+    domainChipEls.forEach(function(chip) {
+        availableDomains[chip.dataset.domainValue] = chip.textContent.trim();
+    });
 
     function mediaIconUrl(name) {
         var url = '/_media/icons/' + name + '.svg';
@@ -1088,6 +1227,122 @@
     /* Auto-detect filters from DOM */
     var filterEls = section.querySelectorAll('[data-filter]');
     var activeFilters = Array.from(filterEls).map(function(el) { return el.dataset.filter; });
+
+    function getDomainContextApi() {
+        return window.VividigitDomainContext || {
+            get: function() { return ''; },
+            set: function() {},
+            clear: function() {},
+            getFromUrl: function() { return ''; },
+            syncUrl: function() {}
+        };
+    }
+
+    function getFilterContextApi() {
+        return window.VividigitFilterContext || {
+            get: function() { return []; },
+            set: function() {},
+            clear: function() {},
+            clearMany: function() {}
+        };
+    }
+
+    function secondaryFiltersChecked() {
+        return !!section.querySelector('.filter-dropdown input[type="checkbox"]:checked');
+    }
+
+    function restorePersistedFilters() {
+        var api = getFilterContextApi();
+        activeFilters.forEach(function(filterName) {
+            var dropdown = section.querySelector('[data-filter="' + filterName + '"]');
+            var matchedValues = [];
+            if (!dropdown) return;
+
+            var persistedValues = api.get(filterName);
+            dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+                var shouldCheck = persistedValues.indexOf(cb.value) !== -1;
+                cb.checked = shouldCheck;
+                if (shouldCheck) matchedValues.push(cb.value);
+            });
+
+            if (!persistedValues.length) return;
+            if (matchedValues.length) api.set(filterName, matchedValues);
+            else api.clear(filterName);
+        });
+    }
+
+    function persistCurrentFilters() {
+        var api = getFilterContextApi();
+        activeFilters.forEach(function(filterName) {
+            var values = getCheckedValues(filterName);
+            if (values.length) api.set(filterName, values);
+            else api.clear(filterName);
+        });
+    }
+
+    function resolveInitialDomainSelection() {
+        var api = getDomainContextApi();
+        var slug = guidedDomainCatalog ? (api.getFromUrl() || api.get()) : '';
+        if (!slug) return '';
+        if (!availableDomains[slug]) {
+            api.clear();
+            api.syncUrl('');
+            return '';
+        }
+        api.set(slug);
+        return slug;
+    }
+
+    function syncDomainChips() {
+        domainChipEls.forEach(function(chip) {
+            var isActive = chip.dataset.domainValue === selectedDomain;
+            chip.classList.toggle('active', isActive);
+            chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+    }
+
+    function syncDomainUi() {
+        if (!guidedDomainCatalog) return;
+
+        var hasSelectedDomain = !!selectedDomain;
+        var showChooser = !hasSelectedDomain || domainChooserExpanded;
+        var showControls = source !== 'domains' && (hasSelectedDomain || secondaryFiltersChecked());
+
+        if (domainContext) domainContext.classList.toggle('hidden', !hasSelectedDomain);
+        if (domainChooser) domainChooser.classList.toggle('hidden', !showChooser);
+        if (domainLabel) domainLabel.textContent = availableDomains[selectedDomain] || toTitleCase(selectedDomain || '');
+        if (filterControls) filterControls.classList.toggle('hidden', !showControls);
+
+        syncDomainChips();
+    }
+
+    function setSelectedDomain(slug, options) {
+        var nextSlug = String(slug || '').trim();
+        var api = getDomainContextApi();
+
+        if (!nextSlug || !availableDomains[nextSlug]) {
+            selectedDomain = '';
+            api.clear();
+            api.syncUrl('');
+        } else {
+            selectedDomain = nextSlug;
+            api.set(nextSlug);
+            api.syncUrl(nextSlug);
+        }
+
+        domainChooserExpanded = false;
+        syncDomainUi();
+
+        if (options && options.render === false) return;
+
+        renderGrid(applyFilters());
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'domain_context_change',
+            catalog_source: source,
+            domain: selectedDomain || null
+        });
+    }
 
     /* ===== Display maps (visual-only, not data) ===== */
     var langCodeMap = { 'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT' };
@@ -1440,6 +1695,7 @@
         var checked = dropdown.querySelectorAll('input[type="checkbox"]:checked');
         var textEl = dropdown.querySelector('.filter-selected-text');
         if (!textEl) return;
+        dropdown.classList.toggle('has-selection', checked.length > 0);
         if (checked.length === 0) textEl.textContent = textEl.dataset.all || 'All';
         else if (checked.length === 1) textEl.textContent = checked[0].nextElementSibling.textContent;
         else textEl.textContent = checked.length + ' selected';
@@ -1459,9 +1715,21 @@
         return checked.some(function(c){ return vals.indexOf(c) !== -1; });
     }
 
+    function getDomainValues(item) {
+        var facets = item.facets || {};
+        var vals = facets.domains || item.domains || [];
+        if (!Array.isArray(vals)) vals = [vals];
+        return vals.filter(Boolean);
+    }
+
+    function matchesSelectedDomain(item) {
+        if (!selectedDomain) return true;
+        return getDomainValues(item).indexOf(selectedDomain) !== -1;
+    }
+
     function applyFilters() {
         var filtered = allItems.filter(function(item) {
-            return activeFilters.every(function(f){ return matchFilter(item, f); });
+            return matchesSelectedDomain(item) && activeFilters.every(function(f){ return matchFilter(item, f); });
         });
         return sortItems(filtered, sortEl.value);
     }
@@ -1497,6 +1765,10 @@
 
     /* ===== Init ===== */
     function init() {
+        selectedDomain = resolveInitialDomainSelection();
+        restorePersistedFilters();
+        syncDomainUi();
+
         fetch(cfg.url)
             .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
             .then(function(data) {
@@ -1520,6 +1792,25 @@
             window.dataLayer.push({event: 'sort_change', catalog_source: source, sort_by: sortEl.value});
         });
 
+        domainChipEls.forEach(function(chip) {
+            chip.addEventListener('click', function() {
+                setSelectedDomain(chip.dataset.domainValue);
+            });
+        });
+
+        if (domainChangeBtn) {
+            domainChangeBtn.addEventListener('click', function() {
+                domainChooserExpanded = !domainChooserExpanded;
+                syncDomainUi();
+            });
+        }
+
+        if (domainClearBtn) {
+            domainClearBtn.addEventListener('click', function() {
+                setSelectedDomain('');
+            });
+        }
+
         /* Filter interactions (scoped to catalog section) */
         section.querySelectorAll('.filter-dropdown-toggle').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
@@ -1531,22 +1822,15 @@
             });
         });
 
-        var filterState = 'none';
-        var filterBtn = section.querySelector('.btn-apply-filters');
+        var filterBtn = section.querySelector('.btn-reset-filters');
 
         function updateFilterBtn() {
             if (!filterBtn) return;
             var anyChecked = !!section.querySelector('.filter-dropdown input[type="checkbox"]:checked');
             if (!anyChecked) {
                 filterBtn.classList.add('hidden');
-            } else if (filterState === 'pending') {
-                filterBtn.classList.remove('hidden');
-                filterBtn.textContent = 'Apply Filters';
-                filterBtn.className = 'btn btn-primary btn-sm btn-apply-filters';
             } else {
                 filterBtn.classList.remove('hidden');
-                filterBtn.textContent = 'Reset Filters';
-                filterBtn.className = 'btn btn-secondary btn-sm btn-apply-filters';
             }
         }
 
@@ -1555,10 +1839,13 @@
                 updateDropdownText(cb.closest('.filter-dropdown'));
                 var anyChecked = !!section.querySelector('.filter-dropdown input[type="checkbox"]:checked');
                 if (anyChecked) {
-                    filterState = 'pending';
+                    persistCurrentFilters();
                 } else {
-                    filterState = 'none';
-                    renderGrid(applyFilters());
+                    getFilterContextApi().clearMany(activeFilters);
+                }
+                renderGrid(applyFilters());
+                if (guidedDomainCatalog) {
+                    syncDomainUi();
                 }
                 updateFilterBtn();
             });
@@ -1572,25 +1859,21 @@
 
         if (filterBtn) {
             filterBtn.addEventListener('click', function() {
-                if (filterState === 'pending') {
-                    renderGrid(applyFilters());
-                    filterState = 'applied';
-                    var appliedFilters = {};
-                    activeFilters.forEach(function(f) {
-                        var vals = getCheckedValues(f);
-                        if (vals.length) appliedFilters[f] = vals;
-                    });
-                    window.dataLayer = window.dataLayer || [];
-                    window.dataLayer.push({event: 'filter_apply', catalog_source: source, filters: appliedFilters, result_count: allItems.filter(function(item) { return activeFilters.every(function(f){ return matchFilter(item, f); }); }).length});
-                } else if (filterState === 'applied') {
-                    section.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb){ cb.checked = false; });
-                    section.querySelectorAll('.filter-dropdown').forEach(function(dd){ updateDropdownText(dd); });
-                    renderGrid(applyFilters());
-                    filterState = 'none';
+                section.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach(function(cb){ cb.checked = false; });
+                section.querySelectorAll('.filter-dropdown').forEach(function(dd){ updateDropdownText(dd); });
+                getFilterContextApi().clearMany(activeFilters);
+                renderGrid(applyFilters());
+                if (guidedDomainCatalog) {
+                    syncDomainUi();
                 }
                 updateFilterBtn();
             });
         }
+
+        section.querySelectorAll('.filter-dropdown').forEach(function(dropdown) {
+            updateDropdownText(dropdown);
+        });
+        updateFilterBtn();
 
         paginationEl?.addEventListener('click', function(event) {
             var btn = event.target.closest('[data-page], [data-page-action]');
@@ -3004,72 +3287,72 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4501)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-4501" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8072)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-8072" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5619)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-5619" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2712)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-2712" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2534)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-2534" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5161)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-5161" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9519)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-9519" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3786)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-3786" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6272)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-6272" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4087)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-4087" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7320)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-7320" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2477)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-2477" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2504)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-2504" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6116)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-6116" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7451)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-7451" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8965)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-8965" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4844)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-4844" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7496)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-7496" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3454)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-3454" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8046)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-8046" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1619)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-1619" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5008)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-5008" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8085)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-8085" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5227)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-5227" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6893)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-6893" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2124)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-2124" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5852)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-5852" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1932)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/><defs><linearGradient id="icon-grad-1932" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
