@@ -333,7 +333,7 @@
             metricRow +
             '<div class="expert-card-footer entity-card-footer">' +
             (d.experienceValue ? '<div class="expert-experience case-result"><span class="result-value">' + esc(d.experienceValue) + '</span><span class="result-label">Years experience</span></div>' : '<span></span>') +
-            '<span class="expert-cta entity-card-cta">View Profile →</span>' +
+            '<span class="expert-cta entity-card-cta">View Profile</span>' +
             '</div>' +
             '</a>';
     }
@@ -376,7 +376,7 @@
             buildCountRow(metricTags, 'scope-card-meta') +
             '<div class="scope-card-footer entity-card-footer">' +
             (price > 0 ? '<span class="scope-price entity-card-price">From $' + Math.round(price) + '</span>' : '<span></span>') +
-            '<span class="scope-cta entity-card-cta">View Scope →</span></div></a>';
+            '<span class="scope-cta entity-card-cta">View Scope</span></div></a>';
     }
 
     window.CMSCards.renderScopeCard = renderScopeCard;
@@ -415,7 +415,7 @@
             exactRows +
             '<div class="' + footerClass + '">' +
             (primary ? '<div class="case-result"><span class="result-value">' + esc(primary.value) + '</span><span class="result-label">' + esc(primary.label) + '</span></div>' : '') +
-            '<span class="case-cta entity-card-cta">View Case →</span></div></div></a>';
+            '<span class="case-cta entity-card-cta">View Case</span></div></div></a>';
     }
 
     window.CMSCards.renderCaseCard = renderCaseCard;
@@ -475,7 +475,7 @@
             exactRows +
             '<div class="blog-card-footer entity-card-footer">' +
             (readingTime > 0 ? '<div class="blog-card-reading case-result"><span class="result-value">' + esc(readingTime + ' min') + '</span><span class="result-label">Reading time</span></div>' : '<span></span>') +
-            '<span class="blog-card-cta entity-card-cta">Read →</span></div></a>';
+            '<span class="blog-card-cta entity-card-cta">Read</span></div></a>';
     }
 
     window.CMSCards.renderBlogCard = renderBlogCard;
@@ -518,7 +518,7 @@
             buildCountRow(metricTags, 'solution-card-meta') +
             '<div class="solution-card-footer entity-card-footer">' +
             (price > 0 ? '<span class="solution-price entity-card-price">From $' + Math.round(price) + '</span>' : '<span></span>') +
-            '<span class="solution-cta entity-card-cta">Explore →</span></div></a>';
+            '<span class="solution-cta entity-card-cta">Explore</span></div></a>';
     }
 
     window.CMSCards.renderSolutionCard = renderSolutionCard;
@@ -612,7 +612,7 @@
             exactRows +
             metricRow +
             '<div class="position-card-footer entity-card-footer entity-card-footer-end">' +
-            '<span class="position-cta entity-card-cta">View Position →</span>' +
+            '<span class="position-cta entity-card-cta">View Position</span>' +
             '</div></a>';
     }
 
