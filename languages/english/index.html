@@ -298,6 +298,7 @@
                 version: 1,
                 essential: true,
                 analytics: !!(payload && payload.analytics),
+                marketing: !!(payload && payload.marketing),
                 updated_at: new Date().toISOString()
             };
         }
@@ -342,8 +343,8 @@
                 return !!(state && state[category]);
             },
             save: function(nextState) { return persist(nextState); },
-            acceptAll: function() { return persist({ analytics: true }); },
-            rejectNonEssential: function() { return persist({ analytics: false }); },
+            acceptAll: function() { return persist({ analytics: true, marketing: false }); },
+            rejectNonEssential: function() { return persist({ analytics: false, marketing: false }); },
             clear: function() {
                 state = null;
                 try {
@@ -1631,72 +1632,72 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4382)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-4382" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4801)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-4801" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9462)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-9462" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9569)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-9569" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6464)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-6464" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4087)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-4087" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1183)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-1183" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4494)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-4494" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6711)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-6711" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3057)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-3057" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9644)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-9644" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7506)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-7506" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5492)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-5492" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5938)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-5938" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8734)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-8734" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2375)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-2375" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3708)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-3708" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8031)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-8031" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5395)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-5395" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6677)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-6677" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1499)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-1499" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1631)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-1631" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5881)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-5881" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6018)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-6018" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6545)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-6545" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9886)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-9886" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5308)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-5308" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1120)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-translate"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2v3"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/><defs><linearGradient id="icon-grad-1120" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -9050,7 +9051,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button type="button" class="cookie-preferences-close" id="cookiePrefsClose" aria-label="Close cookie settings">&times;</button>
                 </div>
                 <p class="cookie-consent-text">
-                    Essential storage stays on because the site and order cart depend on it. Analytics is on by default and can be turned off here for future visits.
+                    Essential storage stays on because the site and order cart depend on it. Analytics is on by default and can be turned off here for future visits. Marketing stays off unless you explicitly enable it.
                 </p>
                 <div class="cookie-pref-list">
                     <label class="widget-checkbox legal-checkbox cookie-pref-row">
@@ -9061,9 +9062,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <input type="checkbox" id="cookieAnalyticsToggle">
                         <span class="legal-consent-copy"><strong>Analytics</strong> — Google Tag Manager and analytics tags for usage measurement.</span>
                     </label>
+                    <label class="widget-checkbox legal-checkbox cookie-pref-row">
+                        <input type="checkbox" id="cookieMarketingToggle">
+                        <span class="legal-consent-copy"><strong>Marketing</strong> — optional campaign and remarketing tags. Off by default.</span>
+                    </label>
                 </div>
                 <div class="cookie-consent-actions">
-                    <button type="button" class="btn btn-secondary" id="cookiePrefsRejectBtn">Reject Analytics</button>
                     <button type="button" class="btn btn-primary" id="cookiePrefsSaveBtn">Save Preferences</button>
                 </div>
             </div>
@@ -9235,6 +9239,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <script src="_assets/js/forms.js?v=17646487" defer></script>
     <script src="_assets/js/ui.js?v=10ccdf89" defer></script>
-    <script src="_assets/js/site.js?v=43394977" defer></script>
+    <script src="_assets/js/site.js?v=6c585595" defer></script>
 </body>
 </html>

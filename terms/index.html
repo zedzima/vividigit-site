@@ -276,6 +276,7 @@
                 version: 1,
                 essential: true,
                 analytics: !!(payload && payload.analytics),
+                marketing: !!(payload && payload.marketing),
                 updated_at: new Date().toISOString()
             };
         }
@@ -320,8 +321,8 @@
                 return !!(state && state[category]);
             },
             save: function(nextState) { return persist(nextState); },
-            acceptAll: function() { return persist({ analytics: true }); },
-            rejectNonEssential: function() { return persist({ analytics: false }); },
+            acceptAll: function() { return persist({ analytics: true, marketing: false }); },
+            rejectNonEssential: function() { return persist({ analytics: false, marketing: false }); },
             clear: function() {
                 state = null;
                 try {
@@ -1159,7 +1160,7 @@
                     <button type="button" class="cookie-preferences-close" id="cookiePrefsClose" aria-label="Close cookie settings">&times;</button>
                 </div>
                 <p class="cookie-consent-text">
-                    Essential storage stays on because the site and order cart depend on it. Analytics is on by default and can be turned off here for future visits.
+                    Essential storage stays on because the site and order cart depend on it. Analytics is on by default and can be turned off here for future visits. Marketing stays off unless you explicitly enable it.
                 </p>
                 <div class="cookie-pref-list">
                     <label class="widget-checkbox legal-checkbox cookie-pref-row">
@@ -1170,9 +1171,12 @@
                         <input type="checkbox" id="cookieAnalyticsToggle">
                         <span class="legal-consent-copy"><strong>Analytics</strong> — Google Tag Manager and analytics tags for usage measurement.</span>
                     </label>
+                    <label class="widget-checkbox legal-checkbox cookie-pref-row">
+                        <input type="checkbox" id="cookieMarketingToggle">
+                        <span class="legal-consent-copy"><strong>Marketing</strong> — optional campaign and remarketing tags. Off by default.</span>
+                    </label>
                 </div>
                 <div class="cookie-consent-actions">
-                    <button type="button" class="btn btn-secondary" id="cookiePrefsRejectBtn">Reject Analytics</button>
                     <button type="button" class="btn btn-primary" id="cookiePrefsSaveBtn">Save Preferences</button>
                 </div>
             </div>
@@ -1345,6 +1349,6 @@
 
     <script src="_assets/js/forms.js?v=17646487" defer></script>
     <script src="_assets/js/ui.js?v=10ccdf89" defer></script>
-    <script src="_assets/js/site.js?v=43394977" defer></script>
+    <script src="_assets/js/site.js?v=6c585595" defer></script>
 </body>
 </html>

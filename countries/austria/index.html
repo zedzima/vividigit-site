@@ -298,6 +298,7 @@
                 version: 1,
                 essential: true,
                 analytics: !!(payload && payload.analytics),
+                marketing: !!(payload && payload.marketing),
                 updated_at: new Date().toISOString()
             };
         }
@@ -342,8 +343,8 @@
                 return !!(state && state[category]);
             },
             save: function(nextState) { return persist(nextState); },
-            acceptAll: function() { return persist({ analytics: true }); },
-            rejectNonEssential: function() { return persist({ analytics: false }); },
+            acceptAll: function() { return persist({ analytics: true, marketing: false }); },
+            rejectNonEssential: function() { return persist({ analytics: false, marketing: false }); },
             clear: function() {
                 state = null;
                 try {
@@ -1588,72 +1589,72 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5408)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-5408" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2742)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-2742" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9199)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-9199" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3378)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-3378" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5064)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-5064" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5316)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-5316" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7356)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-7356" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7915)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-7915" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5399)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-5399" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3407)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-3407" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9753)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-9753" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7116)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-7116" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4513)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-4513" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6117)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-6117" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6525)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-6525" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8180)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-8180" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5302)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-5302" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8840)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-8840" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2540)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-2540" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7394)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-7394" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9054)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-9054" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1509)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-1509" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6587)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-6587" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7583)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-7583" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9592)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-9592" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5738)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-5738" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2493)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-2493" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5601)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><defs><linearGradient id="icon-grad-5601" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -6232,7 +6233,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button type="button" class="cookie-preferences-close" id="cookiePrefsClose" aria-label="Close cookie settings">&times;</button>
                 </div>
                 <p class="cookie-consent-text">
-                    Essential storage stays on because the site and order cart depend on it. Analytics is on by default and can be turned off here for future visits.
+                    Essential storage stays on because the site and order cart depend on it. Analytics is on by default and can be turned off here for future visits. Marketing stays off unless you explicitly enable it.
                 </p>
                 <div class="cookie-pref-list">
                     <label class="widget-checkbox legal-checkbox cookie-pref-row">
@@ -6243,9 +6244,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <input type="checkbox" id="cookieAnalyticsToggle">
                         <span class="legal-consent-copy"><strong>Analytics</strong> — Google Tag Manager and analytics tags for usage measurement.</span>
                     </label>
+                    <label class="widget-checkbox legal-checkbox cookie-pref-row">
+                        <input type="checkbox" id="cookieMarketingToggle">
+                        <span class="legal-consent-copy"><strong>Marketing</strong> — optional campaign and remarketing tags. Off by default.</span>
+                    </label>
                 </div>
                 <div class="cookie-consent-actions">
-                    <button type="button" class="btn btn-secondary" id="cookiePrefsRejectBtn">Reject Analytics</button>
                     <button type="button" class="btn btn-primary" id="cookiePrefsSaveBtn">Save Preferences</button>
                 </div>
             </div>
@@ -6417,6 +6421,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <script src="_assets/js/forms.js?v=17646487" defer></script>
     <script src="_assets/js/ui.js?v=10ccdf89" defer></script>
-    <script src="_assets/js/site.js?v=43394977" defer></script>
+    <script src="_assets/js/site.js?v=6c585595" defer></script>
 </body>
 </html>

@@ -69,11 +69,10 @@
         var prefs = document.getElementById('cookiePreferences');
         var settingsButtons = document.querySelectorAll('[data-cookie-open]');
         var analyticsToggle = document.getElementById('cookieAnalyticsToggle');
+        var marketingToggle = document.getElementById('cookieMarketingToggle');
         var acceptBtn = document.getElementById('cookieAcceptBtn');
-        var rejectBtn = document.getElementById('cookieRejectBtn');
         var manageBtn = document.getElementById('cookieManageBtn');
         var prefsSaveBtn = document.getElementById('cookiePrefsSaveBtn');
-        var prefsRejectBtn = document.getElementById('cookiePrefsRejectBtn');
         var prefsCloseBtn = document.getElementById('cookiePrefsClose');
 
         if (!consent || !banner || !prefs) return;
@@ -99,18 +98,15 @@
             if (analyticsToggle) {
                 analyticsToggle.checked = analyticsEnabled;
             }
+            if (marketingToggle) {
+                marketingToggle.checked = !!(state && state.marketing);
+            }
 
             banner.classList.toggle('hidden', hasChoice);
         }
 
         acceptBtn?.addEventListener('click', function() {
             consent.acceptAll();
-            closePrefs();
-            syncConsentUi();
-        });
-
-        rejectBtn?.addEventListener('click', function() {
-            consent.rejectNonEssential();
             closePrefs();
             syncConsentUi();
         });
@@ -129,15 +125,10 @@
             closePrefs();
         });
 
-        prefsRejectBtn?.addEventListener('click', function() {
-            consent.rejectNonEssential();
-            closePrefs();
-            syncConsentUi();
-        });
-
         prefsSaveBtn?.addEventListener('click', function() {
             consent.save({
-                analytics: !!analyticsToggle?.checked
+                analytics: !!analyticsToggle?.checked,
+                marketing: !!marketingToggle?.checked
             });
             closePrefs();
             syncConsentUi();
