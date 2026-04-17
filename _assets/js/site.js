@@ -92,9 +92,12 @@
         function syncConsentUi() {
             var state = consent.getState();
             var hasChoice = consent.hasChoice();
+            var analyticsEnabled = typeof consent.allowsAnalytics === 'function'
+                ? consent.allowsAnalytics()
+                : !!(state && state.analytics);
 
             if (analyticsToggle) {
-                analyticsToggle.checked = !!(state && state.analytics);
+                analyticsToggle.checked = analyticsEnabled;
             }
 
             banner.classList.toggle('hidden', hasChoice);
