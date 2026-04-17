@@ -385,11 +385,13 @@
         var opts = options || {};
         var facets = s.facets || {};
         var url = normalizeCardUrl(s.url || ('/cases/' + (s.slug || '')), '#');
-        var title = s.menu || s.title || 'Case';
+        var title = s.card_title || s.menu || s.title || 'Case';
         var letter = (s.client || title || 'C').charAt(0).toUpperCase();
+        var imageMode = s.image_mode || '';
+        var imageClass = 'case-image' + (imageMode ? (' case-image-' + imageMode) : '');
         var imageHtml = s.image
-            ? '<div class="case-image"><img src="' + esc(mediaUrl(s.image)) + '" alt="' + esc(title) + '" loading="lazy"></div>'
-            : '<div class="case-image"><div class="case-image-placeholder"><span>' + esc(letter) + '</span></div></div>';
+            ? '<div class="' + imageClass + '"><img src="' + esc(mediaUrl(s.image)) + '" alt="' + esc(title) + '" loading="lazy"></div>'
+            : '<div class="' + imageClass + '"><div class="case-image-placeholder"><span>' + esc(letter) + '</span></div></div>';
         var service = s.service || toArray(facets.services)[0] || '';
         var industry = s.industry || toArray(facets.industries)[0] || '';
         var country = s.country || toArray(facets.countries)[0] || '';
