@@ -136,6 +136,25 @@
         return buildChip(label, 'entity-card-stat');
     }
 
+    function buildSingleLabelOrCount(refs, countValue, resolver, singular, plural, extraClasses) {
+        var values = toArray(refs).filter(Boolean);
+        var count = normalizeCount(countValue, values.length);
+
+        if (count <= 0) {
+            return { exactChip: '', countChip: '' };
+        }
+        if (count === 1 && values.length === 1) {
+            return {
+                exactChip: buildLabelChip(resolveLabel(resolver, values[0]), extraClasses),
+                countChip: ''
+            };
+        }
+        return {
+            exactChip: '',
+            countChip: buildCountChip(pluralize(count, singular, plural))
+        };
+    }
+
     function formatAuthorName(author) {
         return defaultLabel(author);
     }
@@ -297,12 +316,14 @@
         var summary = d.description
             ? '<p class="expert-summary entity-card-copy">' + esc(d.description) + '</p>'
             : '';
-        var serviceTags = d.services.map(function(service) {
-            return buildLabelChip(resolveLabel(opts.serviceLabel, service), 'entity-chip-wide');
-        }).filter(Boolean);
+        var serviceRelation = buildSingleLabelOrCount(d.services, d.serviceCount, opts.serviceLabel, 'service', 'services', 'entity-chip-wide');
+        var industryRelation = buildSingleLabelOrCount(d.industries, d.industryCount, opts.industryLabel, 'industry', 'industries', 'entity-chip-compact');
         var metricTags = [];
-        if (d.industryCount > 0) {
-            metricTags.push(buildCountChip(pluralize(d.industryCount, 'industry', 'industries')));
+        if (serviceRelation.countChip) {
+            metricTags.push(serviceRelation.countChip);
+        }
+        if (industryRelation.countChip) {
+            metricTags.push(industryRelation.countChip);
         }
         if (d.caseCount > 0) {
             metricTags.push(buildCountChip(pluralize(d.caseCount, 'case', 'cases')));
@@ -315,7 +336,8 @@
             return buildLanguageChip(l, opts);
         }).filter(Boolean);
         var exactRows = buildExactRows([
-            buildExactRow(serviceTags, 'expert-tag-row expert-tag-row-services'),
+            buildExactRow([serviceRelation.exactChip], 'expert-tag-row expert-tag-row-services'),
+            buildExactRow([industryRelation.exactChip], 'expert-tag-row expert-tag-row-industries'),
             buildExactRow(countries, 'expert-tag-row expert-tag-row-countries'),
             buildExactRow(languages, 'expert-tag-row expert-tag-row-languages')
         ]);
@@ -345,22 +367,25 @@
         var opts = options || {};
         var facets = s.facets || {};
         var services = toArray(s.services || facets.services || (s.relationships && s.relationships.services) || []);
+        if (!services.length && s.service) services = [s.service];
         var domains = toArray(s.domains || facets.domains || (s.relationships && s.relationships.domains) || []);
-        var industryCount = normalizeCount(s.industry_count, toArray(s.industries || facets.industries).length);
+        var industries = toArray(s.industries || facets.industries || (s.relationships && s.relationships.industries) || []);
+        var serviceCount = normalizeCount(s.service_count, services.length);
+        var domainCount = normalizeCount(s.domain_count, domains.length);
+        var industryCount = normalizeCount(s.industry_count, industries.length);
         var countryCount = normalizeCount(s.country_count, toArray(s.countries || facets.countries).length);
         var languageCount = normalizeCount(s.language_count, toArray(s.languages || facets.languages).length);
         var taskCount = normalizeCount(s.task_count, 0);
         var price = normalizeCount(s.price || s.from_price, 0);
         var url = normalizeCardUrl(s.url || ('/scopes/' + (s.slug || '')), '#');
         var iconName = s.icon || (opts.serviceIconMap && opts.serviceIconMap[services[0]]) || 'settings';
-        var domainTags = domains.map(function(domain) {
-            return buildLabelChip(resolveLabel(opts.domainLabel, domain), 'entity-chip-wide');
-        }).filter(Boolean);
-        var serviceTags = services.map(function(service) {
-            return buildLabelChip(resolveLabel(opts.serviceLabel, service), 'entity-chip-wide');
-        }).filter(Boolean);
+        var domainRelation = buildSingleLabelOrCount(domains, domainCount, opts.domainLabel, 'domain', 'domains', 'entity-chip-wide');
+        var serviceRelation = buildSingleLabelOrCount(services, serviceCount, opts.serviceLabel, 'service', 'services', 'entity-chip-wide');
+        var industryRelation = buildSingleLabelOrCount(industries, industryCount, opts.industryLabel, 'industry', 'industries', 'entity-chip-compact');
         var metricTags = [];
-        if (industryCount > 0) metricTags.push(buildCountChip(pluralize(industryCount, 'industry', 'industries')));
+        if (domainRelation.countChip) metricTags.push(domainRelation.countChip);
+        if (serviceRelation.countChip) metricTags.push(serviceRelation.countChip);
+        if (industryRelation.countChip) metricTags.push(industryRelation.countChip);
         if (countryCount > 0) metricTags.push(buildCountChip(pluralize(countryCount, 'country', 'countries')));
         if (languageCount > 0) metricTags.push(buildCountChip(pluralize(languageCount, 'language', 'languages')));
         if (taskCount > 0) metricTags.push(buildCountChip(pluralize(taskCount, 'task', 'tasks')));
@@ -370,8 +395,9 @@
             '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div></div>' +
             '<p class="entity-card-copy">' + esc(s.description || '') + '</p>' +
             buildExactRows([
-                buildExactRow(domainTags, 'scope-chip-row scope-chip-row-domains'),
-                buildExactRow(serviceTags, 'scope-chip-row scope-chip-row-services')
+                buildExactRow([domainRelation.exactChip], 'scope-chip-row scope-chip-row-domains'),
+                buildExactRow([serviceRelation.exactChip], 'scope-chip-row scope-chip-row-services'),
+                buildExactRow([industryRelation.exactChip], 'scope-chip-row scope-chip-row-industries')
             ]) +
             buildCountRow(metricTags, 'scope-card-meta') +
             '<div class="scope-card-footer entity-card-footer">' +
@@ -436,23 +462,20 @@
         if (!countries.length && s.country) countries = [s.country];
         var languages = toArray(s.languages || s.language || []);
         if (!languages.length && s.language) languages = [s.language];
+        var serviceCount = normalizeCount(s.service_count, services.length);
+        var scopeCount = normalizeCount(s.scope_count, scopes.length);
+        var industryCount = normalizeCount(s.industry_count, industries.length);
+        var serviceRelation = buildSingleLabelOrCount(services, serviceCount, opts.serviceLabel, 'service', 'services', 'entity-chip-wide');
+        var scopeRelation = buildSingleLabelOrCount(scopes, scopeCount, opts.scopeLabel, 'scope', 'scopes', 'entity-chip-wide');
+        var industryRelation = buildSingleLabelOrCount(industries, industryCount, opts.industryLabel, 'industry', 'industries', 'entity-chip-compact');
 
         var primaryRowChips = [];
-        if (services.length === 1) primaryRowChips.push(buildLabelChip(resolveLabel(opts.serviceLabel, services[0]), 'entity-chip-wide'));
-        if (scopes.length === 1) primaryRowChips.push(buildLabelChip(resolveLabel(opts.scopeLabel, scopes[0]), 'entity-chip-wide'));
-        if (industries.length === 1) primaryRowChips.push(buildLabelChip(resolveLabel(opts.industryLabel, industries[0]), 'entity-chip-compact'));
+        if (serviceRelation.exactChip) primaryRowChips.push(serviceRelation.exactChip);
+        if (scopeRelation.exactChip) primaryRowChips.push(scopeRelation.exactChip);
+        if (industryRelation.exactChip) primaryRowChips.push(industryRelation.exactChip);
 
         var exactRows = buildExactRows([
             buildExactRow(primaryRowChips, 'blog-card-chip-row blog-card-chip-row-primary'),
-            services.length > 1 ? buildExactRow(services.map(function(service) {
-                return buildLabelChip(resolveLabel(opts.serviceLabel, service), 'entity-chip-wide');
-            }), 'blog-card-chip-row blog-card-chip-row-services') : '',
-            scopes.length > 1 ? buildExactRow(scopes.map(function(scope) {
-                return buildLabelChip(resolveLabel(opts.scopeLabel, scope), 'entity-chip-wide');
-            }), 'blog-card-chip-row blog-card-chip-row-scopes') : '',
-            industries.length > 1 ? buildExactRow(industries.map(function(industry) {
-                return buildLabelChip(resolveLabel(opts.industryLabel, industry), 'entity-chip-compact');
-            }), 'blog-card-chip-row blog-card-chip-row-industries') : '',
             countries.length ? buildExactRow(countries.map(function(country) {
                 return buildCountryChip(country, opts);
             }), 'blog-card-chip-row blog-card-chip-row-countries') : '',
@@ -460,6 +483,11 @@
                 return buildLanguageChip(language, opts);
             }), 'blog-card-chip-row blog-card-chip-row-languages') : ''
         ]);
+        var relationCountTags = [];
+        if (serviceRelation.countChip) relationCountTags.push(serviceRelation.countChip);
+        if (scopeRelation.countChip) relationCountTags.push(scopeRelation.countChip);
+        if (industryRelation.countChip) relationCountTags.push(industryRelation.countChip);
+        var metricRow = buildCountRow(relationCountTags, 'blog-card-chip-row blog-card-chip-row-metrics');
 
         var tagHtml = s.type
             ? '<div class="blog-card-tags"><span class="blog-chip entity-chip entity-chip-blog">' + esc(defaultLabel(s.type)) + '</span></div>'
@@ -475,6 +503,7 @@
             (metaParts.length ? '<div class="blog-card-meta type-meta">' + metaParts.join('') + '</div>' : '') +
             '<p class="blog-card-excerpt entity-card-copy">' + esc(s.description || '') + '</p>' +
             exactRows +
+            metricRow +
             '<div class="blog-card-footer entity-card-footer">' +
             (readingTime > 0 ? '<div class="blog-card-reading case-result"><span class="result-value">' + esc(readingTime + ' min') + '</span><span class="result-label">Reading time</span></div>' : '<span></span>') +
             '<span class="blog-card-cta entity-card-cta">Read</span></div></a>';
@@ -486,36 +515,52 @@
         var opts = options || {};
         var facets = s.facets || {};
         var domains = toArray(s.domains || facets.domains || (s.relationships && s.relationships.domains) || []);
-        var firstService = s.service || toArray(facets.services)[0] || '';
-        var scope = s.scope || toArray(facets.scopes)[0] || '';
-        var industry = s.industry || toArray(facets.industries)[0] || '';
-        var expertCount = normalizeCount(s.expert_count, toArray(facets.experts).length);
+        var domainCount = normalizeCount(s.domain_count, domains.length);
+        var serviceRefs = toArray(s.services || facets.services || (s.relationships && s.relationships.services) || []);
+        if (!serviceRefs.length && s.service) serviceRefs = [s.service];
+        var serviceCount = normalizeCount(s.service_count, serviceRefs.length);
+        var firstService = s.service || serviceRefs[0] || '';
+        var scopeRefs = toArray(s.scopes || s.scope || facets.scopes || (s.relationships && s.relationships.scopes) || []);
+        if (!scopeRefs.length && s.scope) scopeRefs = [s.scope];
+        var scopeCount = normalizeCount(s.scope_count, scopeRefs.length);
+        var industryRefs = toArray(s.industries || s.industry || facets.industries || (s.relationships && s.relationships.industries) || []);
+        if (!industryRefs.length && s.industry) industryRefs = [s.industry];
+        var industryCount = normalizeCount(s.industry_count, industryRefs.length);
+        var expertRefs = toArray(facets.experts || (s.relationships && s.relationships.experts) || []);
+        var expertCount = normalizeCount(s.expert_count, expertRefs.length);
         var caseCount = normalizeCount(s.case_count, toArray(facets.cases).length);
         var countryCount = normalizeCount(s.country_count, toArray(facets.countries).length);
         var languageCount = normalizeCount(s.language_count, toArray(facets.languages).length);
         var price = normalizeCount(s.starting_price || s.price, 0);
         var url = normalizeCardUrl(s.url || ('/solutions/' + (s.slug || '')), '#');
         var iconName = s.icon || (opts.serviceIconMap && opts.serviceIconMap[firstService]) || 'settings';
+        var domainRelation = buildSingleLabelOrCount(domains, domainCount, opts.domainLabel, 'domain', 'domains', 'entity-chip-wide');
+        var serviceRelation = buildSingleLabelOrCount(serviceRefs, serviceCount, opts.serviceLabel, 'service', 'services', 'entity-chip-wide');
+        var scopeRelation = buildSingleLabelOrCount(scopeRefs, scopeCount, opts.scopeLabel, 'scope', 'scopes', 'entity-chip-wide');
+        var industryRelation = buildSingleLabelOrCount(industryRefs, industryCount, opts.industryLabel, 'industry', 'industries', 'entity-chip-compact');
+        var expertRelation = buildSingleLabelOrCount(expertRefs, expertCount, opts.expertLabel, 'expert', 'experts', 'entity-chip-wide');
         var metricTags = [];
-        if (expertCount > 0) metricTags.push(buildCountChip(pluralize(expertCount, 'expert', 'experts')));
+        if (domainRelation.countChip) metricTags.push(domainRelation.countChip);
+        if (serviceRelation.countChip) metricTags.push(serviceRelation.countChip);
+        if (scopeRelation.countChip) metricTags.push(scopeRelation.countChip);
+        if (industryRelation.countChip) metricTags.push(industryRelation.countChip);
+        if (expertRelation.countChip) metricTags.push(expertRelation.countChip);
         if (caseCount > 0) metricTags.push(buildCountChip(pluralize(caseCount, 'case', 'cases')));
         if (countryCount > 0) metricTags.push(buildCountChip(pluralize(countryCount, 'country', 'countries')));
         if (languageCount > 0) metricTags.push(buildCountChip(pluralize(languageCount, 'language', 'languages')));
-        var domainTags = domains.map(function(domain) {
-            return buildLabelChip(resolveLabel(opts.domainLabel, domain), 'entity-chip-wide');
-        }).filter(Boolean);
 
         return '<a href="' + url + '" class="solution-card entity-card entity-card-padded">' +
             '<div class="service-card-header"><div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div></div>' +
             '<p class="entity-card-copy">' + esc(s.description || '') + '</p>' +
             buildExactRows([
-                buildExactRow(domainTags, 'solution-chip-row solution-chip-row-domains'),
+                buildExactRow([domainRelation.exactChip], 'solution-chip-row solution-chip-row-domains'),
                 buildExactRow([
-                    firstService ? buildLabelChip(resolveLabel(opts.serviceLabel, firstService), 'entity-chip-wide') : '',
-                    scope ? buildLabelChip(resolveLabel(opts.scopeLabel, scope), 'entity-chip-wide') : '',
-                    industry ? buildLabelChip(resolveLabel(opts.industryLabel, industry), 'entity-chip-compact') : ''
-                ], 'solution-chip-row solution-chip-row-primary')
+                    serviceRelation.exactChip,
+                    scopeRelation.exactChip,
+                    industryRelation.exactChip
+                ], 'solution-chip-row solution-chip-row-primary'),
+                buildExactRow([expertRelation.exactChip], 'solution-chip-row solution-chip-row-experts')
             ]) +
             buildCountRow(metricTags, 'solution-card-meta') +
             '<div class="solution-card-footer entity-card-footer">' +
@@ -535,6 +580,9 @@
             p.services || facets.services ||
             (p.relationships && p.relationships.services) || []
         );
+        if (!serviceRefs.length && p.service) {
+            serviceRefs = [p.service];
+        }
         var countryRefs = toArray(
             p.countries || facets.countries ||
             (p.relationships && p.relationships.countries) || []
@@ -562,6 +610,7 @@
             service_count: normalizeCount(p.service_count, serviceRefs.length),
             industry_count: normalizeCount(p.industry_count, industryRefs.length),
             services: serviceRefs,
+            experts: expertRefs,
             countries: countryRefs,
             languages: languageRefs,
             industries: industryRefs,
@@ -584,16 +633,13 @@
         }
 
         var metricTags = [];
-        if (d.expert_count > 0) {
-            metricTags.push(buildCountChip(pluralize(d.expert_count, 'expert', 'experts')));
-        }
-        if (d.industry_count > 0) {
-            metricTags.push(buildCountChip(pluralize(d.industry_count, 'industry', 'industries')));
-        }
+        var serviceRelation = buildSingleLabelOrCount(d.services, d.service_count, opts.serviceLabel, 'service', 'services', 'entity-chip-wide');
+        var industryRelation = buildSingleLabelOrCount(d.industries, d.industry_count, opts.industryLabel, 'industry', 'industries', 'entity-chip-compact');
+        var expertRelation = buildSingleLabelOrCount(d.experts, d.expert_count, opts.expertLabel, 'expert', 'experts', 'entity-chip-wide');
+        if (serviceRelation.countChip) metricTags.push(serviceRelation.countChip);
+        if (industryRelation.countChip) metricTags.push(industryRelation.countChip);
+        if (expertRelation.countChip) metricTags.push(expertRelation.countChip);
 
-        var serviceTags = d.services.map(function(service) {
-            return buildLabelChip(resolveLabel(opts.serviceLabel, service), 'entity-chip-wide');
-        }).filter(Boolean);
         var countries = d.countries.map(function(c) { return buildCountryChip(c, opts); }).filter(Boolean);
 
         var languages = d.languages.map(function(l) {
@@ -601,7 +647,9 @@
         }).filter(Boolean);
 
         var exactRows = buildExactRows([
-            buildExactRow(serviceTags, 'position-tag-row position-tag-row-services'),
+            buildExactRow([serviceRelation.exactChip], 'position-tag-row position-tag-row-services'),
+            buildExactRow([industryRelation.exactChip], 'position-tag-row position-tag-row-industries'),
+            buildExactRow([expertRelation.exactChip], 'position-tag-row position-tag-row-experts'),
             buildExactRow(countries, 'position-tag-row position-tag-row-countries'),
             buildExactRow(languages, 'position-tag-row position-tag-row-languages')
         ]);

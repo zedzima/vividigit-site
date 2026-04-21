@@ -274,7 +274,7 @@
     
     
     </script>
-    <script src="_assets/js/cards.js?v=07255717" defer></script>
+    <script src="_assets/js/cards.js?v=aedee777" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -1534,16 +1534,26 @@
         var url = normalizeCardUrl(s.url || ('/services/' + s.slug), '#');
         var iconName = serviceIconMap[s.slug] || 'settings';
         var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
-        var domains = Array.isArray(s.domains) ? s.domains : ((s.facets && Array.isArray(s.facets.domains)) ? s.facets.domains : []);
-        var domainRow = domains.length ? '<div class="entity-card-exact-chips"><div class="entity-card-exact-row service-chip-row service-chip-row-domains">' + domains.map(function(domain) {
-            return '<span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domain) || toTitleCase(domain)) + '</span>';
-        }).join('') + '</div></div>' : '';
+        var facets = s.facets || {};
+        var domains = Array.isArray(s.domains) ? s.domains : (Array.isArray(facets.domains) ? facets.domains : []);
+        var domainCount = domains.length;
+        var scopeRefs = Array.isArray(s.scopes) ? s.scopes : (Array.isArray(facets.scopes) ? facets.scopes : []);
+        var scopeCount = Number(s.scope_count || scopeRefs.length || 0);
+        var industryRefs = Array.isArray(s.industries) ? s.industries : (Array.isArray(facets.industries) ? facets.industries : []);
+        var industryCount = Number(s.industry_count || industryRefs.length || 0);
+        var expertRefs = Array.isArray(s.experts) ? s.experts : (Array.isArray(facets.experts) ? facets.experts : []);
+        var expertCount = Number(s.expert_count || expertRefs.length || 0);
+        var exactRows = [];
+        if (domainCount === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-domains"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domains[0]) || toTitleCase(domains[0])) + '</span></div>');
+        if (scopeCount === 1 && scopeRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-scopes"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("scopes", scopeRefs[0]) || toTitleCase(scopeRefs[0])) + '</span></div>');
+        if (industryCount === 1 && industryRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-industries"><span class="entity-chip entity-chip-label entity-chip-compact">' + esc(label("industries", industryRefs[0]) || toTitleCase(industryRefs[0])) + '</span></div>');
+        if (expertCount === 1 && expertRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-experts"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("experts", expertRefs[0]) || toTitleCase(expertRefs[0])) + '</span></div>');
         var price = formatCurrency(s.starting_price || s.from_price || s.price);
-        var expertCount = s.expert_count || 0;
         var metrics = [];
-        if (s.scope_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
-        if (expertCount) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
-        if (s.industry_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.industry_count, 'industry', 'industries')) + '</span>');
+        if (domainCount > 1) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(domainCount, 'domain', 'domains')) + '</span>');
+        if (scopeCount > 1 || (scopeCount === 1 && scopeRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(scopeCount, 'scope', 'scopes')) + '</span>');
+        if (expertCount > 1 || (expertCount === 1 && expertRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
+        if (industryCount > 1 || (industryCount === 1 && industryRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(industryCount, 'industry', 'industries')) + '</span>');
         if (s.country_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.country_count, 'country', 'countries')) + '</span>');
         if (s.language_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.language_count, 'language', 'languages')) + '</span>');
         return '<a href="' + url + '" class="service-card entity-card entity-card-padded">' +
@@ -1551,7 +1561,7 @@
             '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             iconHtml + '</div>' +
             '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
-            domainRow +
+            (exactRows.length ? '<div class="entity-card-exact-chips">' + exactRows.join('') + '</div>' : '') +
             (metrics.length ? '<div class="service-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
             '<div class="service-card-footer entity-card-footer">' +
             (price ? '<span class="service-price entity-card-price">From ' + price + '</span>' : '<span></span>') +
@@ -1562,17 +1572,31 @@
         var url = normalizeCardUrl(s.url || ('/domains/' + s.slug), '#');
         var iconName = s.icon || 'compass';
         var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
-        var expertCount = s.expert_count || 0;
+        var facets = s.facets || {};
+        var serviceRefs = Array.isArray(s.services) ? s.services : (Array.isArray(facets.services) ? facets.services : []);
+        var serviceCount = Number(s.service_count || serviceRefs.length || 0);
+        var scopeRefs = Array.isArray(s.scopes) ? s.scopes : (Array.isArray(facets.scopes) ? facets.scopes : []);
+        var scopeCount = Number(s.scope_count || scopeRefs.length || 0);
+        var solutionRefs = Array.isArray(s.solutions) ? s.solutions : (Array.isArray(facets.solutions) ? facets.solutions : []);
+        var solutionCount = Number(s.solution_count || solutionRefs.length || 0);
+        var expertRefs = Array.isArray(s.experts) ? s.experts : (Array.isArray(facets.experts) ? facets.experts : []);
+        var expertCount = Number(s.expert_count || expertRefs.length || 0);
+        var exactRows = [];
+        if (serviceCount === 1 && serviceRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-services"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(serviceLabelMap[serviceRefs[0]] || label("services", serviceRefs[0]) || toTitleCase(serviceRefs[0])) + '</span></div>');
+        if (scopeCount === 1 && scopeRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-scopes"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("scopes", scopeRefs[0]) || toTitleCase(scopeRefs[0])) + '</span></div>');
+        if (solutionCount === 1 && solutionRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-solutions"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("solutions", solutionRefs[0]) || toTitleCase(solutionRefs[0])) + '</span></div>');
+        if (expertCount === 1 && expertRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-experts"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("experts", expertRefs[0]) || toTitleCase(expertRefs[0])) + '</span></div>');
         var metrics = [];
-        if (s.service_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.service_count, 'service', 'services')) + '</span>');
-        if (s.scope_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
-        if (s.solution_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.solution_count, 'solution', 'solutions')) + '</span>');
-        if (expertCount) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
+        if (serviceCount > 1 || (serviceCount === 1 && serviceRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(serviceCount, 'service', 'services')) + '</span>');
+        if (scopeCount > 1 || (scopeCount === 1 && scopeRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(scopeCount, 'scope', 'scopes')) + '</span>');
+        if (solutionCount > 1 || (solutionCount === 1 && solutionRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(solutionCount, 'solution', 'solutions')) + '</span>');
+        if (expertCount > 1 || (expertCount === 1 && expertRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
         return '<a href="' + url + '" class="service-card entity-card entity-card-padded">' +
             '<div class="service-card-header">' +
             '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             iconHtml + '</div>' +
             '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            (exactRows.length ? '<div class="entity-card-exact-chips">' + exactRows.join('') + '</div>' : '') +
             (metrics.length ? '<div class="service-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
             '<div class="service-card-footer entity-card-footer">' +
             '<span></span><span class="service-cta entity-card-cta">Explore Domain</span></div></a>';
@@ -1584,6 +1608,7 @@
             domainLabel: function(slug) { return label('domains', slug) || toTitleCase(slug); },
             scopeLabel: function(slug) { return label('scopes', slug) || toTitleCase(slug); },
             industryLabel: function(slug) { return label('industries', slug) || toTitleCase(slug); },
+            expertLabel: function(slug) { return label('experts', slug) || toTitleCase(slug); },
             serviceIconMap: serviceIconMap
         });
     }
@@ -1592,6 +1617,13 @@
         var url = normalizeCardUrl(s.url || ('/' + collection + '/' + s.slug), '#');
         var facets = s.facets || {};
         var domains = Array.isArray(s.domains) ? s.domains : (Array.isArray(facets.domains) ? facets.domains : []);
+        var domainCount = domains.length;
+        var serviceRefs = Array.isArray(s.services) ? s.services : (Array.isArray(facets.services) ? facets.services : []);
+        if (!serviceRefs.length && s.service) serviceRefs = [s.service];
+        var serviceCount = Number(s.service_count || serviceRefs.length || 0);
+        var scopeRefs = Array.isArray(s.scopes) ? s.scopes : (Array.isArray(facets.scopes) ? facets.scopes : []);
+        if (!scopeRefs.length && s.scope) scopeRefs = [s.scope];
+        var scopeCount = Number(s.scope_count || scopeRefs.length || 0);
         var marketSpeakersDisplay = s.market_speakers_display || s.native_speakers_l1 || '';
         var marketCountryCount = Number(s.market_country_count || s.official_countries_count || 0);
         var significantLanguagesCount = Number(s.significant_languages_count || s.official_languages_count || 0);
@@ -1603,14 +1635,27 @@
         } else if (s.code) {
             badgeHtml = '<div class="dimension-card-badge code">' + esc(s.code) + '</div>';
         }
-        var domainRow = domains.length ? '<div class="entity-card-exact-chips"><div class="entity-card-exact-row dimension-chip-row dimension-chip-row-domains">' + domains.map(function(domain) {
-            return '<span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domain) || toTitleCase(domain)) + '</span>';
-        }).join('') + '</div></div>' : '';
-        var expertCount = s.expert_count || 0;
+        var exactRows = [];
+        if (domainCount === 1) {
+            exactRows.push('<div class="entity-card-exact-row dimension-chip-row dimension-chip-row-domains"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domains[0]) || toTitleCase(domains[0])) + '</span></div>');
+        }
+        if (serviceCount === 1 && serviceRefs.length) {
+            exactRows.push('<div class="entity-card-exact-row dimension-chip-row dimension-chip-row-services"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(serviceLabelMap[serviceRefs[0]] || label("services", serviceRefs[0]) || toTitleCase(serviceRefs[0])) + '</span></div>');
+        }
+        if (scopeCount === 1 && scopeRefs.length) {
+            exactRows.push('<div class="entity-card-exact-row dimension-chip-row dimension-chip-row-scopes"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(scopeLabelMap[scopeRefs[0]] || label("scopes", scopeRefs[0]) || toTitleCase(scopeRefs[0])) + '</span></div>');
+        }
+        var expertRefs = Array.isArray(s.experts) ? s.experts : (Array.isArray(facets.experts) ? facets.experts : []);
+        var expertCount = Number(s.expert_count || expertRefs.length || 0);
+        if (expertCount === 1 && expertRefs.length) {
+            exactRows.push('<div class="entity-card-exact-row dimension-chip-row dimension-chip-row-experts"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("experts", expertRefs[0]) || toTitleCase(expertRefs[0])) + '</span></div>');
+        }
+        var exactHtml = exactRows.length ? '<div class="entity-card-exact-chips">' + exactRows.join('') + '</div>' : '';
         var metrics = [];
-        if (s.service_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.service_count, 'service', 'services')) + '</span>');
-        if (s.scope_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.scope_count, 'scope', 'scopes')) + '</span>');
-        if (expertCount) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
+        if (domainCount > 1) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(domainCount, 'domain', 'domains')) + '</span>');
+        if (serviceCount > 1) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(serviceCount, 'service', 'services')) + '</span>');
+        if (scopeCount > 1) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(scopeCount, 'scope', 'scopes')) + '</span>');
+        if (expertCount > 1 || (expertCount === 1 && !expertRefs.length)) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
         if (s.case_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.case_count, 'case', 'cases')) + '</span>');
         if (collection === 'languages' && marketCountryCount) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(marketCountryCount, 'market', 'markets')) + '</span>');
         if (collection === 'countries' && significantLanguagesCount) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(significantLanguagesCount, 'language', 'languages')) + ' over 1%</span>');
@@ -1633,7 +1678,8 @@
             '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
             badgeHtml + '</div>' +
             '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
-            domainRow + metricsHtml + footerHtml + '</a>';
+            exactHtml +
+            metricsHtml + footerHtml + '</a>';
     }
 
     var RENDERERS = {
@@ -1647,7 +1693,9 @@
             countryFlagMap: countryFlagMap,
             countryLabel: function(slug) { return label('countries', slug); },
             languageLabel: function(slug) { return label('languages', slug); },
-            serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); }
+            serviceLabel: function(slug) { return serviceLabelMap[slug] || label('services', slug) || toTitleCase(slug); },
+            industryLabel: function(slug) { return label('industries', slug) || toTitleCase(slug); },
+            expertLabel: function(slug) { return label('experts', slug) || toTitleCase(slug); }
         }); }
     };
 
@@ -2949,72 +2997,72 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7191)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-7191" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1822)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-1822" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2758)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-2758" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2790)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-2790" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4770)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-4770" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9147)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-9147" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5637)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5637" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5769)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5769" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1553)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-1553" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1259)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-1259" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6124)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-6124" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9352)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-9352" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8180)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-8180" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7808)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-7808" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9719)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-9719" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4410)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-4410" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5303)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5303" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6004)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-6004" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7356)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-7356" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2719)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-2719" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9511)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-9511" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5785)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5785" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3073)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-3073" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7805)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-7805" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3800)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-3800" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3058)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-3058" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5631)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5631" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5860)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5860" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
