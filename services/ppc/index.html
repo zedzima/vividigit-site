@@ -3333,271 +3333,20 @@
             </div>
             
             <div class="block">
-                <!-- Testimonials Block: Customer reviews and social proof -->
-
-
-
-
-
-    
-
-<section class="testimonials-block">
-    
-    <div class="testimonials-header">
-        <div class="testimonials-header-text">
-            <span class="tag tag-accent">PROOF</span>
-            <h2>PPC Results</h2>
-            
-        </div>
-        
-    </div>
-    
-
-    <div class="testimonials-carousel">
-        <div class="testimonials-track">
-            
-            
-            
-            <div class="testimonial-card card card-gradient">
-            <blockquote class="testimonial-quote">
-                "The PPC audit alone saved us $4,000 per month in wasted spend. After restructuring our campaigns, our ROAS went from 2.1x to 5.8x in three months."
-            </blockquote>
-
-            <div class="testimonial-author">
-                
-                <div class="testimonial-avatar-placeholder">
-                    J
-                </div>
-                
-                <div class="testimonial-author-info">
-                    <strong>James Morton</strong>
-                    
-                    <span>E-commerce Director, Alpine Outdoor Gear</span>
-                    
-                </div>
-            </div>
-
-            
-            <div class="testimonial-footer">
-                
-                
-                
-                <div class="testimonial-rating" aria-label="4 star rating">
-                    
-                    <span class="star">★</span>
-                    
-                    <span class="star">★</span>
-                    
-                    <span class="star">★</span>
-                    
-                    <span class="star">★</span>
-                    
-                </div>
-                
-            </div>
-            
-        </div>
-        
-        </div>
-    </div>
-
-    
-</section>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.testimonials-block').forEach(function(block) {
-        const track = block.querySelector('.testimonials-track');
-        const cards = block.querySelectorAll('.testimonial-card');
-        const prevBtn = block.querySelector('[data-dir="prev"]');
-        const nextBtn = block.querySelector('[data-dir="next"]');
-
-        if (!track || cards.length === 0) return;
-
-        let currentIndex = 0;
-
-        function getVisibleCards() {
-            return window.innerWidth <= 768 ? 1 : 2;
-        }
-
-        function getMaxIndex() {
-            return Math.max(0, cards.length - getVisibleCards());
-        }
-
-        function updateCarousel() {
-            const card = cards[0];
-            const cardWidth = card.offsetWidth;
-            const gap = parseInt(getComputedStyle(track).gap) || 24;
-            const offset = currentIndex * (cardWidth + gap);
-            track.style.transform = 'translateX(-' + offset + 'px)';
-        }
-
-        function next() {
-            currentIndex++;
-            if (currentIndex > getMaxIndex()) {
-                currentIndex = 0;
-            }
-            updateCarousel();
-        }
-
-        function prev() {
-            currentIndex--;
-            if (currentIndex < 0) {
-                currentIndex = getMaxIndex();
-            }
-            updateCarousel();
-        }
-
-        if (prevBtn) prevBtn.addEventListener('click', prev);
-        if (nextBtn) nextBtn.addEventListener('click', next);
-
-        window.addEventListener('resize', function() {
-            if (currentIndex > getMaxIndex()) {
-                currentIndex = getMaxIndex();
-            }
-            updateCarousel();
-        });
-    });
-});
-</script>
-
-            </div>
-            
-            <div class="block">
-                <!-- CTA Block: Call-to-action section -->
-
-<section class="cta-block cta-default">
-    
-    
-    
-    
-    
-    
-    <div class="hero-scatter-icons" aria-hidden="true">
-        
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6782)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6782" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4277)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-4277" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8952)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8952" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8126)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8126" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5758)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5758" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5065)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5065" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6130)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6130" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2748)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2748" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1617)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1617" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7540)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7540" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8842)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8842" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9232)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-9232" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3838)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3838" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3809)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3809" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-    </div>
-    
-
-    <div class="cta-inner">
-        
-
-        <span class="tag tag-accent">NEXT STEP</span>
-
-        <h2>Start With One Managed PPC Layer, Then Expand Deliberately</h2>
-
-        
-        <p class="cta-subtitle">Begin with the package that fits your current scope mix. Add more markets only when the base unit works and the economics support expansion.</p>
-        
-
-        
-        <div class="cta-actions">
-            
-            <a href="#pricing" class="btn btn-primary">
-                Start with PPC Starter — $400/mo
-            </a>
-            
-            
-        </div>
-        
-
-        
-        <p class="cta-note">Starter includes month one audit and setup. Ad spend and third-party costs are separate.</p>
-        
-    </div>
-</section>
-            </div>
-            
-            <div class="block">
                 <!-- Catalog Mini Block: Simplified entity grid with dimension filtering -->
+<!-- Supports: standard (relationships-based), dimension/value filter, siblings_by, reverse_filter -->
 
 
 
 
     
+
+
+
+
+    
+    
+
 
 
 
@@ -4110,6 +3859,210 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
+            </div>
+            
+            <div class="block">
+                <!-- Testimonials Block: Customer reviews and social proof -->
+
+
+
+
+
+    
+
+<section class="testimonials-block">
+    
+    <div class="testimonials-header">
+        <div class="testimonials-header-text">
+            <span class="tag tag-accent">PROOF</span>
+            <h2>PPC Results</h2>
+            
+        </div>
+        
+    </div>
+    
+
+    <div class="testimonials-carousel">
+        <div class="testimonials-track">
+            
+            
+            
+            <div class="testimonial-card card card-gradient">
+            <blockquote class="testimonial-quote">
+                "The PPC audit alone saved us $4,000 per month in wasted spend. After restructuring our campaigns, our ROAS went from 2.1x to 5.8x in three months."
+            </blockquote>
+
+            <div class="testimonial-author">
+                
+                <div class="testimonial-avatar-placeholder">
+                    J
+                </div>
+                
+                <div class="testimonial-author-info">
+                    <strong>James Morton</strong>
+                    
+                    <span>E-commerce Director, Alpine Outdoor Gear</span>
+                    
+                </div>
+            </div>
+
+            
+            <div class="testimonial-footer">
+                
+                
+                
+                <div class="testimonial-rating" aria-label="4 star rating">
+                    
+                    <span class="star">★</span>
+                    
+                    <span class="star">★</span>
+                    
+                    <span class="star">★</span>
+                    
+                    <span class="star">★</span>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        </div>
+    </div>
+
+    
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.testimonials-block').forEach(function(block) {
+        const track = block.querySelector('.testimonials-track');
+        const cards = block.querySelectorAll('.testimonial-card');
+        const prevBtn = block.querySelector('[data-dir="prev"]');
+        const nextBtn = block.querySelector('[data-dir="next"]');
+
+        if (!track || cards.length === 0) return;
+
+        let currentIndex = 0;
+
+        function getVisibleCards() {
+            return window.innerWidth <= 768 ? 1 : 2;
+        }
+
+        function getMaxIndex() {
+            return Math.max(0, cards.length - getVisibleCards());
+        }
+
+        function updateCarousel() {
+            const card = cards[0];
+            const cardWidth = card.offsetWidth;
+            const gap = parseInt(getComputedStyle(track).gap) || 24;
+            const offset = currentIndex * (cardWidth + gap);
+            track.style.transform = 'translateX(-' + offset + 'px)';
+        }
+
+        function next() {
+            currentIndex++;
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = 0;
+            }
+            updateCarousel();
+        }
+
+        function prev() {
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', prev);
+        if (nextBtn) nextBtn.addEventListener('click', next);
+
+        window.addEventListener('resize', function() {
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        });
+    });
+});
+</script>
+
+            </div>
+            
+            <div class="block">
+                <!-- FAQ Block: Accordion-style questions and answers -->
+<section class="faq-block">
+    
+    <div class="faq-header ">
+        <span class="tag tag-accent">FAQ</span>
+        <h2>Questions Buyers Ask About PPC Management</h2>
+        
+    </div>
+    
+
+    <div class="faq-list ">
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">What is included in month one?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Month one includes audit and setup at the same monthly package rate. We diagnose the account, define the active PPC scopes, and launch or restructure the work accordingly.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">How are the packages structured?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Starter covers one active PPC scope. Growth covers up to two active scopes. Scale covers up to four active scopes. The package logic is based on governed delivery capacity, not on ad spend percentage.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">Do extra languages and countries change the price?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Yes. Each package includes one language and one country or region. Additional languages and markets are added in the order cart using the built-in pricing modifiers.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">Are management fees separate from ad spend?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Yes. The package covers specialist work only. Ad spend, platform fees, translators, external vendors, and any required third-party tools are separate and must be approved separately.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">Do you handle paid social or marketplace ads inside this PPC service?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>No. This PPC service covers paid search, Shopping, Microsoft Ads, and remarketing for websites. Paid Social, App User Acquisition, and Marketplace Management are separate services.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">Which PPC scopes can be combined?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>The main combinations are Google Ads Search plus Remarketing, Search plus Shopping, or a broader stack that adds Microsoft Ads. The right mix depends on your funnel, catalog, and market complexity.</p>
+            </div>
+        </details>
+        
+    </div>
+
+    
+</section>
             </div>
             
             <div class="block">
@@ -7528,75 +7481,130 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             
             <div class="block">
-                <!-- FAQ Block: Accordion-style questions and answers -->
-<section class="faq-block">
+                <!-- CTA Block: Call-to-action section -->
+
+<section class="cta-block cta-default">
     
-    <div class="faq-header ">
-        <span class="tag tag-accent">FAQ</span>
-        <h2>Questions Buyers Ask About PPC Management</h2>
+    
+    
+    
+    
+    
+    <div class="hero-scatter-icons" aria-hidden="true">
+        
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8561)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8561" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8541)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8541" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6483)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6483" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2788)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2788" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7550)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7550" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3071)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3071" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3026)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3026" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1228)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1228" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3034)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-3034" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7136)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7136" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8549)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8549" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5051)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5051" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8984)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8984" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6536)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6536" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
         
     </div>
     
 
-    <div class="faq-list ">
+    <div class="cta-inner">
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">What is included in month one?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>Month one includes audit and setup at the same monthly package rate. We diagnose the account, define the active PPC scopes, and launch or restructure the work accordingly.</p>
-            </div>
-        </details>
+
+        <span class="tag tag-accent">NEXT STEP</span>
+
+        <h2>Start With One Managed PPC Layer, Then Expand Deliberately</h2>
+
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">How are the packages structured?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>Starter covers one active PPC scope. Growth covers up to two active scopes. Scale covers up to four active scopes. The package logic is based on governed delivery capacity, not on ad spend percentage.</p>
-            </div>
-        </details>
+        <p class="cta-subtitle">Begin with the package that fits your current scope mix. Add more markets only when the base unit works and the economics support expansion.</p>
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">Do extra languages and countries change the price?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>Yes. Each package includes one language and one country or region. Additional languages and markets are added in the order cart using the built-in pricing modifiers.</p>
-            </div>
-        </details>
+
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">Are management fees separate from ad spend?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>Yes. The package covers specialist work only. Ad spend, platform fees, translators, external vendors, and any required third-party tools are separate and must be approved separately.</p>
-            </div>
-        </details>
+        <div class="cta-actions">
+            
+            <a href="#pricing" class="btn btn-primary">
+                Start with PPC Starter — $400/mo
+            </a>
+            
+            
+        </div>
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">Do you handle paid social or marketplace ads inside this PPC service?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>No. This PPC service covers paid search, Shopping, Microsoft Ads, and remarketing for websites. Paid Social, App User Acquisition, and Marketplace Management are separate services.</p>
-            </div>
-        </details>
+
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">Which PPC scopes can be combined?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>The main combinations are Google Ads Search plus Remarketing, Search plus Shopping, or a broader stack that adds Microsoft Ads. The right mix depends on your funnel, catalog, and market complexity.</p>
-            </div>
-        </details>
+        <p class="cta-note">Starter includes month one audit and setup. Ad spend and third-party costs are separate.</p>
         
     </div>
-
-    
 </section>
             </div>
             

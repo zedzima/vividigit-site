@@ -65,6 +65,8 @@
     
         
     
+        
+    
 
     <!-- Fonts -->
     <link rel="preload" href="_media/fonts/jetbrains-mono-latin.woff2?v=ed890622" as="font" type="font/woff2" crossorigin>
@@ -2491,6 +2493,535 @@
             </div>
             
             <div class="block">
+                <!-- Catalog Mini Block: Simplified entity grid with dimension filtering -->
+<!-- Supports: standard (relationships-based), dimension/value filter, siblings_by, reverse_filter -->
+
+
+
+
+    
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+<section class="catalog-mini-block"
+    data-source="scopes"
+    data-page-type="solution"
+    data-dimension="services"
+    data-value="seo"
+    data-related-slugs="technical-seo"
+    data-limit="0">
+
+    <div class="catalog-mini-header">
+        <div class="catalog-mini-header-text">
+            <span class="tag tag-accent">RELATED SCOPES</span>
+            <h2>SEO Scopes of Work</h2>
+            <p class="catalog-mini-subtitle">Delivery scopes commonly used in e-commerce SEO engagements.</p>
+        </div>
+        <div class="carousel-nav catalog-mini-nav">
+            <button class="carousel-btn catalog-mini-prev" aria-label="Previous">&larr;</button>
+            <button class="carousel-btn catalog-mini-next" aria-label="Next">&rarr;</button>
+        </div>
+    </div>
+
+    <div class="catalog-mini-grid entity-card-grid">
+        <div class="catalog-mini-loading">Loading...</div>
+    </div>
+
+    
+</section>
+
+<script>
+(function() {
+    var section = document.currentScript.previousElementSibling;
+    var source = section.dataset.source || 'scopes';
+    var pageType = section.dataset.pageType || '';
+    var dimension = section.dataset.dimension || '';
+    var value = section.dataset.value || '';
+    var relatedSlugs = (section.dataset.relatedSlugs || '')
+        .split(',')
+        .map(function(slug) { return slug.trim(); })
+        .filter(Boolean);
+    var limit = parseInt(section.dataset.limit) || 0;
+    var effectiveLimit = (!dimension && !value && (pageType === 'domain' || pageType === 'service' || pageType === 'solution'))
+        ? 0
+        : limit;
+    var grid = section.querySelector('.catalog-mini-grid');
+    var prevBtn = section.querySelector('.catalog-mini-prev');
+    var nextBtn = section.querySelector('.catalog-mini-next');
+    var LABELS = {};
+    var mediaHash = 'ed890622';
+
+    function mediaIconUrl(name) {
+        var url = '/_media/icons/' + name + '.svg';
+        return mediaHash ? url + '?v=' + mediaHash : url;
+    }
+
+    /* ===== Source configs ===== */
+    var SOURCES = {
+        scopes:     { url: '_data/scopes-index.json', dataKey: 'scopes' },
+        experts:    { url: '_data/team.json', dataKey: 'experts' },
+        team:       { url: '_data/team.json', dataKey: 'experts' },
+        cases:      { url: '_data/cases.json', dataKey: 'cases' },
+        blog:       { url: '_data/blog.json', dataKey: null },
+        domains:    { url: '_data/domains-index.json', dataKey: 'domains' },
+        services:   { url: '_data/services-index.json', dataKey: 'services' },
+        solutions:  { url: '_data/solutions-index.json', dataKey: 'solutions' },
+        industries: { url: '_data/industries-index.json', dataKey: 'industries' },
+        countries:  { url: '_data/countries-index.json', dataKey: 'countries' },
+        languages:  { url: '_data/languages-index.json', dataKey: 'languages' },
+        positions:  { url: '_data/positions-index.json', dataKey: 'positions' }
+    };
+
+    var cfg = SOURCES[source] || SOURCES.scopes;
+
+    /* ===== Display maps ===== */
+    var langCodeMap = { 'english': 'EN', 'german': 'DE', 'french': 'FR', 'spanish': 'ES', 'russian': 'RU', 'chinese': 'ZH', 'japanese': 'JA', 'italian': 'IT', 'portuguese': 'PT' };
+    var countryFlagMap = { 'usa': '🇺🇸', 'uk': '🇬🇧', 'germany': '🇩🇪', 'austria': '🇦🇹', 'france': '🇫🇷', 'spain': '🇪🇸', 'italy': '🇮🇹', 'canada': '🇨🇦', 'china': '🇨🇳', 'japan': '🇯🇵', 'russia': '🇷🇺' };
+    var serviceLabelMap = { 'digital-marketing': 'Digital Marketing', 'seo': 'SEO', 'aeo': 'AEO', 'aso': 'ASO', 'content': 'Content', 'ppc': 'PPC', 'analytics': 'Analytics', 'social-media': 'Social Media', 'paid-social': 'Paid Social', 'email': 'Email', 'cro': 'CRO', 'video': 'Video', 'pr': 'PR', 'orm': 'Online Reputation Management', 'automation': 'Automation', 'marketplace-management': 'Marketplace Management', 'affiliate': 'Affiliate', 'app-marketing': 'App Marketing', 'web-development': 'Web Development' };
+    var industryLabelMap = { 'ecommerce': 'E-commerce', 'saas': 'SaaS', 'fintech': 'Fintech', 'healthcare': 'Healthcare', 'education': 'Education', 'realestate': 'Real Estate', 'travel': 'Travel' };
+    var scopeLabelMap = { 'technical-seo': 'Technical SEO', 'ai-optimisation': 'AI Optimization', 'content-strategy': 'Content Strategy', 'ppc-management': 'PPC Management', 'analytics-setup': 'Analytics', 'localization': 'Localization' };
+    var countryLabelMap = { 'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain' };
+    var serviceIconMap = { 'seo': 'search', 'aeo': 'lightning', 'aso': 'smartphone', 'digital-marketing': 'globe', 'content': 'pen-tool', 'social-media': 'megaphone', 'paid-social': 'megaphone', 'ppc': 'target', 'email': 'mail', 'analytics': 'analytics', 'cro': 'chart', 'video': 'video', 'pr': 'newspaper', 'orm': 'shield', 'automation': 'code', 'marketplace-management': 'layers', 'affiliate': 'users', 'app-marketing': 'smartphone', 'web-development': 'layout' };
+
+    function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+    function label(dimension, slug) {
+        return (LABELS[dimension] || {})[slug] || slug;
+    }
+    function toTitleCase(text) {
+        return String(text || '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\b\w/g, function(ch) { return ch.toUpperCase(); });
+    }
+    function formatAuthorName(author) {
+        if (!author) return '';
+        return toTitleCase(author);
+    }
+    function formatDate(value) {
+        if (!value) return '';
+        var d = new Date(value);
+        if (isNaN(d.getTime())) return String(value);
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    function pluralize(count, singular, plural) {
+        return count + ' ' + (count === 1 ? singular : plural);
+    }
+    function isFeatured(item) {
+        return !!(item && item.featured);
+    }
+    function formatCurrency(value) {
+        var n = Number(value);
+        if (!isFinite(n) || n <= 0) return '';
+        return '$' + Math.round(n);
+    }
+    function normalizeCardUrl(value, fallback) {
+        var href = value === undefined || value === null || value === '' ? (fallback || '#') : String(value).trim();
+        if (!href) href = fallback || '#';
+        if (/^(https?:\/\/|mailto:|tel:|javascript:|#)/i.test(href)) return href;
+        var normalized = href.replace(/\\/g, '/');
+        var comparable = normalized.replace(/^\.\//, '').replace(/^\/+/, '').toLowerCase();
+        if (comparable === 'contact' || comparable.indexOf('contact/') === 0 || comparable.indexOf('contact?') === 0) {
+            return '#sidebar-contact';
+        }
+        var clean = normalized.replace(/^\.\//, '').replace(/^\/+/, '');
+        return clean ? ('/' + clean) : '/';
+    }
+    function sortFeaturedFirst(items) {
+        return items.slice().sort(function(a, b) {
+            var featuredCompare = Number(isFeatured(b)) - Number(isFeatured(a));
+            if (featuredCompare !== 0) return featuredCompare;
+            return (a.__catalogMiniIndex || 0) - (b.__catalogMiniIndex || 0);
+        });
+    }
+    function sortByRelationshipOrder(items) {
+        if (!relatedSlugs.length || dimension || value) return sortFeaturedFirst(items);
+        return items.slice().sort(function(a, b) {
+            return (a.__catalogMiniRelationshipIndex || 0) - (b.__catalogMiniRelationshipIndex || 0);
+        });
+    }
+    function resolveLabel(map, slug) {
+        if (!slug) return '';
+        return map[slug] || toTitleCase(slug);
+    }
+
+    /* ===== Card renderers ===== */
+    function renderScopeCard(s) {
+        return window.CMSCards.renderScopeCard(s, {
+            serviceLabel: serviceLabelMap,
+            domainLabel: function(slug) { return label('domains', slug) || toTitleCase(slug); },
+            serviceIconMap: serviceIconMap
+        });
+    }
+
+    function renderExpertCard(s) {
+        return window.CMSCards.renderExpertCard(s, {
+            langCodeMap: langCodeMap,
+            countryFlagMap: countryFlagMap,
+            countryLabel: countryLabelMap,
+            languageLabel: function(slug) { return toTitleCase(slug); },
+            industryLabel: industryLabelMap,
+            serviceLabel: serviceLabelMap
+        });
+    }
+
+    function renderCaseCard(s) {
+        return window.CMSCards.renderCaseCard(s, {
+            serviceLabel: serviceLabelMap,
+            industryLabel: industryLabelMap,
+            countryLabel: countryLabelMap,
+            countryFlagMap: countryFlagMap,
+            languageLabel: function(slug) { return toTitleCase(slug); },
+            langCodeMap: langCodeMap
+        });
+    }
+
+    function renderBlogCard(s) {
+        return window.CMSCards.renderBlogCard(s, {
+            serviceLabel: serviceLabelMap,
+            scopeLabel: scopeLabelMap,
+            industryLabel: industryLabelMap,
+            countryLabel: countryLabelMap,
+            countryFlagMap: countryFlagMap,
+            languageLabel: function(slug) { return toTitleCase(slug); },
+            langCodeMap: langCodeMap
+        });
+    }
+
+    function renderServiceCard(s) {
+        var url = normalizeCardUrl(s.url || ('/services/' + s.slug), '#');
+        var iconName = serviceIconMap[s.slug] || 'settings';
+        var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
+        var facets = s.facets || {};
+        var domains = Array.isArray(s.domains) ? s.domains : (Array.isArray(facets.domains) ? facets.domains : []);
+        var domainCount = domains.length;
+        var scopeRefs = Array.isArray(s.scopes) ? s.scopes : (Array.isArray(facets.scopes) ? facets.scopes : []);
+        var scopeCount = Number(s.scope_count || scopeRefs.length || 0);
+        var industryRefs = Array.isArray(s.industries) ? s.industries : (Array.isArray(facets.industries) ? facets.industries : []);
+        var industryCount = Number(s.industry_count || industryRefs.length || 0);
+        var expertRefs = Array.isArray(s.experts) ? s.experts : (Array.isArray(facets.experts) ? facets.experts : []);
+        var expertCount = Number(s.expert_count || expertRefs.length || 0);
+        var exactRows = [];
+        if (domainCount === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-domains"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domains[0]) || toTitleCase(domains[0])) + '</span></div>');
+        if (scopeCount === 1 && scopeRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-scopes"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("scopes", scopeRefs[0]) || toTitleCase(scopeRefs[0])) + '</span></div>');
+        if (industryCount === 1 && industryRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-industries"><span class="entity-chip entity-chip-label entity-chip-compact">' + esc(label("industries", industryRefs[0]) || toTitleCase(industryRefs[0])) + '</span></div>');
+        if (expertCount === 1 && expertRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-experts"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("experts", expertRefs[0]) || toTitleCase(expertRefs[0])) + '</span></div>');
+        var price = formatCurrency(s.starting_price || s.from_price || s.price);
+        var metrics = [];
+        if (domainCount > 1) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(domainCount, 'domain', 'domains')) + '</span>');
+        if (scopeCount > 1 || (scopeCount === 1 && scopeRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(scopeCount, 'scope', 'scopes')) + '</span>');
+        if (expertCount > 1 || (expertCount === 1 && expertRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
+        if (industryCount > 1 || (industryCount === 1 && industryRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(industryCount, 'industry', 'industries')) + '</span>');
+        if (s.country_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.country_count, 'country', 'countries')) + '</span>');
+        if (s.language_count) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(s.language_count, 'language', 'languages')) + '</span>');
+        return '<a href="' + url + '" class="service-card entity-card entity-card-padded">' +
+            '<div class="service-card-header">' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
+            iconHtml + '</div>' +
+            '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            (exactRows.length ? '<div class="entity-card-exact-chips">' + exactRows.join('') + '</div>' : '') +
+            (metrics.length ? '<div class="service-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
+            '<div class="service-card-footer entity-card-footer">' +
+            (price ? '<span class="service-price entity-card-price">From ' + price + '</span>' : '<span></span>') +
+            '<span class="service-cta entity-card-cta">View Service</span></div></a>';
+    }
+
+    function renderDomainCard(s) {
+        var url = normalizeCardUrl(s.url || ('/domains/' + s.slug), '#');
+        var iconName = s.icon || 'compass';
+        var iconHtml = '<div class="service-card-icon" style="--icon-url: url(' + mediaIconUrl(iconName) + ')"></div>';
+        var facets = s.facets || {};
+        var serviceRefs = Array.isArray(s.services) ? s.services : (Array.isArray(facets.services) ? facets.services : []);
+        var serviceCount = Number(s.service_count || serviceRefs.length || 0);
+        var scopeRefs = Array.isArray(s.scopes) ? s.scopes : (Array.isArray(facets.scopes) ? facets.scopes : []);
+        var scopeCount = Number(s.scope_count || scopeRefs.length || 0);
+        var solutionRefs = Array.isArray(s.solutions) ? s.solutions : (Array.isArray(facets.solutions) ? facets.solutions : []);
+        var solutionCount = Number(s.solution_count || solutionRefs.length || 0);
+        var expertRefs = Array.isArray(s.experts) ? s.experts : (Array.isArray(facets.experts) ? facets.experts : []);
+        var expertCount = Number(s.expert_count || expertRefs.length || 0);
+        var exactRows = [];
+        if (serviceCount === 1 && serviceRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-services"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(serviceLabelMap[serviceRefs[0]] || label("services", serviceRefs[0]) || toTitleCase(serviceRefs[0])) + '</span></div>');
+        if (scopeCount === 1 && scopeRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-scopes"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("scopes", scopeRefs[0]) || toTitleCase(scopeRefs[0])) + '</span></div>');
+        if (solutionCount === 1 && solutionRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-solutions"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("solutions", solutionRefs[0]) || toTitleCase(solutionRefs[0])) + '</span></div>');
+        if (expertCount === 1 && expertRefs.length === 1) exactRows.push('<div class="entity-card-exact-row service-chip-row service-chip-row-experts"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("experts", expertRefs[0]) || toTitleCase(expertRefs[0])) + '</span></div>');
+        var metrics = [];
+        if (serviceCount > 1 || (serviceCount === 1 && serviceRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(serviceCount, 'service', 'services')) + '</span>');
+        if (scopeCount > 1 || (scopeCount === 1 && scopeRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(scopeCount, 'scope', 'scopes')) + '</span>');
+        if (solutionCount > 1 || (solutionCount === 1 && solutionRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(solutionCount, 'solution', 'solutions')) + '</span>');
+        if (expertCount > 1 || (expertCount === 1 && expertRefs.length !== 1)) metrics.push('<span class="service-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
+        return '<a href="' + url + '" class="service-card entity-card entity-card-padded">' +
+            '<div class="service-card-header">' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
+            iconHtml + '</div>' +
+            '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            (exactRows.length ? '<div class="entity-card-exact-chips">' + exactRows.join('') + '</div>' : '') +
+            (metrics.length ? '<div class="service-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '') +
+            '<div class="service-card-footer entity-card-footer"><span></span><span class="service-cta entity-card-cta">Explore Domain</span></div></a>';
+    }
+
+    function renderSolutionCard(s) {
+        return window.CMSCards.renderSolutionCard(s, {
+            serviceLabel: serviceLabelMap,
+            domainLabel: function(slug) { return label('domains', slug) || toTitleCase(slug); },
+            scopeLabel: scopeLabelMap,
+            industryLabel: industryLabelMap,
+            expertLabel: function(slug) { return label('experts', slug) || toTitleCase(slug); },
+            serviceIconMap: serviceIconMap
+        });
+    }
+
+    function renderDimensionCard(s, collection) {
+        var url = normalizeCardUrl(s.url || ('/' + collection + '/' + s.slug), '#');
+        var facets = s.facets || {};
+        var domains = Array.isArray(s.domains) ? s.domains : (Array.isArray(facets.domains) ? facets.domains : []);
+        var domainCount = domains.length;
+        var serviceRefs = Array.isArray(s.services) ? s.services : (Array.isArray(facets.services) ? facets.services : []);
+        if (!serviceRefs.length && s.service) serviceRefs = [s.service];
+        var serviceCount = Number(s.service_count || serviceRefs.length || 0);
+        var scopeRefs = Array.isArray(s.scopes) ? s.scopes : (Array.isArray(facets.scopes) ? facets.scopes : []);
+        if (!scopeRefs.length && s.scope) scopeRefs = [s.scope];
+        var scopeCount = Number(s.scope_count || scopeRefs.length || 0);
+        var marketSpeakersDisplay = s.market_speakers_display || s.native_speakers_l1 || '';
+        var marketCountryCount = Number(s.market_country_count || s.official_countries_count || 0);
+        var significantLanguagesCount = Number(s.significant_languages_count || s.official_languages_count || 0);
+        var badgeHtml = '';
+        if (s.icon) {
+            badgeHtml = '<div class="dimension-card-badge icon" style="--icon-url: url(' + mediaIconUrl(s.icon) + ')"></div>';
+        } else if (s.flag) {
+            badgeHtml = '<div class="dimension-card-badge">' + s.flag + '</div>';
+        } else if (s.code) {
+            badgeHtml = '<div class="dimension-card-badge code">' + esc(s.code) + '</div>';
+        }
+        var exactRows = [];
+        if (domainCount === 1) {
+            exactRows.push('<div class="entity-card-exact-row dimension-chip-row dimension-chip-row-domains"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("domains", domains[0]) || toTitleCase(domains[0])) + '</span></div>');
+        }
+        if (serviceCount === 1 && serviceRefs.length) {
+            exactRows.push('<div class="entity-card-exact-row dimension-chip-row dimension-chip-row-services"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(serviceLabelMap[serviceRefs[0]] || label("services", serviceRefs[0]) || toTitleCase(serviceRefs[0])) + '</span></div>');
+        }
+        if (scopeCount === 1 && scopeRefs.length) {
+            exactRows.push('<div class="entity-card-exact-row dimension-chip-row dimension-chip-row-scopes"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(scopeLabelMap[scopeRefs[0]] || label("scopes", scopeRefs[0]) || toTitleCase(scopeRefs[0])) + '</span></div>');
+        }
+        var expertRefs = Array.isArray(s.experts) ? s.experts : (Array.isArray(facets.experts) ? facets.experts : []);
+        var expertCount = Number(s.expert_count || expertRefs.length || 0);
+        if (expertCount === 1 && expertRefs.length) {
+            exactRows.push('<div class="entity-card-exact-row dimension-chip-row dimension-chip-row-experts"><span class="entity-chip entity-chip-label entity-chip-wide">' + esc(label("experts", expertRefs[0]) || toTitleCase(expertRefs[0])) + '</span></div>');
+        }
+        var exactHtml = exactRows.length ? '<div class="entity-card-exact-chips">' + exactRows.join('') + '</div>' : '';
+        var metrics = [];
+        if (domainCount > 1) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(domainCount, 'domain', 'domains')) + '</span>');
+        if (serviceCount > 1) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(serviceCount, 'service', 'services')) + '</span>');
+        if (scopeCount > 1) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(scopeCount, 'scope', 'scopes')) + '</span>');
+        if (expertCount > 1 || (expertCount === 1 && !expertRefs.length)) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(expertCount, 'expert', 'experts')) + '</span>');
+        if (s.case_count) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(s.case_count, 'case', 'cases')) + '</span>');
+        if (collection === 'languages' && marketCountryCount) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(marketCountryCount, 'market', 'markets')) + '</span>');
+        if (collection === 'countries' && significantLanguagesCount) metrics.push('<span class="dimension-meta-item entity-card-stat">' + esc(pluralize(significantLanguagesCount, 'language', 'languages')) + ' over 1%</span>');
+        var metricsHtml = metrics.length ? '<div class="dimension-card-meta entity-card-meta-row">' + metrics.join('') + '</div>' : '';
+        var highlightValue = '';
+        var highlightLabel = '';
+        if (collection === 'languages' && marketSpeakersDisplay) {
+            highlightValue = marketSpeakersDisplay;
+            highlightLabel = 'Tracked speakers';
+        } else if (collection === 'countries' && s.population_total) {
+            highlightValue = s.population_total;
+            highlightLabel = 'Market population';
+        }
+        var footerClass = 'dimension-card-footer entity-card-footer' + (highlightValue ? ' dimension-card-footer-highlight' : '');
+        var footerHtml = '<div class="' + footerClass + '">' +
+            (highlightValue ? '<div class="dimension-card-highlight case-result"><span class="result-value">' + esc(highlightValue) + '</span><span class="result-label">' + esc(highlightLabel) + '</span></div><span class="dimension-cta entity-card-cta">Explore</span>' : '<span></span><span class="dimension-cta entity-card-cta">Explore</span>') +
+            '</div>';
+        return '<a href="' + url + '" class="dimension-card entity-card entity-card-padded">' +
+            '<div class="dimension-card-header">' +
+            '<div class="entity-card-title">' + esc(s.menu || s.title) + '</div>' +
+            badgeHtml + '</div>' +
+            '<p class="entity-card-copy">' + esc(s.description) + '</p>' +
+            exactHtml +
+            metricsHtml + footerHtml + '</a>';
+    }
+
+    var RENDERERS = {
+        scopes: renderScopeCard,
+        experts: renderExpertCard,
+        team: renderExpertCard,
+        cases: renderCaseCard,
+        blog: renderBlogCard,
+        domains: renderDomainCard,
+        services: renderServiceCard,
+        solutions: renderSolutionCard,
+        industries: function(s) { return renderDimensionCard(s, 'industries'); },
+        countries: function(s) { return renderDimensionCard(s, 'countries'); },
+        languages: function(s) { return renderDimensionCard(s, 'languages'); },
+        positions: function(s) { return window.CMSCards.renderPositionCard(s, {
+            countryFlagMap: countryFlagMap,
+            countryLabel: countryLabelMap,
+            languageLabel: function(slug) { return toTitleCase(slug); },
+            serviceLabel: serviceLabelMap,
+            industryLabel: industryLabelMap,
+            expertLabel: function(slug) { return label('experts', slug) || toTitleCase(slug); }
+        }); }
+    };
+
+    /* ===== Overflow trim for single-line tag rows ===== */
+    function trimOverflowTags() {
+        if (window.CMSCards && typeof window.CMSCards.fitExactChipRows === 'function') {
+            window.CMSCards.fitExactChipRows(grid);
+        }
+    }
+
+    /* ===== Filtering & rendering ===== */
+    function filterByDimension(items) {
+        if (!dimension || !value) return items;
+
+        return items.filter(function(item) {
+            var facets = item.facets || {};
+            /* For scopes: dimension fields are at item level (from relationships) */
+            if (source === 'scopes') {
+                var vals = item[dimension] || facets[dimension] || [];
+                if (!Array.isArray(vals)) vals = [vals];
+                return vals.indexOf(value) !== -1;
+            }
+            /* For cases: industry/country/language are scalars */
+            if (source === 'cases' && (dimension === 'industry' || dimension === 'country' || dimension === 'language')) {
+                return item[dimension] === value;
+            }
+            /* For solutions: scope/industry are scalars */
+            if (source === 'solutions' && (dimension === 'scope' || dimension === 'industry')) {
+                return item[dimension] === value;
+            }
+            /* For team, blog, etc: dimension is an array field */
+            var fieldVals = item[dimension] || facets[dimension] || [];
+            if (!Array.isArray(fieldVals)) fieldVals = [fieldVals];
+            return fieldVals.indexOf(value) !== -1;
+        });
+    }
+    function filterByRelationships(items) {
+        if (dimension || value || !relatedSlugs.length) return items;
+        return items.filter(function(item) {
+            return relatedSlugs.indexOf(item.slug) !== -1;
+        });
+    }
+
+    function normalizeScopes(data) {
+        return (data.scopes || []).filter(function(s){ return s.slug; }).map(function(s) {
+            var facets = s.facets || {};
+            return {
+                slug: s.slug,
+                url: s.url,
+                title: s.title,
+                menu: s.menu,
+                description: s.description,
+                featured: !!s.featured,
+                facets: facets,
+                services: facets.services || s.services || [],
+                industries: facets.industries || s.industries || [],
+                languages: facets.languages || s.languages || [],
+                countries: facets.countries || s.countries || [],
+                expert_count: s.expert_count || 0,
+                industry_count: s.industry_count || 0,
+                country_count: s.country_count || 0,
+                language_count: s.language_count || 0,
+                task_count: s.task_count || 0,
+                delivery: s.delivery || '',
+                rating: s.rating || 0,
+                price: s.from_price || s.price || 0,
+                from_price: s.from_price || s.price || 0
+            };
+        });
+    }
+
+    function init() {
+        function scrollToAdjacentCard(direction) {
+            if (!grid) return;
+            var gridRect = grid.getBoundingClientRect();
+            var gridStyle = window.getComputedStyle(grid);
+            var paddingStart = parseFloat(gridStyle.paddingLeft) || 0;
+            var items = Array.from(grid.children).filter(function(item) {
+                return !item.classList.contains('catalog-mini-loading') &&
+                    !item.classList.contains('catalog-mini-empty');
+            }).map(function(item) {
+                return {
+                    snap: Math.max(
+                        0,
+                        item.getBoundingClientRect().left - gridRect.left + grid.scrollLeft - paddingStart
+                    )
+                };
+            });
+            if (!items.length) return;
+
+            var current = grid.scrollLeft;
+            var threshold = 4;
+            var target = null;
+
+            if (direction > 0) {
+                target = items.find(function(item) { return item.snap > current + threshold; });
+                if (!target) target = items[items.length - 1];
+            } else {
+                target = items.slice().reverse().find(function(item) { return item.snap < current - threshold; });
+                if (!target) target = items[0];
+            }
+
+            grid.scrollTo({ left: target.snap, behavior: 'smooth' });
+        }
+
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', function() {
+                scrollToAdjacentCard(-1);
+            });
+            nextBtn.addEventListener('click', function() {
+                scrollToAdjacentCard(1);
+            });
+        }
+
+        fetch(cfg.url)
+            .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
+            .then(function(data) {
+                LABELS = data.labels || {};
+                var items;
+                if (source === 'scopes') {
+                    items = normalizeScopes(data);
+                } else {
+                    items = cfg.dataKey ? (data[cfg.dataKey] || []) : (Array.isArray(data) ? data : []);
+                }
+
+                items = items.map(function(item, index) {
+                    item.__catalogMiniIndex = index;
+                    item.__catalogMiniRelationshipIndex = relatedSlugs.length ? relatedSlugs.indexOf(item.slug) : index;
+                    return item;
+                });
+                items = filterByDimension(items);
+                items = filterByRelationships(items);
+                items = sortByRelationshipOrder(items);
+                if (effectiveLimit > 0) items = items.slice(0, effectiveLimit);
+
+                var render = RENDERERS[source] || RENDERERS.scopes;
+                if (items.length === 0) {
+                    section.hidden = true;
+                } else {
+                    grid.innerHTML = items.map(render).join('');
+                    trimOverflowTags();
+                }
+            })
+            .catch(function() {
+                grid.innerHTML = '<div class="catalog-mini-empty">Could not load data.</div>';
+            });
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();
+</script>
+
+            </div>
+            
+            <div class="block">
                 <!-- Testimonials Block: Customer reviews and social proof -->
 
 
@@ -2963,82 +3494,6 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="service-card-footer entity-card-footer">
         <span></span>
         <span class="service-cta entity-card-cta">Explore Domain</span>
-    </div>
-</a>
-            
-            
-        </div>
-    </section>
-    
-    
-    
-    <section class="related-section" data-type="scopes">
-        <div class="related-section-header">
-            <h3>Core scopes behind SEO for E-commerce</h3>
-            
-        </div>
-        <div class="related-grid entity-card-grid">
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-    
-
-
-    
-
-
-
-
-
-
-
-
-
-
-<a href="/scopes/technical-seo" class="scope-card entity-card entity-card-padded">
-    <div class="service-card-header">
-        <div class="entity-card-title">Technical SEO</div>
-        <div class="service-card-icon" style="--icon-url: url('/_media/icons/layout.svg?v=ed890622')"></div>
-    </div>
-    
-    
-    
-    <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">2 domains</span>
-        <span class="scope-metric entity-card-stat">2 services</span>
-        <span class="scope-metric entity-card-stat">7 industries</span>
-        <span class="scope-metric entity-card-stat">8 countries</span>
-        <span class="scope-metric entity-card-stat">7 languages</span>
-        
-    </div>
-    
-    <div class="scope-card-footer entity-card-footer">
-        
-        <span class="scope-price entity-card-price">From $500</span>
-        
-        <span class="scope-cta entity-card-cta">View Scope</span>
     </div>
 </a>
             
@@ -6730,122 +7185,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             
             <div class="block">
-                <!-- CTA Block: Call-to-action section -->
-
-<section class="cta-block cta-default">
-    
-    
-    
-    
-    
-    
-    <div class="hero-scatter-icons" aria-hidden="true">
-        
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9251)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-9251" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4148)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-4148" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3767)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-3767" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7676)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-7676" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1113)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-1113" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4879)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-4879" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9461)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-9461" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9594)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-9594" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6688)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-6688" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3927)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-3927" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9260)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-9260" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6303)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-6303" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1823)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-1823" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8264)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-8264" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg></span>
-        
-    </div>
-    
-
-    <div class="cta-inner">
-        
-
-        <span class="tag tag-accent">NEXT STEP</span>
-
-        <h2>Find out what your catalog looks like to search engines</h2>
-
-        
-        <p class="cta-subtitle">Most stores discover that search engines see a fraction of their products — and waste crawl budget on pages that will never generate revenue. A consultation shows you where the gaps are and what to fix first.</p>
-        
-
-        
-        <div class="cta-actions">
-            
-            <a href="#sidebar-contact" class="btn btn-primary">
-                Book E-commerce SEO Consultation
-            </a>
-            
-            
-            <a href="scopes/technical-seo/" class="btn btn-ghost">
-                View Technical SEO Scope
-            </a>
-            
-        </div>
-        
-
-        
-    </div>
-</section>
-            </div>
-            
-            <div class="block">
                 <!-- FAQ Block: Accordion-style questions and answers -->
 <section class="faq-block">
     
@@ -6906,6 +7245,122 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     
+</section>
+            </div>
+            
+            <div class="block">
+                <!-- CTA Block: Call-to-action section -->
+
+<section class="cta-block cta-default">
+    
+    
+    
+    
+    
+    
+    <div class="hero-scatter-icons" aria-hidden="true">
+        
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3935)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-3935" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2104)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-2104" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1566)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-1566" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6598)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-6598" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9418)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-9418" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6124)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-6124" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7022)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-7022" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9643)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-9643" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1983)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-1983" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7657)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-7657" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3682)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-3682" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9268)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-9268" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2016)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-2016" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3700)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-3700" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg></span>
+        
+    </div>
+    
+
+    <div class="cta-inner">
+        
+
+        <span class="tag tag-accent">NEXT STEP</span>
+
+        <h2>Find out what your catalog looks like to search engines</h2>
+
+        
+        <p class="cta-subtitle">Most stores discover that search engines see a fraction of their products — and waste crawl budget on pages that will never generate revenue. A consultation shows you where the gaps are and what to fix first.</p>
+        
+
+        
+        <div class="cta-actions">
+            
+            <a href="#sidebar-contact" class="btn btn-primary">
+                Book E-commerce SEO Consultation
+            </a>
+            
+            
+            <a href="scopes/technical-seo/" class="btn btn-ghost">
+                View Technical SEO Scope
+            </a>
+            
+        </div>
+        
+
+        
+    </div>
 </section>
             </div>
             

@@ -2727,271 +2727,20 @@
             </div>
             
             <div class="block">
-                <!-- Testimonials Block: Customer reviews and social proof -->
-
-
-
-
-
-    
-
-<section class="testimonials-block">
-    
-    <div class="testimonials-header">
-        <div class="testimonials-header-text">
-            <span class="tag tag-accent">PROOF</span>
-            <h2>PR Results</h2>
-            
-        </div>
-        
-    </div>
-    
-
-    <div class="testimonials-carousel">
-        <div class="testimonials-track">
-            
-            
-            
-            <div class="testimonial-card card card-gradient">
-            <blockquote class="testimonial-quote">
-                "They secured coverage in TechCrunch and Forbes within the first quarter. The backlinks alone increased our domain authority by 15 points, and the brand recognition opened doors we could not have opened with ads."
-            </blockquote>
-
-            <div class="testimonial-author">
-                
-                <div class="testimonial-avatar-placeholder">
-                    N
-                </div>
-                
-                <div class="testimonial-author-info">
-                    <strong>Nina Johansson</strong>
-                    
-                    <span>Communications Director, Hive Robotics</span>
-                    
-                </div>
-            </div>
-
-            
-            <div class="testimonial-footer">
-                
-                
-                
-                <div class="testimonial-rating" aria-label="4 star rating">
-                    
-                    <span class="star">★</span>
-                    
-                    <span class="star">★</span>
-                    
-                    <span class="star">★</span>
-                    
-                    <span class="star">★</span>
-                    
-                </div>
-                
-            </div>
-            
-        </div>
-        
-        </div>
-    </div>
-
-    
-</section>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.testimonials-block').forEach(function(block) {
-        const track = block.querySelector('.testimonials-track');
-        const cards = block.querySelectorAll('.testimonial-card');
-        const prevBtn = block.querySelector('[data-dir="prev"]');
-        const nextBtn = block.querySelector('[data-dir="next"]');
-
-        if (!track || cards.length === 0) return;
-
-        let currentIndex = 0;
-
-        function getVisibleCards() {
-            return window.innerWidth <= 768 ? 1 : 2;
-        }
-
-        function getMaxIndex() {
-            return Math.max(0, cards.length - getVisibleCards());
-        }
-
-        function updateCarousel() {
-            const card = cards[0];
-            const cardWidth = card.offsetWidth;
-            const gap = parseInt(getComputedStyle(track).gap) || 24;
-            const offset = currentIndex * (cardWidth + gap);
-            track.style.transform = 'translateX(-' + offset + 'px)';
-        }
-
-        function next() {
-            currentIndex++;
-            if (currentIndex > getMaxIndex()) {
-                currentIndex = 0;
-            }
-            updateCarousel();
-        }
-
-        function prev() {
-            currentIndex--;
-            if (currentIndex < 0) {
-                currentIndex = getMaxIndex();
-            }
-            updateCarousel();
-        }
-
-        if (prevBtn) prevBtn.addEventListener('click', prev);
-        if (nextBtn) nextBtn.addEventListener('click', next);
-
-        window.addEventListener('resize', function() {
-            if (currentIndex > getMaxIndex()) {
-                currentIndex = getMaxIndex();
-            }
-            updateCarousel();
-        });
-    });
-});
-</script>
-
-            </div>
-            
-            <div class="block">
-                <!-- CTA Block: Call-to-action section -->
-
-<section class="cta-block cta-default">
-    
-    
-    
-    
-    
-    
-    <div class="hero-scatter-icons" aria-hidden="true">
-        
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5899)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5899" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7917)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7917" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1948)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1948" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6375)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6375" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8801)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8801" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8891)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8891" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7870)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7870" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8351)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-8351" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2052)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2052" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2966)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2966" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6665)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6665" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5148)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5148" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5789)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5789" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7292)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7292" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
-                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
-            </linearGradient></defs></svg>
-</span>
-        
-    </div>
-    
-
-    <div class="cta-inner">
-        
-
-        <span class="tag tag-accent">NEXT STEP</span>
-
-        <h2>Start With a PR Assessment — See Where Coverage Is Waiting</h2>
-
-        
-        <p class="cta-subtitle">We will analyze your media landscape, competitor coverage, and available story angles — then show you exactly which publications and journalists are the right targets.</p>
-        
-
-        
-        <div class="cta-actions">
-            
-            <a href="#sidebar-contact" class="btn btn-primary">
-                Book Consultation
-            </a>
-            
-            
-        </div>
-        
-
-        
-        <p class="cta-note">PR Assessment from $400. One-time. Clear action plan.</p>
-        
-    </div>
-</section>
-            </div>
-            
-            <div class="block">
                 <!-- Catalog Mini Block: Simplified entity grid with dimension filtering -->
+<!-- Supports: standard (relationships-based), dimension/value filter, siblings_by, reverse_filter -->
 
 
 
 
     
+
+
+
+
+    
+    
+
 
 
 
@@ -3504,6 +3253,201 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
+            </div>
+            
+            <div class="block">
+                <!-- Testimonials Block: Customer reviews and social proof -->
+
+
+
+
+
+    
+
+<section class="testimonials-block">
+    
+    <div class="testimonials-header">
+        <div class="testimonials-header-text">
+            <span class="tag tag-accent">PROOF</span>
+            <h2>PR Results</h2>
+            
+        </div>
+        
+    </div>
+    
+
+    <div class="testimonials-carousel">
+        <div class="testimonials-track">
+            
+            
+            
+            <div class="testimonial-card card card-gradient">
+            <blockquote class="testimonial-quote">
+                "They secured coverage in TechCrunch and Forbes within the first quarter. The backlinks alone increased our domain authority by 15 points, and the brand recognition opened doors we could not have opened with ads."
+            </blockquote>
+
+            <div class="testimonial-author">
+                
+                <div class="testimonial-avatar-placeholder">
+                    N
+                </div>
+                
+                <div class="testimonial-author-info">
+                    <strong>Nina Johansson</strong>
+                    
+                    <span>Communications Director, Hive Robotics</span>
+                    
+                </div>
+            </div>
+
+            
+            <div class="testimonial-footer">
+                
+                
+                
+                <div class="testimonial-rating" aria-label="4 star rating">
+                    
+                    <span class="star">★</span>
+                    
+                    <span class="star">★</span>
+                    
+                    <span class="star">★</span>
+                    
+                    <span class="star">★</span>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        </div>
+    </div>
+
+    
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.testimonials-block').forEach(function(block) {
+        const track = block.querySelector('.testimonials-track');
+        const cards = block.querySelectorAll('.testimonial-card');
+        const prevBtn = block.querySelector('[data-dir="prev"]');
+        const nextBtn = block.querySelector('[data-dir="next"]');
+
+        if (!track || cards.length === 0) return;
+
+        let currentIndex = 0;
+
+        function getVisibleCards() {
+            return window.innerWidth <= 768 ? 1 : 2;
+        }
+
+        function getMaxIndex() {
+            return Math.max(0, cards.length - getVisibleCards());
+        }
+
+        function updateCarousel() {
+            const card = cards[0];
+            const cardWidth = card.offsetWidth;
+            const gap = parseInt(getComputedStyle(track).gap) || 24;
+            const offset = currentIndex * (cardWidth + gap);
+            track.style.transform = 'translateX(-' + offset + 'px)';
+        }
+
+        function next() {
+            currentIndex++;
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = 0;
+            }
+            updateCarousel();
+        }
+
+        function prev() {
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', prev);
+        if (nextBtn) nextBtn.addEventListener('click', next);
+
+        window.addEventListener('resize', function() {
+            if (currentIndex > getMaxIndex()) {
+                currentIndex = getMaxIndex();
+            }
+            updateCarousel();
+        });
+    });
+});
+</script>
+
+            </div>
+            
+            <div class="block">
+                <!-- FAQ Block: Accordion-style questions and answers -->
+<section class="faq-block">
+    
+    <div class="faq-header ">
+        <span class="tag tag-accent">PR FAQ</span>
+        <h2>Questions Buyers Ask About Digital PR</h2>
+        
+    </div>
+    
+
+    <div class="faq-list ">
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">Can you guarantee media coverage?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>No ethical PR agency can guarantee specific placements — editorial decisions rest with journalists. What we guarantee is a professional, data-driven approach: compelling pitches targeted to the right reporters, persistent follow-up, and consistent results over time. Our track record speaks for itself.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">How long does it take to see PR results?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Initial outreach begins within the first two weeks. First placements typically arrive within 4–8 weeks depending on your industry, story angles, and publication editorial calendars. Sustained PR programs build compounding results over 3–6 months as media relationships deepen and story angles multiply.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">How does digital PR help SEO?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Every earned media placement that links to your site sends a domain authority signal to search engines. Editorial backlinks from real publications are the highest-quality link signal Google recognizes. Over 6–12 months, a consistent PR program measurably improves organic rankings for competitive keywords.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">What is the difference between digital PR and traditional PR?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Traditional PR focuses on brand awareness through media mentions. Digital PR adds a measurable layer: backlink acquisition, domain authority growth, referral traffic, and search visibility impact. Every placement is evaluated for both brand exposure and SEO value.</p>
+            </div>
+        </details>
+        
+        <details class="faq-item" >
+            <summary class="faq-question">
+                <span class="faq-question-title">What is the best first step?</span>
+            </summary>
+            <div class="faq-answer">
+                <p>A PR assessment: media landscape analysis, competitor coverage mapping, and story angle identification. It shows where the coverage opportunities are and which publications are most likely to respond to your brand.</p>
+            </div>
+        </details>
+        
+    </div>
+
+    
+</section>
             </div>
             
             <div class="block">
@@ -5532,66 +5476,130 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             
             <div class="block">
-                <!-- FAQ Block: Accordion-style questions and answers -->
-<section class="faq-block">
+                <!-- CTA Block: Call-to-action section -->
+
+<section class="cta-block cta-default">
     
-    <div class="faq-header ">
-        <span class="tag tag-accent">PR FAQ</span>
-        <h2>Questions Buyers Ask About Digital PR</h2>
+    
+    
+    
+    
+    
+    <div class="hero-scatter-icons" aria-hidden="true">
+        
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1324)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1324" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7893)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7893" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1396)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1396" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9848)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-9848" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7752)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-7752" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6502)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6502" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1565)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-1565" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2696)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2696" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6387)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-6387" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2003)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2003" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5634)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5634" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9030)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-9030" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2998)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-2998" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
+        
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5756)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><defs><linearGradient id="icon-grad-5756" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
+                <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
+            </linearGradient></defs></svg>
+</span>
         
     </div>
     
 
-    <div class="faq-list ">
+    <div class="cta-inner">
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">Can you guarantee media coverage?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>No ethical PR agency can guarantee specific placements — editorial decisions rest with journalists. What we guarantee is a professional, data-driven approach: compelling pitches targeted to the right reporters, persistent follow-up, and consistent results over time. Our track record speaks for itself.</p>
-            </div>
-        </details>
+
+        <span class="tag tag-accent">NEXT STEP</span>
+
+        <h2>Start With a PR Assessment — See Where Coverage Is Waiting</h2>
+
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">How long does it take to see PR results?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>Initial outreach begins within the first two weeks. First placements typically arrive within 4–8 weeks depending on your industry, story angles, and publication editorial calendars. Sustained PR programs build compounding results over 3–6 months as media relationships deepen and story angles multiply.</p>
-            </div>
-        </details>
+        <p class="cta-subtitle">We will analyze your media landscape, competitor coverage, and available story angles — then show you exactly which publications and journalists are the right targets.</p>
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">How does digital PR help SEO?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>Every earned media placement that links to your site sends a domain authority signal to search engines. Editorial backlinks from real publications are the highest-quality link signal Google recognizes. Over 6–12 months, a consistent PR program measurably improves organic rankings for competitive keywords.</p>
-            </div>
-        </details>
+
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">What is the difference between digital PR and traditional PR?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>Traditional PR focuses on brand awareness through media mentions. Digital PR adds a measurable layer: backlink acquisition, domain authority growth, referral traffic, and search visibility impact. Every placement is evaluated for both brand exposure and SEO value.</p>
-            </div>
-        </details>
+        <div class="cta-actions">
+            
+            <a href="#sidebar-contact" class="btn btn-primary">
+                Book Consultation
+            </a>
+            
+            
+        </div>
         
-        <details class="faq-item" >
-            <summary class="faq-question">
-                <span class="faq-question-title">What is the best first step?</span>
-            </summary>
-            <div class="faq-answer">
-                <p>A PR assessment: media landscape analysis, competitor coverage mapping, and story angle identification. It shows where the coverage opportunities are and which publications are most likely to respond to your brand.</p>
-            </div>
-        </details>
+
+        
+        <p class="cta-note">PR Assessment from $400. One-time. Clear action plan.</p>
         
     </div>
-
-    
 </section>
             </div>
             
