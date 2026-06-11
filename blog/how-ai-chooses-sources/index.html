@@ -64,6 +64,7 @@
     (function() {
         try {
             var storedTheme = localStorage.getItem('theme') || 'system';
+            if (['system', 'dark', 'light'].indexOf(storedTheme) === -1) storedTheme = 'system';
             var effectiveTheme = storedTheme === 'system'
                 ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
                 : storedTheme;
@@ -79,7 +80,7 @@
     <link rel="stylesheet" href="_assets/css/styles.css?v=5f8bbd8c">
     <script>
     window.VividigitAssetHashes = {
-        cart: 'c1760380',
+        cart: 'ac131939',
         media: 'a66e3b8f'
     };
     </script>
@@ -270,7 +271,7 @@
     
     
     </script>
-    <script src="_assets/js/cards.js?v=aedee777" defer></script>
+    <script src="_assets/js/cards.js?v=1ffd1b23" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -1041,7 +1042,7 @@ Maintenance      → Is it current?
     var countryLabelMap = { 'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain' };
     var serviceIconMap = { 'seo': 'search', 'aeo': 'lightning', 'aso': 'smartphone', 'digital-marketing': 'globe', 'content': 'pen-tool', 'social-media': 'megaphone', 'paid-social': 'megaphone', 'ppc': 'target', 'email': 'mail', 'analytics': 'analytics', 'cro': 'chart', 'video': 'video', 'pr': 'newspaper', 'orm': 'shield', 'automation': 'code', 'marketplace-management': 'layers', 'affiliate': 'users', 'app-marketing': 'smartphone', 'web-development': 'layout' };
 
-    function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+    function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
     function label(dimension, slug) {
         return (LABELS[dimension] || {})[slug] || slug;
     }
@@ -1074,7 +1075,7 @@ Maintenance      → Is it current?
     function normalizeCardUrl(value, fallback) {
         var href = value === undefined || value === null || value === '' ? (fallback || '#') : String(value).trim();
         if (!href) href = fallback || '#';
-        if (/^(https?:\/\/|mailto:|tel:|javascript:|#)/i.test(href)) return href;
+        if (/^(https?:\/\/|mailto:|tel:|#)/i.test(href)) return href;
         var normalized = href.replace(/\\/g, '/');
         var comparable = normalized.replace(/^\.\//, '').replace(/^\/+/, '').toLowerCase();
         if (comparable === 'contact' || comparable.indexOf('contact/') === 0 || comparable.indexOf('contact?') === 0) {
@@ -3753,7 +3754,7 @@ Maintenance      → Is it current?
     </div>
 
     <!-- Site JavaScript -->
-    <script src="_assets/js/app-core.js?v=0126c121" defer></script>
+    <script src="_assets/js/app-core.js?v=a6382adf" defer></script>
     <!-- SVG templates for JS runtime use -->
     <div id="svg-templates" hidden>
         <span id="svg-theme-system"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
@@ -3762,8 +3763,8 @@ Maintenance      → Is it current?
         <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
 
-    <script src="_assets/js/forms.js?v=17646487" defer></script>
-    <script src="_assets/js/ui.js?v=10ccdf89" defer></script>
-    <script src="_assets/js/site.js?v=6c585595" defer></script>
+    <script src="_assets/js/forms.js?v=c6eee7ef" defer></script>
+    <script src="_assets/js/ui.js?v=d99016a4" defer></script>
+    <script src="_assets/js/site.js?v=dca12656" defer></script>
 </body>
 </html>

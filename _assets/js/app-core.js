@@ -83,10 +83,8 @@
         };
 
         app.getLeftSidebarState = function() {
-            var widthHidden = window.innerWidth <= 800;
             return {
-                widthHidden: widthHidden,
-                split: true
+                widthHidden: window.innerWidth <= 800
             };
         };
 
@@ -125,17 +123,14 @@
             var orderShown = false;
             var contactShown = false;
 
-            document.body.classList.toggle('sidebar-nav-split', leftState.split);
+            document.body.classList.add('sidebar-nav-split');
             document.body.classList.toggle('sidebar-nav-hidden', leftState.widthHidden);
             document.body.classList.toggle('sidebar-action-docked', rightState.docked);
             app.overlay?.classList.toggle('active', overlayOpen);
             document.body.classList.toggle('sidebar-open', overlayOpen);
             app.syncActionPanels();
 
-            if (!leftState.split) {
-                menuShown = true;
-                selectorsShown = true;
-            } else if (leftState.widthHidden) {
+            if (leftState.widthHidden) {
                 menuShown = navOpen && navPanel === 'menu';
                 selectorsShown = navOpen && navPanel === 'selectors';
             } else {
@@ -224,10 +219,6 @@
             var currentPanel = app.sidebarNav.dataset.panel || 'menu';
             var isOpen = app.sidebarNav.classList.contains('open');
 
-            if (!leftState.split) {
-                return;
-            }
-
             if (leftState.widthHidden && isOpen && currentPanel === panel) {
                 app.closeSidebars();
                 return;
@@ -253,11 +244,7 @@
             var leftState = app.getLeftSidebarState();
             var currentPanel = app.sidebarNav.dataset.panel || 'menu';
 
-            if (!leftState.split) {
-                app.sidebarNav.dataset.panel = 'menu';
-                app.sidebarNav.classList.remove('open');
-                app.closeLeftSidebarDropdowns();
-            } else if (!leftState.widthHidden && currentPanel !== 'selectors') {
+            if (!leftState.widthHidden && currentPanel !== 'selectors') {
                 app.sidebarNav.dataset.panel = 'menu';
                 app.sidebarNav.classList.remove('open');
             } else if (!leftState.widthHidden) {

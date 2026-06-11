@@ -70,6 +70,7 @@
     (function() {
         try {
             var storedTheme = localStorage.getItem('theme') || 'system';
+            if (['system', 'dark', 'light'].indexOf(storedTheme) === -1) storedTheme = 'system';
             var effectiveTheme = storedTheme === 'system'
                 ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
                 : storedTheme;
@@ -85,7 +86,7 @@
     <link rel="stylesheet" href="_assets/css/styles.css?v=5f8bbd8c">
     <script>
     window.VividigitAssetHashes = {
-        cart: 'c1760380',
+        cart: 'ac131939',
         media: 'a66e3b8f'
     };
     </script>
@@ -276,7 +277,7 @@
     
     
     </script>
-    <script src="_assets/js/cards.js?v=aedee777" defer></script>
+    <script src="_assets/js/cards.js?v=1ffd1b23" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -1362,7 +1363,7 @@
     data-page-type="expert"
     data-dimension=""
     data-value=""
-    data-related-slugs="ai-optimisation,cross-market-setup,on-page-seo,seo-research,technical-seo,link-building,local-seo,paid-social-for-apps,aso-localization,ppc-audit,apple-search-ads,app-store-cro,aso-optimization,app-retention,google-app-campaigns"
+    data-related-slugs="ai-optimisation,cross-market-setup,on-page-seo,seo-research,technical-seo,link-building,local-seo,app-retention,app-store-cro,apple-search-ads,aso-localization,aso-optimization,google-app-campaigns,paid-social-for-apps,ppc-audit"
     data-limit="0">
 
     <div class="catalog-mini-header">
@@ -1437,7 +1438,7 @@
     var countryLabelMap = { 'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain' };
     var serviceIconMap = { 'seo': 'search', 'aeo': 'lightning', 'aso': 'smartphone', 'digital-marketing': 'globe', 'content': 'pen-tool', 'social-media': 'megaphone', 'paid-social': 'megaphone', 'ppc': 'target', 'email': 'mail', 'analytics': 'analytics', 'cro': 'chart', 'video': 'video', 'pr': 'newspaper', 'orm': 'shield', 'automation': 'code', 'marketplace-management': 'layers', 'affiliate': 'users', 'app-marketing': 'smartphone', 'web-development': 'layout' };
 
-    function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+    function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
     function label(dimension, slug) {
         return (LABELS[dimension] || {})[slug] || slug;
     }
@@ -1470,7 +1471,7 @@
     function normalizeCardUrl(value, fallback) {
         var href = value === undefined || value === null || value === '' ? (fallback || '#') : String(value).trim();
         if (!href) href = fallback || '#';
-        if (/^(https?:\/\/|mailto:|tel:|javascript:|#)/i.test(href)) return href;
+        if (/^(https?:\/\/|mailto:|tel:|#)/i.test(href)) return href;
         var normalized = href.replace(/\\/g, '/');
         var comparable = normalized.replace(/^\.\//, '').replace(/^\/+/, '').toLowerCase();
         if (comparable === 'contact' || comparable.indexOf('contact/') === 0 || comparable.indexOf('contact?') === 0) {
@@ -1877,72 +1878,72 @@
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7283)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-7283" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-1" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2119)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-2119" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-2" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5130)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5130" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-3" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9983)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-9983" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-4" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9804)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-9804" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6609)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-6609" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-6" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7172)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-7172" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-7" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1193)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-1193" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-8" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9221)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-9221" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-9" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1828)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-1828" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-10)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-10" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5608)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5608" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-11)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-11" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8194)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-8194" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-12)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-12" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1497)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-1497" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-13)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-13" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5787)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-5787" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-14)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><defs><linearGradient id="icon-grad-14" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -3354,9 +3355,9 @@
 
 
 
-<a href="/services/app-user-acquisition" class="service-card entity-card entity-card-padded">
+<a href="/services/app-conversion-retention" class="service-card entity-card entity-card-padded">
     <div class="service-card-header">
-        <div class="entity-card-title">App User Acquisition</div>
+        <div class="entity-card-title">App Conversion &amp; Retention</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/settings.svg?v=a66e3b8f')"></div>
     </div>
     
@@ -3364,7 +3365,7 @@
     
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">2 domains</span>
-        <span class="service-meta-item entity-card-stat">3 scopes</span>
+        <span class="service-meta-item entity-card-stat">2 scopes</span>
         <span class="service-meta-item entity-card-stat">2 experts</span>
         <span class="service-meta-item entity-card-stat">4 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
@@ -3373,7 +3374,7 @@
     
     <div class="service-card-footer entity-card-footer">
         
-        <span class="service-price entity-card-price">From $400</span>
+        <span class="service-price entity-card-price">From $600</span>
         
         <span class="service-cta entity-card-cta">View Service</span>
     </div>
@@ -3402,9 +3403,9 @@
 
 
 
-<a href="/services/app-conversion-retention" class="service-card entity-card entity-card-padded">
+<a href="/services/app-user-acquisition" class="service-card entity-card entity-card-padded">
     <div class="service-card-header">
-        <div class="entity-card-title">App Conversion &amp; Retention</div>
+        <div class="entity-card-title">App User Acquisition</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/settings.svg?v=a66e3b8f')"></div>
     </div>
     
@@ -3412,7 +3413,7 @@
     
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">2 domains</span>
-        <span class="service-meta-item entity-card-stat">2 scopes</span>
+        <span class="service-meta-item entity-card-stat">3 scopes</span>
         <span class="service-meta-item entity-card-stat">2 experts</span>
         <span class="service-meta-item entity-card-stat">4 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
@@ -3421,7 +3422,7 @@
     
     <div class="service-card-footer entity-card-footer">
         
-        <span class="service-price entity-card-price">From $600</span>
+        <span class="service-price entity-card-price">From $400</span>
         
         <span class="service-cta entity-card-cta">View Service</span>
     </div>
@@ -4112,11 +4113,11 @@
 
 
 
-<a href="/industries/retail" class="dimension-card entity-card entity-card-padded">
+<a href="/industries/pharma" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Retail</div>
+        <div class="entity-card-title">Pharma &amp; Life Sciences</div>
         
-        <div class="dimension-card-badge icon" style="--icon-url: url('/_media/icons/shopping-bag.svg?v=a66e3b8f')"></div>
+        <div class="dimension-card-badge icon" style="--icon-url: url('/_media/icons/healthcare.svg?v=a66e3b8f')"></div>
         
     </div>
     
@@ -4125,7 +4126,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">11 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">13 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -4168,11 +4169,11 @@
 
 
 
-<a href="/industries/pharma" class="dimension-card entity-card entity-card-padded">
+<a href="/industries/retail" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Pharma &amp; Life Sciences</div>
+        <div class="entity-card-title">Retail</div>
         
-        <div class="dimension-card-badge icon" style="--icon-url: url('/_media/icons/healthcare.svg?v=a66e3b8f')"></div>
+        <div class="dimension-card-badge icon" style="--icon-url: url('/_media/icons/shopping-bag.svg?v=a66e3b8f')"></div>
         
     </div>
     
@@ -4181,7 +4182,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">11 services</span>
-        <span class="dimension-meta-item entity-card-stat">13 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -4740,73 +4741,11 @@
     
     
 
-<a href="/countries/sweden" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/australia" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Sweden</div>
+        <div class="entity-card-title">Australia</div>
         
-        <div class="dimension-card-badge">🇸🇪</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">10.6M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/brazil" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Brazil</div>
-        
-        <div class="dimension-card-badge">🇧🇷</div>
+        <div class="dimension-card-badge">🇦🇺</div>
         
     </div>
     
@@ -4819,13 +4758,13 @@
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">220M</span>
+            <span class="result-value">26.8M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -4926,197 +4865,11 @@
     
     
 
-<a href="/countries/turkey" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/brazil" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Turkey</div>
+        <div class="entity-card-title">Brazil</div>
         
-        <div class="dimension-card-badge">🇹🇷</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">7 domains</span>
-        <span class="dimension-meta-item entity-card-stat">12 services</span>
-        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">2 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">84.1M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/netherlands" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Netherlands</div>
-        
-        <div class="dimension-card-badge">🇳🇱</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">6 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">17.8M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/australia" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Australia</div>
-        
-        <div class="dimension-card-badge">🇦🇺</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">19 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">26.8M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/ireland" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Ireland</div>
-        
-        <div class="dimension-card-badge">🇮🇪</div>
+        <div class="dimension-card-badge">🇧🇷</div>
         
     </div>
     
@@ -5135,7 +4888,7 @@
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">5.23M</span>
+            <span class="result-value">220M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -5174,135 +4927,11 @@
     
     
 
-<a href="/countries/switzerland" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/canada" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Switzerland</div>
+        <div class="entity-card-title">Canada</div>
         
-        <div class="dimension-card-badge">🇨🇭</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">5 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">8.86M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/japan" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Japan</div>
-        
-        <div class="dimension-card-badge">🇯🇵</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">1 language over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">123M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/mexico" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Mexico</div>
-        
-        <div class="dimension-card-badge">🇲🇽</div>
+        <div class="dimension-card-badge">🇨🇦</div>
         
     </div>
     
@@ -5315,13 +4944,13 @@
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">11 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">131M</span>
+            <span class="result-value">38.8M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -5360,11 +4989,11 @@
     
     
 
-<a href="/countries/italy" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/czechia" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Italy</div>
+        <div class="entity-card-title">Czechia</div>
         
-        <div class="dimension-card-badge">🇮🇹</div>
+        <div class="dimension-card-badge">🇨🇿</div>
         
     </div>
     
@@ -5383,7 +5012,7 @@
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">61M</span>
+            <span class="result-value">10.8M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -5546,11 +5175,11 @@
     
     
 
-<a href="/countries/czechia" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/ireland" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Czechia</div>
+        <div class="entity-card-title">Ireland</div>
         
-        <div class="dimension-card-badge">🇨🇿</div>
+        <div class="dimension-card-badge">🇮🇪</div>
         
     </div>
     
@@ -5558,18 +5187,18 @@
     
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">19 services</span>
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">4 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">10.8M</span>
+            <span class="result-value">5.23M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -5608,11 +5237,135 @@
     
     
 
-<a href="/countries/canada" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/italy" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Canada</div>
+        <div class="entity-card-title">Italy</div>
         
-        <div class="dimension-card-badge">🇨🇦</div>
+        <div class="dimension-card-badge">🇮🇹</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">4 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">61M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/japan" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Japan</div>
+        
+        <div class="dimension-card-badge">🇯🇵</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">1 language over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">123M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/mexico" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Mexico</div>
+        
+        <div class="dimension-card-badge">🇲🇽</div>
         
     </div>
     
@@ -5625,13 +5378,261 @@
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">11 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">38.8M</span>
+            <span class="result-value">131M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/netherlands" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Netherlands</div>
+        
+        <div class="dimension-card-badge">🇳🇱</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">6 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">17.8M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/sweden" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Sweden</div>
+        
+        <div class="dimension-card-badge">🇸🇪</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">10.6M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/switzerland" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Switzerland</div>
+        
+        <div class="dimension-card-badge">🇨🇭</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">5 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">8.86M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/turkey" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Turkey</div>
+        
+        <div class="dimension-card-badge">🇹🇷</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">7 domains</span>
+        <span class="dimension-meta-item entity-card-stat">12 services</span>
+        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">2 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">84.1M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -6541,7 +6542,7 @@
     </div>
 
     <!-- Site JavaScript -->
-    <script src="_assets/js/app-core.js?v=0126c121" defer></script>
+    <script src="_assets/js/app-core.js?v=a6382adf" defer></script>
     <!-- SVG templates for JS runtime use -->
     <div id="svg-templates" hidden>
         <span id="svg-theme-system"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
@@ -6550,8 +6551,8 @@
         <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
 
-    <script src="_assets/js/forms.js?v=17646487" defer></script>
-    <script src="_assets/js/ui.js?v=10ccdf89" defer></script>
-    <script src="_assets/js/site.js?v=6c585595" defer></script>
+    <script src="_assets/js/forms.js?v=c6eee7ef" defer></script>
+    <script src="_assets/js/ui.js?v=d99016a4" defer></script>
+    <script src="_assets/js/site.js?v=dca12656" defer></script>
 </body>
 </html>

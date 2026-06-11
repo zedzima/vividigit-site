@@ -78,6 +78,7 @@
     (function() {
         try {
             var storedTheme = localStorage.getItem('theme') || 'system';
+            if (['system', 'dark', 'light'].indexOf(storedTheme) === -1) storedTheme = 'system';
             var effectiveTheme = storedTheme === 'system'
                 ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
                 : storedTheme;
@@ -93,7 +94,7 @@
     <link rel="stylesheet" href="_assets/css/styles.css?v=5f8bbd8c">
     <script>
     window.VividigitAssetHashes = {
-        cart: 'c1760380',
+        cart: 'ac131939',
         media: 'a66e3b8f'
     };
     </script>
@@ -284,7 +285,7 @@
     
     
     </script>
-    <script src="_assets/js/cards.js?v=aedee777" defer></script>
+    <script src="_assets/js/cards.js?v=1ffd1b23" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -2338,20 +2339,22 @@
 
 <script>
 (function() {
-    document.querySelectorAll('.process-block').forEach(block => {
-        const btns = block.querySelectorAll('.process-btn');
-        const panels = block.querySelectorAll('.process-panel');
+    var block = document.currentScript.previousElementSibling;
+    if (!block || !block.classList.contains('process-block')) return;
 
-        btns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabNum = btn.dataset.tab;
+    var btns = block.querySelectorAll('.process-btn');
+    var panels = block.querySelectorAll('.process-panel');
 
-                btns.forEach(b => b.classList.remove('active'));
-                panels.forEach(p => p.classList.remove('active'));
+    btns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var tabNum = btn.dataset.tab;
 
-                btn.classList.add('active');
-                block.querySelector(`[data-panel="${tabNum}"]`).classList.add('active');
-            });
+            btns.forEach(function(b) { b.classList.remove('active'); });
+            panels.forEach(function(p) { p.classList.remove('active'); });
+
+            btn.classList.add('active');
+            var target = block.querySelector('[data-panel="' + tabNum + '"]');
+            if (target) target.classList.add('active');
         });
     });
 })();
@@ -2486,6 +2489,18 @@
 
 <script>
 (function() {
+    // Prevent href="#" clicks inside pricing blocks from navigating away (base href issue).
+    // Registered immediately at parse time so it runs before lazy cart.js attaches handlers.
+    if (!window.__vividigitPricingAnchorGuard) {
+        window.__vividigitPricingAnchorGuard = true;
+        document.addEventListener('click', function(e) {
+            var link = e.target.closest('a[href="#"]');
+            if (link && link.closest('.pricing-block')) {
+                e.preventDefault();
+            }
+        });
+    }
+
     if (window.__vividigitPricingSyncInitialized) return;
     window.__vividigitPricingSyncInitialized = true;
 
@@ -2494,34 +2509,34 @@
     }
 
     function getYearlyPricing(monthlyPrice, discount) {
-        const monthlyEquivalent = Math.round(monthlyPrice * (100 - discount) / 100);
-        const annualTotal = monthlyEquivalent * 12;
-        const annualSavings = (monthlyPrice * 12) - annualTotal;
-        return { monthlyEquivalent, annualTotal, annualSavings };
+        var monthlyEquivalent = Math.round(monthlyPrice * (100 - discount) / 100);
+        var annualTotal = monthlyEquivalent * 12;
+        var annualSavings = (monthlyPrice * 12) - annualTotal;
+        return { monthlyEquivalent: monthlyEquivalent, annualTotal: annualTotal, annualSavings: annualSavings };
     }
 
     function applyButtonState(buttons, period) {
-        buttons.forEach(btn => {
+        buttons.forEach(function(btn) {
             btn.classList.toggle('active', btn.dataset.period === period);
         });
     }
 
     function applySimplePricing(toggle, period, discount) {
-        const section = toggle.closest('.pricing-block');
-        const buttons = toggle.querySelectorAll('.pricing-toggle-btn');
-        const priceEl = section ? section.querySelector('.price-current') : null;
-        const periodEl = section ? section.querySelector('.price-period') : null;
-        const metaEl = section ? section.querySelector('.pricing-simple-meta') : null;
-        const savingsEl = metaEl ? metaEl.querySelector('.savings-amount') : null;
-        const isYearly = period === 'yearly';
+        var section = toggle.closest('.pricing-block');
+        var buttons = toggle.querySelectorAll('.pricing-toggle-btn');
+        var priceEl = section ? section.querySelector('.price-current') : null;
+        var periodEl = section ? section.querySelector('.price-period') : null;
+        var metaEl = section ? section.querySelector('.pricing-simple-meta') : null;
+        var savingsEl = metaEl ? metaEl.querySelector('.savings-amount') : null;
+        var isYearly = period === 'yearly';
 
         applyButtonState(buttons, period);
 
         if (!priceEl || !priceEl.dataset.monthly) return;
 
-        const monthlyPrice = parseInt(priceEl.dataset.monthly, 10);
+        var monthlyPrice = parseInt(priceEl.dataset.monthly, 10);
         if (isYearly) {
-            const yearly = getYearlyPricing(monthlyPrice, discount);
+            var yearly = getYearlyPricing(monthlyPrice, discount);
             priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
             if (periodEl) periodEl.textContent = periodEl.dataset.monthlyLabel || '/month';
             if (savingsEl) savingsEl.textContent = String(yearly.annualSavings);
@@ -2534,26 +2549,26 @@
     }
 
     function applyPackagesPricing(toggle, period, discount) {
-        const buttons = toggle.querySelectorAll('.pricing-toggle-btn');
-        const grid = toggle.nextElementSibling;
-        const isYearly = period === 'yearly';
+        var buttons = toggle.querySelectorAll('.pricing-toggle-btn');
+        var grid = toggle.nextElementSibling;
+        var isYearly = period === 'yearly';
 
         if (!grid || !grid.classList.contains('pricing-packages-grid')) return;
 
         applyButtonState(buttons, period);
 
-        grid.querySelectorAll('.pricing-package').forEach(pkg => {
-            const priceEl = pkg.querySelector('.price-current');
-            const periodEl = pkg.querySelector('.price-period');
-            const savingsEl = pkg.querySelector('.package-savings');
-            const savingsAmount = pkg.querySelector('.savings-amount');
+        grid.querySelectorAll('.pricing-package').forEach(function(pkg) {
+            var priceEl = pkg.querySelector('.price-current');
+            var periodEl = pkg.querySelector('.price-period');
+            var savingsEl = pkg.querySelector('.package-savings');
+            var savingsAmount = pkg.querySelector('.savings-amount');
 
             if (!priceEl || !priceEl.dataset.monthly) return;
 
-            const monthlyPrice = parseInt(priceEl.dataset.monthly, 10);
+            var monthlyPrice = parseInt(priceEl.dataset.monthly, 10);
 
             if (isYearly) {
-                const yearly = getYearlyPricing(monthlyPrice, discount);
+                var yearly = getYearlyPricing(monthlyPrice, discount);
                 priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
                 if (periodEl) periodEl.textContent = '/month';
                 if (savingsEl) {
@@ -2571,65 +2586,25 @@
     }
 
     function syncPricingBlocks(period) {
-        document.querySelectorAll('.pricing-simple-toggle').forEach(toggle => {
-            const discount = parseInt(toggle.dataset.discount, 10) || 20;
+        document.querySelectorAll('.pricing-simple-toggle').forEach(function(toggle) {
+            var discount = parseInt(toggle.dataset.discount, 10) || 20;
             applySimplePricing(toggle, period, discount);
         });
 
-        document.querySelectorAll('.pricing-toggle').forEach(toggle => {
+        document.querySelectorAll('.pricing-toggle').forEach(function(toggle) {
             if (toggle.classList.contains('pricing-simple-toggle')) return;
-            const grid = toggle.nextElementSibling;
-            const discount = grid ? (parseInt(grid.dataset.discount, 10) || 20) : 20;
+            var grid = toggle.nextElementSibling;
+            var discount = grid ? (parseInt(grid.dataset.discount, 10) || 20) : 20;
             applyPackagesPricing(toggle, period, discount);
         });
     }
 
-    // Sidebar toggle for CTA buttons
-    document.querySelectorAll('.pricing-cta-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            if (window.innerWidth < 2200) {
-                const actionToggle = document.getElementById('btnAction');
-                if (actionToggle && btn.getAttribute('href') === '#sidebar') {
-                    e.preventDefault();
-                    actionToggle.click();
-                }
-            }
-        });
-    });
-
-    // Monthly/Yearly toggle for simple pricing
-    document.querySelectorAll('.pricing-simple-toggle').forEach(toggle => {
-        const buttons = toggle.querySelectorAll('.pricing-toggle-btn');
-
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
-                    detail: { period: btn.dataset.period, discount: parseInt(toggle.dataset.discount, 10) || 20, source: 'pricing-simple' }
-                }));
-            });
-        });
-    });
-
-    // Monthly/Yearly toggle for packages
-    document.querySelectorAll('.pricing-toggle').forEach(toggle => {
-        const buttons = toggle.querySelectorAll('.pricing-toggle-btn');
-        const grid = toggle.nextElementSibling;
-        if (!grid || !grid.classList.contains('pricing-packages-grid')) return;
-
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
-                    detail: { period: btn.dataset.period, discount: parseInt(grid.dataset.discount, 10) || 20, source: 'pricing-packages' }
-                }));
-            });
-        });
-    });
-
+    // Document-level billingPeriodChanged listener (registered once, sees all blocks).
     document.addEventListener('billingPeriodChanged', function(e) {
-        const detail = e && e.detail ? e.detail : {};
-        const period = detail.period === 'yearly' ? 'yearly' : 'monthly';
-        const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
-        const itemPath = (detail.itemPage || '').replace(/\/$/, '') || '/';
+        var detail = e && e.detail ? e.detail : {};
+        var period = detail.period === 'yearly' ? 'yearly' : 'monthly';
+        var currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+        var itemPath = (detail.itemPage || '').replace(/\/$/, '') || '/';
 
         if (detail.scope === 'single' && itemPath && itemPath !== currentPath) {
             return;
@@ -2637,11 +2612,54 @@
 
         syncPricingBlocks(period);
 
-        document.querySelectorAll('.pricing-packages-grid').forEach(grid => {
-            const selectedBtn = grid.querySelector('.pricing-package-selected .btn');
+        document.querySelectorAll('.pricing-packages-grid').forEach(function(grid) {
+            var selectedBtn = grid.querySelector('.pricing-package-selected .btn');
             if (selectedBtn && detail.source !== 'pricing-packages') {
                 selectedBtn.click();
             }
+        });
+    });
+
+    // Bind element-level listeners after DOM is fully parsed so all blocks are visible.
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sidebar toggle for CTA buttons
+        document.querySelectorAll('.pricing-cta-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                if (window.innerWidth < 2200) {
+                    var actionToggle = document.getElementById('btnAction');
+                    if (actionToggle && btn.getAttribute('href') === '#sidebar') {
+                        e.preventDefault();
+                        actionToggle.click();
+                    }
+                }
+            });
+        });
+
+        // Monthly/Yearly toggle for simple pricing
+        document.querySelectorAll('.pricing-simple-toggle').forEach(function(toggle) {
+            var buttons = toggle.querySelectorAll('.pricing-toggle-btn');
+            buttons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
+                        detail: { period: btn.dataset.period, discount: parseInt(toggle.dataset.discount, 10) || 20, source: 'pricing-simple' }
+                    }));
+                });
+            });
+        });
+
+        // Monthly/Yearly toggle for packages
+        document.querySelectorAll('.pricing-toggle').forEach(function(toggle) {
+            var buttons = toggle.querySelectorAll('.pricing-toggle-btn');
+            var grid = toggle.nextElementSibling;
+            if (!grid || !grid.classList.contains('pricing-packages-grid')) return;
+
+            buttons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.dispatchEvent(new CustomEvent('billingPeriodChanged', {
+                        detail: { period: btn.dataset.period, discount: parseInt(grid.dataset.discount, 10) || 20, source: 'pricing-packages' }
+                    }));
+                });
+            });
         });
     });
 })();
@@ -2749,7 +2767,7 @@
     var countryLabelMap = { 'germany': 'Germany', 'austria': 'Austria', 'usa': 'USA', 'uk': 'UK', 'france': 'France', 'spain': 'Spain' };
     var serviceIconMap = { 'seo': 'search', 'aeo': 'lightning', 'aso': 'smartphone', 'digital-marketing': 'globe', 'content': 'pen-tool', 'social-media': 'megaphone', 'paid-social': 'megaphone', 'ppc': 'target', 'email': 'mail', 'analytics': 'analytics', 'cro': 'chart', 'video': 'video', 'pr': 'newspaper', 'orm': 'shield', 'automation': 'code', 'marketplace-management': 'layers', 'affiliate': 'users', 'app-marketing': 'smartphone', 'web-development': 'layout' };
 
-    function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+    function esc(str) { var d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
     function label(dimension, slug) {
         return (LABELS[dimension] || {})[slug] || slug;
     }
@@ -2782,7 +2800,7 @@
     function normalizeCardUrl(value, fallback) {
         var href = value === undefined || value === null || value === '' ? (fallback || '#') : String(value).trim();
         if (!href) href = fallback || '#';
-        if (/^(https?:\/\/|mailto:|tel:|javascript:|#)/i.test(href)) return href;
+        if (/^(https?:\/\/|mailto:|tel:|#)/i.test(href)) return href;
         var normalized = href.replace(/\\/g, '/');
         var comparable = normalized.replace(/^\.\//, '').replace(/^\/+/, '').toLowerCase();
         if (comparable === 'contact' || comparable.indexOf('contact/') === 0 || comparable.indexOf('contact?') === 0) {
@@ -3311,16 +3329,19 @@
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.testimonials-block').forEach(function(block) {
-        const track = block.querySelector('.testimonials-track');
-        const cards = block.querySelectorAll('.testimonial-card');
-        const prevBtn = block.querySelector('[data-dir="prev"]');
-        const nextBtn = block.querySelector('[data-dir="next"]');
+(function() {
+    var block = document.currentScript.previousElementSibling;
+    if (!block || !block.classList.contains('testimonials-block')) return;
+
+    function init() {
+        var track = block.querySelector('.testimonials-track');
+        var cards = block.querySelectorAll('.testimonial-card');
+        var prevBtn = block.querySelector('[data-dir="prev"]');
+        var nextBtn = block.querySelector('[data-dir="next"]');
 
         if (!track || cards.length === 0) return;
 
-        let currentIndex = 0;
+        var currentIndex = 0;
 
         function getVisibleCards() {
             return window.innerWidth <= 768 ? 1 : 2;
@@ -3331,10 +3352,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updateCarousel() {
-            const card = cards[0];
-            const cardWidth = card.offsetWidth;
-            const gap = parseInt(getComputedStyle(track).gap) || 24;
-            const offset = currentIndex * (cardWidth + gap);
+            var card = cards[0];
+            var cardWidth = card.offsetWidth;
+            var gap = parseInt(getComputedStyle(track).gap) || 24;
+            var offset = currentIndex * (cardWidth + gap);
             track.style.transform = 'translateX(-' + offset + 'px)';
         }
 
@@ -3363,8 +3384,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             updateCarousel();
         });
-    });
-});
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init, { once: true });
+    } else {
+        init();
+    }
+})();
 </script>
 
             </div>
@@ -3463,72 +3490,72 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3192)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-3192" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-1" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5655)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-5655" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-2" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7257)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-7257" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-3" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7239)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-7239" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-4" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7952)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-7952" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-5" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7573)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-7573" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-6" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3426)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-3426" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-7" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5359)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-5359" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-8" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4456)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-4456" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-9" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4408)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-4408" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-10)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-10" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2101)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-2101" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-11)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-11" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8543)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-8543" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-12)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-12" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9437)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-9437" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-13)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-13" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3354)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-3354" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-14)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><defs><linearGradient id="icon-grad-14" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -5517,11 +5544,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<a href="/industries/retail" class="dimension-card entity-card entity-card-padded">
+<a href="/industries/pharma" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Retail</div>
+        <div class="entity-card-title">Pharma &amp; Life Sciences</div>
         
-        <div class="dimension-card-badge icon" style="--icon-url: url('/_media/icons/shopping-bag.svg?v=a66e3b8f')"></div>
+        <div class="dimension-card-badge icon" style="--icon-url: url('/_media/icons/healthcare.svg?v=a66e3b8f')"></div>
         
     </div>
     
@@ -5530,7 +5557,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">11 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">13 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -5573,11 +5600,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<a href="/industries/pharma" class="dimension-card entity-card entity-card-padded">
+<a href="/industries/retail" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Pharma &amp; Life Sciences</div>
+        <div class="entity-card-title">Retail</div>
         
-        <div class="dimension-card-badge icon" style="--icon-url: url('/_media/icons/healthcare.svg?v=a66e3b8f')"></div>
+        <div class="dimension-card-badge icon" style="--icon-url: url('/_media/icons/shopping-bag.svg?v=a66e3b8f')"></div>
         
     </div>
     
@@ -5586,7 +5613,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">11 services</span>
-        <span class="dimension-meta-item entity-card-stat">13 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -6145,73 +6172,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-<a href="/countries/sweden" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/australia" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Sweden</div>
+        <div class="entity-card-title">Australia</div>
         
-        <div class="dimension-card-badge">🇸🇪</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">10.6M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/brazil" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Brazil</div>
-        
-        <div class="dimension-card-badge">🇧🇷</div>
+        <div class="dimension-card-badge">🇦🇺</div>
         
     </div>
     
@@ -6224,13 +6189,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">220M</span>
+            <span class="result-value">26.8M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -6331,197 +6296,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-<a href="/countries/turkey" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/brazil" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Turkey</div>
+        <div class="entity-card-title">Brazil</div>
         
-        <div class="dimension-card-badge">🇹🇷</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">7 domains</span>
-        <span class="dimension-meta-item entity-card-stat">12 services</span>
-        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">2 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">84.1M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/netherlands" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Netherlands</div>
-        
-        <div class="dimension-card-badge">🇳🇱</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">6 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">17.8M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/australia" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Australia</div>
-        
-        <div class="dimension-card-badge">🇦🇺</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">19 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">26.8M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/ireland" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Ireland</div>
-        
-        <div class="dimension-card-badge">🇮🇪</div>
+        <div class="dimension-card-badge">🇧🇷</div>
         
     </div>
     
@@ -6540,7 +6319,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">5.23M</span>
+            <span class="result-value">220M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -6579,135 +6358,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-<a href="/countries/switzerland" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/canada" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Switzerland</div>
+        <div class="entity-card-title">Canada</div>
         
-        <div class="dimension-card-badge">🇨🇭</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">5 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">8.86M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/japan" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Japan</div>
-        
-        <div class="dimension-card-badge">🇯🇵</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">1 language over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">123M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/mexico" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Mexico</div>
-        
-        <div class="dimension-card-badge">🇲🇽</div>
+        <div class="dimension-card-badge">🇨🇦</div>
         
     </div>
     
@@ -6720,13 +6375,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">11 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">131M</span>
+            <span class="result-value">38.8M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -6765,11 +6420,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-<a href="/countries/italy" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/czechia" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Italy</div>
+        <div class="entity-card-title">Czechia</div>
         
-        <div class="dimension-card-badge">🇮🇹</div>
+        <div class="dimension-card-badge">🇨🇿</div>
         
     </div>
     
@@ -6788,7 +6443,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">61M</span>
+            <span class="result-value">10.8M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -6951,11 +6606,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-<a href="/countries/czechia" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/ireland" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Czechia</div>
+        <div class="entity-card-title">Ireland</div>
         
-        <div class="dimension-card-badge">🇨🇿</div>
+        <div class="dimension-card-badge">🇮🇪</div>
         
     </div>
     
@@ -6963,18 +6618,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">19 services</span>
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">4 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">10.8M</span>
+            <span class="result-value">5.23M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -7013,11 +6668,135 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-<a href="/countries/canada" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/italy" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Canada</div>
+        <div class="entity-card-title">Italy</div>
         
-        <div class="dimension-card-badge">🇨🇦</div>
+        <div class="dimension-card-badge">🇮🇹</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">4 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">61M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/japan" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Japan</div>
+        
+        <div class="dimension-card-badge">🇯🇵</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">1 language over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">123M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/mexico" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Mexico</div>
+        
+        <div class="dimension-card-badge">🇲🇽</div>
         
     </div>
     
@@ -7030,13 +6809,261 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">11 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">38.8M</span>
+            <span class="result-value">131M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/netherlands" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Netherlands</div>
+        
+        <div class="dimension-card-badge">🇳🇱</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">6 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">17.8M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/sweden" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Sweden</div>
+        
+        <div class="dimension-card-badge">🇸🇪</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">10.6M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/switzerland" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Switzerland</div>
+        
+        <div class="dimension-card-badge">🇨🇭</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">5 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">8.86M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/turkey" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Turkey</div>
+        
+        <div class="dimension-card-badge">🇹🇷</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">7 domains</span>
+        <span class="dimension-meta-item entity-card-stat">12 services</span>
+        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">2 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">84.1M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -7526,68 +7553,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-<a href="/languages/dutch" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Dutch</div>
-        
-        <div class="dimension-card-badge code">NL</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">4 experts</span>
-        
-        <span class="dimension-meta-item entity-card-stat">3 markets</span>
-        
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">31.9M</span>
-            <span class="result-label">Tracked speakers</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
 <a href="/languages/czech" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
         <div class="entity-card-title">Czech</div>
@@ -7650,84 +7615,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-<a href="/languages/turkish" class="dimension-card entity-card entity-card-padded">
+<a href="/languages/dutch" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Turkish</div>
+        <div class="entity-card-title">Dutch</div>
         
-        <div class="dimension-card-badge code">TR</div>
-        
-    </div>
-    
-    
-    <div class="entity-card-exact-chips">
-        
-        
-        
-        
-        <div class="entity-card-exact-row dimension-chip-row dimension-chip-row-experts">
-            <span class="entity-chip entity-chip-label entity-chip-wide">Alaaddin Saracyakupoglu</span>
-        </div>
-        
-    </div>
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">7 domains</span>
-        <span class="dimension-meta-item entity-card-stat">12 services</span>
-        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">5 markets</span>
-        
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">81.4M</span>
-            <span class="result-label">Tracked speakers</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/languages/italian" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Italian</div>
-        
-        <div class="dimension-card-badge code">IT</div>
+        <div class="dimension-card-badge code">NL</div>
         
     </div>
     
@@ -7739,14 +7631,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">4 experts</span>
         
-        <span class="dimension-meta-item entity-card-stat">8 markets</span>
+        <span class="dimension-meta-item entity-card-stat">3 markets</span>
         
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">68.3M</span>
+            <span class="result-value">31.9M</span>
             <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -7847,6 +7739,68 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
+<a href="/languages/italian" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Italian</div>
+        
+        <div class="dimension-card-badge code">IT</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">4 experts</span>
+        
+        <span class="dimension-meta-item entity-card-stat">8 markets</span>
+        
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">68.3M</span>
+            <span class="result-label">Tracked speakers</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
 <a href="/languages/swedish" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
         <div class="entity-card-title">Swedish</div>
@@ -7871,6 +7825,79 @@ document.addEventListener('DOMContentLoaded', function() {
         
         <div class="dimension-card-highlight case-result">
             <span class="result-value">13.3M</span>
+            <span class="result-label">Tracked speakers</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/languages/turkish" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Turkish</div>
+        
+        <div class="dimension-card-badge code">TR</div>
+        
+    </div>
+    
+    
+    <div class="entity-card-exact-chips">
+        
+        
+        
+        
+        <div class="entity-card-exact-row dimension-chip-row dimension-chip-row-experts">
+            <span class="entity-chip entity-chip-label entity-chip-wide">Alaaddin Saracyakupoglu</span>
+        </div>
+        
+    </div>
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">7 domains</span>
+        <span class="dimension-meta-item entity-card-stat">12 services</span>
+        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">5 markets</span>
+        
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">81.4M</span>
             <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -8631,7 +8658,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     <!-- Site JavaScript -->
-    <script src="_assets/js/app-core.js?v=0126c121" defer></script>
+    <script src="_assets/js/app-core.js?v=a6382adf" defer></script>
     <!-- SVG templates for JS runtime use -->
     <div id="svg-templates" hidden>
         <span id="svg-theme-system"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
@@ -8640,8 +8667,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
 
-    <script src="_assets/js/forms.js?v=17646487" defer></script>
-    <script src="_assets/js/ui.js?v=10ccdf89" defer></script>
-    <script src="_assets/js/site.js?v=6c585595" defer></script>
+    <script src="_assets/js/forms.js?v=c6eee7ef" defer></script>
+    <script src="_assets/js/ui.js?v=d99016a4" defer></script>
+    <script src="_assets/js/site.js?v=dca12656" defer></script>
 </body>
 </html>

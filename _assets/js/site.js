@@ -60,6 +60,11 @@
             app.initCart?.();
             flushCartCallbacks();
         };
+        script.onerror = function() {
+            // Allow a later interaction to retry the load instead of leaving the cart dead.
+            cartScriptRequested = false;
+            script.remove();
+        };
         document.body.appendChild(script);
     }
 

@@ -6,7 +6,7 @@
     function esc(str) {
         var d = document.createElement('div');
         d.textContent = str || '';
-        return d.innerHTML;
+        return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     function toArray(value) {
@@ -34,7 +34,7 @@
         var href = value === undefined || value === null || value === '' ? (fallback || '#') : String(value).trim();
         if (!href) href = fallback || '#';
 
-        if (/^(https?:\/\/|mailto:|tel:|javascript:|#)/i.test(href)) return href;
+        if (/^(https?:\/\/|mailto:|tel:|#)/i.test(href)) return href;
 
         var normalized = href.replace(/\\/g, '/');
         var comparable = normalized.replace(/^\.\//, '').replace(/^\/+/, '').toLowerCase();
@@ -311,7 +311,7 @@
         var initials = getInitials(d.title || d.slug);
         var avatarSrc = getCardAvatarSrc(d.avatar);
         var avatarHtml = d.avatar
-            ? '<div class="expert-avatar"><img src="' + esc(mediaUrl(avatarSrc)) + '" alt="' + esc(d.title) + '" loading="lazy" fetchpriority="low" decoding="async" width="56" height="56" onerror="this.onerror=null;this.src=\'' + esc(mediaUrl(d.avatar)) + '\'"></div>'
+            ? '<div class="expert-avatar"><img src="' + esc(mediaUrl(avatarSrc)) + '" alt="' + esc(d.title) + '" loading="lazy" fetchpriority="low" decoding="async" width="56" height="56" data-fallback="' + esc(mediaUrl(d.avatar)) + '"></div>'
             : '<div class="expert-avatar"><div class="expert-avatar-initials">' + esc(initials) + '</div></div>';
         var summary = d.description
             ? '<p class="expert-summary entity-card-copy">' + esc(d.description) + '</p>'
@@ -668,7 +668,15 @@
 
     window.CMSCards.renderPositionCard = renderPositionCard;
     window.CMSCards.fitExactChipRows = fitExactChipRows;
-    document.dispatchEvent(new Event('cmscards:ready'));
+
+    // Delegated fallback for expert avatar img[data-fallback] load errors.
+    document.addEventListener('error', function(e) {
+        var img = e.target;
+        if (!img || img.tagName !== 'IMG' || !img.dataset.fallback) return;
+        var fallback = img.dataset.fallback;
+        img.removeAttribute('data-fallback');
+        if (img.src !== fallback) img.src = fallback;
+    }, true);
 
     function runExactChipFit() {
         if (!window.CMSCards || typeof window.CMSCards.fitExactChipRows !== 'function') return;

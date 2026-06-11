@@ -93,14 +93,12 @@
 
         if (explicitValue !== null) return explicitValue;
 
+        // An explicitly persisted numeric discount (including 0) is authoritative.
+        // Route inference is only a fallback for legacy items missing the field.
         itemValue = parseDiscountValue(item && item.discount);
+        if (itemValue !== null) return itemValue;
+
         inferredValue = inferItemDiscount(item);
-
-        if (itemValue !== null) {
-            if (itemValue > 0) return itemValue;
-            if (inferredValue === null || inferredValue === 0) return itemValue;
-        }
-
         if (inferredValue !== null) return inferredValue;
 
         globalValue = parseDiscountValue(_billingDiscount);
@@ -565,7 +563,6 @@
             var feesLabelEl;
             var totalLabelEl;
             var summaryMetaEl;
-            var billingBadge;
             var emptyMessage;
 
             if (!container) return;
@@ -580,7 +577,7 @@
             keys = Object.keys(scopedItems);
 
             if (keys.length === 0) {
-                container.innerHTML = '<p class="cart-empty-msg">' + emptyMessage + '</p>';
+                container.innerHTML = '<p class="cart-empty-msg">' + escapeHtml(emptyMessage) + '</p>';
                 if (modifiers) modifiers.classList.add('hidden');
                 if (totalsEl) totalsEl.classList.add('hidden');
                 return;
@@ -611,7 +608,7 @@
                 perCountry = cart.getModifierUnitPrice(item, getConfig().countryPct);
                 paymentControl = buildCartPaymentControl(item, itemSlug);
                 tierLine = item.tierName
-                    ? item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' + pricingMeta.baseLabel
+                    ? escapeHtml(item.tierName) + (item.tierLabel ? ' — ' + escapeHtml(item.tierLabel) : '') + ' — ' + pricingMeta.baseLabel
                     : pricingMeta.baseLabel;
 
                 html += '<div class="cart-line-item">' +
@@ -632,7 +629,7 @@
                     '</div>' +
                     '<div class="cart-item-actions">' +
                         '<span class="cart-item-price">' + pricingMeta.totalLabel + '</span>' +
-                        '<button class="cart-item-remove" data-slug="' + itemSlug + '" title="Remove">&times;</button>' +
+                        '<button class="cart-item-remove" data-slug="' + escapeHtml(itemSlug) + '" title="Remove">&times;</button>' +
                     '</div>' +
                 '</div>';
             }
@@ -653,7 +650,6 @@
                     updateSidebarItemModifier(btn.dataset.slug, btn.dataset.field, btn.dataset.action);
                 });
             });
-            cart.save();
 
             grandTotal = 0;
             for (var totalSlug of keys) {
@@ -671,22 +667,23 @@
 
             var pageSummary = cart.getSelectionSummary(scopedItems);
             var summaryLines = [];
+            var isMonthlyOnly = pageSummary.monthlyRecurring > 0 && pageSummary.monthlyRecurring === pageSummary.dueToday;
 
             if (subtotalEl) subtotalEl.textContent = (hasCustom ? 'From ' : '') + formatMoney(subtotal);
             if (feesEl) feesEl.textContent = modifierTotal > 0 ? '+' + formatMoney(modifierTotal) : '$0';
-            if (subtotalLabelEl) subtotalLabelEl.textContent = pageSummary.monthlyRecurring > 0 && pageSummary.dueToday === 0 ? 'Base / mo' : (pageSummary.yearlyEquivalentMonthly > 0 && pageSummary.monthlyRecurring === 0 ? 'Base / year' : 'Base');
-            if (feesLabelEl) feesLabelEl.textContent = pageSummary.monthlyRecurring > 0 && pageSummary.dueToday === 0 ? 'Modifiers / mo' : (pageSummary.yearlyEquivalentMonthly > 0 && pageSummary.monthlyRecurring === 0 ? 'Modifiers / year' : 'Modifiers');
+            if (subtotalLabelEl) subtotalLabelEl.textContent = isMonthlyOnly ? 'Base / mo' : (pageSummary.yearlyEquivalentMonthly > 0 && pageSummary.monthlyRecurring === 0 ? 'Base / year' : 'Base');
+            if (feesLabelEl) feesLabelEl.textContent = isMonthlyOnly ? 'Modifiers / mo' : (pageSummary.yearlyEquivalentMonthly > 0 && pageSummary.monthlyRecurring === 0 ? 'Modifiers / year' : 'Modifiers');
             if (totalEl) {
-                if (pageSummary.monthlyRecurring > 0 && pageSummary.dueToday === 0) {
-                    totalEl.textContent = (hasCustom ? 'From ' : '') + formatMoney(pageSummary.monthlyRecurring);
+                if (isMonthlyOnly) {
+                    totalEl.textContent = (hasCustom ? 'From ' : '') + formatMoney(pageSummary.monthlyRecurring) + '/mo';
                 } else {
                     totalEl.textContent = (hasCustom ? 'From ' : '') + formatMoney(pageSummary.dueToday);
                 }
             }
             if (totalLabelEl) {
-                totalLabelEl.textContent = pageSummary.monthlyRecurring > 0 && pageSummary.dueToday === 0 ? 'Monthly Total' : 'Due Today';
+                totalLabelEl.textContent = isMonthlyOnly ? 'Monthly Total' : 'Due Today';
             }
-            if (pageSummary.monthlyRecurring > 0 && pageSummary.dueToday > 0) {
+            if (pageSummary.monthlyRecurring > 0 && !isMonthlyOnly) {
                 summaryLines.push('<div class="cart-summary-line"><span>Monthly recurring</span><strong>' + formatMoney(pageSummary.monthlyRecurring) + '/mo</strong></div>');
             }
             if (pageSummary.yearlyEquivalentMonthly > 0) {
@@ -699,9 +696,6 @@
                 summaryMetaEl.innerHTML = summaryLines.join('');
                 summaryMetaEl.classList.toggle('hidden', summaryLines.length === 0);
             }
-
-            billingBadge = document.getElementById('cartBillingBadge');
-            if (billingBadge) billingBadge.remove();
         }
     };
 
@@ -756,6 +750,7 @@
 
     function buildCartPaymentControl(item, slug) {
         var billing = item.billing || cloneBilling(DEFAULT_BILLING);
+        var safeSlug = escapeHtml(slug);
         var html = '';
 
         if (!isServiceCartItem(item)) {
@@ -768,10 +763,10 @@
 
         html += '<div class="cart-payment-tabs">';
         if (billing.monthly) {
-            html += '<button class="cart-payment-opt' + (item.payment === 'monthly' ? ' active' : '') + '" data-slug="' + slug + '" data-val="monthly">Monthly</button>';
+            html += '<button class="cart-payment-opt' + (item.payment === 'monthly' ? ' active' : '') + '" data-slug="' + safeSlug + '" data-val="monthly">Monthly</button>';
         }
         if (billing.yearly) {
-            html += '<button class="cart-payment-opt' + (item.payment === 'yearly' ? ' active' : '') + '" data-slug="' + slug + '" data-val="yearly">Yearly</button>';
+            html += '<button class="cart-payment-opt' + (item.payment === 'yearly' ? ' active' : '') + '" data-slug="' + safeSlug + '" data-val="yearly">Yearly</button>';
         }
         html += '</div>';
         return html;
@@ -780,14 +775,15 @@
     function buildSidebarModifierControl(item, slug, field, label, unitPrice) {
         var value = item[field] || 0;
         var fee = unitPrice * value;
+        var safeSlug = escapeHtml(slug);
 
         return '<div class="cart-line-row cart-line-row-modifier">' +
             '<span class="cart-line-label">' + label + '</span>' +
             '<div class="cart-line-row-actions">' +
                 '<div class="cart-inline-counter">' +
-                    '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="' + field + '" data-action="minus">−</button>' +
+                    '<button class="cart-inline-btn" data-slug="' + safeSlug + '" data-field="' + field + '" data-action="minus">−</button>' +
                     '<span class="cart-inline-val">' + value + '</span>' +
-                    '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="' + field + '" data-action="plus">+</button>' +
+                    '<button class="cart-inline-btn" data-slug="' + safeSlug + '" data-field="' + field + '" data-action="plus">+</button>' +
                 '</div>' +
             '</div>' +
             '<span class="cart-line-row-value">' + (value > 0 ? '+' + formatMoney(fee) : '$0') + '</span>' +
@@ -838,11 +834,7 @@
             var billing = d.billing || cloneBilling(DEFAULT_BILLING);
             var payment = billing.monthly ? _billingPeriod : 'one-time';
 
-            if (d.replaceAll) {
-                cart.clearCurrentPage();
-                cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Scope');
-                revealOrderTabForSelection();
-            } else if (d.selected) {
+            if (d.selected) {
                 cart.add(d.slug, d.title, d.tierName, d.tierLabel, d.price, d.custom, payment, billing, 'Scope');
                 revealOrderTabForSelection();
             } else {
@@ -891,22 +883,10 @@
     }
 
     function initSidebarCart() {
-        var curPageInit;
         var currentPage;
         var hasPageItems = false;
 
         if (!document.getElementById('cartItems')) return;
-
-        curPageInit = window.location.pathname;
-        for (var savedSlug of Object.keys(cart.items)) {
-            if (cart.items[savedSlug].page === curPageInit) {
-                var langEl = document.getElementById('langCount');
-                var countryEl = document.getElementById('countryCount');
-                if (langEl && cart.items[savedSlug].langCount) langEl.textContent = cart.items[savedSlug].langCount;
-                if (countryEl && cart.items[savedSlug].countryCount) countryEl.textContent = cart.items[savedSlug].countryCount;
-                break;
-            }
-        }
 
         cart.renderSidebar();
         syncCurrentPageTaskPickerState();
@@ -938,26 +918,6 @@
                 billing,
                 'Scope'
             );
-        });
-    }
-
-    function initModifierCounters() {
-        document.querySelectorAll('.cart-counter').forEach(function(counter) {
-            counter.querySelector('.counter-minus')?.addEventListener('click', function() {
-                var valEl = counter.querySelector('.counter-value');
-                var val = parseInt(valEl.textContent) || 0;
-                val = Math.max(0, val - 1);
-                valEl.textContent = val;
-                cart.renderSidebar();
-            });
-
-            counter.querySelector('.counter-plus')?.addEventListener('click', function() {
-                var valEl = counter.querySelector('.counter-value');
-                var val = parseInt(valEl.textContent) || 0;
-                val++;
-                valEl.textContent = val;
-                cart.renderSidebar();
-            });
         });
     }
 
@@ -1113,7 +1073,8 @@
                 name: document.getElementById('cartName')?.value || '',
                 phone: document.getElementById('cartPhone')?.value || '',
                 email: document.getElementById('cartEmail')?.value || '',
-                source: document.getElementById('cartSource')?.value || ''
+                source: document.getElementById('cartSource')?.value || '',
+                legalAck: !!document.getElementById('cartLegalAck')?.checked
             };
         }
 
@@ -1123,6 +1084,10 @@
             if (formState.phone) document.getElementById('cartPhone').value = formState.phone;
             if (formState.email) document.getElementById('cartEmail').value = formState.email;
             if (formState.source) document.getElementById('cartSource').value = formState.source;
+            if (formState.legalAck) {
+                var legalAck = document.getElementById('cartLegalAck');
+                if (legalAck) legalAck.checked = true;
+            }
             if (typeof app.initSourceSelectDropdowns === 'function') {
                 app.initSourceSelectDropdowns();
             }
@@ -1158,6 +1123,7 @@
 
             for (var slug of keys) {
                 var item = cart.items[slug];
+                var safeSlug = escapeHtml(slug);
                 var lc;
                 var cc;
                 var effectivePrice;
@@ -1186,7 +1152,7 @@
                 grandTotal += itemTotal;
 
                 basePriceStr = pricingMeta.baseLabel;
-                tierStr = item.tierName ? item.tierName + (item.tierLabel ? ' — ' + item.tierLabel : '') + ' — ' : '';
+                tierStr = item.tierName ? escapeHtml(item.tierName) + (item.tierLabel ? ' — ' + escapeHtml(item.tierLabel) : '') + ' — ' : '';
 
                 billing = item.billing || cloneBilling(DEFAULT_BILLING);
                 paymentCell = buildCartPaymentControl(item, slug);
@@ -1203,22 +1169,22 @@
                     '<td class="cart-col-payment">' + paymentCell + '</td>' +
                     '<td>' +
                         '<div class="cart-inline-counter">' +
-                            '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="langCount" data-action="minus">−</button>' +
+                            '<button class="cart-inline-btn" data-slug="' + safeSlug + '" data-field="langCount" data-action="minus">−</button>' +
                             '<span class="cart-inline-val">' + lc + '</span>' +
-                            '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="langCount" data-action="plus">+</button>' +
+                            '<button class="cart-inline-btn" data-slug="' + safeSlug + '" data-field="langCount" data-action="plus">+</button>' +
                         '</div>' +
                         (lc > 0 ? '<span class="cart-inline-fee">+' + formatMoney(perLang * lc) + '</span>' : '') +
                     '</td>' +
                     '<td>' +
                         '<div class="cart-inline-counter">' +
-                            '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="countryCount" data-action="minus">−</button>' +
+                            '<button class="cart-inline-btn" data-slug="' + safeSlug + '" data-field="countryCount" data-action="minus">−</button>' +
                             '<span class="cart-inline-val">' + cc + '</span>' +
-                            '<button class="cart-inline-btn" data-slug="' + slug + '" data-field="countryCount" data-action="plus">+</button>' +
+                            '<button class="cart-inline-btn" data-slug="' + safeSlug + '" data-field="countryCount" data-action="plus">+</button>' +
                         '</div>' +
                         (cc > 0 ? '<span class="cart-inline-fee">+' + formatMoney(perCountry * cc) + '</span>' : '') +
                     '</td>' +
                     '<td class="text-right"><span class="cart-item-price">' + pricingMeta.totalLabel + '</span></td>' +
-                    '<td><button class="cart-item-remove-btn" data-slug="' + slug + '">&times;</button></td>' +
+                    '<td><button class="cart-item-remove-btn" data-slug="' + safeSlug + '">&times;</button></td>' +
                 '</tr>';
             }
 
@@ -1391,7 +1357,8 @@
 
             table = buildCartTable(keys);
             html = table.html;
-            if (table.summary.monthlyRecurring > 0) {
+            var isMonthlyOnly = table.summary.monthlyRecurring > 0 && table.summary.monthlyRecurring === table.summary.dueToday;
+            if (table.summary.monthlyRecurring > 0 && !isMonthlyOnly) {
                 summaryLines.push('<div class="cart-summary-line"><span>Monthly recurring</span><strong>' + formatMoney(table.summary.monthlyRecurring) + '/mo</strong></div>');
             }
             if (table.summary.yearlyEquivalentMonthly > 0) {
@@ -1400,8 +1367,8 @@
             if (table.summary.yearlySavings > 0) {
                 summaryLines.push('<div class="cart-summary-line"><span>You save</span><strong>' + formatMoney(table.summary.yearlySavings) + '/year</strong></div>');
             }
-            primaryTotalLabel = table.summary.monthlyRecurring > 0 && table.summary.dueToday === 0 ? 'Monthly Recurring' : 'Due Today';
-            primaryTotalValue = table.summary.monthlyRecurring > 0 && table.summary.dueToday === 0
+            primaryTotalLabel = isMonthlyOnly ? 'Monthly Total' : 'Due Today';
+            primaryTotalValue = isMonthlyOnly
                 ? formatMoney(table.summary.monthlyRecurring) + '/mo'
                 : formatMoney(table.summary.dueToday);
             html += '<div class="cart-totals">' +
@@ -1424,6 +1391,17 @@
         renderCartPage();
     }
 
+    function bindCrossTabSync() {
+        // Keep this tab in sync when another tab mutates the cart in localStorage.
+        // Without this, a stale re-render here could clobber the other tab's changes.
+        window.addEventListener('storage', function(e) {
+            if (e.key !== null && e.key !== getConfig().cartStorageKey) return;
+            cart.load();
+            syncCartViews();
+            updateCartBadge();
+        });
+    }
+
     function initCart() {
         if (app.cartInitialized) return;
         app.cartInitialized = true;
@@ -1433,11 +1411,11 @@
         bindTaskPickerEvents();
         syncCurrentPageBillingStateFromCart();
         initSidebarCart();
-        initModifierCounters();
         initPricingCartIntegration();
         initCartCta();
         updateCartBadge();
         initCartPage();
+        bindCrossTabSync();
     }
 
     app.defaultBilling = DEFAULT_BILLING;

@@ -18,10 +18,11 @@
     function applyTheme(theme) {
         var html = document.documentElement;
         var themeIcon = document.getElementById('themeIcon');
+        if (!['system', 'dark', 'light'].includes(theme)) theme = 'system';
         var effectiveTheme = theme === 'system' ? getSystemTheme() : theme;
 
         html.setAttribute('data-theme', effectiveTheme);
-        localStorage.setItem('theme', theme);
+        try { localStorage.setItem('theme', theme); } catch (e) {}
 
         if (themeIcon) {
             themeIcon.innerHTML = themeIcons[theme];
@@ -91,12 +92,16 @@
     function initThemeSystem() {
         var themeDropdown = document.getElementById('themeDropdown');
         var themeToggleBtn = document.getElementById('themeToggleBtn');
-        var savedTheme = localStorage.getItem('theme') || 'system';
+        var savedTheme;
+        try { savedTheme = localStorage.getItem('theme') || 'system'; } catch (e) { savedTheme = 'system'; }
+        if (!['system', 'dark', 'light'].includes(savedTheme)) savedTheme = 'system';
 
         applyTheme(savedTheme);
 
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
-            var currentTheme = localStorage.getItem('theme') || 'system';
+            var currentTheme;
+            try { currentTheme = localStorage.getItem('theme') || 'system'; } catch (e) { currentTheme = 'system'; }
+            if (!['system', 'dark', 'light'].includes(currentTheme)) currentTheme = 'system';
             if (currentTheme === 'system') {
                 applyTheme('system');
             }

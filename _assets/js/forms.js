@@ -425,6 +425,18 @@
             toggle.setAttribute('aria-haspopup', 'listbox');
             toggle.setAttribute('aria-expanded', 'false');
 
+            // Derive accessible name from associated label element
+            var associatedLabel = group.querySelector('label');
+            if (associatedLabel) {
+                toggle.setAttribute('aria-labelledby', associatedLabel.id || (function() {
+                    var id = 'src-label-' + Math.random().toString(36).slice(2, 8);
+                    associatedLabel.id = id;
+                    return id;
+                }()));
+            } else if (select.getAttribute('aria-label')) {
+                toggle.setAttribute('aria-label', select.getAttribute('aria-label'));
+            }
+
             label = document.createElement('span');
             label.className = 'source-select-label';
             toggle.appendChild(label);
@@ -450,6 +462,10 @@
             menu.className = 'source-select-menu';
             menu.setAttribute('role', 'listbox');
 
+            var menuId = 'src-menu-' + Math.random().toString(36).slice(2, 8);
+            menu.id = menuId;
+            toggle.setAttribute('aria-controls', menuId);
+
             function updateState() {
                 var selected = select.options[select.selectedIndex] || select.options[0];
                 var fallback = select.options[0];
@@ -464,6 +480,7 @@
                     var value = optionBtn.dataset.value || '';
                     var isActive = value === select.value && value !== '';
                     optionBtn.classList.toggle('active', isActive);
+                    optionBtn.setAttribute('aria-selected', isActive ? 'true' : 'false');
                 });
             }
 
@@ -472,6 +489,8 @@
 
                 optionBtn.type = 'button';
                 optionBtn.className = 'source-select-option dropdown-option';
+                optionBtn.setAttribute('role', 'option');
+                optionBtn.setAttribute('aria-selected', 'false');
                 optionBtn.textContent = option.textContent;
                 optionBtn.dataset.value = option.value;
 
@@ -511,11 +530,35 @@
                 toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
             });
 
+            // Arrow-key navigation within the open menu
+            menu.addEventListener('keydown', function(e) {
+                var options = Array.from(menu.querySelectorAll('.source-select-option:not(:disabled)'));
+                var focused = document.activeElement;
+                var idx = options.indexOf(focused);
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    var next = options[idx + 1] || options[0];
+                    if (next) next.focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    var prev = options[idx - 1] || options[options.length - 1];
+                    if (prev) prev.focus();
+                } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    if (options[0]) options[0].focus();
+                } else if (e.key === 'End') {
+                    e.preventDefault();
+                    if (options[options.length - 1]) options[options.length - 1].focus();
+                }
+            });
+
             select.addEventListener('change', updateState);
             group.appendChild(wrapper);
             wrapper.appendChild(toggle);
             wrapper.appendChild(menu);
             select.classList.add('source-select-native');
+            select.setAttribute('tabindex', '-1');
             wrapper.appendChild(select);
             updateState();
         });

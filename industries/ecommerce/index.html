@@ -78,6 +78,7 @@
     (function() {
         try {
             var storedTheme = localStorage.getItem('theme') || 'system';
+            if (['system', 'dark', 'light'].indexOf(storedTheme) === -1) storedTheme = 'system';
             var effectiveTheme = storedTheme === 'system'
                 ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
                 : storedTheme;
@@ -93,7 +94,7 @@
     <link rel="stylesheet" href="_assets/css/styles.css?v=5f8bbd8c">
     <script>
     window.VividigitAssetHashes = {
-        cart: 'c1760380',
+        cart: 'ac131939',
         media: 'a66e3b8f'
     };
     </script>
@@ -288,7 +289,7 @@
     } catch (e) {}
     
     </script>
-    <script src="_assets/js/cards.js?v=aedee777" defer></script>
+    <script src="_assets/js/cards.js?v=1ffd1b23" defer></script>
 
     <!-- Analytics (skip on block demo pages) -->
     
@@ -3245,20 +3246,22 @@
 
 <script>
 (function() {
-    document.querySelectorAll('.process-block').forEach(block => {
-        const btns = block.querySelectorAll('.process-btn');
-        const panels = block.querySelectorAll('.process-panel');
+    var block = document.currentScript.previousElementSibling;
+    if (!block || !block.classList.contains('process-block')) return;
 
-        btns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabNum = btn.dataset.tab;
+    var btns = block.querySelectorAll('.process-btn');
+    var panels = block.querySelectorAll('.process-panel');
 
-                btns.forEach(b => b.classList.remove('active'));
-                panels.forEach(p => p.classList.remove('active'));
+    btns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var tabNum = btn.dataset.tab;
 
-                btn.classList.add('active');
-                block.querySelector(`[data-panel="${tabNum}"]`).classList.add('active');
-            });
+            btns.forEach(function(b) { b.classList.remove('active'); });
+            panels.forEach(function(p) { p.classList.remove('active'); });
+
+            btn.classList.add('active');
+            var target = block.querySelector('[data-panel="' + tabNum + '"]');
+            if (target) target.classList.add('active');
         });
     });
 })();
@@ -3277,72 +3280,72 @@
     
     <div class="hero-scatter-icons" aria-hidden="true">
         
-        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7333)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7333" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-1" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7243)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7243" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-2" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4466)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4466" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1739)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-1739" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3389)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3389" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-5" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-2836)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-2836" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-6" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1152)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-1152" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8577)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-8577" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-7"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-8" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-6639)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-6639" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-9" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-8960)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-8960" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-9"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-10)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-10" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-4211)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-4211" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-11)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-11" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-7961)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-7961" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-11"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-12)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-12" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-3147)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-3147" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-12"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-13)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-13" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
         
-        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-1109)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-1109" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <span class="hero-scatter-icon hero-scatter-icon-13"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#icon-grad-14)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="icon icon-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><defs><linearGradient id="icon-grad-14" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" style="stop-color:var(--accent-start, #8b5cf6)"/>
                 <stop offset="100%" style="stop-color:var(--accent-end, #6366f1)"/>
             </linearGradient></defs></svg></span>
@@ -4977,80 +4980,6 @@
 
 
 
-<a href="/scopes/ppc-audit" class="scope-card entity-card entity-card-padded">
-    <div class="service-card-header">
-        <div class="entity-card-title">PPC Audit</div>
-        <div class="service-card-icon" style="--icon-url: url('/_media/icons/target.svg?v=a66e3b8f')"></div>
-    </div>
-    
-    
-    <div class="entity-card-exact-chips">
-        
-        
-        <div class="entity-card-exact-row scope-chip-row scope-chip-row-services">
-            <span class="scope-service entity-chip entity-chip-label entity-chip-wide">PPC</span>
-        </div>
-        
-        
-    </div>
-    
-    
-    <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">2 domains</span>
-        
-        <span class="scope-metric entity-card-stat">6 industries</span>
-        <span class="scope-metric entity-card-stat">6 countries</span>
-        <span class="scope-metric entity-card-stat">4 languages</span>
-        
-    </div>
-    
-    <div class="scope-card-footer entity-card-footer">
-        
-        <span class="scope-price entity-card-price">From $300</span>
-        
-        <span class="scope-cta entity-card-cta">View Scope</span>
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-    
-
-
-    
-
-
-
-
-
-
-
-
-
-
 <a href="/scopes/google-shopping" class="scope-card entity-card entity-card-padded">
     <div class="service-card-header">
         <div class="entity-card-title">Google Shopping</div>
@@ -5125,18 +5054,14 @@
 
 
 
-<a href="/scopes/youtube-ads" class="scope-card entity-card entity-card-padded">
+<a href="/scopes/ppc-audit" class="scope-card entity-card entity-card-padded">
     <div class="service-card-header">
-        <div class="entity-card-title">YouTube Ads</div>
+        <div class="entity-card-title">PPC Audit</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/target.svg?v=a66e3b8f')"></div>
     </div>
     
     
     <div class="entity-card-exact-chips">
-        
-        <div class="entity-card-exact-row scope-chip-row scope-chip-row-domains">
-            <span class="entity-chip entity-chip-label entity-chip-wide">Performance Marketing</span>
-        </div>
         
         
         <div class="entity-card-exact-row scope-chip-row scope-chip-row-services">
@@ -5148,9 +5073,9 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
+        <span class="scope-metric entity-card-stat">2 domains</span>
         
-        
-        <span class="scope-metric entity-card-stat">5 industries</span>
+        <span class="scope-metric entity-card-stat">6 industries</span>
         <span class="scope-metric entity-card-stat">6 countries</span>
         <span class="scope-metric entity-card-stat">4 languages</span>
         
@@ -5158,7 +5083,81 @@
     
     <div class="scope-card-footer entity-card-footer">
         
-        <span class="scope-price entity-card-price">From $400</span>
+        <span class="scope-price entity-card-price">From $300</span>
+        
+        <span class="scope-cta entity-card-cta">View Scope</span>
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+    
+
+
+    
+
+
+
+
+
+
+
+
+
+
+<a href="/scopes/microsoft-ads" class="scope-card entity-card entity-card-padded">
+    <div class="service-card-header">
+        <div class="entity-card-title">Microsoft Ads</div>
+        <div class="service-card-icon" style="--icon-url: url('/_media/icons/target.svg?v=a66e3b8f')"></div>
+    </div>
+    
+    
+    <div class="entity-card-exact-chips">
+        
+        
+        <div class="entity-card-exact-row scope-chip-row scope-chip-row-services">
+            <span class="scope-service entity-chip entity-chip-label entity-chip-wide">PPC</span>
+        </div>
+        
+        
+    </div>
+    
+    
+    <div class="scope-card-meta entity-card-meta-row">
+        <span class="scope-metric entity-card-stat">2 domains</span>
+        
+        <span class="scope-metric entity-card-stat">6 industries</span>
+        <span class="scope-metric entity-card-stat">6 countries</span>
+        <span class="scope-metric entity-card-stat">4 languages</span>
+        
+    </div>
+    
+    <div class="scope-card-footer entity-card-footer">
+        
+        <span class="scope-price entity-card-price">From $300</span>
         
         <span class="scope-cta entity-card-cta">View Scope</span>
     </div>
@@ -5281,14 +5280,18 @@
 
 
 
-<a href="/scopes/microsoft-ads" class="scope-card entity-card entity-card-padded">
+<a href="/scopes/youtube-ads" class="scope-card entity-card entity-card-padded">
     <div class="service-card-header">
-        <div class="entity-card-title">Microsoft Ads</div>
+        <div class="entity-card-title">YouTube Ads</div>
         <div class="service-card-icon" style="--icon-url: url('/_media/icons/target.svg?v=a66e3b8f')"></div>
     </div>
     
     
     <div class="entity-card-exact-chips">
+        
+        <div class="entity-card-exact-row scope-chip-row scope-chip-row-domains">
+            <span class="entity-chip entity-chip-label entity-chip-wide">Performance Marketing</span>
+        </div>
         
         
         <div class="entity-card-exact-row scope-chip-row scope-chip-row-services">
@@ -5300,9 +5303,9 @@
     
     
     <div class="scope-card-meta entity-card-meta-row">
-        <span class="scope-metric entity-card-stat">2 domains</span>
         
-        <span class="scope-metric entity-card-stat">6 industries</span>
+        
+        <span class="scope-metric entity-card-stat">5 industries</span>
         <span class="scope-metric entity-card-stat">6 countries</span>
         <span class="scope-metric entity-card-stat">4 languages</span>
         
@@ -5310,7 +5313,7 @@
     
     <div class="scope-card-footer entity-card-footer">
         
-        <span class="scope-price entity-card-price">From $300</span>
+        <span class="scope-price entity-card-price">From $400</span>
         
         <span class="scope-cta entity-card-cta">View Scope</span>
     </div>
@@ -5810,92 +5813,6 @@
 
 
 
-<a href="/team/mariia-nedbaievska" class="expert-card entity-card entity-card-padded">
-    <div class="expert-card-top">
-        <div class="expert-info">
-            <div class="entity-card-title">Mariia Nedbaievska</div>
-            <div class="expert-role type-meta">ASO Specialist</div>
-        </div>
-        
-        <div class="expert-avatar">
-            <img src="_media/images/team/cards/mariia-nedbaievska.jpg?v=a66e3b8f"
-                 alt="Mariia Nedbaievska"
-                 loading="lazy"
-                 fetchpriority="low"
-                 decoding="async"
-                 width="56"
-                 height="56"
-                 onerror="this.onerror=null;this.src='_media/images/team/mariia-nedbaievska.jpeg?v=a66e3b8f'">
-        </div>
-        
-    </div>
-    
-    
-    <div class="entity-card-exact-chips">
-        
-        
-        
-        <div class="entity-card-exact-row expert-tag-row expert-tag-row-countries">
-            
-            <span class="entity-chip entity-chip-soft entity-chip-flag" title="Germany">🇩🇪</span>
-            
-            <span class="entity-chip entity-chip-soft entity-chip-flag" title="USA">🇺🇸</span>
-            
-            <span class="entity-chip entity-chip-soft entity-chip-flag" title="UK">🇬🇧</span>
-            
-        </div>
-        
-        
-        <div class="entity-card-exact-row expert-tag-row expert-tag-row-languages">
-            
-            <span class="entity-chip entity-chip-soft entity-chip-code" title="English">EN</span>
-            
-            <span class="entity-chip entity-chip-soft entity-chip-code" title="Russian">RU</span>
-            
-        </div>
-        
-    </div>
-    
-    
-    <div class="expert-tag-row expert-tag-row-metrics entity-card-meta-row">
-        <span class="entity-card-stat">3 services</span>
-        <span class="entity-card-stat">3 industries</span>
-        
-        
-    </div>
-    
-    <div class="expert-card-footer entity-card-footer">
-        
-        <div class="expert-experience case-result">
-            <span class="result-value">2+</span>
-            <span class="result-label">Years experience</span>
-        </div>
-        
-        <span class="expert-cta entity-card-cta">View Profile</span>
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
 <a href="/team/alaaddin-saracyakupoglu" class="expert-card entity-card entity-card-padded">
     <div class="expert-card-top">
         <div class="expert-info">
@@ -5956,6 +5873,92 @@
         
         <div class="expert-experience case-result">
             <span class="result-value">6+</span>
+            <span class="result-label">Years experience</span>
+        </div>
+        
+        <span class="expert-cta entity-card-cta">View Profile</span>
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+<a href="/team/mariia-nedbaievska" class="expert-card entity-card entity-card-padded">
+    <div class="expert-card-top">
+        <div class="expert-info">
+            <div class="entity-card-title">Mariia Nedbaievska</div>
+            <div class="expert-role type-meta">ASO Specialist</div>
+        </div>
+        
+        <div class="expert-avatar">
+            <img src="_media/images/team/cards/mariia-nedbaievska.jpg?v=a66e3b8f"
+                 alt="Mariia Nedbaievska"
+                 loading="lazy"
+                 fetchpriority="low"
+                 decoding="async"
+                 width="56"
+                 height="56"
+                 onerror="this.onerror=null;this.src='_media/images/team/mariia-nedbaievska.jpeg?v=a66e3b8f'">
+        </div>
+        
+    </div>
+    
+    
+    <div class="entity-card-exact-chips">
+        
+        
+        
+        <div class="entity-card-exact-row expert-tag-row expert-tag-row-countries">
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="Germany">🇩🇪</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="USA">🇺🇸</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-flag" title="UK">🇬🇧</span>
+            
+        </div>
+        
+        
+        <div class="entity-card-exact-row expert-tag-row expert-tag-row-languages">
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="English">EN</span>
+            
+            <span class="entity-chip entity-chip-soft entity-chip-code" title="Russian">RU</span>
+            
+        </div>
+        
+    </div>
+    
+    
+    <div class="expert-tag-row expert-tag-row-metrics entity-card-meta-row">
+        <span class="entity-card-stat">3 services</span>
+        <span class="entity-card-stat">3 industries</span>
+        
+        
+    </div>
+    
+    <div class="expert-card-footer entity-card-footer">
+        
+        <div class="expert-experience case-result">
+            <span class="result-value">2+</span>
             <span class="result-label">Years experience</span>
         </div>
         
@@ -7382,21 +7385,32 @@
 
 
 
-<a href="/services/social-media" class="service-card entity-card entity-card-padded">
+<a href="/services/affiliate" class="service-card entity-card entity-card-padded">
     <div class="service-card-header">
-        <div class="entity-card-title">Social Media</div>
-        <div class="service-card-icon" style="--icon-url: url('/_media/icons/megaphone.svg?v=a66e3b8f')"></div>
+        <div class="entity-card-title">Affiliate</div>
+        <div class="service-card-icon" style="--icon-url: url('/_media/icons/users.svg?v=a66e3b8f')"></div>
     </div>
     
+    
+    <div class="entity-card-exact-chips">
+        
+        
+        
+        <div class="entity-card-exact-row service-chip-row service-chip-row-industries">
+            <span class="entity-chip entity-chip-label entity-chip-compact">E-commerce</span>
+        </div>
+        
+        
+    </div>
     
     
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">2 domains</span>
         
         
-        <span class="service-meta-item entity-card-stat">3 industries</span>
-        <span class="service-meta-item entity-card-stat">3 countries</span>
-        <span class="service-meta-item entity-card-stat">2 languages</span>
+        
+        <span class="service-meta-item entity-card-stat">2 countries</span>
+        <span class="service-meta-item entity-card-stat">1 language</span>
     </div>
     
     <div class="service-card-footer entity-card-footer">
@@ -7430,10 +7444,10 @@
 
 
 
-<a href="/services/video" class="service-card entity-card entity-card-padded">
+<a href="/services/cro" class="service-card entity-card entity-card-padded">
     <div class="service-card-header">
-        <div class="entity-card-title">Video Marketing</div>
-        <div class="service-card-icon" style="--icon-url: url('/_media/icons/video.svg?v=a66e3b8f')"></div>
+        <div class="entity-card-title">CRO</div>
+        <div class="service-card-icon" style="--icon-url: url('/_media/icons/chart.svg?v=a66e3b8f')"></div>
     </div>
     
     
@@ -7443,24 +7457,83 @@
         
         
         <div class="entity-card-exact-row service-chip-row service-chip-row-experts">
-            <span class="entity-chip entity-chip-label entity-chip-wide">Anastasiya Antoniuk</span>
+            <span class="entity-chip entity-chip-label entity-chip-wide">Elena Grakovich</span>
         </div>
         
     </div>
     
     
     <div class="service-card-meta entity-card-meta-row">
-        <span class="service-meta-item entity-card-stat">2 domains</span>
+        <span class="service-meta-item entity-card-stat">4 domains</span>
         
         
         <span class="service-meta-item entity-card-stat">2 industries</span>
-        <span class="service-meta-item entity-card-stat">2 countries</span>
-        <span class="service-meta-item entity-card-stat">1 language</span>
+        <span class="service-meta-item entity-card-stat">3 countries</span>
+        <span class="service-meta-item entity-card-stat">2 languages</span>
     </div>
     
     <div class="service-card-footer entity-card-footer">
         
-        <span class="service-price entity-card-price">From $300</span>
+        <span class="service-price entity-card-price">From $500</span>
+        
+        <span class="service-cta entity-card-cta">View Service</span>
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a href="/services/email" class="service-card entity-card entity-card-padded">
+    <div class="service-card-header">
+        <div class="entity-card-title">Email Marketing</div>
+        <div class="service-card-icon" style="--icon-url: url('/_media/icons/mail.svg?v=a66e3b8f')"></div>
+    </div>
+    
+    
+    <div class="entity-card-exact-chips">
+        
+        
+        
+        
+        <div class="entity-card-exact-row service-chip-row service-chip-row-experts">
+            <span class="entity-chip entity-chip-label entity-chip-wide">Elena Grakovich</span>
+        </div>
+        
+    </div>
+    
+    
+    <div class="service-card-meta entity-card-meta-row">
+        <span class="service-meta-item entity-card-stat">3 domains</span>
+        
+        
+        <span class="service-meta-item entity-card-stat">2 industries</span>
+        <span class="service-meta-item entity-card-stat">3 countries</span>
+        <span class="service-meta-item entity-card-stat">2 languages</span>
+    </div>
+    
+    <div class="service-card-footer entity-card-footer">
+        
+        <span class="service-price entity-card-price">From $400</span>
         
         <span class="service-cta entity-card-cta">View Service</span>
     </div>
@@ -7556,37 +7629,26 @@
 
 
 
-<a href="/services/cro" class="service-card entity-card entity-card-padded">
+<a href="/services/social-media" class="service-card entity-card entity-card-padded">
     <div class="service-card-header">
-        <div class="entity-card-title">CRO</div>
-        <div class="service-card-icon" style="--icon-url: url('/_media/icons/chart.svg?v=a66e3b8f')"></div>
+        <div class="entity-card-title">Social Media</div>
+        <div class="service-card-icon" style="--icon-url: url('/_media/icons/megaphone.svg?v=a66e3b8f')"></div>
     </div>
     
-    
-    <div class="entity-card-exact-chips">
-        
-        
-        
-        
-        <div class="entity-card-exact-row service-chip-row service-chip-row-experts">
-            <span class="entity-chip entity-chip-label entity-chip-wide">Elena Grakovich</span>
-        </div>
-        
-    </div>
     
     
     <div class="service-card-meta entity-card-meta-row">
-        <span class="service-meta-item entity-card-stat">4 domains</span>
+        <span class="service-meta-item entity-card-stat">2 domains</span>
         
         
-        <span class="service-meta-item entity-card-stat">2 industries</span>
+        <span class="service-meta-item entity-card-stat">3 industries</span>
         <span class="service-meta-item entity-card-stat">3 countries</span>
         <span class="service-meta-item entity-card-stat">2 languages</span>
     </div>
     
     <div class="service-card-footer entity-card-footer">
         
-        <span class="service-price entity-card-price">From $500</span>
+        <span class="service-price entity-card-price">From $400</span>
         
         <span class="service-cta entity-card-cta">View Service</span>
     </div>
@@ -7615,10 +7677,10 @@
 
 
 
-<a href="/services/affiliate" class="service-card entity-card entity-card-padded">
+<a href="/services/video" class="service-card entity-card entity-card-padded">
     <div class="service-card-header">
-        <div class="entity-card-title">Affiliate</div>
-        <div class="service-card-icon" style="--icon-url: url('/_media/icons/users.svg?v=a66e3b8f')"></div>
+        <div class="entity-card-title">Video Marketing</div>
+        <div class="service-card-icon" style="--icon-url: url('/_media/icons/video.svg?v=a66e3b8f')"></div>
     </div>
     
     
@@ -7626,10 +7688,10 @@
         
         
         
-        <div class="entity-card-exact-row service-chip-row service-chip-row-industries">
-            <span class="entity-chip entity-chip-label entity-chip-compact">E-commerce</span>
-        </div>
         
+        <div class="entity-card-exact-row service-chip-row service-chip-row-experts">
+            <span class="entity-chip entity-chip-label entity-chip-wide">Anastasiya Antoniuk</span>
+        </div>
         
     </div>
     
@@ -7638,73 +7700,14 @@
         <span class="service-meta-item entity-card-stat">2 domains</span>
         
         
-        
+        <span class="service-meta-item entity-card-stat">2 industries</span>
         <span class="service-meta-item entity-card-stat">2 countries</span>
         <span class="service-meta-item entity-card-stat">1 language</span>
     </div>
     
     <div class="service-card-footer entity-card-footer">
         
-        <span class="service-price entity-card-price">From $400</span>
-        
-        <span class="service-cta entity-card-cta">View Service</span>
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<a href="/services/email" class="service-card entity-card entity-card-padded">
-    <div class="service-card-header">
-        <div class="entity-card-title">Email Marketing</div>
-        <div class="service-card-icon" style="--icon-url: url('/_media/icons/mail.svg?v=a66e3b8f')"></div>
-    </div>
-    
-    
-    <div class="entity-card-exact-chips">
-        
-        
-        
-        
-        <div class="entity-card-exact-row service-chip-row service-chip-row-experts">
-            <span class="entity-chip entity-chip-label entity-chip-wide">Elena Grakovich</span>
-        </div>
-        
-    </div>
-    
-    
-    <div class="service-card-meta entity-card-meta-row">
-        <span class="service-meta-item entity-card-stat">3 domains</span>
-        
-        
-        <span class="service-meta-item entity-card-stat">2 industries</span>
-        <span class="service-meta-item entity-card-stat">3 countries</span>
-        <span class="service-meta-item entity-card-stat">2 languages</span>
-    </div>
-    
-    <div class="service-card-footer entity-card-footer">
-        
-        <span class="service-price entity-card-price">From $400</span>
+        <span class="service-price entity-card-price">From $300</span>
         
         <span class="service-cta entity-card-cta">View Service</span>
     </div>
@@ -8254,73 +8257,11 @@
     
     
 
-<a href="/countries/sweden" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/australia" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Sweden</div>
+        <div class="entity-card-title">Australia</div>
         
-        <div class="dimension-card-badge">🇸🇪</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">10.6M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/brazil" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Brazil</div>
-        
-        <div class="dimension-card-badge">🇧🇷</div>
+        <div class="dimension-card-badge">🇦🇺</div>
         
     </div>
     
@@ -8333,13 +8274,13 @@
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">220M</span>
+            <span class="result-value">26.8M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -8440,197 +8381,11 @@
     
     
 
-<a href="/countries/turkey" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/brazil" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Turkey</div>
+        <div class="entity-card-title">Brazil</div>
         
-        <div class="dimension-card-badge">🇹🇷</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">7 domains</span>
-        <span class="dimension-meta-item entity-card-stat">12 services</span>
-        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">2 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">84.1M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/netherlands" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Netherlands</div>
-        
-        <div class="dimension-card-badge">🇳🇱</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">6 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">17.8M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/australia" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Australia</div>
-        
-        <div class="dimension-card-badge">🇦🇺</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">19 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">26.8M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/ireland" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Ireland</div>
-        
-        <div class="dimension-card-badge">🇮🇪</div>
+        <div class="dimension-card-badge">🇧🇷</div>
         
     </div>
     
@@ -8649,7 +8404,7 @@
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">5.23M</span>
+            <span class="result-value">220M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -8688,135 +8443,11 @@
     
     
 
-<a href="/countries/switzerland" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/canada" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Switzerland</div>
+        <div class="entity-card-title">Canada</div>
         
-        <div class="dimension-card-badge">🇨🇭</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">5 languages over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">8.86M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/japan" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Japan</div>
-        
-        <div class="dimension-card-badge">🇯🇵</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">5 experts</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">1 language over 1%</span>
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">123M</span>
-            <span class="result-label">Market population</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/countries/mexico" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Mexico</div>
-        
-        <div class="dimension-card-badge">🇲🇽</div>
+        <div class="dimension-card-badge">🇨🇦</div>
         
     </div>
     
@@ -8829,13 +8460,13 @@
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">11 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">131M</span>
+            <span class="result-value">38.8M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -8874,11 +8505,11 @@
     
     
 
-<a href="/countries/italy" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/czechia" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Italy</div>
+        <div class="entity-card-title">Czechia</div>
         
-        <div class="dimension-card-badge">🇮🇹</div>
+        <div class="dimension-card-badge">🇨🇿</div>
         
     </div>
     
@@ -8897,7 +8528,7 @@
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">61M</span>
+            <span class="result-value">10.8M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -9060,11 +8691,11 @@
     
     
 
-<a href="/countries/czechia" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/ireland" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Czechia</div>
+        <div class="entity-card-title">Ireland</div>
         
-        <div class="dimension-card-badge">🇨🇿</div>
+        <div class="dimension-card-badge">🇮🇪</div>
         
     </div>
     
@@ -9072,18 +8703,18 @@
     
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">19 services</span>
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">4 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">10.8M</span>
+            <span class="result-value">5.23M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -9122,11 +8753,135 @@
     
     
 
-<a href="/countries/canada" class="dimension-card entity-card entity-card-padded">
+<a href="/countries/italy" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Canada</div>
+        <div class="entity-card-title">Italy</div>
         
-        <div class="dimension-card-badge">🇨🇦</div>
+        <div class="dimension-card-badge">🇮🇹</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">4 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">61M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/japan" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Japan</div>
+        
+        <div class="dimension-card-badge">🇯🇵</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">1 language over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">123M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/mexico" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Mexico</div>
+        
+        <div class="dimension-card-badge">🇲🇽</div>
         
     </div>
     
@@ -9139,13 +8894,261 @@
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
-        <span class="dimension-meta-item entity-card-stat">11 languages over 1%</span>
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">38.8M</span>
+            <span class="result-value">131M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/netherlands" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Netherlands</div>
+        
+        <div class="dimension-card-badge">🇳🇱</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">6 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">17.8M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/sweden" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Sweden</div>
+        
+        <div class="dimension-card-badge">🇸🇪</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">3 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">10.6M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/switzerland" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Switzerland</div>
+        
+        <div class="dimension-card-badge">🇨🇭</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">5 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">5 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">8.86M</span>
+            <span class="result-label">Market population</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/countries/turkey" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Turkey</div>
+        
+        <div class="dimension-card-badge">🇹🇷</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">7 domains</span>
+        <span class="dimension-meta-item entity-card-stat">12 services</span>
+        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">2 experts</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">2 languages over 1%</span>
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">84.1M</span>
             <span class="result-label">Market population</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -9635,68 +9638,6 @@
     
     
 
-<a href="/languages/dutch" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Dutch</div>
-        
-        <div class="dimension-card-badge code">NL</div>
-        
-    </div>
-    
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">9 domains</span>
-        <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
-        <span class="dimension-meta-item entity-card-stat">4 experts</span>
-        
-        <span class="dimension-meta-item entity-card-stat">3 markets</span>
-        
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">31.9M</span>
-            <span class="result-label">Tracked speakers</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
 <a href="/languages/czech" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
         <div class="entity-card-title">Czech</div>
@@ -9759,84 +9700,11 @@
     
     
 
-<a href="/languages/turkish" class="dimension-card entity-card entity-card-padded">
+<a href="/languages/dutch" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
-        <div class="entity-card-title">Turkish</div>
+        <div class="entity-card-title">Dutch</div>
         
-        <div class="dimension-card-badge code">TR</div>
-        
-    </div>
-    
-    
-    <div class="entity-card-exact-chips">
-        
-        
-        
-        
-        <div class="entity-card-exact-row dimension-chip-row dimension-chip-row-experts">
-            <span class="entity-chip entity-chip-label entity-chip-wide">Alaaddin Saracyakupoglu</span>
-        </div>
-        
-    </div>
-    
-    
-    <div class="dimension-card-meta entity-card-meta-row">
-        <span class="dimension-meta-item entity-card-stat">7 domains</span>
-        <span class="dimension-meta-item entity-card-stat">12 services</span>
-        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
-        
-        
-        <span class="dimension-meta-item entity-card-stat">5 markets</span>
-        
-    </div>
-    
-    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
-        
-        <div class="dimension-card-highlight case-result">
-            <span class="result-value">81.4M</span>
-            <span class="result-label">Tracked speakers</span>
-        </div>
-        <span class="dimension-cta entity-card-cta">Explore</span>
-        
-    </div>
-</a>
-            
-            
-            
-            
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-<a href="/languages/italian" class="dimension-card entity-card entity-card-padded">
-    <div class="dimension-card-header">
-        <div class="entity-card-title">Italian</div>
-        
-        <div class="dimension-card-badge code">IT</div>
+        <div class="dimension-card-badge code">NL</div>
         
     </div>
     
@@ -9848,14 +9716,14 @@
         <span class="dimension-meta-item entity-card-stat">14 scopes</span>
         <span class="dimension-meta-item entity-card-stat">4 experts</span>
         
-        <span class="dimension-meta-item entity-card-stat">8 markets</span>
+        <span class="dimension-meta-item entity-card-stat">3 markets</span>
         
     </div>
     
     <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
         
         <div class="dimension-card-highlight case-result">
-            <span class="result-value">68.3M</span>
+            <span class="result-value">31.9M</span>
             <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -9956,6 +9824,68 @@
     
     
 
+<a href="/languages/italian" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Italian</div>
+        
+        <div class="dimension-card-badge code">IT</div>
+        
+    </div>
+    
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">9 domains</span>
+        <span class="dimension-meta-item entity-card-stat">17 services</span>
+        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">4 experts</span>
+        
+        <span class="dimension-meta-item entity-card-stat">8 markets</span>
+        
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">68.3M</span>
+            <span class="result-label">Tracked speakers</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
 <a href="/languages/swedish" class="dimension-card entity-card entity-card-padded">
     <div class="dimension-card-header">
         <div class="entity-card-title">Swedish</div>
@@ -9980,6 +9910,79 @@
         
         <div class="dimension-card-highlight case-result">
             <span class="result-value">13.3M</span>
+            <span class="result-label">Tracked speakers</span>
+        </div>
+        <span class="dimension-cta entity-card-cta">Explore</span>
+        
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+<a href="/languages/turkish" class="dimension-card entity-card entity-card-padded">
+    <div class="dimension-card-header">
+        <div class="entity-card-title">Turkish</div>
+        
+        <div class="dimension-card-badge code">TR</div>
+        
+    </div>
+    
+    
+    <div class="entity-card-exact-chips">
+        
+        
+        
+        
+        <div class="entity-card-exact-row dimension-chip-row dimension-chip-row-experts">
+            <span class="entity-chip entity-chip-label entity-chip-wide">Alaaddin Saracyakupoglu</span>
+        </div>
+        
+    </div>
+    
+    
+    <div class="dimension-card-meta entity-card-meta-row">
+        <span class="dimension-meta-item entity-card-stat">7 domains</span>
+        <span class="dimension-meta-item entity-card-stat">12 services</span>
+        <span class="dimension-meta-item entity-card-stat">10 scopes</span>
+        
+        
+        <span class="dimension-meta-item entity-card-stat">5 markets</span>
+        
+    </div>
+    
+    <div class="dimension-card-footer entity-card-footer dimension-card-footer-highlight">
+        
+        <div class="dimension-card-highlight case-result">
+            <span class="result-value">81.4M</span>
             <span class="result-label">Tracked speakers</span>
         </div>
         <span class="dimension-cta entity-card-cta">Explore</span>
@@ -10961,7 +10964,7 @@
     </div>
 
     <!-- Site JavaScript -->
-    <script src="_assets/js/app-core.js?v=0126c121" defer></script>
+    <script src="_assets/js/app-core.js?v=a6382adf" defer></script>
     <!-- SVG templates for JS runtime use -->
     <div id="svg-templates" hidden>
         <span id="svg-theme-system"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" class="icon icon-monitor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
@@ -10970,8 +10973,8 @@
         <span id="svg-chevron-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="icon icon-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
 
-    <script src="_assets/js/forms.js?v=17646487" defer></script>
-    <script src="_assets/js/ui.js?v=10ccdf89" defer></script>
-    <script src="_assets/js/site.js?v=6c585595" defer></script>
+    <script src="_assets/js/forms.js?v=c6eee7ef" defer></script>
+    <script src="_assets/js/ui.js?v=d99016a4" defer></script>
+    <script src="_assets/js/site.js?v=dca12656" defer></script>
 </body>
 </html>
