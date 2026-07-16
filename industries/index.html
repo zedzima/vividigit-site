@@ -86,7 +86,7 @@
     <link rel="stylesheet" href="_assets/css/styles.css?v=5f8bbd8c">
     <script>
     window.VividigitAssetHashes = {
-        cart: 'ac131939',
+        cart: '6aa4cd7f',
         media: 'a66e3b8f'
     };
     </script>
@@ -981,7 +981,10 @@
 
 
 
-<section class="catalog-block" data-source="industries" data-guided-domain="true">
+<section class="catalog-block"
+         data-source="industries"
+         data-guided-domain="true"
+         data-pinned="">
     
     <div class="catalog-header">
         <span class="tag tag-accent">INDUSTRIES WE SERVE</span>
@@ -1235,6 +1238,11 @@
     var availableDomains = {};
     var selectedDomain = '';
     var domainChooserExpanded = false;
+    var pinnedOrder = {};
+
+    String(section.dataset.pinned || '').split(',').filter(Boolean).forEach(function(slug, index) {
+        pinnedOrder[slug] = index;
+    });
 
     domainChipEls.forEach(function(chip) {
         availableDomains[chip.dataset.domainValue] = chip.textContent.trim();
@@ -1483,6 +1491,14 @@
     }
     function compareFeatured(a, b) {
         return Number(isFeatured(b)) - Number(isFeatured(a));
+    }
+    function comparePinned(a, b) {
+        var aPinned = Object.prototype.hasOwnProperty.call(pinnedOrder, a && a.slug);
+        var bPinned = Object.prototype.hasOwnProperty.call(pinnedOrder, b && b.slug);
+        if (aPinned && bPinned) return pinnedOrder[a.slug] - pinnedOrder[b.slug];
+        if (aPinned) return -1;
+        if (bPinned) return 1;
+        return 0;
     }
     function compareOriginalOrder(a, b) {
         return (a.__catalogIndex || 0) - (b.__catalogIndex || 0);
@@ -1873,6 +1889,9 @@
     function sortItems(items, by) {
         var sorted = items.slice();
         sorted.sort(function(a, b) {
+            var pinnedCompare = comparePinned(a, b);
+            if (pinnedCompare !== 0) return pinnedCompare;
+
             var featuredCompare = compareFeatured(a, b);
             if (featuredCompare !== 0) return featuredCompare;
 

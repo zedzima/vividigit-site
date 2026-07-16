@@ -94,7 +94,7 @@
     <link rel="stylesheet" href="_assets/css/styles.css?v=5f8bbd8c">
     <script>
     window.VividigitAssetHashes = {
-        cart: 'ac131939',
+        cart: '6aa4cd7f',
         media: 'a66e3b8f'
     };
     </script>
@@ -932,7 +932,7 @@
         <div class="hero-stats">
             
             <div class="hero-stat">
-                <span class="hero-stat-value text-gradient">1</span>
+                <span class="hero-stat-value text-gradient">2</span>
                 <span class="hero-stat-label">Scopes</span>
             </div>
             
@@ -942,7 +942,7 @@
             </div>
             
             <div class="hero-stat">
-                <span class="hero-stat-value text-gradient">$1,500</span>
+                <span class="hero-stat-value text-gradient">$1,990</span>
                 <span class="hero-stat-label">Starting audit</span>
             </div>
             
@@ -2299,9 +2299,9 @@
         <div class="pricing-simple-left">
             <div class="pricing-simple-info">
                 <span class="tag tag-accent">PRICING</span>
-                <h2>E-commerce SEO Audit</h2>
-                <p class="pricing-subtitle">The starting point for any store that suspects organic performance is leaving revenue on the table.</p>
-                <p class="pricing-simple-desc">A full technical and strategic audit built for e-commerce: crawl budget analysis, faceted navigation review, duplicate content mapping, product schema validation, category structure assessment, and a prioritized roadmap with estimated impact. You get a clear picture of what is broken, what matters most, and what to fix first.</p>
+                <h2>SEO Audit for E-commerce</h2>
+                <p class="pricing-subtitle">E-commerce sites enter through the Advanced or Complex SEO Audit tier, depending on catalog and platform complexity.</p>
+                <p class="pricing-simple-desc">The comprehensive SEO Audit combines technical catalog evidence with search demand, category and page architecture, content, authority, measurement, and a prioritized first delivery plan. Advanced covers a bounded growing store; larger catalogs, complex JavaScript, faceting, logs, multiple properties, and re-platforming are routed to Complex or custom scoping.</p>
             </div>
         </div>
         <div class="pricing-simple-right">
@@ -2312,15 +2312,15 @@
                         
                         <span class="price-label">from</span>
                         
-                        <span class="price-current" data-monthly="1500">$1500</span>
+                        <span class="price-current" data-monthly="1990">$1,990</span>
                         
                     </div>
                     
                 </div>
 
                 <div class="pricing-simple-actions">
-                    <a href="#sidebar-contact" class="btn btn-primary btn-full pricing-simple-cta">
-                        Book Consultation
+                    <a href="scopes/seo-audit/#task-picker" class="btn btn-primary btn-full pricing-simple-cta">
+                        View SEO Audit Tiers
                     </a>
                     
                     <a href="scopes/technical-seo/" class="btn btn-secondary btn-full">
@@ -2330,7 +2330,7 @@
                 </div>
 
                 
-                <span class="pricing-simple-note">Final price depends on catalog size and platform. Free initial consultation included.</span>
+                <span class="pricing-simple-note">Advanced SEO Audit: $1,990. Complex SEO Audit: $3,990. Oversized, multi-property, headless, migration, or enterprise projects are custom-scoped. Remediation is separate.</span>
                 
             </div>
         </div>
@@ -2356,8 +2356,12 @@
     if (window.__vividigitPricingSyncInitialized) return;
     window.__vividigitPricingSyncInitialized = true;
 
+    function formatNumber(value) {
+        return Math.round(value || 0).toLocaleString('en-US');
+    }
+
     function formatPrice(value) {
-        return '$' + Math.round(value || 0);
+        return '$' + formatNumber(value);
     }
 
     function getYearlyPricing(monthlyPrice, discount) {
@@ -2391,7 +2395,7 @@
             var yearly = getYearlyPricing(monthlyPrice, discount);
             priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
             if (periodEl) periodEl.textContent = periodEl.dataset.monthlyLabel || '/month';
-            if (savingsEl) savingsEl.textContent = String(yearly.annualSavings);
+            if (savingsEl) savingsEl.textContent = formatNumber(yearly.annualSavings);
             if (metaEl) metaEl.hidden = false;
         } else {
             priceEl.textContent = formatPrice(monthlyPrice);
@@ -2422,14 +2426,14 @@
             if (isYearly) {
                 var yearly = getYearlyPricing(monthlyPrice, discount);
                 priceEl.textContent = formatPrice(yearly.monthlyEquivalent);
-                if (periodEl) periodEl.textContent = '/month';
+                if (periodEl) periodEl.textContent = periodEl.dataset.yearlyLabel || periodEl.dataset.monthlyLabel || '/month';
                 if (savingsEl) {
                     savingsEl.style.display = 'block';
-                    if (savingsAmount) savingsAmount.textContent = String(yearly.annualSavings);
+                    if (savingsAmount) savingsAmount.textContent = formatNumber(yearly.annualSavings);
                 }
             } else {
                 priceEl.textContent = formatPrice(monthlyPrice);
-                if (periodEl) periodEl.textContent = '/month';
+                if (periodEl) periodEl.textContent = periodEl.dataset.monthlyLabel || '/month';
                 if (savingsEl) {
                     savingsEl.style.display = 'none';
                 }
@@ -2544,7 +2548,7 @@
     data-page-type="solution"
     data-dimension="services"
     data-value="seo"
-    data-related-slugs="technical-seo"
+    data-related-slugs="seo-audit,technical-seo"
     data-limit="0">
 
     <div class="catalog-mini-header">
@@ -3411,8 +3415,8 @@
         
         <div class="cta-actions">
             
-            <a href="#sidebar-contact" class="btn btn-primary">
-                Book E-commerce SEO Consultation
+            <a href="scopes/seo-audit/#task-picker" class="btn btn-primary">
+                View SEO Audit Tiers
             </a>
             
             
@@ -3473,7 +3477,7 @@
     
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">6 services</span>
-        <span class="service-meta-item entity-card-stat">12 scopes</span>
+        <span class="service-meta-item entity-card-stat">13 scopes</span>
         <span class="service-meta-item entity-card-stat">10 solutions</span>
         <span class="service-meta-item entity-card-stat">8 experts</span>
     </div>
@@ -3511,7 +3515,7 @@
     
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">5 services</span>
-        <span class="service-meta-item entity-card-stat">7 scopes</span>
+        <span class="service-meta-item entity-card-stat">8 scopes</span>
         <span class="service-meta-item entity-card-stat">10 solutions</span>
         <span class="service-meta-item entity-card-stat">5 experts</span>
     </div>
@@ -3813,7 +3817,7 @@
         <span class="entity-card-stat">7 services</span>
         <span class="entity-card-stat">7 industries</span>
         <span class="entity-card-stat">2 cases</span>
-        <span class="entity-card-stat">2 articles</span>
+        <span class="entity-card-stat">3 articles</span>
     </div>
     
     <div class="expert-card-footer entity-card-footer">
@@ -3991,7 +3995,7 @@
         <span class="entity-card-stat">3 services</span>
         
         
-        <span class="entity-card-stat">1 article</span>
+        <span class="entity-card-stat">2 articles</span>
     </div>
     
     <div class="expert-card-footer entity-card-footer">
@@ -4171,7 +4175,7 @@
         <span class="entity-card-stat">3 services</span>
         <span class="entity-card-stat">4 industries</span>
         <span class="entity-card-stat">1 case</span>
-        <span class="entity-card-stat">1 article</span>
+        <span class="entity-card-stat">2 articles</span>
     </div>
     
     <div class="expert-card-footer entity-card-footer">
@@ -4406,7 +4410,7 @@
     
     <div class="service-card-meta entity-card-meta-row">
         <span class="service-meta-item entity-card-stat">2 domains</span>
-        <span class="service-meta-item entity-card-stat">6 scopes</span>
+        <span class="service-meta-item entity-card-stat">7 scopes</span>
         <span class="service-meta-item entity-card-stat">6 experts</span>
         <span class="service-meta-item entity-card-stat">7 industries</span>
         <span class="service-meta-item entity-card-stat">8 countries</span>
@@ -4415,7 +4419,7 @@
     
     <div class="service-card-footer entity-card-footer">
         
-        <span class="service-price entity-card-price">From $500</span>
+        <span class="service-price entity-card-price">From $1,990</span>
         
         <span class="service-cta entity-card-cta">View Service</span>
     </div>
@@ -4653,7 +4657,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">18 services</span>
-        <span class="dimension-meta-item entity-card-stat">20 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">7 experts</span>
         <span class="dimension-meta-item entity-card-stat">2 cases</span>
         
@@ -4709,7 +4713,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">19 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">20 scopes</span>
         <span class="dimension-meta-item entity-card-stat">7 experts</span>
         <span class="dimension-meta-item entity-card-stat">1 case</span>
         
@@ -4765,7 +4769,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">12 services</span>
-        <span class="dimension-meta-item entity-card-stat">19 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">20 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         
         
@@ -4821,7 +4825,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">11 services</span>
-        <span class="dimension-meta-item entity-card-stat">17 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">18 scopes</span>
         <span class="dimension-meta-item entity-card-stat">6 experts</span>
         
         
@@ -4877,7 +4881,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">8 domains</span>
         <span class="dimension-meta-item entity-card-stat">8 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">15 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         <span class="dimension-meta-item entity-card-stat">1 case</span>
         
@@ -4933,7 +4937,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">8 domains</span>
         <span class="dimension-meta-item entity-card-stat">8 services</span>
-        <span class="dimension-meta-item entity-card-stat">12 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">13 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -4989,7 +4993,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">8 domains</span>
         <span class="dimension-meta-item entity-card-stat">7 services</span>
-        <span class="dimension-meta-item entity-card-stat">12 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">13 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -5121,7 +5125,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">22 scopes</span>
         <span class="dimension-meta-item entity-card-stat">7 experts</span>
         <span class="dimension-meta-item entity-card-stat">1 case</span>
         
@@ -5183,7 +5187,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">19 services</span>
-        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">22 scopes</span>
         <span class="dimension-meta-item entity-card-stat">8 experts</span>
         
         
@@ -5245,7 +5249,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">19 services</span>
-        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">22 scopes</span>
         <span class="dimension-meta-item entity-card-stat">8 experts</span>
         
         
@@ -5307,7 +5311,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">8 domains</span>
         <span class="dimension-meta-item entity-card-stat">10 services</span>
-        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">22 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -5369,7 +5373,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">7 domains</span>
         <span class="dimension-meta-item entity-card-stat">7 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">15 scopes</span>
         <span class="dimension-meta-item entity-card-stat">4 experts</span>
         
         
@@ -5431,7 +5435,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">8 domains</span>
         <span class="dimension-meta-item entity-card-stat">8 services</span>
-        <span class="dimension-meta-item entity-card-stat">20 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -5493,7 +5497,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">7 domains</span>
         <span class="dimension-meta-item entity-card-stat">7 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">15 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -5555,7 +5559,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">8 domains</span>
         <span class="dimension-meta-item entity-card-stat">8 services</span>
-        <span class="dimension-meta-item entity-card-stat">20 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         
         
@@ -6564,7 +6568,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">19 services</span>
-        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">22 scopes</span>
         <span class="dimension-meta-item entity-card-stat">8 experts</span>
         <span class="dimension-meta-item entity-card-stat">1 case</span>
         <span class="dimension-meta-item entity-card-stat">67 markets</span>
@@ -6626,7 +6630,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">9 domains</span>
         <span class="dimension-meta-item entity-card-stat">17 services</span>
-        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">22 scopes</span>
         <span class="dimension-meta-item entity-card-stat">5 experts</span>
         <span class="dimension-meta-item entity-card-stat">1 case</span>
         <span class="dimension-meta-item entity-card-stat">22 markets</span>
@@ -6688,7 +6692,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">8 domains</span>
         <span class="dimension-meta-item entity-card-stat">11 services</span>
-        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">22 scopes</span>
         <span class="dimension-meta-item entity-card-stat">4 experts</span>
         
         <span class="dimension-meta-item entity-card-stat">23 markets</span>
@@ -6750,7 +6754,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">7 domains</span>
         <span class="dimension-meta-item entity-card-stat">7 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">15 scopes</span>
         <span class="dimension-meta-item entity-card-stat">7 experts</span>
         
         <span class="dimension-meta-item entity-card-stat">13 markets</span>
@@ -6812,7 +6816,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">8 domains</span>
         <span class="dimension-meta-item entity-card-stat">9 services</span>
-        <span class="dimension-meta-item entity-card-stat">20 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">21 scopes</span>
         <span class="dimension-meta-item entity-card-stat">4 experts</span>
         
         <span class="dimension-meta-item entity-card-stat">24 markets</span>
@@ -6874,7 +6878,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">7 domains</span>
         <span class="dimension-meta-item entity-card-stat">7 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">15 scopes</span>
         <span class="dimension-meta-item entity-card-stat">3 experts</span>
         
         <span class="dimension-meta-item entity-card-stat">4 markets</span>
@@ -6936,7 +6940,7 @@
     <div class="dimension-card-meta entity-card-meta-row">
         <span class="dimension-meta-item entity-card-stat">7 domains</span>
         <span class="dimension-meta-item entity-card-stat">7 services</span>
-        <span class="dimension-meta-item entity-card-stat">14 scopes</span>
+        <span class="dimension-meta-item entity-card-stat">15 scopes</span>
         <span class="dimension-meta-item entity-card-stat">4 experts</span>
         
         <span class="dimension-meta-item entity-card-stat">6 markets</span>
@@ -7347,6 +7351,11 @@
         <div class="related-section-header">
             <h3>Articles about SEO for E-commerce</h3>
             
+            <div class="carousel-nav related-section-nav">
+                <button class="carousel-btn related-prev" aria-label="Previous">&larr;</button>
+                <button class="carousel-btn related-next" aria-label="Next">&rarr;</button>
+            </div>
+            
         </div>
         <div class="related-grid entity-card-grid">
             
@@ -7443,6 +7452,113 @@
         
         <div class="blog-card-reading case-result">
             <span class="result-value">11 min</span>
+            <span class="result-label">Reading time</span>
+        </div>
+        
+        <span class="blog-card-cta entity-card-cta">Read</span>
+    </div>
+</a>
+            
+            
+            
+            
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a href="/blog/seo-packages-comparison" class="blog-card entity-card entity-card-padded">
+    
+    <div class="blog-card-tags">
+        <span class="blog-chip entity-chip entity-chip-blog">Guide</span>
+    </div>
+    
+    <div class="blog-card-title entity-card-title">SEO Packages Compared</div>
+    <div class="blog-card-meta type-meta">
+        <span>2026-07-16</span>
+        <span>By Dmitriy Razakhatsky</span>
+    </div>
+    
+    
+    <div class="entity-card-exact-chips">
+        
+        <div class="entity-card-exact-row blog-card-chip-row blog-card-chip-row-primary">
+            <span class="blog-chip entity-chip entity-chip-label entity-chip-wide">SEO</span>
+            
+            
+        </div>
+        
+        
+        <div class="entity-card-exact-row blog-card-chip-row blog-card-chip-row-countries">
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-flag" title="Germany">🇩🇪</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-flag" title="USA">🇺🇸</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-flag" title="UK">🇬🇧</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-flag" title="France">🇫🇷</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-flag" title="Austria">🇦🇹</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-flag" title="Poland">🇵🇱</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-flag" title="Portugal">🇵🇹</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-flag" title="Spain">🇪🇸</span>
+            
+        </div>
+        
+        
+        <div class="entity-card-exact-row blog-card-chip-row blog-card-chip-row-languages">
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-code" title="English">EN</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-code" title="German">DE</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-code" title="French">FR</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-code" title="Spanish">ES</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-code" title="Russian">RU</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-code" title="Polish">PO</span>
+            
+            <span class="blog-chip entity-chip entity-chip-soft entity-chip-code" title="Portuguese">PT</span>
+            
+        </div>
+        
+    </div>
+    
+    
+    <div class="blog-card-chip-row blog-card-chip-row-metrics entity-card-meta-row">
+        
+        <span class="entity-card-stat">6 scopes</span>
+        <span class="entity-card-stat">7 industries</span>
+    </div>
+    
+    <div class="blog-card-footer entity-card-footer">
+        
+        <div class="blog-card-reading case-result">
+            <span class="result-value">13 min</span>
             <span class="result-label">Reading time</span>
         </div>
         

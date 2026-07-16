@@ -514,8 +514,8 @@
                         lines.push('   Savings: ' + formatMoney(this.getAnnualSavings(item)) + '/year');
                     }
                 }
-                if (lc > 0) lines.push('   Languages: +' + lc + ' × ' + formatMoney(perLang) + periodSuffix + ' = ' + formatMoney(lc * perLang));
-                if (cc > 0) lines.push('   Countries: +' + cc + ' × ' + formatMoney(perCountry) + periodSuffix + ' = ' + formatMoney(cc * perCountry));
+                if (lc > 0) lines.push('   Additional Languages: +' + lc + ' × ' + formatMoney(perLang) + periodSuffix + ' = ' + formatMoney(lc * perLang));
+                if (cc > 0) lines.push('   Additional Countries: +' + cc + ' × ' + formatMoney(perCountry) + periodSuffix + ' = ' + formatMoney(cc * perCountry));
                 lines.push('   Base: ' + (effectivePrice > 0 ? formatMoney(effectivePrice) + periodSuffix : 'Custom quote'));
                 lines.push('   Subtotal: ' + (effectivePrice > 0 ? formatMoney(itemTotal) + periodSuffix : 'Custom quote'));
                 lines.push('');
@@ -623,8 +623,8 @@
                                 '<span class="cart-line-label">Payment</span>' +
                                 '<div class="cart-line-row-actions">' + paymentControl + '</div>' +
                             '</div>' +
-                            buildSidebarModifierControl(item, itemSlug, 'langCount', 'Languages', perLang) +
-                            buildSidebarModifierControl(item, itemSlug, 'countryCount', 'Countries', perCountry) +
+                            buildSidebarModifierControl(item, itemSlug, 'langCount', 'Additional Languages', perLang) +
+                            buildSidebarModifierControl(item, itemSlug, 'countryCount', 'Additional Countries', perCountry) +
                         '</div>' +
                     '</div>' +
                     '<div class="cart-item-actions">' +
@@ -1112,8 +1112,8 @@
                 '<th>Item</th>' +
                 '<th>Type</th>' +
                 '<th>Payment</th>' +
-                '<th>Languages</th>' +
-                '<th>Countries</th>' +
+                '<th>Additional Languages</th>' +
+                '<th>Additional Countries</th>' +
                 '<th class="text-right">Total</th>' +
                 '<th></th>' +
             '</tr></thead><tbody>';
