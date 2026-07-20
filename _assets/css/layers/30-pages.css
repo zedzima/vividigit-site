@@ -3017,6 +3017,13 @@ a.cards-link:hover {
     align-self: stretch;
 }
 
+    /* .feature-content is a flex column (shared rule with .faq-list / .task-picker-items),
+       so its default align-items: stretch forces the per-feature .tag chip to full width.
+       Shrink it back to its text length without touching the shared .tag class. */
+    .feature-content > .tag {
+        align-self: flex-start;
+    }
+
     .feature-content .tag + h3 {
         margin-top: var(--space-md);
     }
